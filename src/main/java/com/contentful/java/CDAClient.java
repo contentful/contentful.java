@@ -35,7 +35,7 @@ public class CDAClient {
     /**
      * Gson
      */
-    private static Gson gson;
+    private Gson gson;
     private static Gson gsonWithDateAdapter;
 
     /**
@@ -79,13 +79,11 @@ public class CDAClient {
      * Initialize Gson instances
      */
     private void initGson() {
-        if (gson == null) {
-            gson = new GsonBuilder()
-                    .registerTypeAdapter(CDABaseItem.class, new EntryDeserializer(CDAClient.this))
-                    .registerTypeAdapter(CDAEntry.class, new EntryDeserializer(CDAClient.this))
-                    .registerTypeAdapter(Date.class, new DateDeserializer())
-                    .create();
-        }
+        gson = new GsonBuilder()
+                .registerTypeAdapter(CDABaseItem.class, new EntryDeserializer(CDAClient.this))
+                .registerTypeAdapter(CDAEntry.class, new EntryDeserializer(CDAClient.this))
+                .registerTypeAdapter(Date.class, new DateDeserializer())
+                .create();
 
         if (gsonWithDateAdapter == null) {
             gsonWithDateAdapter = new GsonBuilder()

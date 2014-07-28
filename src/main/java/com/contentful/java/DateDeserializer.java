@@ -16,7 +16,11 @@ import java.util.TimeZone;
  * This class will attempt to de-serialize date strings according to the ISO8601 standard.
  */
 public class DateDeserializer implements JsonDeserializer<Date> {
-    private static final String PATTERN_ISO8601 = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private static final String[] ISO8601_PATTERNS = new String[]{
+            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+            "yyyy-MM-dd'T'HH:mm:ss+"
+    };
+
     private static final String DEFAULT_TIMEZONE = "UTC";
 
     @Override
@@ -26,13 +30,20 @@ public class DateDeserializer implements JsonDeserializer<Date> {
 
         Date result = null;
         String dateStr = jsonElement.getAsString();
-        SimpleDateFormat sdf = new SimpleDateFormat(PATTERN_ISO8601);
-        sdf.setTimeZone(TimeZone.getTimeZone(DEFAULT_TIMEZONE));
+        SimpleDateFormat sdf = null;
 
-        try {
-            result = sdf.parse(dateStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        for (String pattern : ISO8601_PATTERNS) {
+            sdf = new SimpleDateFormat(pattern);
+            sdf.setTimeZone(TimeZone.getTimeZone(DEFAULT_TIMEZONE));
+
+            try {
+                result = sdf.parse(dateStr);
+            } catch (ParseException ignore) {
+            }
+
+            if (result != null) {
+                break;
+            }
         }
 
         return result;

@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import retrofit.client.Response;
 
 import java.net.URI;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,8 +76,6 @@ public class Utils {
         // set new pagination parameters
         queryMap.put("skip", Integer.toString(nextOffset));
         queryMap.put("limit", Integer.toString(limit));
-
-        System.out.println(Arrays.toString(queryMap.entrySet().toArray())); // todo tmp
 
         return queryMap;
     }
