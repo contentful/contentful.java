@@ -30,10 +30,9 @@ public class DateDeserializer implements JsonDeserializer<Date> {
 
         Date result = null;
         String dateStr = jsonElement.getAsString();
-        SimpleDateFormat sdf = null;
 
         for (String pattern : ISO8601_PATTERNS) {
-            sdf = new SimpleDateFormat(pattern);
+            SimpleDateFormat sdf = new SimpleDateFormat(pattern);
             sdf.setTimeZone(TimeZone.getTimeZone(DEFAULT_TIMEZONE));
 
             try {
