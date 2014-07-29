@@ -1,13 +1,15 @@
 package com.contentful.java;
 
 import com.contentful.java.lib.TestCallback;
+import com.contentful.java.model.CDAAsset;
+import com.contentful.java.model.CDAListResult;
 import retrofit.RetrofitError;
 
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * Test of all Entries fetching methods via {@link CDAClient}.
+ * Test of all Entries fetching methods via {@link com.contentful.java.model.CDAClient}.
  */
 public class AssetsTest extends AbsTestCase {
     private RetrofitError retrofitError;

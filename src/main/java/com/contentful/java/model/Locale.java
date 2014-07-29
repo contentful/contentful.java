@@ -1,4 +1,4 @@
-package com.contentful.java;
+package com.contentful.java.model;
 
 import com.google.gson.annotations.SerializedName;
 

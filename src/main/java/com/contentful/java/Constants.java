@@ -5,8 +5,11 @@ package com.contentful.java;
  */
 public class Constants {
     public enum CDAType {
+        Array,
         Asset,
-        Entry
+        Entry,
+        Link,
+        Space
     }
 
     public static final String HTTPS = "HTTPS";

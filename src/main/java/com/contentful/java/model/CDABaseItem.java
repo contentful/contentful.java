@@ -1,4 +1,4 @@
-package com.contentful.java;
+package com.contentful.java.model;
 
 import java.util.Map;
 

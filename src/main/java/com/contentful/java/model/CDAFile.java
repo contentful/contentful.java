@@ -1,10 +1,11 @@
-package com.contentful.java;
+package com.contentful.java.model;
 
 /**
  * TBD
  */
 @SuppressWarnings("UnusedDeclaration")
-public class CDAFile extends CDABaseItem {
+public class CDAFile {
+    public Sys sys;
     public String fileName;
     public String contentType;
     public String url;
@@ -12,7 +13,7 @@ public class CDAFile extends CDABaseItem {
     /**
      * File details
      */
-    static class Details {
+    public static class Details {
         // todo image, video, ...
         public Long size;
     }

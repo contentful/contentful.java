@@ -1,5 +1,9 @@
-package com.contentful.java;
+package com.contentful.java.api;
 
+import com.contentful.java.model.CDAAsset;
+import com.contentful.java.model.CDAEntry;
+import com.contentful.java.model.CDAListResult;
+import com.contentful.java.model.CDASpace;
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;

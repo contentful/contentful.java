@@ -1,11 +1,17 @@
-package com.contentful.java;
+package com.contentful.java.model;
 
+import com.contentful.java.Constants;
+import com.contentful.java.api.CDACallback;
+import com.contentful.java.api.CDAService;
+import com.contentful.java.serialization.BaseDeserializer;
+import com.contentful.java.serialization.DateDeserializer;
+import com.contentful.java.serialization.GsonConverter;
+import com.contentful.java.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
-import retrofit.converter.GsonConverter;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -80,8 +86,8 @@ public class CDAClient {
      */
     private void initGson() {
         gson = new GsonBuilder()
-                .registerTypeAdapter(CDABaseItem.class, new EntryDeserializer(CDAClient.this))
-                .registerTypeAdapter(CDAEntry.class, new EntryDeserializer(CDAClient.this))
+                .registerTypeAdapter(CDABaseItem.class, new BaseDeserializer(CDAClient.this))
+                .registerTypeAdapter(CDAEntry.class, new BaseDeserializer(CDAClient.this))
                 .registerTypeAdapter(Date.class, new DateDeserializer())
                 .create();
 
@@ -183,7 +189,7 @@ public class CDAClient {
     }
 
     /**
-     * TBD
+     * TBD (paging)
      */
     public void fetchNextItemsFromList(CDAListResult previousResult, Callback<CDAListResult> callback) {
         HashMap<String, String> map = Utils.getNextBatchQueryMapForList(previousResult);
@@ -197,7 +203,7 @@ public class CDAClient {
 
     /**
      * Get a {@link com.google.gson.Gson} instance having only a
-     * {@link com.contentful.java.DateDeserializer}.
+     * {@link com.contentful.java.serialization.DateDeserializer}.
      *
      * @return {@link com.google.gson.Gson} instance.
      */

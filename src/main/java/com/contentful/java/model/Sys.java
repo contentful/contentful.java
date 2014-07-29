@@ -1,20 +1,17 @@
-package com.contentful.java;
+package com.contentful.java.model;
 
 import java.util.Date;
 
 /**
  * Class representing a collection of system attributes.
  */
+@SuppressWarnings("UnusedDeclaration")
 public class Sys {
     // Type of resource
     public String type;
 
     // Unique ID of resource
     public String id;
-
-    // todo Link space - Link to resource's Space (except Spaces) .
-
-    // todo Link contentType - Link to Entry's Content Type (Entries only).
 
     // Version of resource.
     public Integer revision;
@@ -25,7 +22,11 @@ public class Sys {
     // Time entity was updated.
     public Date updatedAt;
 
+    // Content Type
     public CDAContentType contentType;
 
+    // Type of Link
     public String linkType;
+
+    // todo Link to object's Space
 }

@@ -1,10 +1,11 @@
 package com.contentful.java;
 
 import com.contentful.java.lib.TestClientFactory;
+import com.contentful.java.model.CDAClient;
 import junit.framework.TestCase;
 
 /**
- * Created by tomxor on 28/07/14.
+ * Base class for test cases, just sets up a {@link CDAClient} for now.
  */
 public abstract class AbsTestCase extends TestCase {
     protected CDAClient client;

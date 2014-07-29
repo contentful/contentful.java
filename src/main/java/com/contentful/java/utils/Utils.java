@@ -1,5 +1,9 @@
-package com.contentful.java;
+package com.contentful.java.utils;
 
+import com.contentful.java.model.CDAAsset;
+import com.contentful.java.model.CDABaseItem;
+import com.contentful.java.model.CDAEntry;
+import com.contentful.java.model.CDAListResult;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import retrofit.client.Response;
@@ -9,15 +13,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by tomxor on 25/07/14.
+ * SDK utilities
  */
 public class Utils {
     /**
      * Populates a {@link java.util.Map} object with items to fetch the next
-     * batch of items from a previous {@link CDAListResult} item.
+     * batch of items from a previous {@link com.contentful.java.model.CDAListResult} item.
      *
-     * @param listResult {@link CDAListResult} instance which was successfully executed,
-     *                   meaning {@link CDACallback#onSuccess} was
+     * @param listResult {@link com.contentful.java.model.CDAListResult} instance which was successfully executed,
+     *                   meaning {@link com.contentful.java.api.CDACallback#onSuccess} was
      *                   called.
      * @return {@link java.util.Map} instance containing original query string parameters
      * and updated pagination parameters (skip/limit).
@@ -47,7 +51,7 @@ public class Utils {
     }
 
     /**
-     * TBD
+     * TBD (paging)
      */
     private static HashMap<String, String> prepareQueryMap(URI uri, int nextOffset, int limit) {
         // prepare the new map
@@ -81,19 +85,36 @@ public class Utils {
     }
 
     /**
-     * TBD
+     * Sets all fields as a {@link java.util.Map} for any class extending {@link com.contentful.java.model.CDABaseItem}
+     * out of a {@link com.google.gson.JsonObject} instance.
+     *
+     * @param jsonDeserializationContext De-serialization context.
+     * @param jsonObject                 Object to read values from.
+     * @return Map instance representing the fields for this CDA object.
      */
     public static Map<String, ?> createFieldsMap(JsonDeserializationContext jsonDeserializationContext,
                                                  JsonObject jsonObject) {
 
         JsonObject fields = jsonObject.getAsJsonObject("fields");
-        return jsonDeserializationContext.deserialize(fields, Map.class); // todo use TypeToken ?
+        return jsonDeserializationContext.deserialize(fields, Map.class);
     }
 
+    /**
+     * Determine whether an item is a {@link CDAEntry} subclass.
+     *
+     * @param item Item to be checked.
+     * @return Boolean indicating whether this item is a subclass of {@link CDAEntry}.
+     */
     public static boolean isEntry(CDABaseItem item) {
         return item instanceof CDAEntry;
     }
 
+    /**
+     * Determine whether an item is a {@link CDAAsset} subclass.
+     *
+     * @param item Item to be checked.
+     * @return Boolean indicating whether this item is a subclass of {@link CDAAsset}.
+     */
     public static boolean isAsset(CDABaseItem item) {
         return item instanceof CDAAsset;
     }

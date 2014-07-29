@@ -1,15 +1,18 @@
-package com.contentful.java;
+package com.contentful.java.model;
+
+import com.contentful.java.annotations.CDAFields;
 
 /**
  * Class representing a single Asset
  */
 @SuppressWarnings("UnusedDeclaration")
 public class CDAAsset extends CDABaseItem {
-    static class Fields {
+    public static class Fields {
         public String title;
         public String description;
         public CDAFile file;
     }
 
+    @CDAFields
     public Fields fields;
 }

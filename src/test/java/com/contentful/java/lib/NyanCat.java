@@ -1,12 +1,13 @@
 package com.contentful.java.lib;
 
-import com.contentful.java.CDAEntry;
+import com.contentful.java.annotations.CDAFields;
+import com.contentful.java.model.CDAEntry;
 
 import java.util.Date;
 import java.util.List;
 
 /**
- * Created by tomxor on 28/07/14.
+ * Sample model class for CDA Entry.
  */
 public class NyanCat extends CDAEntry {
     public static class Fields {
@@ -15,7 +16,9 @@ public class NyanCat extends CDAEntry {
         public String color;
         public Date birthday;
         public Integer lives;
+        public NyanCat bestFriend;
     }
 
+    @CDAFields
     public Fields fields;
 }

@@ -1,15 +1,15 @@
-package com.contentful.java;
+package com.contentful.java.model;
 
 /**
  * Class representing a single Content Type.
  */
 @SuppressWarnings("UnusedDeclaration")
 public class CDAContentType {
-    static class Sys {
+    public static class Sys {
         String type;
         String linkType;
         String id;
     }
 
-    Sys sys;
+    public Sys sys;
 }

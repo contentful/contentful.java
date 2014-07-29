@@ -1,5 +1,6 @@
-package com.contentful.java;
+package com.contentful.java.model;
 
+import com.google.gson.annotations.SerializedName;
 import retrofit.client.Response;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class CDAListResult {
     int skip;
     int limit;
 
-    List<? extends CDABaseItem> items;
+    List<CDABaseItem> items;
     Response response;
 
     public Sys getSys() {
@@ -32,7 +33,7 @@ public class CDAListResult {
         return limit;
     }
 
-    public List<? extends CDABaseItem> getItems() {
+    public List<CDABaseItem> getItems() {
         return items;
     }
 
@@ -43,4 +44,15 @@ public class CDAListResult {
     public void setResponse(Response response) {
         this.response = response;
     }
+
+    // Includes
+    public static class Includes {
+        @SerializedName("Asset")
+        public List<CDAAsset> assets;
+
+        @SerializedName("Entry")
+        public List<CDAEntry> entries;
+    }
+
+    public Includes includes;
 }

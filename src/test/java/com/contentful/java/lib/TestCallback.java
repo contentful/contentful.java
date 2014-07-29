@@ -1,6 +1,6 @@
 package com.contentful.java.lib;
 
-import com.contentful.java.CDACallback;
+import com.contentful.java.api.CDACallback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 

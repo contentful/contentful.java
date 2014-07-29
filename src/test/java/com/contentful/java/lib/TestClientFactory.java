@@ -1,9 +1,9 @@
 package com.contentful.java.lib;
 
-import com.contentful.java.CDAClient;
+import com.contentful.java.model.CDAClient;
 
 /**
- * Created by tomxor on 28/07/14.
+ * Factory for creating {@link CDAClient} instances for unit tests.
  */
 public class TestClientFactory {
     public static CDAClient newInstance() {
