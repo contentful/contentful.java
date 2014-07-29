@@ -43,7 +43,7 @@ public class Utils {
             return null;
         }
 
-        return prepareQueryMap(URI.create(listResult.getResponse().getUrl()), nextOffset, limit);
+        return prepareQueryMap(URI.create(response.getUrl()), nextOffset, limit);
     }
 
     /**

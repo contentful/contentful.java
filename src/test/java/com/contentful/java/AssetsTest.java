@@ -1,8 +1,6 @@
 package com.contentful.java;
 
 import com.contentful.java.lib.TestCallback;
-import com.contentful.java.lib.TestClientFactory;
-import junit.framework.TestCase;
 import retrofit.RetrofitError;
 
 import java.util.HashMap;
@@ -11,16 +9,8 @@ import java.util.concurrent.CountDownLatch;
 /**
  * Test of all Entries fetching methods via {@link CDAClient}.
  */
-public class AssetsTest extends TestCase {
-    private CDAClient client;
+public class AssetsTest extends AbsTestCase {
     private RetrofitError retrofitError;
-
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-
-        client = TestClientFactory.newInstance();
-    }
 
     public void testFetchAssets() throws Exception {
         final CountDownLatch cdl = new CountDownLatch(1);
@@ -76,11 +66,5 @@ public class AssetsTest extends TestCase {
         cdl.await();
 
         assertNull(retrofitError);
-
-    }
-
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
     }
 }

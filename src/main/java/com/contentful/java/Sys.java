@@ -26,4 +26,6 @@ public class Sys {
     public Date updatedAt;
 
     public CDAContentType contentType;
+
+    public String linkType;
 }

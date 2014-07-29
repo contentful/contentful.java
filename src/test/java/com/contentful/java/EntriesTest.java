@@ -3,7 +3,6 @@ package com.contentful.java;
 import com.contentful.java.lib.NyanCat;
 import com.contentful.java.lib.TestCallback;
 import com.contentful.java.lib.TestClientFactory;
-import junit.framework.TestCase;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -14,16 +13,8 @@ import java.util.concurrent.CountDownLatch;
 /**
  * Test of all Entries fetching methods via {@link CDAClient}.
  */
-public class EntriesTest extends TestCase {
-    private CDAClient client;
+public class EntriesTest extends AbsTestCase {
     private RetrofitError retrofitError;
-
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-
-        client = TestClientFactory.newInstance();
-    }
 
     public void testFetchEntries() throws Exception {
         final CountDownLatch cdl = new CountDownLatch(1);
@@ -127,10 +118,5 @@ public class EntriesTest extends TestCase {
 
         // birthday
         assertEquals(new Date(1301954400000L), cat.fields.birthday);
-    }
-
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
     }
 }
