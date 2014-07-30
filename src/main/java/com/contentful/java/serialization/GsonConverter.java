@@ -225,6 +225,8 @@ public class GsonConverter implements Converter {
 
         for (Field f : fields) {
             try {
+                f.setAccessible(true);
+
                 if (CDABaseItem.class.isAssignableFrom(f.getType())) {
                     CDABaseItem item = (CDABaseItem) f.get(parent);
 
