@@ -1,9 +1,6 @@
 package com.contentful.java.api;
 
-import com.contentful.java.model.CDAAsset;
-import com.contentful.java.model.CDAEntry;
-import com.contentful.java.model.CDAListResult;
-import com.contentful.java.model.CDASpace;
+import com.contentful.java.model.*;
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;
@@ -46,7 +43,7 @@ public interface CDAService {
      * Asset endpoint with UID.
      *
      * @param space      String representing the Space key.
-     * @param identifier String reprsenting the Asset's UID.
+     * @param identifier String representing the Asset UID.
      * @param callback   {@link retrofit.Callback} instance to be used.
      */
     @GET("/spaces/{space}/assets/{identifier}")
@@ -66,6 +63,20 @@ public interface CDAService {
     void fetchContentTypes(
             @Path("space") String space,
             Callback<CDAListResult> callback
+    );
+
+    /**
+     * Content Type endpoint with UID.
+     *
+     * @param space      String representing the Space key.
+     * @param identifier String representing the Content Type UID.
+     * @param callback   {@link retrofit.Callback} instance to be used.
+     */
+    @GET("/spaces/{space}/content_types/{identifier}")
+    void fetchContentTypeWithIdentifier(
+            @Path("space") String space,
+            @Path("identifier") String identifier,
+            Callback<? extends CDAContentType> callback
     );
 
     /**
@@ -98,7 +109,7 @@ public interface CDAService {
      * Entry endpoint with UID.
      *
      * @param space      String representing the Space key.
-     * @param identifier String reprsenting the Asset's UID.
+     * @param identifier String representing the Asset UID.
      * @param callback   {@link retrofit.Callback} instance to be used.
      */
     @GET("/spaces/{space}/entries/{identifier}")

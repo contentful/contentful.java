@@ -205,6 +205,13 @@ public class CDAClient {
     }
 
     /**
+     * Fetch Content Type with identifier
+     */
+    public void fetchContentTypeWithIdentifier(String identifier, CDACallback<? extends CDAContentType> callback) {
+        service.fetchContentTypeWithIdentifier(this.spaceKey, identifier, callback);
+    }
+
+    /**
      * Fetch Space metadata
      */
     public void fetchSpace(CDACallback<CDASpace> callback) {
