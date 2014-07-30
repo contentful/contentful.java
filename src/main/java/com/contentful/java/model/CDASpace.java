@@ -7,14 +7,6 @@ import java.util.List;
  */
 @SuppressWarnings("UnusedDeclaration")
 public class CDASpace extends CDABaseItem {
-    String name;
-    List<Locale> locales;
-
-    public String getName() {
-        return name;
-    }
-
-    public List<Locale> getLocales() {
-        return locales;
-    }
+    public String name;
+    public List<Locale> locales;
 }

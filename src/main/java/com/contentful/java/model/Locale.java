@@ -7,10 +7,10 @@ import com.google.gson.annotations.SerializedName;
  */
 @SuppressWarnings("UnusedDeclaration")
 public class Locale {
-    String code;
+    public String code;
 
     @SerializedName("default")
-    boolean isDefault;
+    public boolean isDefault;
 
-    String name;
+    public String name;
 }
