@@ -36,9 +36,9 @@ public class Utils {
         }
 
         // extract pagination parameters
-        int skip = listResult.getSkip();
-        int limit = listResult.getLimit();
-        int total = listResult.getTotal();
+        int skip = listResult.skip;
+        int limit = listResult.limit;
+        int total = listResult.total;
 
         // calculate next offset
         int nextOffset = skip + limit;

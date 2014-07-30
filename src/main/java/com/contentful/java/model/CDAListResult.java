@@ -9,33 +9,13 @@ import java.util.List;
  * Class representing a collection of items fetched from the CDA.
  */
 public class CDAListResult {
-    Sys sys;
-    int total;
-    int skip;
-    int limit;
+    public Sys sys;
+    public int total;
+    public int skip;
+    public int limit;
 
-    List<CDABaseItem> items;
-    Response response;
-
-    public Sys getSys() {
-        return sys;
-    }
-
-    public int getTotal() {
-        return total;
-    }
-
-    public int getSkip() {
-        return skip;
-    }
-
-    public int getLimit() {
-        return limit;
-    }
-
-    public List<CDABaseItem> getItems() {
-        return items;
-    }
+    public List<CDABaseItem> items;
+    private Response response;
 
     public Response getResponse() {
         return response;

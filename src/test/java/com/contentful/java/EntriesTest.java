@@ -161,9 +161,9 @@ public class EntriesTest extends AbsTestCase {
         assertTrue(result[0] instanceof CDAListResult);
 
         CDAListResult cdaListResult = (CDAListResult) result[0];
-        assertTrue(cdaListResult.getItems().size() > 0);
+        assertTrue(cdaListResult.items.size() > 0);
 
-        CDABaseItem item = cdaListResult.getItems().get(0);
+        CDABaseItem item = cdaListResult.items.get(0);
         assertTrue(item instanceof NyanCat);
 
         NyanCat cat = (NyanCat) item;

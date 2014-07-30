@@ -33,8 +33,8 @@ public class ClientTest extends AbsTestCase {
 
         cdl.await();
 
-        assertTrue(result[0].getItems().size() == 1);
-        NyanCat cat = (NyanCat) result[0].getItems().get(0);
+        assertTrue(result[0].items.size() == 1);
+        NyanCat cat = (NyanCat) result[0].items.get(0);
 
         assertEquals("Nyan Cat", cat.fields.name);
         assertEquals(2, cat.fields.likes.size());

@@ -33,13 +33,13 @@ public class ContentTypeTest extends AbsTestCase {
         cdl.await();
 
         assertNotNull(result[0]);
-        assertEquals(2, result[0].getTotal());
-        assertEquals(0, result[0].getSkip());
-        assertEquals(100, result[0].getLimit());
-        assertEquals(2, result[0].getItems().size());
+        assertEquals(2, result[0].total);
+        assertEquals(0, result[0].skip);
+        assertEquals(100, result[0].limit);
+        assertEquals(2, result[0].items.size());
 
         // 1st item (City)
-        CDAContentType item = (CDAContentType) result[0].getItems().get(0);
+        CDAContentType item = (CDAContentType) result[0].items.get(0);
         assertEquals("City", item.name);
         assertNull(item.description);
         assertEquals("name", item.displayField);
@@ -60,7 +60,7 @@ public class ContentTypeTest extends AbsTestCase {
         assertTrue((Boolean) field.get("required"));
 
         // 2nd item (Cat)
-        item = (CDAContentType) result[0].getItems().get(1);
+        item = (CDAContentType) result[0].items.get(1);
         assertEquals("Cat", item.name);
         assertEquals("Meow!", item.description);
         assertEquals("name", item.displayField);

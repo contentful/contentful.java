@@ -149,7 +149,7 @@ public class GsonConverter implements Converter {
         }
 
         // map regular items as well
-        List<? extends CDABaseItem> items = listResult.getItems();
+        List<? extends CDABaseItem> items = listResult.items;
 
         if (items.size() > 0) {
             for (CDABaseItem item : items) {
@@ -213,7 +213,7 @@ public class GsonConverter implements Converter {
             }
 
             // resolve regular items
-            for (CDABaseItem item : listResult.getItems()) {
+            for (CDABaseItem item : listResult.items) {
                 resolveLinksWithReflection(item, provider);
             }
 
