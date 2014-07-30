@@ -198,6 +198,13 @@ public class CDAClient {
     }
 
     /**
+     * Fetch all available Content Types
+     */
+    public void fetchContentTypes(CDACallback<CDAListResult> callback) {
+        service.fetchContentTypes(this.spaceKey, callback);
+    }
+
+    /**
      * Fetch Space metadata
      */
     public void fetchSpace(CDACallback<CDASpace> callback) {

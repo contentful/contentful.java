@@ -57,6 +57,18 @@ public interface CDAService {
     );
 
     /**
+     * Content Types endpoint.
+     *
+     * @param space    String representing the Space key.
+     * @param callback {@link retrofit.Callback} instance to be used.
+     */
+    @GET("/spaces/{space}/content_types")
+    void fetchContentTypes(
+            @Path("space") String space,
+            Callback<CDAListResult> callback
+    );
+
+    /**
      * Entries endpoint.
      *
      * @param space    String representing the Space key.

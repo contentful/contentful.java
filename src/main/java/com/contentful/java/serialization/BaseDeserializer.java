@@ -1,10 +1,7 @@
 package com.contentful.java.serialization;
 
 import com.contentful.java.lib.Constants;
-import com.contentful.java.model.CDAAsset;
-import com.contentful.java.model.CDABaseItem;
-import com.contentful.java.model.CDAClient;
-import com.contentful.java.model.CDAEntry;
+import com.contentful.java.model.*;
 import com.contentful.java.utils.Utils;
 import com.google.gson.*;
 import org.json.JSONObject;
@@ -64,13 +61,19 @@ public class BaseDeserializer implements JsonDeserializer<CDABaseItem> {
             } else if (Constants.CDAType.Asset.equals(Constants.CDAType.valueOf(linkType))) {
                 result = CDAClient.getGsonWithDateAdapter().fromJson(jsonElement, CDAAsset.class);
             }
+        } else if (Constants.CDAType.ContentType.equals(cdaType)) {
+            result = CDAClient.getGsonWithDateAdapter().fromJson(jsonElement, CDAContentType.class);
+        } else {
+            result = CDAClient.getGsonWithDateAdapter().fromJson(jsonElement, type);
         }
 
         // also set fields map
         if (result != null) {
-            result.fieldsMap = Utils.createFieldsMap(
-                    jsonDeserializationContext,
-                    (JsonObject) jsonElement);
+            if (jsonElement instanceof JsonObject) {
+                result.fieldsMap = Utils.createFieldsMap(
+                        jsonDeserializationContext,
+                        (JsonObject) jsonElement);
+            }
         }
 
         return result;

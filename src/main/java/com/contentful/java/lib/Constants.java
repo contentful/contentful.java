@@ -7,6 +7,7 @@ public class Constants {
     public enum CDAType {
         Array,
         Asset,
+        ContentType,
         Entry,
         Link,
         Space

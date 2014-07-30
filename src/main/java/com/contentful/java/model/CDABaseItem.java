@@ -8,6 +8,5 @@ import java.util.Map;
 @SuppressWarnings("UnusedDeclaration")
 public class CDABaseItem {
     public Sys sys;
-
     public Map<String, ?> fieldsMap;
 }

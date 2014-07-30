@@ -5,6 +5,7 @@ import com.contentful.java.model.CDABaseItem;
 import com.contentful.java.model.CDAEntry;
 import com.contentful.java.model.CDAListResult;
 import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import retrofit.client.Response;
 
@@ -95,8 +96,13 @@ public class Utils {
     public static Map<String, ?> createFieldsMap(JsonDeserializationContext jsonDeserializationContext,
                                                  JsonObject jsonObject) {
 
-        JsonObject fields = jsonObject.getAsJsonObject("fields");
-        return jsonDeserializationContext.deserialize(fields, Map.class);
+        Object fields = jsonObject.get("fields");
+
+        if (fields != null && fields instanceof JsonObject) {
+            return jsonDeserializationContext.deserialize((JsonElement) fields, Map.class);
+        }
+
+        return null;
     }
 
     /**

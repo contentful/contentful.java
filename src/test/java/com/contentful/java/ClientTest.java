@@ -3,7 +3,7 @@ package com.contentful.java;
 import com.contentful.java.lib.MockClient;
 import com.contentful.java.lib.NyanCat;
 import com.contentful.java.lib.TestCallback;
-import com.contentful.java.model.CDAClient;
+import com.contentful.java.lib.TestClientFactory;
 import com.contentful.java.model.CDAListResult;
 import retrofit.client.Response;
 
@@ -18,11 +18,8 @@ public class ClientTest extends AbsTestCase {
         final CountDownLatch cdl = new CountDownLatch(1);
         final CDAListResult[] result = {null};
 
-        CDAClient client = new CDAClient.Builder()
-                .setSpaceKey("NON EXISTING")
-                .setAccessToken("NON EXISTING")
-                .setClient(new MockClient("result_test_client_provider.json"))
-                .build();
+        client = TestClientFactory.newInstanceWithClient(
+                new MockClient("result_test_client_provider.json"));
 
         client.registerCustomClass("cat", NyanCat.class);
 
