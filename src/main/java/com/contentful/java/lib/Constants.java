@@ -4,7 +4,7 @@ package com.contentful.java.lib;
  * Library constants.
  */
 public class Constants {
-    public enum CDAType {
+    public enum CDAResourceType {
         Array,
         Asset,
         ContentType,

@@ -18,8 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Client class.
- * TBD.
+ * The {@link CDAClient} is used to request any information from the server.
+ * A client is associated with exactly one Space, but there is no limit to the concurrent number
+ * of clients existing at any one time.
  */
 @SuppressWarnings("UnusedDeclaration")
 public class CDAClient {
@@ -229,6 +230,56 @@ public class CDAClient {
      */
     public void fetchContentTypeWithIdentifier(String identifier, CDACallback<CDAContentType> callback) {
         service.fetchContentTypeWithIdentifier(this.spaceKey, identifier, callback);
+    }
+
+    /**
+     * Fetch any kind of Resource from the server.
+     * This method can be used in cases where the actual type of Resource to be fetched is determined at runtime.
+     * Allowed Resource types are:
+     * <ul>
+     * <li>{@link Constants.CDAResourceType#Asset}</li>
+     * <li>{@link Constants.CDAResourceType#ContentType}</li>
+     * <li>{@link Constants.CDAResourceType#Entry}</li>
+     * </ul>
+     *
+     * @param resourceType The type of Resource to be fetched.
+     * @param callback     {@link CDACallback} instances}.
+     */
+    public void fetchResourcesOfType(Constants.CDAResourceType resourceType, CDACallback<CDAListResult> callback) {
+        if (Constants.CDAResourceType.Asset.equals(resourceType)) {
+            fetchAssets(callback);
+        } else if (Constants.CDAResourceType.ContentType.equals(resourceType)) {
+            fetchContentTypes(callback);
+        } else if (Constants.CDAResourceType.Entry.equals(resourceType)) {
+            fetchEntries(callback);
+        } else {
+            throw new IllegalArgumentException("Invalid resource type, allowed types are: Asset, ContentType, Entry.");
+        }
+    }
+
+    /**
+     * An extension of {@link #fetchResourcesOfTypeMatching} method.
+     * Allowed Resource types are:
+     * <ul>
+     * <li>{@link Constants.CDAResourceType#Asset}</li>
+     * <li>{@link Constants.CDAResourceType#Entry}</li>
+     * </ul>
+     *
+     * @param resourceType The type of Resource to be fetched.
+     * @param query        {@link java.util.Map} representing the query.
+     * @param callback     {@link CDACallback} instances}.
+     */
+    public void fetchResourcesOfTypeMatching(Constants.CDAResourceType resourceType,
+                                             Map<String, String> query,
+                                             CDACallback<CDAListResult> callback) {
+
+        if (Constants.CDAResourceType.Asset.equals(resourceType)) {
+            fetchAssetsMatching(query, callback);
+        } else if (Constants.CDAResourceType.Entry.equals(resourceType)) {
+            fetchEntriesMatching(query, callback);
+        } else {
+            throw new IllegalArgumentException("Invalid resource type, allowed types are: Asset, Entry.");
+        }
     }
 
     /**

@@ -265,14 +265,14 @@ public class GsonConverter implements Converter {
     private CDABaseItem resolveCDABaseItem(CDABaseItem item, ResolveLinksProvider provider) {
         CDABaseItem resolved = null;
 
-        if (Constants.CDAType.Link.equals(Constants.CDAType.valueOf(item.sys.type))) {
-            Constants.CDAType linkType = Constants.CDAType.valueOf(item.sys.linkType);
+        if (Constants.CDAResourceType.Link.equals(Constants.CDAResourceType.valueOf(item.sys.type))) {
+            Constants.CDAResourceType linkType = Constants.CDAResourceType.valueOf(item.sys.linkType);
 
             String itemId = item.sys.id;
 
-            if (Constants.CDAType.Asset.equals(linkType)) {
+            if (Constants.CDAResourceType.Asset.equals(linkType)) {
                 resolved = provider.getAsset(itemId);
-            } else if (Constants.CDAType.Entry.equals(linkType)) {
+            } else if (Constants.CDAResourceType.Entry.equals(linkType)) {
                 resolved = provider.getEntry(itemId);
             }
         }

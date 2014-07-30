@@ -35,17 +35,17 @@ public class BaseDeserializer implements JsonDeserializer<CDABaseItem> {
 
         // Content Type
         String itemType = getType(jsonObject);
-        Constants.CDAType cdaType = Constants.CDAType.valueOf(itemType);
+        Constants.CDAResourceType cdaType = Constants.CDAResourceType.valueOf(itemType);
 
         // UID
         String id = getId(jsonObject);
 
         CDABaseItem result = null;
 
-        if (Constants.CDAType.Asset.equals(cdaType)) {
+        if (Constants.CDAResourceType.Asset.equals(cdaType)) {
             // Asset
             result = CDAClient.getBaseGson().fromJson(jsonElement, CDAAsset.class);
-        } else if (Constants.CDAType.Entry.equals(cdaType)) {
+        } else if (Constants.CDAResourceType.Entry.equals(cdaType)) {
             // Entry
             Class<?> clazz = client.getCustomTypesMap().get(id);
 
@@ -56,16 +56,16 @@ public class BaseDeserializer implements JsonDeserializer<CDABaseItem> {
                 // custom class registered for this Content Type
                 result = jsonDeserializationContext.deserialize(jsonElement, clazz);
             }
-        } else if (Constants.CDAType.Link.equals(cdaType)) {
+        } else if (Constants.CDAResourceType.Link.equals(cdaType)) {
             // Link
             String linkType = getLinkType(jsonObject);
 
-            if (Constants.CDAType.Entry.equals(Constants.CDAType.valueOf(linkType))) {
+            if (Constants.CDAResourceType.Entry.equals(Constants.CDAResourceType.valueOf(linkType))) {
                 result = CDAClient.getBaseGson().fromJson(jsonElement, CDAEntry.class);
-            } else if (Constants.CDAType.Asset.equals(Constants.CDAType.valueOf(linkType))) {
+            } else if (Constants.CDAResourceType.Asset.equals(Constants.CDAResourceType.valueOf(linkType))) {
                 result = CDAClient.getBaseGson().fromJson(jsonElement, CDAAsset.class);
             }
-        } else if (Constants.CDAType.ContentType.equals(cdaType)) {
+        } else if (Constants.CDAResourceType.ContentType.equals(cdaType)) {
             result = CDAClient.getBaseGson().fromJson(jsonElement, CDAContentType.class);
         } else {
             result = CDAClient.getBaseGson().fromJson(jsonElement, type);
