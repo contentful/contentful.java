@@ -12,6 +12,7 @@ import com.google.gson.GsonBuilder;
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.client.Client;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -43,6 +44,7 @@ public class CDAClient {
      */
     private Gson gson;
     private static Gson gsonWithDateAdapter;
+    private Client.Provider clientProvider;
 
     /**
      * Initialization method - should be called once all configuration properties are set.
@@ -55,12 +57,16 @@ public class CDAClient {
         initGson();
 
         // Create a service
-        service = new RestAdapter.Builder()
+        RestAdapter.Builder builder = new RestAdapter.Builder()
                 .setEndpoint(Constants.SERVER_URI)
                 .setConverter(new GsonConverter(gson))
-                .setRequestInterceptor(getRequestInterceptor())
-                .build()
-                .create(CDAService.class);
+                .setRequestInterceptor(getRequestInterceptor());
+
+        if (clientProvider != null) {
+            builder.setClient(clientProvider);
+        }
+
+        service = builder.build().create(CDAService.class);
     }
 
     /**
@@ -79,6 +85,15 @@ public class CDAClient {
      */
     private void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
+    }
+
+    /**
+     * Sets the HTTP client provider to be used with this client.
+     *
+     * @param clientProvider {@link retrofit.client.Client.Provider} instance.
+     */
+    private void setClientProvider(Client.Provider clientProvider) {
+        this.clientProvider = clientProvider;
     }
 
     /**
@@ -213,25 +228,80 @@ public class CDAClient {
     }
 
     /**
-     * Builder class
+     * Build a new {@link CDAClient}.
+     * <p/>
+     * Calling the following methods is required before calling {@link #build()}:
+     * <ul>
+     * <li>{@link #setSpaceKey(String)}</li>
+     * <li>{@link #setAccessToken(String)}</li>
+     * </ul>
      */
     public static class Builder {
         private String spaceKey;
         private String accessToken;
+        private Client.Provider clientProvider;
 
         /**
          * Sets the space key to be used with this client.
+         *
+         * @param spaceKey String representing the space key.
+         * @return this {@link Builder} instance.
          */
         public Builder setSpaceKey(String spaceKey) {
+            if (spaceKey == null) {
+                throw new NullPointerException("Space key may not be null.");
+            }
+
             this.spaceKey = spaceKey;
             return this;
         }
 
         /**
          * Sets the access token to be used with this client.
+         *
+         * @param accessToken String representing access token to be used when authenticating with the CDA.
+         * @return this {@link Builder} instance.
          */
         public Builder setAccessToken(String accessToken) {
+            if (accessToken == null) {
+                throw new NullPointerException("Access token may not be null.");
+            }
+
             this.accessToken = accessToken;
+            return this;
+        }
+
+        /**
+         * Sets a custom HTTP client to be used for requests.
+         *
+         * @param client {@link retrofit.client.Client} instance.
+         * @return this {@link Builder} instance.
+         */
+        public Builder setClient(final Client client) {
+            if (client == null) {
+                throw new NullPointerException("Client may not be null.");
+            }
+
+            return setClient(new Client.Provider() {
+                @Override
+                public Client get() {
+                    return client;
+                }
+            });
+        }
+
+        /**
+         * Sets a provider of clients to be used for HTTP requests.
+         *
+         * @param clientProvider {@link retrofit.client.Client.Provider} instance.
+         * @return this {@link Builder} instance.
+         */
+        public Builder setClient(Client.Provider clientProvider) {
+            if (clientProvider == null) {
+                throw new NullPointerException("Client provider may not be null.");
+            }
+
+            this.clientProvider = clientProvider;
             return this;
         }
 
@@ -242,6 +312,7 @@ public class CDAClient {
             CDAClient client = new CDAClient();
             client.setSpaceKey(this.spaceKey);
             client.setAccessToken(this.accessToken);
+            client.setClientProvider(this.clientProvider);
             client.init();
 
             return client;
