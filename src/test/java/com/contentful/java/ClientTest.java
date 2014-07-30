@@ -5,7 +5,6 @@ import com.contentful.java.lib.NyanCat;
 import com.contentful.java.lib.TestCallback;
 import com.contentful.java.model.CDAClient;
 import com.contentful.java.model.CDAListResult;
-import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 import java.util.Date;
@@ -15,8 +14,6 @@ import java.util.concurrent.CountDownLatch;
  * Created by tomxor on 30/07/14.
  */
 public class ClientTest extends AbsTestCase {
-    private RetrofitError retrofitError;
-
     public void testClientProvider() throws Exception {
         final CountDownLatch cdl = new CountDownLatch(1);
         final CDAListResult[] result = {null};
