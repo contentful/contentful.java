@@ -3,7 +3,7 @@ package com.contentful.java.model;
 import java.util.Map;
 
 /**
- * Base class for Contentful entities (i.e. Asset, Entry, Space, ...)
+ * Base class for all CDA entities.
  */
 @SuppressWarnings("UnusedDeclaration")
 public class CDABaseItem {

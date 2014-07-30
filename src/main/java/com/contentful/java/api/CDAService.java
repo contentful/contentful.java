@@ -50,7 +50,7 @@ public interface CDAService {
     void fetchAssetWithIdentifier(
             @Path("space") String space,
             @Path("identifier") String identifier,
-            Callback<? extends CDAAsset> callback
+            Callback<CDAAsset> callback
     );
 
     /**
@@ -76,7 +76,7 @@ public interface CDAService {
     void fetchContentTypeWithIdentifier(
             @Path("space") String space,
             @Path("identifier") String identifier,
-            Callback<? extends CDAContentType> callback
+            Callback<CDAContentType> callback
     );
 
     /**

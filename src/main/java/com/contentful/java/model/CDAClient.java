@@ -23,28 +23,18 @@ import java.util.Map;
  * TBD.
  */
 public class CDAClient {
-    /**
-     * Definitions
-     */
-
-    /**
-     * Configuration
-     */
+    // definitions & configuration
     private String accessToken;
     private String spaceKey;
 
-    /**
-     * Members
-     */
+    // members
     private CDAService service;
     private HashMap<String, Class<?>> customTypesMap;
-
-    /**
-     * Gson
-     */
-    private Gson gson;
-    private static Gson gsonWithDateAdapter;
     private Client.Provider clientProvider;
+
+    // gson related
+    private Gson gson;
+    private static Gson baseGson;
 
     /**
      * Initialization method - should be called once all configuration properties are set.
@@ -97,7 +87,7 @@ public class CDAClient {
     }
 
     /**
-     * Initialize Gson instances
+     * Initialize Gson instances.
      */
     private void initGson() {
         gson = new GsonBuilder()
@@ -107,8 +97,8 @@ public class CDAClient {
                 .registerTypeAdapter(Date.class, new DateDeserializer())
                 .create();
 
-        if (gsonWithDateAdapter == null) {
-            gsonWithDateAdapter = new GsonBuilder()
+        if (baseGson == null) {
+            baseGson = new GsonBuilder()
                     .registerTypeAdapter(Date.class, new DateDeserializer())
                     .create();
         }
@@ -117,7 +107,7 @@ public class CDAClient {
     /**
      * Returns a {@link retrofit.RequestInterceptor} instance.
      * This ensures requests will include authentication headers following
-     * the standardized OAuth 2.0 Bearer Token Specification as per the Content Devliery API.
+     * the standardized OAuth 2.0 Bearer Token Specification as per the Content Delivery API.
      */
     private RequestInterceptor getRequestInterceptor() {
         return new RequestInterceptor() {
@@ -138,9 +128,9 @@ public class CDAClient {
      * This allows the integration of custom value objects with convenience accessors, additional
      * conversions or custom functionality so that you can easily build your data model upon Entries.
      *
-     * @param contentTypeIdentifier String representing a specific Content Type by it's UID
+     * @param contentTypeIdentifier {@link java.lang.String} representing a specific Content Type UID.
      * @param clazz                 {@link java.lang.Class} type to instantiate when creating objects of
-     *                              the specified Content Type
+     *                              the specified Content Type.
      */
     public void registerCustomClass(String contentTypeIdentifier, Class<?> clazz) {
         customTypesMap.put(contentTypeIdentifier, clazz);
@@ -155,64 +145,97 @@ public class CDAClient {
         return customTypesMap;
     }
 
+
     /**
-     * Fetch Assets
+     * Fetch Assets.
+     *
+     * @param callback {@link CDACallback} instance.
+     * @see {@link CDAService#fetchAssets}.
      */
     public void fetchAssets(CDACallback<CDAListResult> callback) {
         service.fetchAssets(this.spaceKey, callback);
     }
 
     /**
-     * Fetch Assets matching a specific query
+     * Fetch Assets matching a specific query.
+     *
+     * @param query    {@link java.util.Map} representing the query.
+     * @param callback {@link CDACallback} instance.
+     * @see {@link CDAService#fetchAssetsMatching}.
      */
     public void fetchAssetsMatching(Map<String, String> query, CDACallback<CDAListResult> callback) {
         service.fetchAssetsMatching(this.spaceKey, query, callback);
     }
 
     /**
-     * Fetch a single Asset with identifier
+     * Fetch a single Asset with identifier.
+     *
+     * @param identifier {@link java.lang.String} representing the Asset UID.
+     * @param callback   {@link CDACallback} instance.
+     * @see {@link CDAService#fetchAssetsMatching}.
      */
-    public void fetchAssetWithIdentifier(String identifier, CDACallback<? extends CDAAsset> callback) {
+    public void fetchAssetWithIdentifier(String identifier, CDACallback<CDAAsset> callback) {
         service.fetchAssetWithIdentifier(this.spaceKey, identifier, callback);
     }
 
     /**
-     * Fetch Entries
+     * Fetch Entries.
+     *
+     * @param callback {@link CDACallback} instance.
+     * @see {@link CDAService#fetchEntries}.
      */
     public void fetchEntries(CDACallback<CDAListResult> callback) {
         service.fetchEntries(this.spaceKey, callback);
     }
 
     /**
-     * Fetch Entries matching a specific query
+     * Fetch Entries matching a specific query.
+     *
+     * @param query    {@link java.util.Map} representing the query.
+     * @param callback {@link CDACallback} instance.
+     * @see {@link CDAService#fetchAssetsMatching}.
      */
     public void fetchEntriesMatching(Map<String, String> query, CDACallback<CDAListResult> callback) {
         service.fetchEntriesMatching(this.spaceKey, query, callback);
     }
 
     /**
-     * Fetch a single Entry with identifier
+     * Fetch a single Entry with identifier.
+     *
+     * @param identifier {@link java.lang.String} representing the Entry UID.
+     * @param callback   {@link CDACallback} instance.
+     * @see {@link CDAService#fetchEntryWithIdentifier}.
      */
     public void fetchEntryWithIdentifier(String identifier, CDACallback<? extends CDAEntry> callback) {
         service.fetchEntryWithIdentifier(this.spaceKey, identifier, callback);
     }
 
     /**
-     * Fetch all available Content Types
+     * Fetch all Content Types from a Space.
+     *
+     * @param callback {@link CDACallback} instance.
+     * @see {@link CDAService#fetchContentTypes}.
      */
     public void fetchContentTypes(CDACallback<CDAListResult> callback) {
         service.fetchContentTypes(this.spaceKey, callback);
     }
 
     /**
-     * Fetch Content Type with identifier
+     * Fetch a single Content Type with identifier.
+     *
+     * @param identifier {@link java.lang.String} representing the Content Type UID.
+     * @param callback   {@link CDACallback} instance.
+     * @see {@link CDAService#fetchContentTypeWithIdentifier}.
      */
-    public void fetchContentTypeWithIdentifier(String identifier, CDACallback<? extends CDAContentType> callback) {
+    public void fetchContentTypeWithIdentifier(String identifier, CDACallback<CDAContentType> callback) {
         service.fetchContentTypeWithIdentifier(this.spaceKey, identifier, callback);
     }
 
     /**
-     * Fetch Space metadata
+     * Fetch Space.
+     *
+     * @param callback {@link CDACallback} instance.
+     * @see {@link CDAService#fetchSpace}.
      */
     public void fetchSpace(CDACallback<CDASpace> callback) {
         service.fetchSpace(this.spaceKey, callback);
@@ -237,8 +260,8 @@ public class CDAClient {
      *
      * @return {@link com.google.gson.Gson} instance.
      */
-    public static Gson getGsonWithDateAdapter() {
-        return gsonWithDateAdapter;
+    public static Gson getBaseGson() {
+        return baseGson;
     }
 
     /**

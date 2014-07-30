@@ -40,14 +40,14 @@ public class BaseDeserializer implements JsonDeserializer<CDABaseItem> {
 
         if (Constants.CDAType.Asset.equals(cdaType)) {
             // Asset
-            result = CDAClient.getGsonWithDateAdapter().fromJson(jsonElement, CDAAsset.class);
+            result = CDAClient.getBaseGson().fromJson(jsonElement, CDAAsset.class);
         } else if (Constants.CDAType.Entry.equals(cdaType)) {
             // Entry
             Class<?> clazz = client.getCustomTypesMap().get(id);
 
             if (clazz == null) {
                 // no custom class registered for this Content Type
-                result = CDAClient.getGsonWithDateAdapter().fromJson(jsonElement, CDAEntry.class);
+                result = CDAClient.getBaseGson().fromJson(jsonElement, CDAEntry.class);
             } else {
                 // custom class registered for this Content Type
                 result = jsonDeserializationContext.deserialize(jsonElement, clazz);
@@ -57,14 +57,14 @@ public class BaseDeserializer implements JsonDeserializer<CDABaseItem> {
             String linkType = getLinkType(jsonObject);
 
             if (Constants.CDAType.Entry.equals(Constants.CDAType.valueOf(linkType))) {
-                result = CDAClient.getGsonWithDateAdapter().fromJson(jsonElement, CDAEntry.class);
+                result = CDAClient.getBaseGson().fromJson(jsonElement, CDAEntry.class);
             } else if (Constants.CDAType.Asset.equals(Constants.CDAType.valueOf(linkType))) {
-                result = CDAClient.getGsonWithDateAdapter().fromJson(jsonElement, CDAAsset.class);
+                result = CDAClient.getBaseGson().fromJson(jsonElement, CDAAsset.class);
             }
         } else if (Constants.CDAType.ContentType.equals(cdaType)) {
-            result = CDAClient.getGsonWithDateAdapter().fromJson(jsonElement, CDAContentType.class);
+            result = CDAClient.getBaseGson().fromJson(jsonElement, CDAContentType.class);
         } else {
-            result = CDAClient.getGsonWithDateAdapter().fromJson(jsonElement, type);
+            result = CDAClient.getBaseGson().fromJson(jsonElement, type);
         }
 
         // also set fields map
