@@ -1,10 +1,10 @@
 package com.contentful.java;
 
+import com.contentful.java.api.CDAClient;
 import com.contentful.java.lib.NyanCat;
 import com.contentful.java.lib.TestCallback;
 import com.contentful.java.lib.TestClientFactory;
 import com.contentful.java.model.CDABaseItem;
-import com.contentful.java.model.CDAClient;
 import com.contentful.java.model.CDAEntry;
 import com.contentful.java.model.CDAListResult;
 import retrofit.RetrofitError;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * Test of all Entries fetching methods via {@link com.contentful.java.model.CDAClient}.
+ * Test of all Entries fetching methods via {@link CDAClient}.
  */
 public class EntriesTest extends AbsTestCase {
     private RetrofitError retrofitError;

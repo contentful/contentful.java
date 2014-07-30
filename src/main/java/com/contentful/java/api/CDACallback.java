@@ -7,7 +7,7 @@ import retrofit.client.Response;
 
 /**
  * A new instance of this class should be passed as the callback parameter for any of the
- * {@link com.contentful.java.model.CDAClient#} asynchronous methods.
+ * {@link CDAClient} asynchronous methods.
  * <p/>
  * {@link #onSuccess(Object, retrofit.client.Response)} has to be implemented by the creator and hence
  * is declared abstract.
@@ -17,7 +17,7 @@ import retrofit.client.Response;
  *
  * @param <T> The type of {@link java.lang.Object} expected as a result.
  *            For methods that return a collection of items ot would be best to
- *            provide {@link com.contentful.java.model.CDAListResult} as the type.
+ *            provide {@link CDAListResult} as the type.
  */
 public abstract class CDACallback<T> implements Callback<T> {
     boolean cancelled;

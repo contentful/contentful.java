@@ -19,9 +19,9 @@ import java.util.Map;
 public class Utils {
     /**
      * Populates a {@link java.util.Map} object with items to fetch the next
-     * batch of items from a previous {@link com.contentful.java.model.CDAListResult} item.
+     * batch of items from a previous {@link CDAListResult} item.
      *
-     * @param listResult {@link com.contentful.java.model.CDAListResult} instance which was successfully executed,
+     * @param listResult {@link CDAListResult} instance which was successfully executed,
      *                   meaning {@link com.contentful.java.api.CDACallback#onSuccess} was
      *                   called.
      * @return {@link java.util.Map} instance containing original query string parameters

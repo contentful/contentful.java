@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * Test of all Entries fetching methods via {@link com.contentful.java.model.CDAClient}.
+ * Test of all Entries fetching methods via {@link com.contentful.java.api.CDAClient}.
  */
 public class AssetsTest extends AbsTestCase {
     private RetrofitError retrofitError;

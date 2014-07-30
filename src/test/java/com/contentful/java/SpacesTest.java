@@ -1,9 +1,9 @@
 package com.contentful.java;
 
+import com.contentful.java.api.CDAClient;
 import com.contentful.java.lib.MockClient;
 import com.contentful.java.lib.TestCallback;
 import com.contentful.java.lib.TestClientFactory;
-import com.contentful.java.model.CDAClient;
 import com.contentful.java.model.CDASpace;
 import com.contentful.java.model.Locale;
 import retrofit.client.Response;
@@ -11,7 +11,7 @@ import retrofit.client.Response;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * Created by tomxor on 30/07/14.
+ * Test for fetching a Space.
  */
 public class SpacesTest extends AbsTestCase {
     public void testFetchSpace() throws Exception {

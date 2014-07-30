@@ -1,9 +1,9 @@
 package com.contentful.java;
 
+import com.contentful.java.api.CDAClient;
 import com.contentful.java.lib.MockClient;
 import com.contentful.java.lib.TestCallback;
 import com.contentful.java.lib.TestClientFactory;
-import com.contentful.java.model.CDAClient;
 import com.contentful.java.model.CDAContentType;
 import com.contentful.java.model.CDAListResult;
 import retrofit.client.Response;
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * Created by tomxor on 30/07/14.
+ * Set of tests for fetching Content Types.
  */
 public class ContentTypeTest extends AbsTestCase {
     public void testFetchContentTypes() throws Exception {

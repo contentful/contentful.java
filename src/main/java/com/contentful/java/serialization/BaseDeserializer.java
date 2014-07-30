@@ -1,7 +1,11 @@
 package com.contentful.java.serialization;
 
+import com.contentful.java.api.CDAClient;
 import com.contentful.java.lib.Constants;
-import com.contentful.java.model.*;
+import com.contentful.java.model.CDAAsset;
+import com.contentful.java.model.CDABaseItem;
+import com.contentful.java.model.CDAContentType;
+import com.contentful.java.model.CDAEntry;
 import com.contentful.java.utils.Utils;
 import com.google.gson.*;
 import org.json.JSONObject;
@@ -12,7 +16,7 @@ import java.lang.reflect.Type;
  * A custom Deserializer to be used with Gson.
  * This class will attempt to de-serialize JSON strings to their corresponding class types
  * as defined on the SDK or configured by the user through the
- * {@link CDAClient#registerCustomClass(String, Class)} method.
+ * {@link com.contentful.java.api.CDAClient#registerCustomClass(String, Class)} method.
  */
 public class BaseDeserializer implements JsonDeserializer<CDABaseItem> {
     private CDAClient client;

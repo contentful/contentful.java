@@ -1,10 +1,10 @@
 package com.contentful.java.lib;
 
-import com.contentful.java.model.CDAClient;
+import com.contentful.java.api.CDAClient;
 import retrofit.client.Client;
 
 /**
- * Factory for creating {@link CDAClient} instances for unit tests.
+ * Factory for creating {@link com.contentful.java.api.CDAClient} instances for unit tests.
  */
 public class TestClientFactory {
     private static CDAClient.Builder getBaseInstance() {

@@ -1,7 +1,7 @@
 package com.contentful.java;
 
+import com.contentful.java.api.CDAClient;
 import com.contentful.java.lib.TestClientFactory;
-import com.contentful.java.model.CDAClient;
 import junit.framework.TestCase;
 
 /**
