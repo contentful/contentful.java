@@ -1,4 +1,4 @@
-package com.contentful.java;
+package com.contentful.java.lib;
 
 /**
  * Library constants.

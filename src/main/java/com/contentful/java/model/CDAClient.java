@@ -1,8 +1,8 @@
 package com.contentful.java.model;
 
-import com.contentful.java.Constants;
 import com.contentful.java.api.CDACallback;
 import com.contentful.java.api.CDAService;
+import com.contentful.java.lib.Constants;
 import com.contentful.java.serialization.BaseDeserializer;
 import com.contentful.java.serialization.DateDeserializer;
 import com.contentful.java.serialization.GsonConverter;
@@ -87,6 +87,7 @@ public class CDAClient {
     private void initGson() {
         gson = new GsonBuilder()
                 .registerTypeAdapter(CDABaseItem.class, new BaseDeserializer(CDAClient.this))
+                .registerTypeAdapter(CDAAsset.class, new BaseDeserializer(CDAClient.this))
                 .registerTypeAdapter(CDAEntry.class, new BaseDeserializer(CDAClient.this))
                 .registerTypeAdapter(Date.class, new DateDeserializer())
                 .create();

@@ -1,7 +1,7 @@
 package com.contentful.java.serialization;
 
-import com.contentful.java.Constants;
 import com.contentful.java.annotations.CDAFields;
+import com.contentful.java.lib.Constants;
 import com.contentful.java.model.CDAAsset;
 import com.contentful.java.model.CDABaseItem;
 import com.contentful.java.model.CDAEntry;
@@ -64,10 +64,8 @@ public class GsonConverter implements Converter {
             // parse the stream using Gson
             Object result = gson.fromJson(isr, type);
 
-            // resolve links for list results
-            if (result instanceof CDAListResult) {
-                resolveLinksForResult((CDAListResult) result);
-            }
+            // do any additional processing of the result
+            finalizeResult(result);
 
             return result;
         } catch (IOException e) {
@@ -301,6 +299,13 @@ public class GsonConverter implements Converter {
                     list.set(i, resolved); // todo tom make sure this is safe
                 }
             }
+        }
+    }
+
+    private void finalizeResult(Object result) {
+        // resolve links for list results
+        if (result instanceof CDAListResult) {
+            resolveLinksForResult((CDAListResult) result);
         }
     }
 

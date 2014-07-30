@@ -28,12 +28,16 @@ public abstract class CDACallback<T> implements Callback<T> {
             return;
         }
 
+        finalizeResult(t, response);
+
+        onSuccess(t, response);
+    }
+
+    private void finalizeResult(T t, Response response) {
         if (t instanceof CDAListResult) {
             // keep the original response for pagination
             ((CDAListResult) t).setResponse(response);
         }
-
-        onSuccess(t, response);
     }
 
     @Override
