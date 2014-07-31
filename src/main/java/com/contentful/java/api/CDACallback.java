@@ -1,26 +1,25 @@
 package com.contentful.java.api;
 
-import com.contentful.java.model.CDAListResult;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * A new instance of this class should be passed as the callback parameter for any of the
- * {@link CDAClient} asynchronous methods.
+ * A new instance of this class should be passed as the callback parameter for all asynchronous methods
+ * of the {@link CDAClient} class.
  * <p/>
- * {@link #onSuccess(Object, retrofit.client.Response)} has to be implemented by the creator and hence
- * is declared abstract.
+ * Implement the {@link #onSuccess} method for cases where the request was successful, the result object
+ * should be delivered as a parameter.
  * <p/>
- * You can also override {@link #onFailure(retrofit.RetrofitError)} and provide your own implementation
- * for handling errors.
+ * It is also possible to override {@link #onFailure} and provide an implementation for handling errors.
  *
- * @param <T> The type of {@link java.lang.Object} expected as a result.
- *            For methods that return a collection of items ot would be best to
- *            provide {@link CDAListResult} as the type.
+ * @param <T> The type of object to be expected as a result.
+ *            For methods that return a collection of items it is required to
+ *            provide {@link com.contentful.java.model.CDAArray} as the type.
  */
+@SuppressWarnings("UnusedDeclaration")
 public abstract class CDACallback<T> implements Callback<T> {
-    boolean cancelled;
+    private boolean cancelled;
 
     @Override
     public final void success(T t, Response response) {
@@ -28,16 +27,7 @@ public abstract class CDACallback<T> implements Callback<T> {
             return;
         }
 
-        finalizeResult(t, response);
-
         onSuccess(t, response);
-    }
-
-    private void finalizeResult(T t, Response response) {
-        if (t instanceof CDAListResult) {
-            // keep the original response for pagination
-            ((CDAListResult) t).setResponse(response);
-        }
     }
 
     @Override
@@ -53,7 +43,8 @@ public abstract class CDACallback<T> implements Callback<T> {
      * Callback to be invoked in case the request was successful.
      *
      * @param t        Type of {@link java.lang.Object} to be expected as a result.
-     *                 Use {@link com.contentful.java.model.CDAListResult} for collections.
+     *                 Use {@link com.contentful.java.model.CDAArray} for requests that
+     *                 return multiple items.
      * @param response {@link retrofit.client.Response} instance.
      */
     protected abstract void onSuccess(T t, Response response);
@@ -64,16 +55,25 @@ public abstract class CDACallback<T> implements Callback<T> {
      * @param retrofitError {@link retrofit.RetrofitError} instance.
      */
     protected void onFailure(RetrofitError retrofitError) {
-        // do nothing
+        // Do nothing.
     }
 
     /**
-     * Cancels this {@link CDACallback}.
-     * Calling this method will result in any of the callbacks ({@link #onSuccess} / {@link #onFailure}
-     * not being called.
+     * Cancels this callback.
+     * Calling this method will result in any of the callbacks methods
+     * ({@link #onSuccess} / {@link #onFailure} not being called, this action cannot be
+     * reversed.
      */
-    @SuppressWarnings("UnusedDeclaration")
-    public void cancel() {
+    public synchronized void cancel() {
         this.cancelled = true;
+    }
+
+    /**
+     * Check if this callback instance was cancelled using the {@link #cancel} method.
+     *
+     * @return Boolean indicating whether or not this callback was cancelled.
+     */
+    public synchronized boolean isCancelled() {
+        return cancelled;
     }
 }

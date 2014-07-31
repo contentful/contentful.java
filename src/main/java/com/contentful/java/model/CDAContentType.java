@@ -2,18 +2,33 @@ package com.contentful.java.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
 import java.util.Map;
 
 /**
- * Class representing a single Content Type.
+ * Class representing a single Content Type resource.
  */
-@SuppressWarnings("UnusedDeclaration")
-public class CDAContentType extends CDABaseItem {
-    public String name;
-    public String description;
-    public String displayField;
+public class CDAContentType extends ResourceWithList<Map> {
+    String displayField;
+    String name;
 
-    @SerializedName("fields")
-    public List<Map<String, ?>> fieldsList;
+    @SerializedName("description")
+    String userDescription;
+
+    public CDAContentType(String displayField, String name, String userDescription) {
+        this.displayField = displayField;
+        this.name = name;
+        this.userDescription = userDescription;
+    }
+
+    public String getDisplayField() {
+        return displayField;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getUserDescription() {
+        return userDescription;
+    }
 }

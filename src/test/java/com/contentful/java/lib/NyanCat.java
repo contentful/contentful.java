@@ -1,25 +1,34 @@
 package com.contentful.java.lib;
 
-import com.contentful.java.annotations.CDAFields;
 import com.contentful.java.model.CDAEntry;
-import com.contentful.java.model.LocalizedString;
 
-import java.util.Date;
 import java.util.List;
 
 /**
  * Sample model class for CDA Entry.
  */
 public class NyanCat extends CDAEntry {
-    public static class Fields {
-        public String name;
-        public List<LocalizedString> likes;
-        public String color;
-        public Date birthday;
-        public Integer lives;
-        public NyanCat bestFriend;
+    public String getName() {
+        return (String) getFields().get("name");
     }
 
-    @CDAFields
-    public Fields fields;
+    public List<String> getLikes() {
+        return (List<String>) getFields().get("likes");
+    }
+
+    public String getColor() {
+        return (String) getFields().get("color");
+    }
+
+    public String getBirthday() {
+        return (String) getFields().get("birthday");
+    }
+
+    public Integer getLives() {
+        return ((Double) getFields().get("lives")).intValue();
+    }
+
+    public NyanCat getBestFriend() {
+        return (NyanCat) getFields().get("bestFriend");
+    }
 }

@@ -1,18 +1,51 @@
 package com.contentful.java.model;
 
-import com.contentful.java.annotations.CDAFields;
-
 /**
- * Class representing a single Asset.
+ * Class representing a single Asset resource.
  */
-@SuppressWarnings("UnusedDeclaration")
-public class CDAAsset extends CDABaseItem {
-    public static class Fields {
-        public LocalizedString title;
-        public LocalizedString description;
-        public CDAFile file;
+public class CDAAsset extends ResourceWithMap {
+    // Asset URL
+    String url;
+
+    // MIME type
+    String mimeType;
+
+    /**
+     * Gets the URL of this Asset.
+     *
+     * @return String representing the URL.
+     */
+    public String getUrl() {
+        return url;
     }
 
-    @CDAFields
-    public Fields fields;
+    /**
+     * Sets the URL of this Asset.
+     *
+     * @param url String representing the URL.
+     */
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    /**
+     * Gets the MIME type of this Asset.
+     *
+     * @return String representing the MIME type.
+     */
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    /**
+     * Sets the MIME type of this Asset.
+     *
+     * @param mimeType
+     */
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+
+    // todo size
+    // todo isImage
 }

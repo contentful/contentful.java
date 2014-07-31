@@ -1,21 +1,24 @@
 package com.contentful.java.api;
 
-import com.contentful.java.lib.Constants;
 import com.contentful.java.model.*;
-import com.contentful.java.serialization.BaseDeserializer;
-import com.contentful.java.serialization.DateDeserializer;
-import com.contentful.java.serialization.GsonConverter;
-import com.contentful.java.serialization.StringDeserializer;
+import com.contentful.java.serialization.ResourceTypeAdapter;
 import com.contentful.java.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
 import retrofit.client.Client;
+import retrofit.client.Response;
+import retrofit.converter.GsonConverter;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+
+import static com.contentful.java.lib.Constants.*;
 
 /**
  * The {@link CDAClient} is used to request any information from the server.
@@ -23,19 +26,22 @@ import java.util.Map;
  * of clients existing at any one time.
  */
 @SuppressWarnings("UnusedDeclaration")
-public class CDAClient {
-    // definitions & configuration
+public class CDAClient implements SpaceReadyInterface {
+    // Definitions & Configuration
     private String accessToken;
     private String spaceKey;
 
-    // members
+    // Members
     private CDAService service;
     private HashMap<String, Class<?>> customTypesMap;
     private Client.Provider clientProvider;
+    private CDASpace space;
 
-    // gson related
+    // Gson
     private Gson gson;
-    private static Gson baseGson;
+
+    // Executors
+    private ExecutorService executorService;
 
     /**
      * Initialization method - should be called once all configuration properties are set.
@@ -49,7 +55,7 @@ public class CDAClient {
 
         // Create a service
         RestAdapter.Builder builder = new RestAdapter.Builder()
-                .setEndpoint(Constants.SERVER_URI)
+                .setEndpoint(SERVER_URI)
                 .setConverter(new GsonConverter(gson))
                 .setRequestInterceptor(getRequestInterceptor());
 
@@ -58,53 +64,32 @@ public class CDAClient {
         }
 
         service = builder.build().create(CDAService.class);
+
+        // Init ExecutorService (will be used for parsing of array results and spaces synchronization).
+        executorService = Executors.newCachedThreadPool(new ThreadFactory() {
+            @Override
+            public Thread newThread(final Runnable r) {
+                return new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+                        r.run();
+                    }
+                }, IDLE_THREAD_NAME);
+            }
+        });
     }
 
     /**
-     * Sets the space key to be used with this client.
-     *
-     * @param spaceKey String representing the Space UID.
-     */
-    private void setSpaceKey(String spaceKey) {
-        this.spaceKey = spaceKey;
-    }
-
-    /**
-     * Sets the access token to be used with this client.
-     *
-     * @param accessToken String representing an access token created using the Contentful app.
-     */
-    private void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    /**
-     * Sets the HTTP client provider to be used with this client.
-     *
-     * @param clientProvider {@link retrofit.client.Client.Provider} instance.
-     */
-    private void setClientProvider(Client.Provider clientProvider) {
-        this.clientProvider = clientProvider;
-    }
-
-    /**
-     * Initialize Gson instances.
+     * Initialize Gson instance.
      */
     private void initGson() {
         gson = new GsonBuilder()
-                .registerTypeAdapter(CDABaseItem.class, new BaseDeserializer(CDAClient.this))
-                .registerTypeAdapter(CDAAsset.class, new BaseDeserializer(CDAClient.this))
-                .registerTypeAdapter(CDAEntry.class, new BaseDeserializer(CDAClient.this))
-                .registerTypeAdapter(LocalizedString.class, new StringDeserializer())
-                .registerTypeAdapter(Date.class, new DateDeserializer())
+                .registerTypeAdapter(CDAResource.class, new ResourceTypeAdapter(CDAClient.this))
+                .registerTypeAdapter(CDAEntry.class, new ResourceTypeAdapter(CDAClient.this))
+                .registerTypeAdapter(CDAAsset.class, new ResourceTypeAdapter(CDAClient.this))
+                .registerTypeAdapter(CDAContentType.class, new ResourceTypeAdapter(CDAClient.this))
                 .create();
-
-        if (baseGson == null) {
-            baseGson = new GsonBuilder()
-                    .registerTypeAdapter(LocalizedString.class, new StringDeserializer())
-                    .registerTypeAdapter(Date.class, new DateDeserializer())
-                    .create();
-        }
     }
 
     /**
@@ -117,37 +102,37 @@ public class CDAClient {
             @Override
             public void intercept(RequestFacade requestFacade) {
                 if (accessToken != null && !accessToken.isEmpty()) {
-                    requestFacade.addHeader(Constants.HTTP_HEADER_AUTH,
-                            String.format(Constants.HTTP_OAUTH_PATTERN, accessToken));
+                    requestFacade.addHeader(HTTP_HEADER_AUTH,
+                            String.format(HTTP_OAUTH_PATTERN, accessToken));
                 }
             }
         };
     }
 
     /**
-     * This method allows registering of custom {@link CDAEntry} subclasses when Entries of a specific
-     * Content Type are retrieved from the server.
+     * Use this method in order to register custom {@link CDAEntry} subclasses to be instantiated by this client
+     * when Entries of a specific Content Type are retrieved from the server.
      * <p/>
      * This allows the integration of custom value objects with convenience accessors, additional
      * conversions or custom functionality so that you can easily build your data model upon Entries.
      *
-     * @param contentTypeIdentifier {@link java.lang.String} representing a specific Content Type UID.
-     * @param clazz                 {@link java.lang.Class} type to instantiate when creating objects of
-     *                              the specified Content Type.
+     * @param contentTypeIdentifier String representing a specific Content Type UID.
+     * @param clazz                 Class type to instantiate when creating objects of
+     *                              the specified Content Type (i.e. "SomeCustomEntry.class").
      */
     public void registerCustomClass(String contentTypeIdentifier, Class<?> clazz) {
         customTypesMap.put(contentTypeIdentifier, clazz);
     }
 
     /**
-     * Get a mapping of Contentful UIDs to {@link java.lang.Class} types.
+     * Get a mapping of Content Type UIDs to custom class types as registered
+     * using the {@link #registerCustomClass} method.
      *
-     * @return {@link java.util.Map} instance.
+     * @return Map instance.
      */
     public HashMap<String, Class<?>> getCustomTypesMap() {
         return customTypesMap;
     }
-
 
     /**
      * Fetch Assets.
@@ -155,19 +140,19 @@ public class CDAClient {
      * @param callback {@link CDACallback} instance.
      * @see {@link CDAService#fetchAssets}.
      */
-    public void fetchAssets(CDACallback<CDAListResult> callback) {
-        service.fetchAssets(this.spaceKey, callback);
+    public void fetchAssets(CDACallback<CDAArray> callback) {
+        fetchArrayWithPathSegment(PATH_ASSETS, null, callback);
     }
 
     /**
      * Fetch Assets matching a specific query.
      *
-     * @param query    {@link java.util.Map} representing the query.
+     * @param query    Map representing the query.
      * @param callback {@link CDACallback} instance.
      * @see {@link CDAService#fetchAssetsMatching}.
      */
-    public void fetchAssetsMatching(Map<String, String> query, CDACallback<CDAListResult> callback) {
-        service.fetchAssetsMatching(this.spaceKey, query, callback);
+    public void fetchAssetsMatching(Map<String, String> query, CDACallback<CDAArray> callback) {
+        fetchArrayWithPathSegment(PATH_ASSETS, query, callback);
     }
 
     /**
@@ -177,8 +162,13 @@ public class CDAClient {
      * @param callback   {@link CDACallback} instance.
      * @see {@link CDAService#fetchAssetsMatching}.
      */
-    public void fetchAssetWithIdentifier(String identifier, CDACallback<CDAAsset> callback) {
-        service.fetchAssetWithIdentifier(this.spaceKey, identifier, callback);
+    public void fetchAssetWithIdentifier(final String identifier, final CDACallback<CDAAsset> callback) {
+        ensureSpace(new EnsureSpaceCallback(this, callback) {
+            @Override
+            void onResultSuccess() {
+                service.fetchAssetWithIdentifier(CDAClient.this.spaceKey, identifier, callback);
+            }
+        });
     }
 
     /**
@@ -187,30 +177,39 @@ public class CDAClient {
      * @param callback {@link CDACallback} instance.
      * @see {@link CDAService#fetchEntries}.
      */
-    public void fetchEntries(CDACallback<CDAListResult> callback) {
-        service.fetchEntries(this.spaceKey, callback);
+    public void fetchEntries(CDACallback<CDAArray> callback) {
+        fetchArrayWithPathSegment(PATH_ENTRIES, null, callback);
     }
 
     /**
      * Fetch Entries matching a specific query.
      *
-     * @param query    {@link java.util.Map} representing the query.
+     * @param query    Map representing the query.
      * @param callback {@link CDACallback} instance.
      * @see {@link CDAService#fetchAssetsMatching}.
      */
-    public void fetchEntriesMatching(Map<String, String> query, CDACallback<CDAListResult> callback) {
-        service.fetchEntriesMatching(this.spaceKey, query, callback);
+    public void fetchEntriesMatching(Map<String, String> query, CDACallback<CDAArray> callback) {
+        fetchArrayWithPathSegment(PATH_ENTRIES, query, callback);
     }
 
     /**
      * Fetch a single Entry with identifier.
+     * <p/>
+     * When expecting result of a custom type which was previously registered using the {@link #registerCustomClass}
+     * method, the type of the expected object can also be specified as the generic type of the
+     * {@link CDACallback} instance (i.e. "new CDACallback<SomeCustomEntry>(){...}").
      *
-     * @param identifier {@link java.lang.String} representing the Entry UID.
+     * @param identifier String representing the UID of the Entry.
      * @param callback   {@link CDACallback} instance.
      * @see {@link CDAService#fetchEntryWithIdentifier}.
      */
-    public void fetchEntryWithIdentifier(String identifier, CDACallback<? extends CDAEntry> callback) {
-        service.fetchEntryWithIdentifier(this.spaceKey, identifier, callback);
+    public void fetchEntryWithIdentifier(final String identifier, final CDACallback<? extends CDAEntry> callback) {
+        ensureSpace(new EnsureSpaceCallback(this, callback) {
+            @Override
+            void onResultSuccess() {
+                service.fetchEntryWithIdentifier(CDAClient.this.spaceKey, identifier, callback);
+            }
+        });
     }
 
     /**
@@ -219,40 +218,54 @@ public class CDAClient {
      * @param callback {@link CDACallback} instance.
      * @see {@link CDAService#fetchContentTypes}.
      */
-    public void fetchContentTypes(CDACallback<CDAListResult> callback) {
-        service.fetchContentTypes(this.spaceKey, callback);
+    public void fetchContentTypes(final CDACallback<CDAArray> callback) {
+        ensureSpace(new EnsureSpaceCallback(this, callback) {
+            @Override
+            void onResultSuccess() {
+                service.fetchContentTypes(CDAClient.this.spaceKey, callback);
+            }
+        });
     }
 
     /**
      * Fetch a single Content Type with identifier.
      *
-     * @param identifier {@link java.lang.String} representing the Content Type UID.
+     * @param identifier String representing the Content Type UID.
      * @param callback   {@link CDACallback} instance.
      * @see {@link CDAService#fetchContentTypeWithIdentifier}.
      */
-    public void fetchContentTypeWithIdentifier(String identifier, CDACallback<CDAContentType> callback) {
-        service.fetchContentTypeWithIdentifier(this.spaceKey, identifier, callback);
+    public void fetchContentTypeWithIdentifier(final String identifier, final CDACallback<CDAContentType> callback) {
+        ensureSpace(new EnsureSpaceCallback(this, callback) {
+            @Override
+            void onResultSuccess() {
+                service.fetchContentTypeWithIdentifier(CDAClient.this.spaceKey, identifier, callback);
+            }
+        });
     }
 
     /**
      * Fetch any kind of Resource from the server.
      * This method can be used in cases where the actual type of Resource to be fetched is determined at runtime.
+     * <p/>
      * Allowed Resource types are:
      * <ul>
-     * <li>{@link Constants.CDAResourceType#Asset}</li>
-     * <li>{@link Constants.CDAResourceType#ContentType}</li>
-     * <li>{@link Constants.CDAResourceType#Entry}</li>
+     * <li>{@link com.contentful.java.lib.Constants.CDAResourceType#Asset}</li>
+     * <li>{@link com.contentful.java.lib.Constants.CDAResourceType#ContentType}</li>
+     * <li>{@link com.contentful.java.lib.Constants.CDAResourceType#Entry}</li>
      * </ul>
+     * <p/>
+     * Note: This method <b>will throw an {@link java.lang.IllegalArgumentException}</b> in cases where an
+     * invalid resource type is specified.
      *
      * @param resourceType The type of Resource to be fetched.
-     * @param callback     {@link CDACallback} instances}.
+     * @param callback     {@link CDACallback} instance.
      */
-    public void fetchResourcesOfType(Constants.CDAResourceType resourceType, CDACallback<CDAListResult> callback) {
-        if (Constants.CDAResourceType.Asset.equals(resourceType)) {
+    public void fetchResourcesOfType(CDAResourceType resourceType, CDACallback<CDAArray> callback) {
+        if (CDAResourceType.Asset.equals(resourceType)) {
             fetchAssets(callback);
-        } else if (Constants.CDAResourceType.ContentType.equals(resourceType)) {
+        } else if (CDAResourceType.ContentType.equals(resourceType)) {
             fetchContentTypes(callback);
-        } else if (Constants.CDAResourceType.Entry.equals(resourceType)) {
+        } else if (CDAResourceType.Entry.equals(resourceType)) {
             fetchEntries(callback);
         } else {
             throw new IllegalArgumentException("Invalid resource type, allowed types are: Asset, ContentType, Entry.");
@@ -263,21 +276,24 @@ public class CDAClient {
      * An extension of {@link #fetchResourcesOfType} method.
      * Allowed Resource types are:
      * <ul>
-     * <li>{@link Constants.CDAResourceType#Asset}</li>
-     * <li>{@link Constants.CDAResourceType#Entry}</li>
+     * <li>{@link com.contentful.java.lib.Constants.CDAResourceType#Asset}</li>
+     * <li>{@link com.contentful.java.lib.Constants.CDAResourceType#Entry}</li>
      * </ul>
+     * <p/>
+     * Note: This method <b>will throw an {@link java.lang.IllegalArgumentException}</b> in cases where an
+     * invalid resource type is specified.
      *
      * @param resourceType The type of Resource to be fetched.
      * @param query        {@link java.util.Map} representing the query.
-     * @param callback     {@link CDACallback} instances}.
+     * @param callback     {@link CDACallback} instance.
      */
-    public void fetchResourcesOfTypeMatching(Constants.CDAResourceType resourceType,
+    public void fetchResourcesOfTypeMatching(CDAResourceType resourceType,
                                              Map<String, String> query,
-                                             CDACallback<CDAListResult> callback) {
+                                             CDACallback<CDAArray> callback) {
 
-        if (Constants.CDAResourceType.Asset.equals(resourceType)) {
+        if (CDAResourceType.Asset.equals(resourceType)) {
             fetchAssetsMatching(query, callback);
-        } else if (Constants.CDAResourceType.Entry.equals(resourceType)) {
+        } else if (CDAResourceType.Entry.equals(resourceType)) {
             fetchEntriesMatching(query, callback);
         } else {
             throw new IllegalArgumentException("Invalid resource type, allowed types are: Asset, Entry.");
@@ -285,7 +301,7 @@ public class CDAClient {
     }
 
     /**
-     * Fetch Space.
+     * Fetch a single Space.
      *
      * @param callback {@link CDACallback} instance.
      * @see {@link CDAService#fetchSpace}.
@@ -294,15 +310,84 @@ public class CDAClient {
         service.fetchSpace(this.spaceKey, callback);
     }
 
-    // Sync
-    public void performSynchronization(boolean initial, CDACallback<CDASyncedSpace> callback) {
-        service.performSynchronization(spaceKey, initial, callback);
+    private void fetchArrayWithPathSegment(final String pathSegment,
+                                           final Map<String, String> query,
+                                           final CDACallback<CDAArray> callback) {
+
+        ensureSpace(new EnsureSpaceCallback(this, callback) {
+            @Override
+            void onResultSuccess() {
+                service.fetchArrayWithPath(CDAClient.this.spaceKey,
+                        pathSegment,
+                        query,
+                        new CDACallback<CDAArray>() {
+                            @Override
+                            protected void onSuccess(CDAArray cdaArray, Response response) {
+                                if (!callback.isCancelled()) {
+                                    executorService.submit(new ArrayParserRunnable(
+                                            cdaArray, callback, space, response, false));
+                                }
+                            }
+
+                            @Override
+                            protected void onFailure(RetrofitError retrofitError) {
+                                super.onFailure(retrofitError);
+
+                                if (!callback.isCancelled()) {
+                                    callback.onFailure(retrofitError);
+                                }
+                            }
+                        });
+            }
+        });
+    }
+
+    /**
+     * Ensure a Space is set for this client instance.
+     *
+     * @param callback {@link EnsureSpaceCallback} callback instance.
+     */
+    private void ensureSpace(final EnsureSpaceCallback callback) {
+        if (space == null) {
+            fetchSpace(callback);
+        } else {
+            callback.onSuccess(space, null);
+        }
+    }
+
+    /**
+     * Initial sync for a Space.
+     *
+     * @param callback {@link CDACallback} instance.
+     */
+    public void performInitialSynchronization(CDACallback<CDASyncedSpace> callback) {
+        service.performSynchronization(spaceKey, true, callback);
+    }
+
+    /**
+     * TBD
+     *
+     * @param syncedSpace
+     * @param callback
+     */
+    public void performSynchronization(final CDASyncedSpace syncedSpace, final CDACallback<CDASyncedSpace> callback) {
+        service.fetchSyncedSpaceWithPath(syncedSpace.nextSyncUrl, new CDACallback<CDASyncedSpace>() {
+            @Override
+            protected void onSuccess(CDASyncedSpace updatedSpace, Response response) {
+                executorService.submit(new MergeSpacesRunnable(syncedSpace, updatedSpace, callback, response));
+            }
+
+            @Override
+            protected void onFailure(RetrofitError retrofitError) {
+                callback.onFailure(retrofitError);
+            }
+        });
     }
 
     /**
      * TBD (paging)
      */
-    public void fetchNextItemsFromList(CDAListResult previousResult, CDACallback<CDAListResult> callback) {
+    public void fetchNextItemsFromList(CDAArray previousResult, CDACallback<CDAArray> callback) {
         HashMap<String, String> map = Utils.getNextBatchQueryMapForList(previousResult);
 
         if (map == null) {
@@ -312,14 +397,23 @@ public class CDAClient {
         service.fetchEntriesMatching(this.spaceKey, map, callback);
     }
 
-    /**
-     * Get a {@link com.google.gson.Gson} instance having only a
-     * {@link com.contentful.java.serialization.DateDeserializer}.
-     *
-     * @return {@link com.google.gson.Gson} instance.
-     */
-    public static Gson getBaseGson() {
-        return baseGson;
+    public void setSpace(CDASpace space) {
+        this.space = space;
+    }
+
+    public CDASpace getSpace() {
+        return this.space;
+    }
+
+    public Gson getGson() {
+        return gson;
+    }
+
+    @Override
+    public void onSpaceReady(CDASpace space) {
+        if (space != null && this.space != space) {
+            this.space = space;
+        }
     }
 
     /**
@@ -354,7 +448,7 @@ public class CDAClient {
         /**
          * Sets the access token to be used with this client.
          *
-         * @param accessToken String representing access token to be used when authenticating with the CDA.
+         * @param accessToken String representing access token to be used when authenticating against the CDA.
          * @return this {@link Builder} instance.
          */
         public Builder setAccessToken(String accessToken) {
@@ -367,7 +461,7 @@ public class CDAClient {
         }
 
         /**
-         * Sets a custom HTTP client to be used for requests.
+         * Sets a custom client to be used for making HTTP requests.
          *
          * @param client {@link retrofit.client.Client} instance.
          * @return this {@link Builder} instance.
@@ -386,7 +480,7 @@ public class CDAClient {
         }
 
         /**
-         * Sets a provider of clients to be used for HTTP requests.
+         * Sets a provider of clients to be used for making HTTP requests.
          *
          * @param clientProvider {@link retrofit.client.Client.Provider} instance.
          * @return this {@link Builder} instance.
@@ -401,13 +495,13 @@ public class CDAClient {
         }
 
         /**
-         * Builds and returns a {@link CDAClient} out of this {@link Builder} instance.
+         * Builds and returns a {@link CDAClient}.
          */
         public CDAClient build() {
             CDAClient client = new CDAClient();
-            client.setSpaceKey(this.spaceKey);
-            client.setAccessToken(this.accessToken);
-            client.setClientProvider(this.clientProvider);
+            client.spaceKey = this.spaceKey;
+            client.accessToken = this.accessToken;
+            client.clientProvider = this.clientProvider;
             client.init();
 
             return client;

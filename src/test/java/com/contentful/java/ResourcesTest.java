@@ -2,103 +2,115 @@ package com.contentful.java;
 
 import com.contentful.java.lib.Constants;
 import com.contentful.java.lib.TestCallback;
-import com.contentful.java.lib.TestClientResult;
 import com.contentful.java.model.*;
+import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 /**
- * Set of tests for fetching Resources with types defined at runtime.
+ * Test Resources.
  */
 public class ResourcesTest extends AbsTestCase {
+    @Test
     public void testFetchResourcesOfTypeAsset() throws Exception {
-        TestClientResult<CDAListResult> result = new TestClientResult<CDAListResult>();
+        TestCallback<CDAArray> callback = new TestCallback<CDAArray>();
 
-        client.fetchResourcesOfType(Constants.CDAResourceType.Asset, new TestCallback<CDAListResult>(result));
-        result.cdl.await();
-        verifyResultNotEmpty(result);
+        client.fetchResourcesOfType(Constants.CDAResourceType.Asset, callback);
+        callback.await();
+        verifyResultNotEmpty(callback);
 
-        assertTrue(result.value.total > 0);
+        assertTrue(callback.value.getTotal() > 0);
 
-        for (CDABaseItem item : result.value.items) {
+        for (CDAResource item : callback.value.getItems()) {
             assertTrue(item instanceof CDAAsset);
-            assertEquals(Constants.CDAResourceType.Asset.toString(), item.sys.type);
+            assertEquals(Constants.CDAResourceType.Asset.toString(), item.getSys().get("type"));
         }
     }
 
+    @Test
     public void testFetchResourcesOfTypeEntry() throws Exception {
-        TestClientResult<CDAListResult> result = new TestClientResult<CDAListResult>();
+        TestCallback<CDAArray> callback = new TestCallback<CDAArray>();
 
-        client.fetchResourcesOfType(Constants.CDAResourceType.Entry, new TestCallback<CDAListResult>(result));
-        result.cdl.await();
-        verifyResultNotEmpty(result);
+        client.fetchResourcesOfType(Constants.CDAResourceType.Entry, callback);
+        callback.await();
+        verifyResultNotEmpty(callback);
 
-        assertTrue(result.value.total > 0);
+        assertTrue(callback.value.getTotal() > 0);
 
-        for (CDABaseItem item : result.value.items) {
+        for (CDAResource item : callback.value.getItems()) {
             assertTrue(item instanceof CDAEntry);
-            assertEquals(Constants.CDAResourceType.Entry.toString(), item.sys.type);
+            assertEquals(Constants.CDAResourceType.Entry.toString(), item.getSys().get("type"));
         }
     }
 
+    @Test
     public void testFetchResourcesOfTypeContentType() throws Exception {
-        TestClientResult<CDAListResult> result = new TestClientResult<CDAListResult>();
+        TestCallback<CDAArray> callback = new TestCallback<CDAArray>();
 
-        client.fetchResourcesOfType(Constants.CDAResourceType.ContentType,
-                new TestCallback<CDAListResult>(result));
+        client.fetchResourcesOfType(Constants.CDAResourceType.ContentType, callback);
+        callback.await();
+        verifyResultNotEmpty(callback);
 
-        result.cdl.await();
-        verifyResultNotEmpty(result);
+        assertTrue(callback.value.getTotal() > 0);
 
-        assertTrue(result.value.total > 0);
-
-        for (CDABaseItem item : result.value.items) {
+        for (CDAResource item : callback.value.getItems()) {
             assertTrue(item instanceof CDAContentType);
-            assertEquals(Constants.CDAResourceType.ContentType.toString(), item.sys.type);
+
+            assertEquals(Constants.CDAResourceType.ContentType.toString(),
+                    item.getSys().get("type"));
         }
     }
 
+    @Test
     public void testFetchResourcesOfTypeAssetMatching() throws Exception {
-        TestClientResult<CDAListResult> result = new TestClientResult<CDAListResult>();
-
+        TestCallback<CDAArray> callback = new TestCallback<CDAArray>();
         HashMap<String, String> query = new HashMap<String, String>();
         query.put("sys.id", "happycat");
 
         client.fetchResourcesOfTypeMatching(Constants.CDAResourceType.Asset,
                 query,
-                new TestCallback<CDAListResult>(result));
+                callback);
 
-        result.cdl.await();
-        verifyResultNotEmpty(result);
+        callback.await();
+        verifyResultNotEmpty(callback);
 
-        assertEquals(1, result.value.total);
-        assertEquals(1, result.value.items.size());
+        assertEquals(1, callback.value.getTotal());
 
-        CDAAsset asset = (CDAAsset) result.value.items.get(0);
-        assertEquals(Constants.CDAResourceType.Asset.toString(), asset.sys.type);
-        assertEquals("happycat", asset.sys.id);
-        assertEquals("Happy Cat", asset.fields.title.getValue());
+        ArrayList<CDAResource> items = callback.value.getItems();
+        assertEquals(1, items.size());
+
+        CDAAsset asset = (CDAAsset) items.get(0);
+        assertEquals(Constants.CDAResourceType.Asset.toString(), asset.getSys().get("type"));
+        assertEquals("happycat", asset.getSys().get("id"));
+        assertEquals("Happy Cat", asset.getFields().get("title"));
     }
 
+    @Test
     public void testFetchResourcesOfTypeEntryMatching() throws Exception {
-        TestClientResult<CDAListResult> result = new TestClientResult<CDAListResult>();
+        TestCallback<CDAArray> callback = new TestCallback<CDAArray>();
 
         HashMap<String, String> query = new HashMap<String, String>();
         query.put("sys.id", "nyancat");
 
         client.fetchResourcesOfTypeMatching(Constants.CDAResourceType.Entry,
                 query,
-                new TestCallback<CDAListResult>(result));
+                callback);
 
-        result.cdl.await();
-        verifyResultNotEmpty(result);
+        callback.await();
+        verifyResultNotEmpty(callback);
 
-        assertEquals(1, result.value.total);
-        assertEquals(1, result.value.items.size());
+        assertEquals(1, callback.value.getTotal());
 
-        CDAEntry entry = (CDAEntry) result.value.items.get(0);
-        assertEquals(Constants.CDAResourceType.Entry.toString(), entry.sys.type);
-        assertEquals("nyancat", entry.sys.id);
-        assertEquals("Nyan Cat", entry.fieldsMap.get("name"));
+        ArrayList<CDAResource> items = callback.value.getItems();
+        assertEquals(1, items.size());
+
+        CDAEntry entry = (CDAEntry) items.get(0);
+        assertEquals(Constants.CDAResourceType.Entry.toString(), entry.getSys().get("type"));
+        assertEquals("nyancat", entry.getSys().get("id"));
+        assertEquals("Nyan Cat", entry.getFields().get("name"));
     }
 }

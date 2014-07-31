@@ -1,0 +1,74 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 4,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    {
+      "fields": {
+        "title": "Jake",
+        "file": {
+          "fileName": "file_1.png",
+          "contentType": "image/png",
+          "details": {
+            "image": {
+              "width": 100,
+              "height": 161
+            },
+            "size": 20480
+          },
+          "url": "//test.url.com/file_1.png"
+        }
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "type": "Asset",
+        "id": "jake",
+        "revision": 2,
+        "createdAt": "2013-09-02T14:56:34.260Z",
+        "updatedAt": "2013-09-02T15:22:39.466Z",
+        "locale": "en-US"
+      }
+    },
+    {
+      "fields": {
+        "title": "Nyan Cat",
+        "file": {
+          "fileName": "file_2.png",
+          "contentType": "image/png",
+          "details": {
+            "image": {
+              "width": 250,
+              "height": 250
+            },
+            "size": 12273
+          },
+          "url": "//test.url.com/file_2.png"
+        }
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "type": "Asset",
+        "id": "nyancat",
+        "revision": 1,
+        "createdAt": "2013-09-02T14:56:34.240Z",
+        "updatedAt": "2013-09-02T14:56:34.240Z",
+        "locale": "en-US"
+      }
+    }
+  ]
+}

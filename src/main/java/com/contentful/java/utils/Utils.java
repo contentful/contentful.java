@@ -1,33 +1,29 @@
 package com.contentful.java.utils;
 
-import com.contentful.java.model.CDAAsset;
-import com.contentful.java.model.CDABaseItem;
-import com.contentful.java.model.CDAEntry;
-import com.contentful.java.model.CDAListResult;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import retrofit.client.Response;
+import com.contentful.java.model.CDAArray;
 
 import java.net.URI;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * SDK utilities
  */
 public class Utils {
+    // todo tmp
+
     /**
      * Populates a {@link java.util.Map} object with items to fetch the next
-     * batch of items from a previous {@link CDAListResult} item.
+     * batch of items from a previous {@link com.contentful.java.model.CDAArray} item.
      *
-     * @param listResult {@link CDAListResult} instance which was successfully executed,
+     * @param listResult {@link com.contentful.java.model.CDAArray} instance which was successfully executed,
      *                   meaning {@link com.contentful.java.api.CDACallback#onSuccess} was
      *                   called.
      * @return {@link java.util.Map} instance containing original query string parameters
      * and updated pagination parameters (skip/limit).
      */
-    public static HashMap<String, String> getNextBatchQueryMapForList(CDAListResult listResult) {
+    public static HashMap<String, String> getNextBatchQueryMapForList(CDAArray listResult) {
+        // todo refactor
+/*
         Response response = listResult.getResponse();
 
         // ensure this instance has a reference to a valid response object
@@ -49,7 +45,11 @@ public class Utils {
         }
 
         return prepareQueryMap(URI.create(response.getUrl()), nextOffset, limit);
+*/
+        return null;
     }
+
+    // todo tmp
 
     /**
      * TBD (paging)
@@ -85,44 +85,5 @@ public class Utils {
         return queryMap;
     }
 
-    /**
-     * Sets all fields as a {@link java.util.Map} for any class extending {@link com.contentful.java.model.CDABaseItem}
-     * out of a {@link com.google.gson.JsonObject} instance.
-     *
-     * @param jsonDeserializationContext De-serialization context.
-     * @param jsonObject                 Object to read values from.
-     * @return Map instance representing the fields for this CDA object.
-     */
-    public static Map<String, ?> createFieldsMap(JsonDeserializationContext jsonDeserializationContext,
-                                                 JsonObject jsonObject) {
-
-        Object fields = jsonObject.get("fields");
-
-        if (fields != null && fields instanceof JsonObject) {
-            return jsonDeserializationContext.deserialize((JsonElement) fields, Map.class);
-        }
-
-        return null;
-    }
-
-    /**
-     * Determine whether an item is a {@link CDAEntry} subclass.
-     *
-     * @param item Item to be checked.
-     * @return Boolean indicating whether this item is a subclass of {@link CDAEntry}.
-     */
-    public static boolean isEntry(CDABaseItem item) {
-        return item instanceof CDAEntry;
-    }
-
-    /**
-     * Determine whether an item is a {@link CDAAsset} subclass.
-     *
-     * @param item Item to be checked.
-     * @return Boolean indicating whether this item is a subclass of {@link CDAAsset}.
-     */
-    public static boolean isAsset(CDABaseItem item) {
-        return item instanceof CDAAsset;
-    }
 }
 

@@ -1,0 +1,175 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 1,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    {
+      "fields": {
+        "name": "Nyan Cat",
+        "likes": [
+          "rainbows",
+          "fish"
+        ],
+        "color": "rainbow",
+        "bestFriend": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "happycat"
+          }
+        },
+        "birthday": "2011-04-04T22:00:00+00:00",
+        "lives": 1337,
+        "image": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Asset",
+            "id": "nyancat"
+          }
+        }
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "cat"
+          }
+        },
+        "id": "nyancat",
+        "revision": 5,
+        "createdAt": "2013-06-27T22:46:19.513Z",
+        "updatedAt": "2013-09-04T09:19:39.027Z",
+        "locale": "en-US"
+      }
+    }
+  ],
+  "includes": {
+    "Entry": [
+      {
+        "fields": {
+          "name": "Happy Cat",
+          "bestFriend": {
+            "sys": {
+              "type": "Link",
+              "linkType": "Entry",
+              "id": "nyancat"
+            }
+          },
+          "likes": [
+            "cheezburger"
+          ],
+          "color": "gray",
+          "birthday": "2003-10-28T23:00:00+00:00",
+          "lives": 1,
+          "image": {
+            "sys": {
+              "type": "Link",
+              "linkType": "Asset",
+              "id": "happycat"
+            }
+          }
+        },
+        "sys": {
+          "space": {
+            "sys": {
+              "type": "Link",
+              "linkType": "Space",
+              "id": "cfexampleapi"
+            }
+          },
+          "type": "Entry",
+          "contentType": {
+            "sys": {
+              "type": "Link",
+              "linkType": "ContentType",
+              "id": "cat"
+            }
+          },
+          "id": "happycat",
+          "revision": 8,
+          "createdAt": "2013-06-27T22:46:20.171Z",
+          "updatedAt": "2013-11-18T15:58:02.018Z",
+          "locale": "en-US"
+        }
+      }
+    ],
+    "Asset": [
+      {
+        "fields": {
+          "title": "Nyan Cat",
+          "file": {
+            "fileName": "Nyan_cat_250px_frame.png",
+            "contentType": "image/png",
+            "details": {
+              "image": {
+                "width": 250,
+                "height": 250
+              },
+              "size": 12273
+            },
+            "url": "//images.contentful.com/cfexampleapi/4gp6taAwW4CmSgumq2ekUm/9da0cd1936871b8d72343e895a00d611/Nyan_cat_250px_frame.png"
+          }
+        },
+        "sys": {
+          "space": {
+            "sys": {
+              "type": "Link",
+              "linkType": "Space",
+              "id": "cfexampleapi"
+            }
+          },
+          "type": "Asset",
+          "id": "nyancat",
+          "revision": 1,
+          "createdAt": "2013-09-02T14:56:34.240Z",
+          "updatedAt": "2013-09-02T14:56:34.240Z",
+          "locale": "en-US"
+        }
+      },
+      {
+        "fields": {
+          "file": {
+            "fileName": "happycatw.jpg",
+            "contentType": "image/jpeg",
+            "details": {
+              "image": {
+                "width": 273,
+                "height": 397
+              },
+              "size": 59939
+            },
+            "url": "//images.contentful.com/cfexampleapi/3MZPnjZTIskAIIkuuosCss/382a48dfa2cb16c47aa2c72f7b23bf09/happycatw.jpg"
+          },
+          "title": "Happy Cat"
+        },
+        "sys": {
+          "space": {
+            "sys": {
+              "type": "Link",
+              "linkType": "Space",
+              "id": "cfexampleapi"
+            }
+          },
+          "type": "Asset",
+          "id": "happycat",
+          "revision": 2,
+          "createdAt": "2013-09-02T14:56:34.267Z",
+          "updatedAt": "2013-09-02T15:11:24.361Z",
+          "locale": "en-US"
+        }
+      }
+    ]
+  }
+}

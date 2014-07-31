@@ -1,41 +1,50 @@
 package com.contentful.java;
 
-import com.contentful.java.api.CDAClient;
+import com.contentful.java.lib.Constants;
 import com.contentful.java.lib.MockClient;
 import com.contentful.java.lib.TestCallback;
 import com.contentful.java.lib.TestClientFactory;
-import com.contentful.java.lib.TestClientResult;
 import com.contentful.java.model.CDASpace;
 import com.contentful.java.model.Locale;
+import org.junit.Test;
+
+import java.util.ArrayList;
+
+import static org.junit.Assert.*;
 
 /**
  * Test for fetching a Space.
  */
 public class SpacesTest extends AbsTestCase {
+    @Test
     public void testFetchSpace() throws Exception {
-        TestClientResult<CDASpace> result = new TestClientResult<CDASpace>();
+        TestCallback<CDASpace> callback = new TestCallback<CDASpace>();
 
-        CDAClient customClient = TestClientFactory.newInstanceWithClient(
+        client = TestClientFactory.newInstanceWithClient(
                 new MockClient("result_test_fetch_space.json"));
 
-        customClient.fetchSpace(new TestCallback<CDASpace>(result));
+        client.fetchSpace(callback);
+        callback.await();
 
-        result.cdl.await();
-        verifyResultNotEmpty(result);
+        verifyResultNotEmpty(callback);
 
-        assertEquals("Contentful Example API", result.value.name);
-        assertEquals("Space", result.value.sys.type);
-        assertEquals("cfexampleapi", result.value.sys.id);
-        assertEquals(2, result.value.locales.size());
+        CDASpace space = callback.value;
+
+        assertEquals("Contentful Example API", space.getName());
+        assertEquals("Space", space.getSys().get("type"));
+        assertEquals("cfexampleapi", space.getSys().get("id"));
+
+        ArrayList<Locale> locales = space.getLocales();
+        assertEquals(2, locales.size());
 
         // English
-        Locale locale = result.value.locales.get(0);
-        assertEquals("en-US", locale.code);
+        Locale locale = locales.get(0);
+        assertEquals(Constants.DEFAULT_LOCALE, locale.code);
         assertEquals("English", locale.name);
         assertTrue(locale.isDefault);
 
         // Klingon
-        locale = result.value.locales.get(1);
+        locale = locales.get(1);
         assertEquals("tlh", locale.code);
         assertEquals("Klingon", locale.name);
         assertFalse(locale.isDefault);
