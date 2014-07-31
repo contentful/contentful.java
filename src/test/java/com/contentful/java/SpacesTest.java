@@ -4,48 +4,38 @@ import com.contentful.java.api.CDAClient;
 import com.contentful.java.lib.MockClient;
 import com.contentful.java.lib.TestCallback;
 import com.contentful.java.lib.TestClientFactory;
+import com.contentful.java.lib.TestClientResult;
 import com.contentful.java.model.CDASpace;
 import com.contentful.java.model.Locale;
-import retrofit.client.Response;
-
-import java.util.concurrent.CountDownLatch;
 
 /**
  * Test for fetching a Space.
  */
 public class SpacesTest extends AbsTestCase {
     public void testFetchSpace() throws Exception {
+        TestClientResult<CDASpace> result = new TestClientResult<CDASpace>();
+
         CDAClient customClient = TestClientFactory.newInstanceWithClient(
                 new MockClient("result_test_fetch_space.json"));
 
-        CountDownLatch cdl = new CountDownLatch(1);
+        customClient.fetchSpace(new TestCallback<CDASpace>(result));
 
-        final CDASpace[] result = new CDASpace[]{null};
+        result.cdl.await();
+        verifyResultNotEmpty(result);
 
-        customClient.fetchSpace(new TestCallback<CDASpace>(cdl) {
-            @Override
-            protected void onSuccess(CDASpace cdaSpace, Response response) {
-                result[0] = cdaSpace;
-                super.onSuccess(cdaSpace, response);
-            }
-        });
-
-        cdl.await();
-
-        assertNotNull(result[0]);
-        assertEquals("Contentful Example API", result[0].name);
-        assertEquals("Space", result[0].sys.type);
-        assertEquals("cfexampleapi", result[0].sys.id);
-        assertEquals(2, result[0].locales.size());
+        assertEquals("Contentful Example API", result.value.name);
+        assertEquals("Space", result.value.sys.type);
+        assertEquals("cfexampleapi", result.value.sys.id);
+        assertEquals(2, result.value.locales.size());
 
         // English
-        Locale locale = result[0].locales.get(0);
+        Locale locale = result.value.locales.get(0);
         assertEquals("en-US", locale.code);
         assertEquals("English", locale.name);
         assertTrue(locale.isDefault);
 
         // Klingon
-        locale = result[0].locales.get(1);
+        locale = result.value.locales.get(1);
         assertEquals("tlh", locale.code);
         assertEquals("Klingon", locale.name);
         assertFalse(locale.isDefault);

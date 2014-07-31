@@ -2,6 +2,7 @@ package com.contentful.java;
 
 import com.contentful.java.api.CDAClient;
 import com.contentful.java.lib.TestClientFactory;
+import com.contentful.java.lib.TestClientResult;
 import junit.framework.TestCase;
 
 /**
@@ -15,5 +16,13 @@ public abstract class AbsTestCase extends TestCase {
         super.setUp();
 
         client = TestClientFactory.newInstance();
+    }
+
+    protected void verifyResultNotEmpty(TestClientResult result) {
+        // check that error is empty
+        assertNull(result.error);
+
+        // check that result is not empty
+        assertNotNull(result.value);
     }
 }

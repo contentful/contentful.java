@@ -1,72 +1,38 @@
 package com.contentful.java;
 
 import com.contentful.java.lib.TestCallback;
+import com.contentful.java.lib.TestClientResult;
 import com.contentful.java.model.CDAAsset;
 import com.contentful.java.model.CDAListResult;
-import retrofit.RetrofitError;
 
 import java.util.HashMap;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * Test of all Entries fetching methods via {@link com.contentful.java.api.CDAClient}.
  */
 public class AssetsTest extends AbsTestCase {
-    private RetrofitError retrofitError;
-
     public void testFetchAssets() throws Exception {
-        final CountDownLatch cdl = new CountDownLatch(1);
+        TestClientResult<CDAListResult> result = new TestClientResult<CDAListResult>();
 
-        retrofitError = null;
-
-        client.fetchAssets(new TestCallback<CDAListResult>(cdl) {
-            @Override
-            protected void onFailure(RetrofitError retrofitError) {
-                AssetsTest.this.retrofitError = retrofitError;
-                super.onFailure(retrofitError);
-            }
-        });
-
-        cdl.await();
-
-        assertNull(retrofitError);
+        client.fetchAssets(new TestCallback<CDAListResult>(result));
+        result.cdl.await();
+        verifyResultNotEmpty(result);
     }
 
     public void testFetchAssetsMatching() throws Exception {
-        final CountDownLatch cdl = new CountDownLatch(1);
-
-        retrofitError = null;
+        TestClientResult<CDAListResult> result = new TestClientResult<CDAListResult>();
 
         HashMap<String, String> query = new HashMap<String, String>();
-
-        client.fetchAssetsMatching(query, new TestCallback<CDAListResult>(cdl) {
-            @Override
-            protected void onFailure(RetrofitError retrofitError) {
-                AssetsTest.this.retrofitError = retrofitError;
-                super.onFailure(retrofitError);
-            }
-        });
-
-        cdl.await();
-
-        assertNull(retrofitError);
+        client.fetchAssetsMatching(query, new TestCallback<CDAListResult>(result));
+        result.cdl.await();
+        verifyResultNotEmpty(result);
     }
 
     public void testFetchAssetWithIdentifier() throws Exception {
-        final CountDownLatch cdl = new CountDownLatch(1);
+        TestClientResult<CDAAsset> result = new TestClientResult<CDAAsset>();
 
-        retrofitError = null;
-
-        client.fetchAssetWithIdentifier("nyancat", new TestCallback<CDAAsset>(cdl) {
-            @Override
-            protected void onFailure(RetrofitError retrofitError) {
-                AssetsTest.this.retrofitError = retrofitError;
-                super.onFailure(retrofitError);
-            }
-        });
-
-        cdl.await();
-
-        assertNull(retrofitError);
+        client.fetchAssetWithIdentifier("nyancat", new TestCallback<CDAAsset>(result));
+        result.cdl.await();
+        verifyResultNotEmpty(result);
     }
 }
