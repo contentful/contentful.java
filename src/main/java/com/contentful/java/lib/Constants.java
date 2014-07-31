@@ -19,4 +19,6 @@ public class Constants {
 
     public static final String SERVER_HOSTNAME = "cdn.contentful.com";
     public static final String SERVER_URI = String.format("%s://%s", HTTPS, SERVER_HOSTNAME);
+
+    public static final String DEFAULT_LOCALE = "en-US";
 }

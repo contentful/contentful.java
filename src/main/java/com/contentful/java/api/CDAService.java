@@ -1,9 +1,9 @@
 package com.contentful.java.api;
 
 import com.contentful.java.model.*;
-import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;
+import retrofit.http.Query;
 import retrofit.http.QueryMap;
 
 import java.util.Map;
@@ -22,7 +22,7 @@ public interface CDAService {
     @GET("/spaces/{space}/assets")
     void fetchAssets(
             @Path("space") String space,
-            Callback<CDAListResult> callback
+            CDACallback<CDAListResult> callback
     );
 
     /**
@@ -36,7 +36,7 @@ public interface CDAService {
     void fetchAssetsMatching(
             @Path("space") String space,
             @QueryMap Map<String, String> query,
-            Callback<CDAListResult> callback
+            CDACallback<CDAListResult> callback
     );
 
     /**
@@ -50,7 +50,7 @@ public interface CDAService {
     void fetchAssetWithIdentifier(
             @Path("space") String space,
             @Path("identifier") String identifier,
-            Callback<CDAAsset> callback
+            CDACallback<CDAAsset> callback
     );
 
     /**
@@ -62,7 +62,7 @@ public interface CDAService {
     @GET("/spaces/{space}/content_types")
     void fetchContentTypes(
             @Path("space") String space,
-            Callback<CDAListResult> callback
+            CDACallback<CDAListResult> callback
     );
 
     /**
@@ -76,7 +76,7 @@ public interface CDAService {
     void fetchContentTypeWithIdentifier(
             @Path("space") String space,
             @Path("identifier") String identifier,
-            Callback<CDAContentType> callback
+            CDACallback<CDAContentType> callback
     );
 
     /**
@@ -88,7 +88,7 @@ public interface CDAService {
     @GET("/spaces/{space}/entries")
     void fetchEntries(
             @Path("space") String space,
-            Callback<CDAListResult> callback
+            CDACallback<CDAListResult> callback
     );
 
     /**
@@ -102,7 +102,7 @@ public interface CDAService {
     void fetchEntriesMatching(
             @Path("space") String space,
             @QueryMap Map<String, String> query,
-            Callback<CDAListResult> callback
+            CDACallback<CDAListResult> callback
     );
 
     /**
@@ -116,7 +116,7 @@ public interface CDAService {
     void fetchEntryWithIdentifier(
             @Path("space") String space,
             @Path("identifier") String identifier,
-            Callback<? extends CDAEntry> callback
+            CDACallback<? extends CDAEntry> callback
     );
 
     /**
@@ -128,6 +128,20 @@ public interface CDAService {
     @GET("/spaces/{space}")
     void fetchSpace(
             @Path("space") String space,
-            Callback<CDASpace> callback
+            CDACallback<CDASpace> callback
+    );
+
+    /**
+     * Space Sync endpoint.
+     *
+     * @param space    String representing the Space key.
+     * @param initial  Boolean indicating whether this is the initial sync request or not.
+     * @param callback {@link retrofit.Callback} instance to be used.
+     */
+    @GET("/spaces/{space}/sync")
+    void performSynchronization(
+            @Path("space") String space,
+            @Query("initial") Boolean initial,
+            CDACallback<CDASyncedSpace> callback
     );
 }

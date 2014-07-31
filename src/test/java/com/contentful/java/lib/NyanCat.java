@@ -2,6 +2,7 @@ package com.contentful.java.lib;
 
 import com.contentful.java.annotations.CDAFields;
 import com.contentful.java.model.CDAEntry;
+import com.contentful.java.model.LocalizedString;
 
 import java.util.Date;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 public class NyanCat extends CDAEntry {
     public static class Fields {
         public String name;
-        public List<String> likes;
+        public List<LocalizedString> likes;
         public String color;
         public Date birthday;
         public Integer lives;

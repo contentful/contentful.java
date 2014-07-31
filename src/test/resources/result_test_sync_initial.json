@@ -1,0 +1,21 @@
+{
+  "items": [
+    {
+      "sys": {
+        "type": "Asset",
+        "contentType": {
+          "sys": {
+            "id": "1t9IbcfdCk6m04uISSsaIK"
+          }
+        },
+        "id": "5ETMRzkl9KM4omyMwKAOki"
+      },
+      "fields": {
+        "title": {
+            "en-US": "english",
+            "he-IL": "hebrew"
+        }
+      }
+    }
+  ]
+}

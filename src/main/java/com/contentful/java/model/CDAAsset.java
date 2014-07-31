@@ -8,8 +8,8 @@ import com.contentful.java.annotations.CDAFields;
 @SuppressWarnings("UnusedDeclaration")
 public class CDAAsset extends CDABaseItem {
     public static class Fields {
-        public String title;
-        public String description;
+        public LocalizedString title;
+        public LocalizedString description;
         public CDAFile file;
     }
 

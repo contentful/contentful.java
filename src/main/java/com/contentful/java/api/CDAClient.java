@@ -5,10 +5,10 @@ import com.contentful.java.model.*;
 import com.contentful.java.serialization.BaseDeserializer;
 import com.contentful.java.serialization.DateDeserializer;
 import com.contentful.java.serialization.GsonConverter;
+import com.contentful.java.serialization.StringDeserializer;
 import com.contentful.java.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.Client;
@@ -95,11 +95,13 @@ public class CDAClient {
                 .registerTypeAdapter(CDABaseItem.class, new BaseDeserializer(CDAClient.this))
                 .registerTypeAdapter(CDAAsset.class, new BaseDeserializer(CDAClient.this))
                 .registerTypeAdapter(CDAEntry.class, new BaseDeserializer(CDAClient.this))
+                .registerTypeAdapter(LocalizedString.class, new StringDeserializer())
                 .registerTypeAdapter(Date.class, new DateDeserializer())
                 .create();
 
         if (baseGson == null) {
             baseGson = new GsonBuilder()
+                    .registerTypeAdapter(LocalizedString.class, new StringDeserializer())
                     .registerTypeAdapter(Date.class, new DateDeserializer())
                     .create();
         }
@@ -258,7 +260,7 @@ public class CDAClient {
     }
 
     /**
-     * An extension of {@link #fetchResourcesOfTypeMatching} method.
+     * An extension of {@link #fetchResourcesOfType} method.
      * Allowed Resource types are:
      * <ul>
      * <li>{@link Constants.CDAResourceType#Asset}</li>
@@ -292,10 +294,15 @@ public class CDAClient {
         service.fetchSpace(this.spaceKey, callback);
     }
 
+    // Sync
+    public void performSynchronization(boolean initial, CDACallback<CDASyncedSpace> callback) {
+        service.performSynchronization(spaceKey, initial, callback);
+    }
+
     /**
      * TBD (paging)
      */
-    public void fetchNextItemsFromList(CDAListResult previousResult, Callback<CDAListResult> callback) {
+    public void fetchNextItemsFromList(CDAListResult previousResult, CDACallback<CDAListResult> callback) {
         HashMap<String, String> map = Utils.getNextBatchQueryMapForList(previousResult);
 
         if (map == null) {
