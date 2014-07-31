@@ -1,5 +1,6 @@
 package com.contentful.java.api;
 
+import com.contentful.java.executables.MergeSpacesRunnable;
 import com.contentful.java.lib.Constants;
 import com.contentful.java.model.*;
 import com.contentful.java.serialization.BaseDeserializer;
@@ -11,11 +12,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
 import retrofit.client.Client;
+import retrofit.client.Response;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * The {@link CDAClient} is used to request any information from the server.
@@ -36,6 +42,9 @@ public class CDAClient {
     // gson related
     private Gson gson;
     private static Gson baseGson;
+
+    // executors
+    private ExecutorService executorService;
 
     /**
      * Initialization method - should be called once all configuration properties are set.
@@ -58,6 +67,20 @@ public class CDAClient {
         }
 
         service = builder.build().create(CDAService.class);
+
+        // Init sync ExecutorService
+        executorService = Executors.newCachedThreadPool(new ThreadFactory() {
+            @Override
+            public Thread newThread(final Runnable r) {
+                return new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+                        r.run();
+                    }
+                }, Constants.IDLE_THREAD_NAME);
+            }
+        });
     }
 
     /**
@@ -206,7 +229,7 @@ public class CDAClient {
      * Fetch a single Entry with identifier.
      *
      * @param identifier {@link java.lang.String} representing the Entry UID.
-     * @param callback   {@link CDACallback} instance.
+     * @param callback {@link CDACallback} instance.
      * @see {@link CDAService#fetchEntryWithIdentifier}.
      */
     public void fetchEntryWithIdentifier(String identifier, CDACallback<? extends CDAEntry> callback) {
@@ -227,7 +250,7 @@ public class CDAClient {
      * Fetch a single Content Type with identifier.
      *
      * @param identifier {@link java.lang.String} representing the Content Type UID.
-     * @param callback   {@link CDACallback} instance.
+     * @param callback {@link CDACallback} instance.
      * @see {@link CDAService#fetchContentTypeWithIdentifier}.
      */
     public void fetchContentTypeWithIdentifier(String identifier, CDACallback<CDAContentType> callback) {
@@ -245,7 +268,7 @@ public class CDAClient {
      * </ul>
      *
      * @param resourceType The type of Resource to be fetched.
-     * @param callback     {@link CDACallback} instances}.
+     * @param callback {@link CDACallback} instance.
      */
     public void fetchResourcesOfType(Constants.CDAResourceType resourceType, CDACallback<CDAListResult> callback) {
         if (Constants.CDAResourceType.Asset.equals(resourceType)) {
@@ -269,7 +292,7 @@ public class CDAClient {
      *
      * @param resourceType The type of Resource to be fetched.
      * @param query        {@link java.util.Map} representing the query.
-     * @param callback     {@link CDACallback} instances}.
+     * @param callback {@link CDACallback} instance.
      */
     public void fetchResourcesOfTypeMatching(Constants.CDAResourceType resourceType,
                                              Map<String, String> query,
@@ -294,9 +317,33 @@ public class CDAClient {
         service.fetchSpace(this.spaceKey, callback);
     }
 
-    // Sync
-    public void performSynchronization(boolean initial, CDACallback<CDASyncedSpace> callback) {
-        service.performSynchronization(spaceKey, initial, callback);
+    /**
+     * Initial sync for a Space.
+     *
+     * @param callback {@link CDACallback} instance.
+     */
+    public void performInitialSynchronization(CDACallback<CDASyncedSpace> callback) {
+        service.performSynchronization(spaceKey, true, callback);
+    }
+
+    /**
+     * TBD
+     *
+     * @param syncedSpace
+     * @param callback
+     */
+    public void performSynchronization(final CDASyncedSpace syncedSpace, final CDACallback<CDASyncedSpace> callback) {
+        service.withDynamicPath(syncedSpace.nextSyncUrl, new CDACallback<CDASyncedSpace>() {
+            @Override
+            protected void onSuccess(CDASyncedSpace updatedSpace, Response response) {
+                executorService.submit(new MergeSpacesRunnable(syncedSpace, updatedSpace, callback, response));
+            }
+
+            @Override
+            protected void onFailure(RetrofitError retrofitError) {
+                callback.onFailure(retrofitError);
+            }
+        });
     }
 
     /**

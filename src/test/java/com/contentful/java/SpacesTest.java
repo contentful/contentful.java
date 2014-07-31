@@ -1,10 +1,7 @@
 package com.contentful.java;
 
 import com.contentful.java.api.CDAClient;
-import com.contentful.java.lib.MockClient;
-import com.contentful.java.lib.TestCallback;
-import com.contentful.java.lib.TestClientFactory;
-import com.contentful.java.lib.TestClientResult;
+import com.contentful.java.lib.*;
 import com.contentful.java.model.CDASpace;
 import com.contentful.java.model.Locale;
 
@@ -30,7 +27,7 @@ public class SpacesTest extends AbsTestCase {
 
         // English
         Locale locale = result.value.locales.get(0);
-        assertEquals("en-US", locale.code);
+        assertEquals(Constants.DEFAULT_LOCALE, locale.code);
         assertEquals("English", locale.name);
         assertTrue(locale.isDefault);
 

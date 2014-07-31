@@ -17,7 +17,7 @@ public interface CDAService {
      * Assets endpoint.
      *
      * @param space    String representing the Space key.
-     * @param callback {@link retrofit.Callback} instance to be used.
+     * @param callback {@link CDACallback} instance to be used.
      */
     @GET("/spaces/{space}/assets")
     void fetchAssets(
@@ -30,7 +30,7 @@ public interface CDAService {
      *
      * @param space    String representing the Space key.
      * @param query    {@link java.util.Map} instance containing keys & values for this query.
-     * @param callback {@link retrofit.Callback} instance to be used.
+     * @param callback {@link CDACallback} instance to be used.
      */
     @GET("/spaces/{space}/assets")
     void fetchAssetsMatching(
@@ -44,7 +44,7 @@ public interface CDAService {
      *
      * @param space      String representing the Space key.
      * @param identifier String representing the Asset UID.
-     * @param callback   {@link retrofit.Callback} instance to be used.
+     * @param callback   {@link CDACallback} instance to be used.
      */
     @GET("/spaces/{space}/assets/{identifier}")
     void fetchAssetWithIdentifier(
@@ -57,7 +57,7 @@ public interface CDAService {
      * Content Types endpoint.
      *
      * @param space    String representing the Space key.
-     * @param callback {@link retrofit.Callback} instance to be used.
+     * @param callback {@link CDACallback} instance to be used.
      */
     @GET("/spaces/{space}/content_types")
     void fetchContentTypes(
@@ -70,7 +70,7 @@ public interface CDAService {
      *
      * @param space      String representing the Space key.
      * @param identifier String representing the Content Type UID.
-     * @param callback   {@link retrofit.Callback} instance to be used.
+     * @param callback   {@link CDACallback} instance to be used.
      */
     @GET("/spaces/{space}/content_types/{identifier}")
     void fetchContentTypeWithIdentifier(
@@ -83,7 +83,7 @@ public interface CDAService {
      * Entries endpoint.
      *
      * @param space    String representing the Space key.
-     * @param callback {@link retrofit.Callback} instance to be used.
+     * @param callback {@link CDACallback} instance to be used.
      */
     @GET("/spaces/{space}/entries")
     void fetchEntries(
@@ -96,7 +96,7 @@ public interface CDAService {
      *
      * @param space    String representing the Space key.
      * @param query    {@link java.util.Map} instance containing keys & values for this query.
-     * @param callback {@link retrofit.Callback} instance to be used.
+     * @param callback {@link CDACallback} instance to be used.
      */
     @GET("/spaces/{space}/entries")
     void fetchEntriesMatching(
@@ -110,7 +110,7 @@ public interface CDAService {
      *
      * @param space      String representing the Space key.
      * @param identifier String representing the Asset UID.
-     * @param callback   {@link retrofit.Callback} instance to be used.
+     * @param callback   {@link CDACallback} instance to be used.
      */
     @GET("/spaces/{space}/entries/{identifier}")
     void fetchEntryWithIdentifier(
@@ -123,7 +123,7 @@ public interface CDAService {
      * Space endpoint.
      *
      * @param space    String representing the Space key.
-     * @param callback {@link retrofit.Callback} instance to be used.
+     * @param callback {@link CDACallback} instance to be used.
      */
     @GET("/spaces/{space}")
     void fetchSpace(
@@ -136,7 +136,7 @@ public interface CDAService {
      *
      * @param space    String representing the Space key.
      * @param initial  Boolean indicating whether this is the initial sync request or not.
-     * @param callback {@link retrofit.Callback} instance to be used.
+     * @param callback {@link CDACallback} instance to be used.
      */
     @GET("/spaces/{space}/sync")
     void performSynchronization(
@@ -144,4 +144,15 @@ public interface CDAService {
             @Query("initial") Boolean initial,
             CDACallback<CDASyncedSpace> callback
     );
+
+    /**
+     * Execute a request using a path determined at runtime.
+     *
+     * @param dynamicPath String representing the path.
+     * @param callback    {@link CDACallback} instance to be used.
+     */
+    @GET("/{dynamic_path}")
+    void withDynamicPath(
+            @Path("dynamic_path") String dynamicPath,
+            CDACallback<CDASyncedSpace> callback);
 }

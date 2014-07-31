@@ -10,7 +10,9 @@ public class Constants {
         ContentType,
         Entry,
         Link,
-        Space
+        Space,
+        DeletedAsset,
+        DeletedEntry
     }
 
     public static final String HTTPS = "HTTPS";
@@ -21,4 +23,6 @@ public class Constants {
     public static final String SERVER_URI = String.format("%s://%s", HTTPS, SERVER_HOSTNAME);
 
     public static final String DEFAULT_LOCALE = "en-US";
+
+    public static final String IDLE_THREAD_NAME = "Contentful-Idle";
 }

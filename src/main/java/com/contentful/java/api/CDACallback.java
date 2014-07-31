@@ -19,6 +19,7 @@ import retrofit.client.Response;
  *            For methods that return a collection of items ot would be best to
  *            provide {@link CDAListResult} as the type.
  */
+@SuppressWarnings("UnusedDeclaration")
 public abstract class CDACallback<T> implements Callback<T> {
     boolean cancelled;
 
@@ -72,8 +73,11 @@ public abstract class CDACallback<T> implements Callback<T> {
      * Calling this method will result in any of the callbacks ({@link #onSuccess} / {@link #onFailure}
      * not being called.
      */
-    @SuppressWarnings("UnusedDeclaration")
-    public void cancel() {
+    public synchronized void cancel() {
         this.cancelled = true;
+    }
+
+    public synchronized boolean isCancelled() {
+        return cancelled;
     }
 }

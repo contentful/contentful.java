@@ -20,17 +20,48 @@
             "id": "30chr9JfriYkAWyCC06Mkg"
           }
         },
+        "id": "mrEukQm7eKg0AmuEWisgG",
+        "revision": 1,
+        "createdAt": "2014-07-31T15:16:35.584Z",
+        "updatedAt": "2014-07-31T15:16:35.584Z"
+      },
+      "fields": {
+        "name": {
+          "en-US": "Ooctaiphus"
+        },
+        "age": {
+          "en-US": 2
+        }
+      }
+    },
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "h38qvm6rr4hv"
+          }
+        },
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "30chr9JfriYkAWyCC06Mkg"
+          }
+        },
         "id": "6VqrvaiOGWYYC2W64gEAom",
-        "revision": 8,
+        "revision": 9,
         "createdAt": "2014-07-23T08:08:00.237Z",
-        "updatedAt": "2014-07-31T15:13:29.045Z"
+        "updatedAt": "2014-07-31T15:15:14.079Z"
       },
       "fields": {
         "name": {
           "en-US": "Yiltiquoar"
         },
         "age": {
-          "en-US": 9999
+          "en-US": 666666
         },
         "image": {
           "en-US": null
@@ -39,37 +70,8 @@
     },
     {
       "sys": {
-        "space": {
-          "sys": {
-            "type": "Link",
-            "linkType": "Space",
-            "id": "h38qvm6rr4hv"
-          }
-        },
-        "type": "Entry",
-        "contentType": {
-          "sys": {
-            "type": "Link",
-            "linkType": "ContentType",
-            "id": "30chr9JfriYkAWyCC06Mkg"
-          }
-        },
+        "type": "DeletedEntry",
         "id": "5h10FZ0tDG4aWsUWSQICI2",
-        "revision": 6,
-        "createdAt": "2014-07-23T08:08:43.387Z",
-        "updatedAt": "2014-07-31T15:13:08.111Z"
-      },
-      "fields": {
-        "name": {
-          "en-US": "Tzayclibbon"
-        },
-        "age": {
-          "en-US": 2405
-        }
-      }
-    },
-    {
-      "sys": {
         "space": {
           "sys": {
             "type": "Link",
@@ -77,26 +79,10 @@
             "id": "h38qvm6rr4hv"
           }
         },
-        "type": "Entry",
-        "contentType": {
-          "sys": {
-            "type": "Link",
-            "linkType": "ContentType",
-            "id": "30chr9JfriYkAWyCC06Mkg"
-          }
-        },
-        "id": "3lgVaMtRiMSaUCGU0KqoWK",
-        "revision": 5,
-        "createdAt": "2014-07-23T08:09:08.138Z",
-        "updatedAt": "2014-07-31T15:12:54.517Z"
-      },
-      "fields": {
-        "name": {
-          "en-US": "Za'ha'zah"
-        },
-        "age": {
-          "en-US": 2789
-        }
+        "revision": 6,
+        "createdAt": "2014-07-31T15:14:59.226Z",
+        "updatedAt": "2014-07-31T15:14:59.226Z",
+        "deletedAt": "2014-07-31T15:14:59.226Z"
       }
     }
   ],

@@ -124,5 +124,15 @@ public class Utils {
     public static boolean isAsset(CDABaseItem item) {
         return item instanceof CDAAsset;
     }
+
+    /**
+     * TBD
+     *
+     * @param item
+     * @return
+     */
+    public static String getUniqueIdForItem(CDABaseItem item) {
+        return String.format("%s:%s", item.sys.type, item.sys.id);
+    }
 }
 
