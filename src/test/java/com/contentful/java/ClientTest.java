@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Client tests.
+ * Tests using custom clients and client providers.
  */
 public class ClientTest extends AbsTestCase {
     @Test

@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Test Resources.
+ * Tests for fetching resources of various types.
  */
 public class ResourcesTest extends AbsTestCase {
     @Test

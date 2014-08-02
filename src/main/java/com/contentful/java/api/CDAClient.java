@@ -138,7 +138,7 @@ public class CDAClient implements SpaceReadyInterface {
      * Fetch Assets.
      *
      * @param callback {@link CDACallback} instance.
-     * @see {@link CDAService#fetchAssets}.
+     * @see CDAService#fetchAssets
      */
     public void fetchAssets(CDACallback<CDAArray> callback) {
         fetchArrayWithPathSegment(PATH_ASSETS, null, callback);
@@ -149,7 +149,7 @@ public class CDAClient implements SpaceReadyInterface {
      *
      * @param query    Map representing the query.
      * @param callback {@link CDACallback} instance.
-     * @see {@link CDAService#fetchAssetsMatching}.
+     * @see CDAService#fetchAssetsMatching
      */
     public void fetchAssetsMatching(Map<String, String> query, CDACallback<CDAArray> callback) {
         fetchArrayWithPathSegment(PATH_ASSETS, query, callback);
@@ -160,7 +160,7 @@ public class CDAClient implements SpaceReadyInterface {
      *
      * @param identifier {@link java.lang.String} representing the Asset UID.
      * @param callback   {@link CDACallback} instance.
-     * @see {@link CDAService#fetchAssetsMatching}.
+     * @see CDAService#fetchAssetsMatching
      */
     public void fetchAssetWithIdentifier(final String identifier, final CDACallback<CDAAsset> callback) {
         ensureSpace(new EnsureSpaceCallback(this, callback) {
@@ -175,7 +175,7 @@ public class CDAClient implements SpaceReadyInterface {
      * Fetch Entries.
      *
      * @param callback {@link CDACallback} instance.
-     * @see {@link CDAService#fetchEntries}.
+     * @see CDAService#fetchEntries
      */
     public void fetchEntries(CDACallback<CDAArray> callback) {
         fetchArrayWithPathSegment(PATH_ENTRIES, null, callback);
@@ -186,7 +186,7 @@ public class CDAClient implements SpaceReadyInterface {
      *
      * @param query    Map representing the query.
      * @param callback {@link CDACallback} instance.
-     * @see {@link CDAService#fetchAssetsMatching}.
+     * @see CDAService#fetchAssetsMatching
      */
     public void fetchEntriesMatching(Map<String, String> query, CDACallback<CDAArray> callback) {
         fetchArrayWithPathSegment(PATH_ENTRIES, query, callback);
@@ -201,7 +201,7 @@ public class CDAClient implements SpaceReadyInterface {
      *
      * @param identifier String representing the UID of the Entry.
      * @param callback   {@link CDACallback} instance.
-     * @see {@link CDAService#fetchEntryWithIdentifier}.
+     * @see CDAService#fetchEntryWithIdentifier
      */
     public void fetchEntryWithIdentifier(final String identifier, final CDACallback<? extends CDAEntry> callback) {
         ensureSpace(new EnsureSpaceCallback(this, callback) {
@@ -216,7 +216,7 @@ public class CDAClient implements SpaceReadyInterface {
      * Fetch all Content Types from a Space.
      *
      * @param callback {@link CDACallback} instance.
-     * @see {@link CDAService#fetchContentTypes}.
+     * @see CDAService#fetchContentTypes
      */
     public void fetchContentTypes(final CDACallback<CDAArray> callback) {
         ensureSpace(new EnsureSpaceCallback(this, callback) {
@@ -232,7 +232,7 @@ public class CDAClient implements SpaceReadyInterface {
      *
      * @param identifier String representing the Content Type UID.
      * @param callback   {@link CDACallback} instance.
-     * @see {@link CDAService#fetchContentTypeWithIdentifier}.
+     * @see CDAService#fetchContentTypeWithIdentifier
      */
     public void fetchContentTypeWithIdentifier(final String identifier, final CDACallback<CDAContentType> callback) {
         ensureSpace(new EnsureSpaceCallback(this, callback) {
@@ -304,7 +304,7 @@ public class CDAClient implements SpaceReadyInterface {
      * Fetch a single Space.
      *
      * @param callback {@link CDACallback} instance.
-     * @see {@link CDAService#fetchSpace}.
+     * @see CDAService#fetchSpace
      */
     public void fetchSpace(CDACallback<CDASpace> callback) {
         service.fetchSpace(this.spaceKey, callback);

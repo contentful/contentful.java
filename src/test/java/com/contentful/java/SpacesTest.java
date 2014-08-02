@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 
 /**
- * Test for fetching a Space.
+ * Tests for fetching Space resources.
  */
 public class SpacesTest extends AbsTestCase {
     @Test

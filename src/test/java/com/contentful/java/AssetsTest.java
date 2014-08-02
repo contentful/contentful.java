@@ -14,7 +14,7 @@ import java.util.HashMap;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Test Assets.
+ * Tests for fetching Asset resources.
  */
 public class AssetsTest extends AbsTestCase {
     @Test

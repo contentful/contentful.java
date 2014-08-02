@@ -9,7 +9,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 /**
- * Base class for test cases, just sets up a {@link CDAClient} for now.
+ * Base class for all test cases.
  */
 public abstract class AbsTestCase {
     protected CDAClient client;

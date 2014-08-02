@@ -15,7 +15,7 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 /**
- * Test Content Types.
+ * Tests for fetching Content Type resources.
  */
 public class ContentTypeTest extends AbsTestCase {
     @Test

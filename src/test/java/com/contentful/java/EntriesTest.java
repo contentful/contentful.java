@@ -17,7 +17,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * Test Entries.
+ * Tests for fetching Entry resources.
  */
 public class EntriesTest extends AbsTestCase {
     @Test
