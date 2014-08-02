@@ -1,4 +1,4 @@
-package com.contentful.java.utils;
+package com.contentful.java.lib;
 
 import com.contentful.java.model.CDAArray;
 

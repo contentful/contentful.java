@@ -1,6 +1,5 @@
-package com.contentful.java.serialization;
+package com.contentful.java.api;
 
-import com.contentful.java.api.CDAClient;
 import com.contentful.java.lib.Constants;
 import com.contentful.java.model.*;
 import com.google.gson.*;
@@ -12,7 +11,7 @@ import java.util.Map;
 /**
  * Custom type adapter for de-serializing resources.
  */
-public class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
+class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
     // Client reference.
     private CDAClient client;
 
@@ -69,7 +68,7 @@ public class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
 
     /**
      * De-serialize a resource of type Entry.
-     * <p/>
+     *
      * This method should return an {@link CDAEntry} object or in case the resource
      * matches a previously registered custom class via {@link CDAClient#registerCustomClass}
      * an object of the custom class type will be created.
@@ -153,7 +152,7 @@ public class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
      * This will set the list fields based on the target's type, depending on whether
      * it is an instance of the {@link ResourceWithMap} class or the {@link ResourceWithList},
      * different results will be provided.
-     * <p/>
+     *
      * This method will also set the map of system attributes for the resource.
      *
      * @param target      Target {@link CDAResource} object to set fields for.

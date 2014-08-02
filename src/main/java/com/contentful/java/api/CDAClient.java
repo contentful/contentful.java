@@ -1,8 +1,7 @@
 package com.contentful.java.api;
 
+import com.contentful.java.lib.Utils;
 import com.contentful.java.model.*;
-import com.contentful.java.serialization.ResourceTypeAdapter;
-import com.contentful.java.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import retrofit.RequestInterceptor;
@@ -21,12 +20,14 @@ import java.util.concurrent.ThreadFactory;
 import static com.contentful.java.lib.Constants.*;
 
 /**
- * The {@link CDAClient} is used to request any information from the server.
- * A client is associated with exactly one Space, but there is no limit to the concurrent number
- * of clients existing at any one time.
+ * Client to be used when requesting information from the server.
+ * <p>Every client is associated with exactly one Space, but there is no limit to the concurrent number
+ * of clients existing at any one time.</p>
+ *
+ * @see Builder for instructions of how to create a client.
  */
 @SuppressWarnings("UnusedDeclaration")
-public class CDAClient implements SpaceReadyInterface {
+public class CDAClient {
     // Definitions & Configuration
     private String accessToken;
     private String spaceKey;
@@ -43,6 +44,9 @@ public class CDAClient implements SpaceReadyInterface {
     // Executors
     private ExecutorService executorService;
 
+    private CDAClient() {
+    }
+
     /**
      * Initialization method - should be called once all configuration properties are set.
      */
@@ -55,7 +59,7 @@ public class CDAClient implements SpaceReadyInterface {
 
         // Create a service
         RestAdapter.Builder builder = new RestAdapter.Builder()
-                .setEndpoint(SERVER_URI)
+                .setEndpoint(CDA_SERVER_URI)
                 .setConverter(new GsonConverter(gson))
                 .setRequestInterceptor(getRequestInterceptor());
 
@@ -112,7 +116,7 @@ public class CDAClient implements SpaceReadyInterface {
     /**
      * Use this method in order to register custom {@link CDAEntry} subclasses to be instantiated by this client
      * when Entries of a specific Content Type are retrieved from the server.
-     * <p/>
+     *
      * This allows the integration of custom value objects with convenience accessors, additional
      * conversions or custom functionality so that you can easily build your data model upon Entries.
      *
@@ -130,7 +134,7 @@ public class CDAClient implements SpaceReadyInterface {
      *
      * @return Map instance.
      */
-    public HashMap<String, Class<?>> getCustomTypesMap() {
+    HashMap<String, Class<?>> getCustomTypesMap() {
         return customTypesMap;
     }
 
@@ -138,7 +142,6 @@ public class CDAClient implements SpaceReadyInterface {
      * Fetch Assets.
      *
      * @param callback {@link CDACallback} instance.
-     * @see CDAService#fetchAssets
      */
     public void fetchAssets(CDACallback<CDAArray> callback) {
         fetchArrayWithPathSegment(PATH_ASSETS, null, callback);
@@ -149,7 +152,6 @@ public class CDAClient implements SpaceReadyInterface {
      *
      * @param query    Map representing the query.
      * @param callback {@link CDACallback} instance.
-     * @see CDAService#fetchAssetsMatching
      */
     public void fetchAssetsMatching(Map<String, String> query, CDACallback<CDAArray> callback) {
         fetchArrayWithPathSegment(PATH_ASSETS, query, callback);
@@ -160,7 +162,6 @@ public class CDAClient implements SpaceReadyInterface {
      *
      * @param identifier {@link java.lang.String} representing the Asset UID.
      * @param callback   {@link CDACallback} instance.
-     * @see CDAService#fetchAssetsMatching
      */
     public void fetchAssetWithIdentifier(final String identifier, final CDACallback<CDAAsset> callback) {
         ensureSpace(new EnsureSpaceCallback(this, callback) {
@@ -175,7 +176,6 @@ public class CDAClient implements SpaceReadyInterface {
      * Fetch Entries.
      *
      * @param callback {@link CDACallback} instance.
-     * @see CDAService#fetchEntries
      */
     public void fetchEntries(CDACallback<CDAArray> callback) {
         fetchArrayWithPathSegment(PATH_ENTRIES, null, callback);
@@ -186,7 +186,6 @@ public class CDAClient implements SpaceReadyInterface {
      *
      * @param query    Map representing the query.
      * @param callback {@link CDACallback} instance.
-     * @see CDAService#fetchAssetsMatching
      */
     public void fetchEntriesMatching(Map<String, String> query, CDACallback<CDAArray> callback) {
         fetchArrayWithPathSegment(PATH_ENTRIES, query, callback);
@@ -194,14 +193,13 @@ public class CDAClient implements SpaceReadyInterface {
 
     /**
      * Fetch a single Entry with identifier.
-     * <p/>
+     *
      * When expecting result of a custom type which was previously registered using the {@link #registerCustomClass}
      * method, the type of the expected object can also be specified as the generic type of the
-     * {@link CDACallback} instance (i.e. "new CDACallback<SomeCustomEntry>(){...}").
+     * {@link CDACallback} instance (i.e. {@literal "new CDACallback<SomeCustomClass>(){...}"}).
      *
      * @param identifier String representing the UID of the Entry.
      * @param callback   {@link CDACallback} instance.
-     * @see CDAService#fetchEntryWithIdentifier
      */
     public void fetchEntryWithIdentifier(final String identifier, final CDACallback<? extends CDAEntry> callback) {
         ensureSpace(new EnsureSpaceCallback(this, callback) {
@@ -216,7 +214,6 @@ public class CDAClient implements SpaceReadyInterface {
      * Fetch all Content Types from a Space.
      *
      * @param callback {@link CDACallback} instance.
-     * @see CDAService#fetchContentTypes
      */
     public void fetchContentTypes(final CDACallback<CDAArray> callback) {
         ensureSpace(new EnsureSpaceCallback(this, callback) {
@@ -232,7 +229,6 @@ public class CDAClient implements SpaceReadyInterface {
      *
      * @param identifier String representing the Content Type UID.
      * @param callback   {@link CDACallback} instance.
-     * @see CDAService#fetchContentTypeWithIdentifier
      */
     public void fetchContentTypeWithIdentifier(final String identifier, final CDACallback<CDAContentType> callback) {
         ensureSpace(new EnsureSpaceCallback(this, callback) {
@@ -246,14 +242,14 @@ public class CDAClient implements SpaceReadyInterface {
     /**
      * Fetch any kind of Resource from the server.
      * This method can be used in cases where the actual type of Resource to be fetched is determined at runtime.
-     * <p/>
+     *
      * Allowed Resource types are:
      * <ul>
      * <li>{@link com.contentful.java.lib.Constants.CDAResourceType#Asset}</li>
      * <li>{@link com.contentful.java.lib.Constants.CDAResourceType#ContentType}</li>
      * <li>{@link com.contentful.java.lib.Constants.CDAResourceType#Entry}</li>
      * </ul>
-     * <p/>
+     *
      * Note: This method <b>will throw an {@link java.lang.IllegalArgumentException}</b> in cases where an
      * invalid resource type is specified.
      *
@@ -279,7 +275,7 @@ public class CDAClient implements SpaceReadyInterface {
      * <li>{@link com.contentful.java.lib.Constants.CDAResourceType#Asset}</li>
      * <li>{@link com.contentful.java.lib.Constants.CDAResourceType#Entry}</li>
      * </ul>
-     * <p/>
+     *
      * Note: This method <b>will throw an {@link java.lang.IllegalArgumentException}</b> in cases where an
      * invalid resource type is specified.
      *
@@ -304,7 +300,6 @@ public class CDAClient implements SpaceReadyInterface {
      * Fetch a single Space.
      *
      * @param callback {@link CDACallback} instance.
-     * @see CDAService#fetchSpace
      */
     public void fetchSpace(CDACallback<CDASpace> callback) {
         service.fetchSpace(this.spaceKey, callback);
@@ -364,12 +359,7 @@ public class CDAClient implements SpaceReadyInterface {
         service.performSynchronization(spaceKey, true, callback);
     }
 
-    /**
-     * TBD
-     *
-     * @param syncedSpace
-     * @param callback
-     */
+    // TBD
     public void performSynchronization(final CDASyncedSpace syncedSpace, final CDACallback<CDASyncedSpace> callback) {
         service.fetchSyncedSpaceWithPath(syncedSpace.nextSyncUrl, new CDACallback<CDASyncedSpace>() {
             @Override
@@ -384,9 +374,7 @@ public class CDAClient implements SpaceReadyInterface {
         });
     }
 
-    /**
-     * TBD (paging)
-     */
+    // TBD
     public void fetchNextItemsFromList(CDAArray previousResult, CDACallback<CDAArray> callback) {
         HashMap<String, String> map = Utils.getNextBatchQueryMapForList(previousResult);
 
@@ -397,7 +385,7 @@ public class CDAClient implements SpaceReadyInterface {
         service.fetchEntriesMatching(this.spaceKey, map, callback);
     }
 
-    public void setSpace(CDASpace space) {
+    void setSpace(CDASpace space) {
         this.space = space;
     }
 
@@ -405,12 +393,11 @@ public class CDAClient implements SpaceReadyInterface {
         return this.space;
     }
 
-    public Gson getGson() {
+    Gson getGson() {
         return gson;
     }
 
-    @Override
-    public void onSpaceReady(CDASpace space) {
+    void onSpaceReady(CDASpace space) {
         if (space != null && this.space != space) {
             this.space = space;
         }
@@ -418,7 +405,7 @@ public class CDAClient implements SpaceReadyInterface {
 
     /**
      * Build a new {@link CDAClient}.
-     * <p/>
+     *
      * Calling the following methods is required before calling {@link #build}:
      * <ul>
      * <li>{@link #setSpaceKey(String)}</li>
@@ -496,6 +483,8 @@ public class CDAClient implements SpaceReadyInterface {
 
         /**
          * Builds and returns a {@link CDAClient}.
+         *
+         * @return Client instance.
          */
         public CDAClient build() {
             CDAClient client = new CDAClient();

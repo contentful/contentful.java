@@ -40,7 +40,7 @@ public class CDAAsset extends ResourceWithMap {
     /**
      * Sets the MIME type of this Asset.
      *
-     * @param mimeType
+     * @param mimeType String representing the MIME type.
      */
     public void setMimeType(String mimeType) {
         this.mimeType = mimeType;

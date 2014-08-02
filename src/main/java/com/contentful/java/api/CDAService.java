@@ -12,7 +12,7 @@ import java.util.Map;
  * An interface being used internally to create a client via
  * {@link retrofit.RestAdapter#create}.
  */
-public interface CDAService {
+interface CDAService {
     /**
      * Assets endpoint.
      *

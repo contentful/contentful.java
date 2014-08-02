@@ -10,10 +10,10 @@ import java.util.Map;
 
 /**
  * A custom runnable used internally for preparing array result objects.
- * <p/>
+ *
  * This will attempt to resolve all links within a {@link CDAArray} instance,
  * while iterating through all of it's normal and included resources.
- * <p/>
+ *
  * Note: this does some <b>extensive</b> parsing, hence the {@link CDAClient} class
  * spawns any instances of it in the context of a background thread.
  */

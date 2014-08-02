@@ -5,12 +5,11 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * A new instance of this class should be passed as the callback parameter for all asynchronous methods
- * of the {@link CDAClient} class.
- * <p/>
+ * Callback to be used when making asynchronous requests using a {@link com.contentful.java.api.CDAClient} instance.
+ *
  * Implement the {@link #onSuccess} method for cases where the request was successful, the result object
  * should be delivered as a parameter.
- * <p/>
+ *
  * It is also possible to override {@link #onFailure} and provide an implementation for handling errors.
  *
  * @param <T> The type of object to be expected as a result.

@@ -2,11 +2,14 @@ package com.contentful.java.lib;
 
 import com.contentful.java.api.CDAClient;
 import com.contentful.java.model.CDASpace;
+import com.google.gson.Gson;
 import org.apache.commons.io.IOUtils;
 import retrofit.client.Client;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Factory for creating {@link com.contentful.java.api.CDAClient} instances for unit tests.
@@ -33,8 +36,24 @@ public class TestClientFactory {
 
         try {
             String json = IOUtils.toString(TestClientFactory.class.getResourceAsStream(File.separator + spaceFileName));
-            CDASpace space = result.getGson().fromJson(json, CDASpace.class);
-            result.setSpace(space);
+
+            try {
+                Class<? extends CDAClient> clazz = result.getClass();
+
+                Method m = clazz.getDeclaredMethod("getGson");
+                m.setAccessible(true);
+                Gson gson = (Gson) m.invoke(result);
+                CDASpace space = gson.fromJson(json, CDASpace.class);
+                m = result.getClass().getDeclaredMethod("setSpace", CDASpace.class);
+                m.setAccessible(true);
+                m.invoke(result, space);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

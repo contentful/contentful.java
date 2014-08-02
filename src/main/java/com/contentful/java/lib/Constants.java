@@ -18,8 +18,8 @@ public class Constants {
     public static final String HTTP_OAUTH_PATTERN = "Bearer %s";
 
     // Default configuration
-    public static final String SERVER_HOSTNAME = "cdn.contentful.com";
-    public static final String SERVER_URI = String.format("%s://%s", SCHEME_HTTPS, SERVER_HOSTNAME);
+    public static final String CDA_SERVER_HOSTNAME = "cdn.contentful.com";
+    public static final String CDA_SERVER_URI = String.format("%s://%s", SCHEME_HTTPS, CDA_SERVER_HOSTNAME);
     public static final String DEFAULT_LOCALE = "en-US";
 
     // Idle thread name
