@@ -166,7 +166,7 @@ public class CDAClient {
     public void fetchAssetWithIdentifier(final String identifier, final CDACallback<CDAAsset> callback) {
         ensureSpace(new EnsureSpaceCallback(this, callback) {
             @Override
-            void onResultSuccess() {
+            void onSpaceReady() {
                 service.fetchAssetWithIdentifier(CDAClient.this.spaceKey, identifier, callback);
             }
         });
@@ -204,7 +204,7 @@ public class CDAClient {
     public void fetchEntryWithIdentifier(final String identifier, final CDACallback<? extends CDAEntry> callback) {
         ensureSpace(new EnsureSpaceCallback(this, callback) {
             @Override
-            void onResultSuccess() {
+            void onSpaceReady() {
                 service.fetchEntryWithIdentifier(CDAClient.this.spaceKey, identifier, callback);
             }
         });
@@ -218,7 +218,7 @@ public class CDAClient {
     public void fetchContentTypes(final CDACallback<CDAArray> callback) {
         ensureSpace(new EnsureSpaceCallback(this, callback) {
             @Override
-            void onResultSuccess() {
+            void onSpaceReady() {
                 service.fetchContentTypes(CDAClient.this.spaceKey, callback);
             }
         });
@@ -233,7 +233,7 @@ public class CDAClient {
     public void fetchContentTypeWithIdentifier(final String identifier, final CDACallback<CDAContentType> callback) {
         ensureSpace(new EnsureSpaceCallback(this, callback) {
             @Override
-            void onResultSuccess() {
+            void onSpaceReady() {
                 service.fetchContentTypeWithIdentifier(CDAClient.this.spaceKey, identifier, callback);
             }
         });
@@ -311,7 +311,7 @@ public class CDAClient {
 
         ensureSpace(new EnsureSpaceCallback(this, callback) {
             @Override
-            void onResultSuccess() {
+            void onSpaceReady() {
                 service.fetchArrayWithPath(CDAClient.this.spaceKey,
                         pathSegment,
                         query,
@@ -319,8 +319,8 @@ public class CDAClient {
                             @Override
                             protected void onSuccess(CDAArray cdaArray, Response response) {
                                 if (!callback.isCancelled()) {
-                                    executorService.submit(new ArrayParserRunnable(
-                                            cdaArray, callback, space, response, false));
+                                    executorService.submit(new ArrayParserRunnable<CDAArray>(
+                                            cdaArray, callback, space, response));
                                 }
                             }
 
@@ -337,13 +337,12 @@ public class CDAClient {
         });
     }
 
-    /**
-     * Ensure a Space is set for this client instance.
-     *
-     * @param callback {@link EnsureSpaceCallback} callback instance.
-     */
-    private void ensureSpace(final EnsureSpaceCallback callback) {
-        if (space == null) {
+    private void ensureSpace(EnsureSpaceCallback callback) {
+        ensureSpace(false, callback);
+    }
+
+    private void ensureSpace(boolean invalidate, final EnsureSpaceCallback callback) {
+        if (invalidate || space == null) {
             fetchSpace(callback);
         } else {
             callback.onSuccess(space, null);
@@ -355,21 +354,52 @@ public class CDAClient {
      *
      * @param callback {@link CDACallback} instance.
      */
-    public void performInitialSynchronization(CDACallback<CDASyncedSpace> callback) {
-        service.performSynchronization(spaceKey, true, callback);
+    public void performInitialSynchronization(final CDACallback<CDASyncedSpace> callback) {
+        ensureSpace(true, new EnsureSpaceCallback(this, callback) {
+            @Override
+            void onSpaceReady() {
+
+                service.performSynchronization(spaceKey, true, new CDACallback<CDASyncedSpace>() {
+                    @Override
+                    protected void onSuccess(CDASyncedSpace syncedSpace, Response response) {
+                        if (!callback.isCancelled()) {
+                            executorService.submit(new ArrayParserRunnable<CDASyncedSpace>(
+                                    syncedSpace, callback, space, response));
+                        }
+                    }
+
+                    @Override
+                    protected void onFailure(RetrofitError retrofitError) {
+                        super.onFailure(retrofitError);
+
+                        if (!callback.isCancelled()) {
+                            callback.onFailure(retrofitError);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     // TBD
     public void performSynchronization(final CDASyncedSpace syncedSpace, final CDACallback<CDASyncedSpace> callback) {
-        service.fetchSyncedSpaceWithPath(syncedSpace.nextSyncUrl, new CDACallback<CDASyncedSpace>() {
+        ensureSpace(true, new EnsureSpaceCallback(this, callback) {
             @Override
-            protected void onSuccess(CDASyncedSpace updatedSpace, Response response) {
-                executorService.submit(new MergeSpacesRunnable(syncedSpace, updatedSpace, callback, response));
-            }
+            void onSpaceReady() {
+                service.fetchSyncedSpaceWithPath(syncedSpace.getNextSyncUrl(), new CDACallback<CDASyncedSpace>() {
+                    @Override
+                    protected void onSuccess(CDASyncedSpace updatedSpace, Response response) {
+                        executorService.submit(new MergeSpacesRunnable(
+                                syncedSpace,
+                                updatedSpace, callback,
+                                response, space));
+                    }
 
-            @Override
-            protected void onFailure(RetrofitError retrofitError) {
-                callback.onFailure(retrofitError);
+                    @Override
+                    protected void onFailure(RetrofitError retrofitError) {
+                        callback.onFailure(retrofitError);
+                    }
+                });
             }
         });
     }
