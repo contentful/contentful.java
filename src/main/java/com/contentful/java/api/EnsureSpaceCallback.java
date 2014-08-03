@@ -27,7 +27,7 @@ abstract class EnsureSpaceCallback extends CDACallback<CDASpace> {
         client.onSpaceReady(space);
 
         if (!wrappedCallback.isCancelled()) {
-            onResultSuccess();
+            onSpaceReady();
         }
     }
 
@@ -40,5 +40,5 @@ abstract class EnsureSpaceCallback extends CDACallback<CDASpace> {
         }
     }
 
-    abstract void onResultSuccess();
+    abstract void onSpaceReady();
 }

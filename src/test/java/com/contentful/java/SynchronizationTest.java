@@ -1,75 +1,89 @@
 package com.contentful.java;
 
+import com.contentful.java.lib.MockClient;
+import com.contentful.java.lib.TestCallback;
+import com.contentful.java.lib.TestClientFactory;
+import com.contentful.java.model.CDAEntry;
+import com.contentful.java.model.CDAResource;
+import com.contentful.java.model.CDASyncedSpace;
+import org.junit.Test;
+
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
+
 /**
  * Tests for consuming the Sync API.
  */
-public class SynchronizationTest {
-/*
-    public void testSynchronization() throws Exception {
-        TestClientResult<CDASyncedSpace> result = new TestClientResult<CDASyncedSpace>();
+public class SynchronizationTest extends AbsTestCase {
+    @SuppressWarnings("UnnecessaryBoxing")
+    @Test
+    public void testTom() throws Exception {
+        TestCallback<CDASyncedSpace> callback = new TestCallback<CDASyncedSpace>();
 
-        CDAClient customClient = TestClientFactory.newInstanceWithClient(
+        client = TestClientFactory.newInstanceWithClient(
                 new MockClient("result_test_sync_initial.json"));
 
         // #1 - perform initial synchronization
-        customClient.performInitialSynchronization(new TestCallback<CDASyncedSpace>(result));
-        result.cdl.await();
-        verifyResultNotEmpty(result);
+        client.performInitialSynchronization(callback);
+        callback.await();
+        verifyResultNotEmpty(callback);
 
-        assertEquals(3, result.value.items.size());
+        ArrayList<CDAResource> items = callback.value.getItems();
+        assertEquals(3, items.size());
 
-        CDAEntry entry = (CDAEntry) result.value.items.get(0);
-        assertEquals("Yiltiquoar", ((Map) entry.fieldsMap.get("name")).get(Constants.DEFAULT_LOCALE));
-        assertEquals(Double.valueOf(9999), ((Map) entry.fieldsMap.get("age")).get(Constants.DEFAULT_LOCALE));
 
-        entry = (CDAEntry) result.value.items.get(1);
-        assertEquals("Tzayclibbon", ((Map) entry.fieldsMap.get("name")).get(Constants.DEFAULT_LOCALE));
-        assertEquals(Double.valueOf(2405), ((Map) entry.fieldsMap.get("age")).get(Constants.DEFAULT_LOCALE));
+        CDAEntry entry = (CDAEntry) items.get(0);
+        assertEquals("Yiltiquoar", entry.getFields().get("name"));
+        assertEquals(Double.valueOf(9999), entry.getFields().get("age"));
 
-        entry = (CDAEntry) result.value.items.get(2);
-        assertEquals("Za'ha'zah", ((Map) entry.fieldsMap.get("name")).get(Constants.DEFAULT_LOCALE));
-        assertEquals(Double.valueOf(2789), ((Map) entry.fieldsMap.get("age")).get(Constants.DEFAULT_LOCALE));
+        entry = (CDAEntry) items.get(1);
+        assertEquals("Tzayclibbon", entry.getFields().get("name"));
+        assertEquals(Double.valueOf(2405), entry.getFields().get("age"));
+
+        entry = (CDAEntry) items.get(2);
+        assertEquals("Za'ha'zah", entry.getFields().get("name"));
+        assertEquals(Double.valueOf(2789), entry.getFields().get("age"));
 
 
         // #2 - get delta update
-        CDASyncedSpace initialSyncResult = result.value;
-        result = new TestClientResult<CDASyncedSpace>();
+        CDASyncedSpace initialSyncResult = callback.value;
+        callback = new TestCallback<CDASyncedSpace>();
 
-        customClient = TestClientFactory.newInstanceWithClient(
+        client = TestClientFactory.newInstanceWithClient(
                 new MockClient("result_test_sync_update.json"));
 
-        customClient.performSynchronization(initialSyncResult, new TestCallback<CDASyncedSpace>(result));
-        result.cdl.await();
-        verifyResultNotEmpty(result);
+        client.performSynchronization(initialSyncResult, callback);
+        callback.await();
+        verifyResultNotEmpty(callback);
 
-        assertEquals(3, result.value.items.size());
+        items = callback.value.getItems();
+        assertEquals(3, items.size());
 
-        entry = (CDAEntry) result.value.items.get(0);
-        assertEquals("Ooctaiphus", ((Map) entry.fieldsMap.get("name")).get(Constants.DEFAULT_LOCALE));
-        assertEquals(Double.valueOf(2), ((Map) entry.fieldsMap.get("age")).get(Constants.DEFAULT_LOCALE));
+        entry = (CDAEntry) items.get(0);
+        assertEquals("Ooctaiphus", entry.getFields().get("name"));
+        assertEquals(Double.valueOf(2), entry.getFields().get("age"));
 
-        entry = (CDAEntry) result.value.items.get(1);
-        assertEquals("Yiltiquoar", ((Map) entry.fieldsMap.get("name")).get(Constants.DEFAULT_LOCALE));
-        assertEquals(Double.valueOf(666666), ((Map) entry.fieldsMap.get("age")).get(Constants.DEFAULT_LOCALE));
+        entry = (CDAEntry) items.get(1);
+        assertEquals("Yiltiquoar", entry.getFields().get("name"));
+        assertEquals(Double.valueOf(666666), entry.getFields().get("age"));
 
-        entry = (CDAEntry) result.value.items.get(2);
-        assertEquals("Za'ha'zah", ((Map) entry.fieldsMap.get("name")).get(Constants.DEFAULT_LOCALE));
-        assertEquals(Double.valueOf(2789), ((Map) entry.fieldsMap.get("age")).get(Constants.DEFAULT_LOCALE));
+        entry = (CDAEntry) items.get(2);
+        assertEquals("Za'ha'zah", entry.getFields().get("name"));
+        assertEquals(Double.valueOf(2789), entry.getFields().get("age"));
 
         // #3 - empty update
-        CDASyncedSpace updatedSpace = result.value;
+        CDASyncedSpace updatedSpace = callback.value;
 
-        result = new TestClientResult<CDASyncedSpace>();
+        callback = new TestCallback<CDASyncedSpace>();
 
-        customClient = TestClientFactory.newInstanceWithClient(
+        client = TestClientFactory.newInstanceWithClient(
                 new MockClient("result_test_sync_update_empty.json"));
 
+        client.performSynchronization(updatedSpace, callback);
+        callback.await();
+        verifyResultNotEmpty(callback);
 
-        customClient.performSynchronization(updatedSpace, new TestCallback<CDASyncedSpace>(result));
-        result.cdl.await();
-        verifyResultNotEmpty(result);
-
-        assertEquals(3, result.value.items.size());
+        assertEquals(3, callback.value.getItems().size());
     }
-*/
 }

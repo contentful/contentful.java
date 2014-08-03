@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * A class representing a type of result which may contain multiple resources.
  */
-public class CDAArray extends CDAResource {
+public class CDAArray extends ArrayResource {
     // Limit parameter.
     int limit;
 

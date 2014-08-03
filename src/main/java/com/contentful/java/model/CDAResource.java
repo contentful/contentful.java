@@ -5,7 +5,7 @@ import com.contentful.java.lib.Constants;
 import java.util.Map;
 
 /**
- * Created by tomxor on 01/08/14.
+ * Base class for CDA resources.
  */
 public class CDAResource {
     Map<String, Object> sys;
@@ -27,4 +27,24 @@ public class CDAResource {
     // todo get/set locale
 
     // todo resolveWithSuccess
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CDAResource)) return false;
+
+        CDAResource that = (CDAResource) o;
+
+        return uniqueIdForResource(this).equals(uniqueIdForResource(that));
+    }
+
+    @Override
+    public int hashCode() {
+        return uniqueIdForResource(this).hashCode();
+    }
+
+    private static String uniqueIdForResource(CDAResource resource) {
+        Map sysMap = resource.getSys();
+        return String.format("%s:%s", sysMap.get("id"), sysMap.get("type"));
+    }
 }

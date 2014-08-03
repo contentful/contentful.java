@@ -1,16 +1,20 @@
 package com.contentful.java.model;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * A class to represent the result of a Space synchronization.
  */
-public class CDASyncedSpace {
-    public List<Object> assets; // todo tmp
+public class CDASyncedSpace extends ArrayResource {
+    ArrayList<CDAResource> items;
 
-    public List<Object> entries;
+    String nextSyncUrl;
 
-    public String nextSyncUrl;
+    public ArrayList<CDAResource> getItems() {
+        return items;
+    }
 
-//    public List<CDABaseItem> items;
+    public String getNextSyncUrl() {
+        return nextSyncUrl;
+    }
 }

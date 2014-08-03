@@ -7,6 +7,8 @@ public class Constants {
     public enum CDAResourceType {
         Asset,
         ContentType,
+        DeletedAsset,
+        DeletedEntry,
         Entry,
         Link,
         Space

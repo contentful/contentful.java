@@ -4,6 +4,7 @@ import com.contentful.java.lib.Constants;
 import com.contentful.java.model.*;
 import retrofit.client.Response;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,24 +18,21 @@ import java.util.Map;
  * Note: this does some <b>extensive</b> parsing, hence the {@link CDAClient} class
  * spawns any instances of it in the context of a background thread.
  */
-class ArrayParserRunnable implements Runnable {
-    private final CDAArray result;
-    private final CDACallback<CDAArray> callback;
+class ArrayParserRunnable<T extends ArrayResource> implements Runnable {
+    private final T result;
+    private final CDACallback<T> callback;
     private CDASpace space;
     private final Response response;
-    private boolean forSync;
 
-    public ArrayParserRunnable(CDAArray result,
-                               CDACallback<CDAArray> callback,
+    public ArrayParserRunnable(T result,
+                               CDACallback<T> callback,
                                CDASpace space,
-                               Response response,
-                               boolean forSync) {
+                               Response response) {
 
         this.result = result;
         this.callback = callback;
         this.space = space;
         this.response = response;
-        this.forSync = forSync;
     }
 
     @Override
@@ -42,7 +40,36 @@ class ArrayParserRunnable implements Runnable {
         HashMap<String, CDAResource> assets = new HashMap<String, CDAResource>();
         HashMap<String, CDAResource> entries = new HashMap<String, CDAResource>();
 
-        for (CDAResource item : result.getItems()) {
+        ArrayList<CDAResource> items;
+
+        if (result instanceof CDAArray) {
+            items = ((CDAArray) result).getItems();
+
+            CDAArray.Includes includes = ((CDAArray) result).getIncludes();
+
+            if (includes != null) {
+                List<CDAAsset> includedAssets = includes.getAssets();
+                List<CDAEntry> includedEntries = includes.getEntries();
+
+                if (includedAssets != null) {
+                    for (CDAResource item : includedAssets) {
+                        assets.put((String) item.getSys().get("id"), item);
+                    }
+                }
+
+                if (includedEntries != null) {
+                    for (CDAResource item : includedEntries) {
+                        entries.put((String) item.getSys().get("id"), item);
+                    }
+                }
+            }
+        } else if (result instanceof CDASyncedSpace) {
+            items = ((CDASyncedSpace) result).getItems();
+        } else {
+            throw new IllegalArgumentException("Invalid result item.");
+        }
+
+        for (CDAResource item : items) {
             parseResource(item);
 
             if (item instanceof CDAAsset) {
@@ -52,43 +79,22 @@ class ArrayParserRunnable implements Runnable {
             }
         }
 
-        CDAArray.Includes includes = result.getIncludes();
-
-        if (includes != null) {
-            List<CDAAsset> includedAssets = includes.getAssets();
-            List<CDAEntry> includedEntries = includes.getEntries();
-
-            if (includedAssets != null) {
-                for (CDAResource item : includedAssets) {
-                    assets.put((String) item.getSys().get("id"), item);
-                }
-            }
-
-            if (includedEntries != null) {
-                for (CDAResource item : includedEntries) {
-                    entries.put((String) item.getSys().get("id"), item);
-                }
-            }
-        }
-
         for (Map.Entry<String, CDAResource> entry : entries.entrySet()) {
             CDAResource item = entry.getValue();
             resolveResourceLinks(item, assets, entries);
         }
 
-        if (!callback.isCancelled()) {
-            callback.success(result, response);
-        }
+        onFinish();
     }
 
     private void parseResource(CDAResource resource) {
-        if (resource instanceof ResourceWithMap) {
-            ResourceWithMap res = (ResourceWithMap) resource;
+        if (result instanceof CDASyncedSpace) {
+            if (resource instanceof ResourceWithMap) {
+                ResourceWithMap res = (ResourceWithMap) resource;
 
-            HashMap<String, Map> localizedFields = res.getLocalizedFieldsMap();
-            Map<String, Object> rawFields = res.getRawFields();
+                HashMap<String, Map> localizedFields = res.getLocalizedFieldsMap();
+                Map<String, Object> rawFields = res.getRawFields();
 
-            if (forSync) {
                 // create a map for every locale
                 for (Locale locale : space.getLocales()) {
                     localizedFields.put(locale.code, new HashMap<String, Object>());
@@ -155,5 +161,11 @@ class ArrayParserRunnable implements Runnable {
         }
 
         return result;
+    }
+
+    void onFinish() {
+        if (!callback.isCancelled()) {
+            callback.success(result, response);
+        }
     }
 }
