@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 public class SynchronizationTest extends AbsTestCase {
     @SuppressWarnings("UnnecessaryBoxing")
     @Test
-    public void testTom() throws Exception {
+    public void testSynchronization() throws Exception {
         TestCallback<CDASyncedSpace> callback = new TestCallback<CDASyncedSpace>();
 
         client = TestClientFactory.newInstanceWithClient(
@@ -44,7 +44,6 @@ public class SynchronizationTest extends AbsTestCase {
         entry = (CDAEntry) items.get(2);
         assertEquals("Za'ha'zah", entry.getFields().get("name"));
         assertEquals(Double.valueOf(2789), entry.getFields().get("age"));
-
 
         // #2 - get delta update
         CDASyncedSpace initialSyncResult = callback.value;

@@ -2,50 +2,39 @@ package com.contentful.java.api;
 
 import com.contentful.java.lib.Constants;
 import com.contentful.java.model.*;
-import retrofit.client.Response;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 /**
  * A custom runnable used internally for preparing array result objects.
  *
- * This will attempt to resolve all links within a {@link CDAArray} instance,
+ * This will attempt to resolve all links within an {@link ArrayResource} instance,
  * while iterating through all of it's normal and included resources.
- *
- * Note: this does some <b>extensive</b> parsing, hence the {@link CDAClient} class
- * spawns any instances of it in the context of a background thread.
  */
-class ArrayParserRunnable<T extends ArrayResource> implements Runnable {
-    private final T result;
-    private final CDACallback<T> callback;
-    private CDASpace space;
-    private final Response response;
+public class ArrayParser<T extends ArrayResource> implements Callable<T> {
+    final T source;
+    final CDASpace space;
 
-    public ArrayParserRunnable(T result,
-                               CDACallback<T> callback,
-                               CDASpace space,
-                               Response response) {
-
-        this.result = result;
-        this.callback = callback;
+    public ArrayParser(T source, CDASpace space) {
+        this.source = source;
         this.space = space;
-        this.response = response;
     }
 
     @Override
-    public void run() {
+    public T call() throws Exception {
         HashMap<String, CDAResource> assets = new HashMap<String, CDAResource>();
         HashMap<String, CDAResource> entries = new HashMap<String, CDAResource>();
 
         ArrayList<CDAResource> items;
 
-        if (result instanceof CDAArray) {
-            items = ((CDAArray) result).getItems();
+        if (source instanceof CDAArray) {
+            items = ((CDAArray) source).getItems();
 
-            CDAArray.Includes includes = ((CDAArray) result).getIncludes();
+            CDAArray.Includes includes = ((CDAArray) source).getIncludes();
 
             if (includes != null) {
                 List<CDAAsset> includedAssets = includes.getAssets();
@@ -63,8 +52,8 @@ class ArrayParserRunnable<T extends ArrayResource> implements Runnable {
                     }
                 }
             }
-        } else if (result instanceof CDASyncedSpace) {
-            items = ((CDASyncedSpace) result).getItems();
+        } else if (source instanceof CDASyncedSpace) {
+            items = ((CDASyncedSpace) source).getItems();
         } else {
             throw new IllegalArgumentException("Invalid result item.");
         }
@@ -84,11 +73,11 @@ class ArrayParserRunnable<T extends ArrayResource> implements Runnable {
             resolveResourceLinks(item, assets, entries);
         }
 
-        onFinish();
+        return source;
     }
 
     private void parseResource(CDAResource resource) {
-        if (result instanceof CDASyncedSpace) {
+        if (source instanceof CDASyncedSpace) {
             if (resource instanceof ResourceWithMap) {
                 ResourceWithMap res = (ResourceWithMap) resource;
 
@@ -161,11 +150,5 @@ class ArrayParserRunnable<T extends ArrayResource> implements Runnable {
         }
 
         return result;
-    }
-
-    void onFinish() {
-        if (!callback.isCancelled()) {
-            callback.success(result, response);
-        }
     }
 }
