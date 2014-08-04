@@ -515,16 +515,8 @@ public class CDAClient {
     }
 */
 
-    void setSpace(CDASpace space) {
-        this.space = space;
-    }
-
     public CDASpace getSpace() {
         return this.space;
-    }
-
-    Gson getGson() {
-        return gson;
     }
 
     void onSpaceReady(CDASpace space) {
