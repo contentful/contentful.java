@@ -1,5 +1,6 @@
 package com.contentful.java;
 
+import com.contentful.java.api.CDAClient;
 import com.contentful.java.lib.Constants;
 import com.contentful.java.lib.MockClient;
 import com.contentful.java.lib.TestCallback;
@@ -20,16 +21,29 @@ public class SpacesTest extends AbsTestCase {
     public void testFetchSpace() throws Exception {
         TestCallback<CDASpace> callback = new TestCallback<CDASpace>();
 
-        client = TestClientFactory.newInstanceWithClient(
-                new MockClient("result_test_fetch_space.json"));
+        TestClientFactory.newInstance()
+                .setClient(new MockClient("result_test_fetch_space.json"))
+                .build()
+                .fetchSpace(callback);
 
-        client.fetchSpace(callback);
         callback.await();
 
         verifyResultNotEmpty(callback);
+        verifySpace(callback.value);
+    }
 
-        CDASpace space = callback.value;
+    @Test
+    public void testFetchSpaceBlocking() throws Exception {
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_test_fetch_space.json"))
+                .build();
 
+        CDASpace result = client.fetchSpaceBlocking();
+        verifySpace(result);
+    }
+
+    void verifySpace(CDASpace space) {
+        assertNotNull(space);
         assertEquals("Contentful Example API", space.getName());
         assertEquals("Space", space.getSys().get("type"));
         assertEquals("cfexampleapi", space.getSys().get("id"));

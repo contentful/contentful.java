@@ -1,13 +1,17 @@
 package com.contentful.java;
 
-import com.contentful.java.lib.MockClient;
-import com.contentful.java.lib.NyanCat;
-import com.contentful.java.lib.TestCallback;
-import com.contentful.java.lib.TestClientFactory;
+import com.contentful.java.api.CDAClient;
+import com.contentful.java.lib.*;
 import com.contentful.java.model.CDAArray;
 import com.contentful.java.model.CDAResource;
 import org.junit.Test;
+import retrofit.ErrorHandler;
+import retrofit.RetrofitError;
+import retrofit.client.Client;
+import retrofit.client.Request;
+import retrofit.client.Response;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
@@ -20,8 +24,9 @@ public class ClientTest extends AbsTestCase {
     public void testClientProvider() throws Exception {
         TestCallback<CDAArray> callback = new TestCallback<CDAArray>();
 
-        client = TestClientFactory.newInstanceWithClient(
-                new MockClient("result_test_client_provider.json"));
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_test_client_provider.json"))
+                .build();
 
         client.registerCustomClass("cat", NyanCat.class);
 
@@ -36,5 +41,22 @@ public class ClientTest extends AbsTestCase {
 
         EntriesTest.verifyNyanCatEntryWithClass(cat);
         assertTrue(cat.getBestFriend().getBestFriend() == cat);
+    }
+
+    @Test(expected = TestException.class)
+    public void testCustomErrorHandler() throws Exception {
+        TestClientFactory.newInstance()
+                .setClient(new Client() {
+                    @Override
+                    public Response execute(Request request) throws IOException {
+                        throw new RuntimeException();
+                    }
+                })
+                .setErrorHandler(new ErrorHandler() {
+                    @Override
+                    public Throwable handleError(RetrofitError retrofitError) {
+                        return new TestException();
+                    }
+                }).build().fetchSpaceBlocking();
     }
 }

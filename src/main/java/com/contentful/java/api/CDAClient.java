@@ -1,9 +1,9 @@
 package com.contentful.java.api;
 
-import com.contentful.java.lib.Utils;
 import com.contentful.java.model.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import retrofit.ErrorHandler;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.Client;
@@ -50,24 +50,30 @@ public class CDAClient {
     /**
      * Initialization method - should be called once all configuration properties are set.
      */
-    private void init() {
+    private void init(Builder builder) {
         // Initialize members
         customTypesMap = new HashMap<String, Class<?>>();
+        this.spaceKey = builder.spaceKey;
+        this.accessToken = builder.accessToken;
 
         // Initialize Gson
         initGson();
 
         // Create a service
-        RestAdapter.Builder builder = new RestAdapter.Builder()
+        RestAdapter.Builder restBuilder = new RestAdapter.Builder()
                 .setEndpoint(CDA_SERVER_URI)
                 .setConverter(new GsonConverter(gson))
                 .setRequestInterceptor(getRequestInterceptor());
 
-        if (clientProvider != null) {
-            builder.setClient(clientProvider);
+        if (builder.clientProvider != null) {
+            restBuilder.setClient(builder.clientProvider);
         }
 
-        service = builder.build().create(CDAService.class);
+        if (builder.errorHandler != null) {
+            restBuilder.setErrorHandler(builder.errorHandler);
+        }
+
+        service = restBuilder.build().create(CDAService.class);
 
         // Init ExecutorService (will be used for parsing of array results and spaces synchronization).
         executorService = Executors.newCachedThreadPool(new ThreadFactory() {
@@ -158,6 +164,16 @@ public class CDAClient {
     }
 
     /**
+     * Fetch Assets. (BLOCKING)
+     *
+     * @return {@link CDAArray} result.
+     * @throws Exception in case of an error.
+     */
+    public CDAArray fetchAssetsBlocking() throws Exception {
+        return fetchArrayWithPathSegmentBlocking(PATH_ASSETS, null);
+    }
+
+    /**
      * Fetch Assets matching a specific query.
      *
      * @param query    Map representing the query.
@@ -165,6 +181,17 @@ public class CDAClient {
      */
     public void fetchAssetsMatching(Map<String, String> query, CDACallback<CDAArray> callback) {
         fetchArrayWithPathSegment(PATH_ASSETS, query, callback);
+    }
+
+    /**
+     * Fetch Assets matching a specific query. (BLOCKING)
+     *
+     * @param query Map representing the query.
+     * @return {@link CDAArray} result.
+     * @throws Exception in case of an error.
+     */
+    public CDAArray fetchAssetsMatchingBlocking(Map<String, String> query) throws Exception {
+        return fetchArrayWithPathSegmentBlocking(PATH_ASSETS, query);
     }
 
     /**
@@ -183,12 +210,37 @@ public class CDAClient {
     }
 
     /**
+     * Fetch a single Asset with identifier. (BLOCKING)
+     *
+     * @param identifier {@link java.lang.String} representing the Asset UID.
+     * @return {@link CDAArray} result.
+     * @throws Exception in case of an error.
+     */
+    public CDAAsset fetchAssetWithIdentifierBlocking(String identifier) throws Exception {
+        if (ensureSpaceBlocking(false)) {
+            return service.fetchAssetWithIdentifierBlocking(spaceKey, identifier);
+        }
+
+        return null; // todo throw exception and pass to custom error handler if there is one
+    }
+
+    /**
      * Fetch Entries.
      *
      * @param callback {@link CDACallback} instance.
      */
     public void fetchEntries(CDACallback<CDAArray> callback) {
         fetchArrayWithPathSegment(PATH_ENTRIES, null, callback);
+    }
+
+    /**
+     * Fetch Entries. (BLOCKING)
+     *
+     * @return {@link CDAArray} result.
+     * @throws Exception in case of an error.
+     */
+    public CDAArray fetchEntriesBlocking() throws Exception {
+        return fetchArrayWithPathSegmentBlocking(PATH_ENTRIES, null);
     }
 
     /**
@@ -199,6 +251,17 @@ public class CDAClient {
      */
     public void fetchEntriesMatching(Map<String, String> query, CDACallback<CDAArray> callback) {
         fetchArrayWithPathSegment(PATH_ENTRIES, query, callback);
+    }
+
+    /**
+     * Fetch Entries matching a specific query. (BLOCKING)
+     *
+     * @param query Map representing the query.
+     * @return {@link CDAArray} result.
+     * @throws Exception in case of an error.
+     */
+    public CDAArray fetchEntriesMatchingBlocking(Map<String, String> query) throws Exception {
+        return fetchArrayWithPathSegmentBlocking(PATH_ENTRIES, query);
     }
 
     /**
@@ -221,6 +284,23 @@ public class CDAClient {
     }
 
     /**
+     * Fetch a single Entry with identifier.
+     *
+     * @param identifier String representing the UID of the Entry.
+     * @return {@link CDAEntry} or a subclass of it.
+     * @throws Exception in case of an error.
+     * @see #fetchEntryWithIdentifier(String, CDACallback)
+     */
+    @SuppressWarnings("unchecked")
+    public CDAEntry fetchEntryWithIdentifierBlocking(String identifier) throws Exception {
+        if (ensureSpaceBlocking(false)) {
+            return service.fetchEntryWithIdentifierBlocking(spaceKey, identifier);
+        }
+
+        return null; // todo throw exception and pass to custom error handler if there is one
+    }
+
+    /**
      * Fetch all Content Types from a Space.
      *
      * @param callback {@link CDACallback} instance.
@@ -232,6 +312,20 @@ public class CDAClient {
                 service.fetchContentTypes(CDAClient.this.spaceKey, callback);
             }
         });
+    }
+
+    /**
+     * Fetch all Content Types from a Space. (BLOCKING)
+     *
+     * @return {@link CDAArray} result.
+     * @throws Exception in case of an error.
+     */
+    public CDAArray fetchContentTypesBlocking() throws Exception {
+        if (ensureSpaceBlocking(false)) {
+            return service.fetchContentTypesBlocking(spaceKey);
+        }
+
+        return null; // todo throw exception and pass to custom error handler if there is one
     }
 
     /**
@@ -247,6 +341,21 @@ public class CDAClient {
                 service.fetchContentTypeWithIdentifier(CDAClient.this.spaceKey, identifier, callback);
             }
         });
+    }
+
+    /**
+     * Fetch a single Content Type with identifier. (BLOCKING)
+     *
+     * @param identifier String representing the Content Type UID.
+     * @return {@link CDAContentType} result.
+     * @throws Exception
+     */
+    public CDAContentType fetchContentTypeWithIdentifierBlocking(String identifier) throws Exception {
+        if (ensureSpaceBlocking(false)) {
+            return service.fetchContentTypeWithIdentifierBlocking(spaceKey, identifier);
+        }
+
+        return null; // todo throw exception and pass to custom error handler if there is one
     }
 
     /**
@@ -315,6 +424,15 @@ public class CDAClient {
         service.fetchSpace(this.spaceKey, callback);
     }
 
+    /**
+     * Fetch a single Space. (BLOCKING)
+     *
+     * @return {@link CDASpace} result.
+     */
+    public CDASpace fetchSpaceBlocking() throws Exception {
+        return service.fetchSpaceBlocking(this.spaceKey);
+    }
+
     private void fetchArrayWithPathSegment(final String pathSegment,
                                            final Map<String, String> query,
                                            final CDACallback<CDAArray> callback) {
@@ -330,6 +448,14 @@ public class CDAClient {
         });
     }
 
+    private CDAArray fetchArrayWithPathSegmentBlocking(String pathSegment, Map<String, String> query) throws Exception {
+        if (ensureSpaceBlocking(false)) {
+            return service.fetchArrayWithPathBlocking(spaceKey, pathSegment, query);
+        }
+
+        return null; // todo throw exception and pass to custom error handler if there is one
+    }
+
     private void ensureSpace(EnsureSpaceCallback callback) {
         ensureSpace(false, callback);
     }
@@ -340,6 +466,14 @@ public class CDAClient {
         } else {
             callback.onSuccess(space, null);
         }
+    }
+
+    private boolean ensureSpaceBlocking(boolean invalidate) throws Exception {
+        if (invalidate || space == null) {
+            space = fetchSpaceBlocking();
+        }
+
+        return space != null;
     }
 
     /**
@@ -368,7 +502,8 @@ public class CDAClient {
         });
     }
 
-    // TBD
+/*
+    TBD
     public void fetchNextItemsFromList(CDAArray previousResult, CDACallback<CDAArray> callback) {
         HashMap<String, String> map = Utils.getNextBatchQueryMapForList(previousResult);
 
@@ -378,6 +513,7 @@ public class CDAClient {
 
         service.fetchEntriesMatching(this.spaceKey, map, callback);
     }
+*/
 
     void setSpace(CDASpace space) {
         this.space = space;
@@ -410,12 +546,13 @@ public class CDAClient {
         private String spaceKey;
         private String accessToken;
         private Client.Provider clientProvider;
+        private ErrorHandler errorHandler;
 
         /**
          * Sets the space key to be used with this client.
          *
          * @param spaceKey String representing the space key.
-         * @return this {@link Builder} instance.
+         * @return this {@code Builder} instance.
          */
         public Builder setSpaceKey(String spaceKey) {
             if (spaceKey == null) {
@@ -430,7 +567,7 @@ public class CDAClient {
          * Sets the access token to be used with this client.
          *
          * @param accessToken String representing access token to be used when authenticating against the CDA.
-         * @return this {@link Builder} instance.
+         * @return this {@code Builder} instance.
          */
         public Builder setAccessToken(String accessToken) {
             if (accessToken == null) {
@@ -445,7 +582,7 @@ public class CDAClient {
          * Sets a custom client to be used for making HTTP requests.
          *
          * @param client {@link retrofit.client.Client} instance.
-         * @return this {@link Builder} instance.
+         * @return this {@code Builder} instance.
          */
         public Builder setClient(final Client client) {
             if (client == null) {
@@ -464,7 +601,7 @@ public class CDAClient {
          * Sets a provider of clients to be used for making HTTP requests.
          *
          * @param clientProvider {@link retrofit.client.Client.Provider} instance.
-         * @return this {@link Builder} instance.
+         * @return this {@code Builder} instance.
          */
         public Builder setClient(Client.Provider clientProvider) {
             if (clientProvider == null) {
@@ -476,16 +613,28 @@ public class CDAClient {
         }
 
         /**
+         * The error handler allows you to customize the type of exception thrown for errors on synchronous requests.
+         *
+         * @param errorHandler Error handler to use.
+         * @return this {@code Builder} instance.
+         */
+        public Builder setErrorHandler(ErrorHandler errorHandler) {
+            if (errorHandler == null) {
+                throw new NullPointerException("Error handler may not be null.");
+            }
+
+            this.errorHandler = errorHandler;
+            return this;
+        }
+
+        /**
          * Builds and returns a {@link CDAClient}.
          *
          * @return Client instance.
          */
         public CDAClient build() {
             CDAClient client = new CDAClient();
-            client.spaceKey = this.spaceKey;
-            client.accessToken = this.accessToken;
-            client.clientProvider = this.clientProvider;
-            client.init();
+            client.init(this);
 
             return client;
         }

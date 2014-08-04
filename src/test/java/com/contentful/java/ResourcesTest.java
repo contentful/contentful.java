@@ -2,6 +2,7 @@ package com.contentful.java;
 
 import com.contentful.java.lib.Constants;
 import com.contentful.java.lib.TestCallback;
+import com.contentful.java.lib.TestClientFactory;
 import com.contentful.java.model.*;
 import org.junit.Test;
 
@@ -19,7 +20,11 @@ public class ResourcesTest extends AbsTestCase {
     public void testFetchResourcesOfTypeAsset() throws Exception {
         TestCallback<CDAArray> callback = new TestCallback<CDAArray>();
 
-        client.fetchResourcesOfType(Constants.CDAResourceType.Asset, callback);
+        TestClientFactory
+                .newInstance()
+                .build()
+                .fetchResourcesOfType(Constants.CDAResourceType.Asset, callback);
+
         callback.await();
         verifyResultNotEmpty(callback);
 
@@ -35,7 +40,11 @@ public class ResourcesTest extends AbsTestCase {
     public void testFetchResourcesOfTypeEntry() throws Exception {
         TestCallback<CDAArray> callback = new TestCallback<CDAArray>();
 
-        client.fetchResourcesOfType(Constants.CDAResourceType.Entry, callback);
+        TestClientFactory
+                .newInstance()
+                .build()
+                .fetchResourcesOfType(Constants.CDAResourceType.Entry, callback);
+
         callback.await();
         verifyResultNotEmpty(callback);
 
@@ -51,7 +60,11 @@ public class ResourcesTest extends AbsTestCase {
     public void testFetchResourcesOfTypeContentType() throws Exception {
         TestCallback<CDAArray> callback = new TestCallback<CDAArray>();
 
-        client.fetchResourcesOfType(Constants.CDAResourceType.ContentType, callback);
+        TestClientFactory
+                .newInstance()
+                .build()
+                .fetchResourcesOfType(Constants.CDAResourceType.ContentType, callback);
+
         callback.await();
         verifyResultNotEmpty(callback);
 
@@ -71,9 +84,10 @@ public class ResourcesTest extends AbsTestCase {
         HashMap<String, String> query = new HashMap<String, String>();
         query.put("sys.id", "happycat");
 
-        client.fetchResourcesOfTypeMatching(Constants.CDAResourceType.Asset,
-                query,
-                callback);
+        TestClientFactory
+                .newInstance()
+                .build()
+                .fetchResourcesOfTypeMatching(Constants.CDAResourceType.Asset, query, callback);
 
         callback.await();
         verifyResultNotEmpty(callback);
@@ -96,9 +110,10 @@ public class ResourcesTest extends AbsTestCase {
         HashMap<String, String> query = new HashMap<String, String>();
         query.put("sys.id", "nyancat");
 
-        client.fetchResourcesOfTypeMatching(Constants.CDAResourceType.Entry,
-                query,
-                callback);
+        TestClientFactory
+                .newInstance()
+                .build()
+                .fetchResourcesOfTypeMatching(Constants.CDAResourceType.Entry, query, callback);
 
         callback.await();
         verifyResultNotEmpty(callback);

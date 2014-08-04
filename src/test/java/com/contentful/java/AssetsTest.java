@@ -1,5 +1,6 @@
 package com.contentful.java;
 
+import com.contentful.java.api.CDAClient;
 import com.contentful.java.lib.MockClient;
 import com.contentful.java.lib.TestCallback;
 import com.contentful.java.lib.TestClientFactory;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests for fetching Asset resources.
@@ -21,15 +23,85 @@ public class AssetsTest extends AbsTestCase {
     public void testFetchAssets() throws Exception {
         TestCallback<CDAArray> callback = new TestCallback<CDAArray>();
 
-        client = TestClientFactory.newInstanceWithClient(
-                new MockClient("result_fetch_assets.json"));
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_assets.json"))
+                .build();
 
         client.fetchAssets(callback);
 
         callback.await();
         verifyResultNotEmpty(callback);
+        verifyAssets(callback.value);
+    }
 
-        CDAArray result = callback.value;
+    @Test
+    public void testFetchAssetsBlocking() throws Exception {
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_assets.json"))
+                .build();
+
+        CDAArray result = client.fetchAssetsBlocking();
+        verifyAssets(result);
+    }
+
+    @Test
+    public void testFetchAssetsMatching() throws Exception {
+        TestCallback<CDAArray> callback = new TestCallback<CDAArray>();
+
+        HashMap<String, String> query = new HashMap<String, String>();
+        query.put("sys.id", "jake");
+
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_assets_matching.json"))
+                .build();
+
+        client.fetchAssetsMatching(query, callback);
+        callback.await();
+
+        verifyResultNotEmpty(callback);
+        verifyAssetsMatching(callback.value);
+    }
+
+    @Test
+    public void testFetchAssetsMatchingBlocking() throws Exception {
+        HashMap<String, String> query = new HashMap<String, String>();
+        query.put("sys.id", "jake");
+
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_assets_matching.json"))
+                .build();
+
+        CDAArray result = client.fetchAssetsMatchingBlocking(query);
+        verifyAssetsMatching(result);
+    }
+
+    @Test
+    public void testFetchAssetWithIdentifier() throws Exception {
+        TestCallback<CDAAsset> callback = new TestCallback<CDAAsset>();
+
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_asset_with_identifier.json"))
+                .build();
+
+        client.fetchAssetWithIdentifier("fake", callback);
+
+        callback.await();
+        verifyResultNotEmpty(callback);
+        verifyAssetWithIdentifier(callback.value);
+    }
+
+    @Test
+    public void testFetchAssetWithIdentifierBlocking() throws Exception {
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_asset_with_identifier.json"))
+                .build();
+
+        CDAAsset result = client.fetchAssetWithIdentifierBlocking("fake");
+        verifyAssetWithIdentifier(result);
+    }
+
+    void verifyAssets(CDAArray result) {
+        assertNotNull(result);
         ArrayList<CDAResource> items = result.getItems();
 
         assertEquals(2, items.size());
@@ -43,22 +115,8 @@ public class AssetsTest extends AbsTestCase {
         assertEquals("image/png", item.getMimeType());
     }
 
-    @Test
-    public void testFetchAssetsMatching() throws Exception {
-        TestCallback<CDAArray> callback = new TestCallback<CDAArray>();
-
-        HashMap<String, String> query = new HashMap<String, String>();
-        query.put("sys.id", "jake");
-
-        client = TestClientFactory.newInstanceWithClient(
-                new MockClient("result_fetch_assets_matching.json"));
-
-        client.fetchAssetsMatching(query, callback);
-        callback.await();
-
-        verifyResultNotEmpty(callback);
-
-        CDAArray result = callback.value;
+    void verifyAssetsMatching(CDAArray result) {
+        assertNotNull(result);
         ArrayList<CDAResource> items = result.getItems();
 
         assertEquals(1, items.size());
@@ -72,21 +130,10 @@ public class AssetsTest extends AbsTestCase {
         assertEquals("image/png", asset.getMimeType());
     }
 
-    @Test
-    public void testFetchAssetWithIdentifier() throws Exception {
-        TestCallback<CDAAsset> callback = new TestCallback<CDAAsset>();
+    void verifyAssetWithIdentifier(CDAAsset result) {
+        assertNotNull(result);
 
-        client = TestClientFactory.newInstanceWithClient(
-                new MockClient("result_fetch_asset_with_identifier.json"));
-
-        client.fetchAssetWithIdentifier("fake", callback);
-
-        callback.await();
-        verifyResultNotEmpty(callback);
-
-        CDAAsset asset = callback.value;
-
-        assertEquals("https://images.contentful.com/fake.png", asset.getUrl());
-        assertEquals("image/png", asset.getMimeType());
+        assertEquals("https://images.contentful.com/fake.png", result.getUrl());
+        assertEquals("image/png", result.getMimeType());
     }
 }
