@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests for fetching Asset resources.
@@ -30,19 +31,17 @@ public class AssetsTest extends AbsTestCase {
 
         callback.await();
         verifyResultNotEmpty(callback);
+        verifyAssets(callback.value);
+    }
 
-        CDAArray result = callback.value;
-        ArrayList<CDAResource> items = result.getItems();
+    @Test
+    public void testFetchAssetsBlocking() throws Exception {
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_assets.json"))
+                .build();
 
-        assertEquals(2, items.size());
-
-        CDAAsset item = (CDAAsset) items.get(0);
-        assertEquals("https://test.url.com/file_1.png", item.getUrl());
-        assertEquals("image/png", item.getMimeType());
-
-        item = (CDAAsset) items.get(1);
-        assertEquals("https://test.url.com/file_2.png", item.getUrl());
-        assertEquals("image/png", item.getMimeType());
+        CDAArray result = client.fetchAssetsBlocking();
+        verifyAssets(result);
     }
 
     @Test
@@ -60,19 +59,20 @@ public class AssetsTest extends AbsTestCase {
         callback.await();
 
         verifyResultNotEmpty(callback);
+        verifyAssetsMatching(callback.value);
+    }
 
-        CDAArray result = callback.value;
-        ArrayList<CDAResource> items = result.getItems();
+    @Test
+    public void testFetchAssetsMatchingBlocking() throws Exception {
+        HashMap<String, String> query = new HashMap<String, String>();
+        query.put("sys.id", "jake");
 
-        assertEquals(1, items.size());
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_assets_matching.json"))
+                .build();
 
-        CDAAsset asset = (CDAAsset) items.get(0);
-
-        assertEquals(
-                "https://images.contentful.com/cfexampleapi/4hlteQAXS8iS0YCMU6QMWg/2a4d826144f014109364ccf5c891d2dd/jake.png",
-                asset.getUrl());
-
-        assertEquals("image/png", asset.getMimeType());
+        CDAArray result = client.fetchAssetsMatchingBlocking(query);
+        verifyAssetsMatching(result);
     }
 
     @Test
@@ -87,10 +87,53 @@ public class AssetsTest extends AbsTestCase {
 
         callback.await();
         verifyResultNotEmpty(callback);
+        verifyAssetWithIdentifier(callback.value);
+    }
 
-        CDAAsset asset = callback.value;
+    @Test
+    public void testFetchAssetWithIdentifierBlocking() throws Exception {
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_asset_with_identifier.json"))
+                .build();
 
-        assertEquals("https://images.contentful.com/fake.png", asset.getUrl());
+        CDAAsset result = client.fetchAssetWithIdentifierBlocking("fake");
+        verifyAssetWithIdentifier(result);
+    }
+
+    void verifyAssets(CDAArray result) {
+        assertNotNull(result);
+        ArrayList<CDAResource> items = result.getItems();
+
+        assertEquals(2, items.size());
+
+        CDAAsset item = (CDAAsset) items.get(0);
+        assertEquals("https://test.url.com/file_1.png", item.getUrl());
+        assertEquals("image/png", item.getMimeType());
+
+        item = (CDAAsset) items.get(1);
+        assertEquals("https://test.url.com/file_2.png", item.getUrl());
+        assertEquals("image/png", item.getMimeType());
+    }
+
+    void verifyAssetsMatching(CDAArray result) {
+        assertNotNull(result);
+        ArrayList<CDAResource> items = result.getItems();
+
+        assertEquals(1, items.size());
+
+        CDAAsset asset = (CDAAsset) items.get(0);
+
+        assertEquals(
+                "https://images.contentful.com/cfexampleapi/4hlteQAXS8iS0YCMU6QMWg/2a4d826144f014109364ccf5c891d2dd/jake.png",
+                asset.getUrl());
+
         assertEquals("image/png", asset.getMimeType());
+    }
+
+    void verifyAssetWithIdentifier(CDAAsset result) {
+        assertNotNull(result);
+
+        assertEquals("https://images.contentful.com/fake.png", result.getUrl());
+        assertEquals("image/png", result.getMimeType());
     }
 }

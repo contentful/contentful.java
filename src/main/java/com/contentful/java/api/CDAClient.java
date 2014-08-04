@@ -49,8 +49,6 @@ public class CDAClient {
 
     /**
      * Initialization method - should be called once all configuration properties are set.
-     *
-     * @param builder
      */
     private void init(Builder builder) {
         // Initialize members
@@ -166,6 +164,16 @@ public class CDAClient {
     }
 
     /**
+     * Fetch Assets. (BLOCKING)
+     *
+     * @return {@link CDAArray} result instance.
+     * @throws Exception in case of an error.
+     */
+    public CDAArray fetchAssetsBlocking() throws Exception {
+        return fetchArrayWithPathSegmentBlocking(PATH_ASSETS, null);
+    }
+
+    /**
      * Fetch Assets matching a specific query.
      *
      * @param query    Map representing the query.
@@ -173,6 +181,17 @@ public class CDAClient {
      */
     public void fetchAssetsMatching(Map<String, String> query, CDACallback<CDAArray> callback) {
         fetchArrayWithPathSegment(PATH_ASSETS, query, callback);
+    }
+
+    /**
+     * Fetch Assets matching a specific query. (BLOCKING)
+     *
+     * @param query Map representing the query.
+     * @return {@link CDAArray} instance.
+     * @throws Exception in case of an error.
+     */
+    public CDAArray fetchAssetsMatchingBlocking(Map<String, String> query) throws Exception {
+        return fetchArrayWithPathSegmentBlocking(PATH_ASSETS, query);
     }
 
     /**
@@ -188,6 +207,21 @@ public class CDAClient {
                 service.fetchAssetWithIdentifier(CDAClient.this.spaceKey, identifier, callback);
             }
         });
+    }
+
+    /**
+     * Fetch a single Asset with identifier. (BLOCKING)
+     *
+     * @param identifier {@link java.lang.String} representing the Asset UID.
+     * @return {@link CDAArray} instance.
+     * @throws Exception in case of an error.
+     */
+    public CDAAsset fetchAssetWithIdentifierBlocking(String identifier) throws Exception {
+        if (ensureSpaceBlocking(false)) {
+            return service.fetchAssetWithIdentifierBlocking(spaceKey, identifier);
+        }
+
+        return null; // todo throw exception and pass to custom error handler if there is one
     }
 
     /**
@@ -347,6 +381,14 @@ public class CDAClient {
         });
     }
 
+    private CDAArray fetchArrayWithPathSegmentBlocking(String pathSegment, Map<String, String> query) throws Exception {
+        if (ensureSpaceBlocking(false)) {
+            return service.fetchArrayWithPathBlocking(spaceKey, pathSegment, query);
+        }
+
+        return null; // todo throw exception and pass to custom error handler if there is one
+    }
+
     private void ensureSpace(EnsureSpaceCallback callback) {
         ensureSpace(false, callback);
     }
@@ -359,15 +401,9 @@ public class CDAClient {
         }
     }
 
-    private boolean ensureSpaceBlocking(boolean invalidate) {
+    private boolean ensureSpaceBlocking(boolean invalidate) throws Exception {
         if (invalidate || space == null) {
-            space = null;
-
-            try {
-                space = fetchSpaceBlocking();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            space = fetchSpaceBlocking();
         }
 
         return space != null;

@@ -14,6 +14,38 @@ import java.util.Map;
  */
 interface CDAService {
     /**
+     * Fetch any type of resource from a Space.
+     * This can be useful for when the type of resource to be fetched is determined at runtime.
+     *
+     * @param space    String representing the Space key.
+     * @param type     Type of resource to be fetched (i.e. "entries", "assets", ...).
+     * @param query    Map representing the query.
+     * @param callback {@link CDACallback} instance to be used.
+     */
+    @GET("/spaces/{space}/{type}")
+    void fetchArrayWithPath(
+            @Path("space") String space,
+            @Path("type") String type,
+            @QueryMap Map<String, String> query,
+            CDACallback<CDAArray> callback
+    );
+
+    /**
+     * Fetch any type of resource from a Space. (BLOCKING)
+     *
+     * @param space String representing the Space key.
+     * @param type  Type of resource to be fetched (i.e. "entries", "assets", ...).
+     * @param query Map representing the query.
+     * @return {@link CDAArray} result.
+     */
+    @GET("/spaces/{space}/{type}")
+    CDAArray fetchArrayWithPathBlocking(
+            @Path("space") String space,
+            @Path("type") String type,
+            @QueryMap Map<String, String> query
+    );
+
+    /**
      * Asset endpoint with UID.
      *
      * @param space      String representing the Space key.
@@ -25,6 +57,19 @@ interface CDAService {
             @Path("space") String space,
             @Path("identifier") String identifier,
             CDACallback<CDAAsset> callback
+    );
+
+    /**
+     * Asset endpoint with UID. (BLOCKING)
+     *
+     * @param space      String representing the Space key.
+     * @param identifier String representing the Asset UID.
+     * @return {@link CDAAsset} result.
+     */
+    @GET("/spaces/{space}/assets/{identifier}")
+    CDAAsset fetchAssetWithIdentifierBlocking(
+            @Path("space") String space,
+            @Path("identifier") String identifier
     );
 
     /**
@@ -83,7 +128,7 @@ interface CDAService {
      * Space endpoint. (BLOCKING)
      *
      * @param space String representing the Space key.
-     * @return {@link CDASpace} instance.
+     * @return {@link CDASpace} result.
      */
     @GET("/spaces/{space}")
     CDASpace fetchSpaceBlocking(
@@ -114,21 +159,4 @@ interface CDAService {
     void fetchSyncedSpaceWithPath(
             @Path("dynamic_path") String dynamicPath,
             SyncSpaceCallback callback);
-
-    /**
-     * Fetch any type of resource from a Space.
-     * This can be useful for when the type of resource to be fetched is determined at runtime.
-     *
-     * @param space    String representing the Space key.
-     * @param type     Type of resource to be fetched (i.e. "entries", "assets", ...).
-     * @param query    Map representing the query.
-     * @param callback {@link CDACallback} instance to be used.
-     */
-    @GET("/spaces/{space}/{type}")
-    void fetchArrayWithPath(
-            @Path("space") String space,
-            @Path("type") String type,
-            @QueryMap Map<String, String> query,
-            CDACallback<CDAArray> callback
-    );
 }
