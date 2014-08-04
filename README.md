@@ -21,7 +21,7 @@ Download the [latest JAR][2] or grab via Maven:
 ```
 or Gradle:
 ```groovy
-compile 'com.contentful.java:sdk:1.0'
+compile 'com.contentful.java:contentful-java-sdk:1.0'
 ```
 
  [1]: https://www.contentful.com
