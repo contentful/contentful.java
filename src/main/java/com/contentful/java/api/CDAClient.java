@@ -166,7 +166,7 @@ public class CDAClient {
     /**
      * Fetch Assets. (BLOCKING)
      *
-     * @return {@link CDAArray} result instance.
+     * @return {@link CDAArray} result.
      * @throws Exception in case of an error.
      */
     public CDAArray fetchAssetsBlocking() throws Exception {
@@ -187,7 +187,7 @@ public class CDAClient {
      * Fetch Assets matching a specific query. (BLOCKING)
      *
      * @param query Map representing the query.
-     * @return {@link CDAArray} instance.
+     * @return {@link CDAArray} result.
      * @throws Exception in case of an error.
      */
     public CDAArray fetchAssetsMatchingBlocking(Map<String, String> query) throws Exception {
@@ -213,7 +213,7 @@ public class CDAClient {
      * Fetch a single Asset with identifier. (BLOCKING)
      *
      * @param identifier {@link java.lang.String} representing the Asset UID.
-     * @return {@link CDAArray} instance.
+     * @return {@link CDAArray} result.
      * @throws Exception in case of an error.
      */
     public CDAAsset fetchAssetWithIdentifierBlocking(String identifier) throws Exception {
@@ -277,6 +277,20 @@ public class CDAClient {
     }
 
     /**
+     * Fetch all Content Types from a Space. (BLOCKING)
+     *
+     * @return {@link CDAArray} result.
+     * @throws Exception in case of an error.
+     */
+    public CDAArray fetchContentTypesBlocking() throws Exception {
+        if (ensureSpaceBlocking(false)) {
+            return service.fetchContentTypesBlocking(spaceKey);
+        }
+
+        return null; // todo throw exception and pass to custom error handler if there is one
+    }
+
+    /**
      * Fetch a single Content Type with identifier.
      *
      * @param identifier String representing the Content Type UID.
@@ -289,6 +303,21 @@ public class CDAClient {
                 service.fetchContentTypeWithIdentifier(CDAClient.this.spaceKey, identifier, callback);
             }
         });
+    }
+
+    /**
+     * Fetch a single Content Type with identifier. (BLOCKING)
+     *
+     * @param identifier String representing the Content Type UID.
+     * @return {@link CDAContentType} result.
+     * @throws Exception
+     */
+    public CDAContentType fetchContentTypeWithIdentifierBlocking(String identifier) throws Exception {
+        if (ensureSpaceBlocking(false)) {
+            return service.fetchContentTypeWithIdentifierBlocking(spaceKey, identifier);
+        }
+
+        return null; // todo throw exception and pass to custom error handler if there is one
     }
 
     /**
@@ -360,7 +389,7 @@ public class CDAClient {
     /**
      * Fetch a single Space. (BLOCKING)
      *
-     * @return {@link CDASpace} instance.
+     * @return {@link CDASpace} result.
      */
     public CDASpace fetchSpaceBlocking() throws Exception {
         return service.fetchSpaceBlocking(this.spaceKey);

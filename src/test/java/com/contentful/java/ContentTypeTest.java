@@ -30,8 +30,44 @@ public class ContentTypeTest extends AbsTestCase {
         client.fetchContentTypes(callback);
         callback.await();
         verifyResultNotEmpty(callback);
+        verifyContentTypes(callback.value);
+    }
 
-        CDAArray result = callback.value;
+    @Test
+    public void testFetchContentTypesBlocking() throws Exception {
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_test_fetch_content_types.json"))
+                .build();
+
+        CDAArray result = client.fetchContentTypesBlocking();
+        verifyContentTypes(result);
+    }
+
+    @Test
+    public void testFetchContentTypeWithIdentifier() throws Exception {
+        TestCallback<CDAContentType> callback = new TestCallback<CDAContentType>();
+
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_test_fetch_content_type_with_id.json"))
+                .build();
+
+        client.fetchContentTypeWithIdentifier("MOCK", callback);
+        callback.await();
+        verifyResultNotEmpty(callback);
+        verifyContentTypeWithIdentifier(callback.value);
+    }
+
+    @Test
+    public void testFetchContentTypeWithIdentifierBlocking() throws Exception {
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_test_fetch_content_type_with_id.json"))
+                .build();
+
+        client.fetchContentTypeWithIdentifierBlocking("MOCK");
+    }
+
+    void verifyContentTypes(CDAArray result) {
+        assertNotNull(result);
 
         assertEquals(2, result.getTotal());
         assertEquals(0, result.getSkip());
@@ -79,24 +115,15 @@ public class ContentTypeTest extends AbsTestCase {
         assertFalse((Boolean) field.get("localized"));
     }
 
-    @Test
-    public void testFetchContentTypeWithIdentifier() throws Exception {
-        TestCallback<CDAContentType> callback = new TestCallback<CDAContentType>();
+    void verifyContentTypeWithIdentifier(CDAContentType result) {
+        assertNotNull(result);
 
-        CDAClient client = TestClientFactory.newInstance()
-                .setClient(new MockClient("result_test_fetch_content_type_with_id.json"))
-                .build();
+        assertEquals("Cat", result.getName());
+        assertEquals("name", result.getDisplayField());
+        assertEquals("Meow.", result.getUserDescription());
+        assertEquals("cat", result.getSys().get("id"));
 
-        client.fetchContentTypeWithIdentifier("MOCK", callback);
-        callback.await();
-        verifyResultNotEmpty(callback);
-
-        assertEquals("Cat", callback.value.getName());
-        assertEquals("name", callback.value.getDisplayField());
-        assertEquals("Meow.", callback.value.getUserDescription());
-        assertEquals("cat", callback.value.getSys().get("id"));
-
-        List<Map> fields = callback.value.getFields();
+        List<Map> fields = result.getFields();
         assertEquals(8, fields.size());
 
         assertEquals("name", fields.get(0).get("id"));

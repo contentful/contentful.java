@@ -85,6 +85,17 @@ interface CDAService {
     );
 
     /**
+     * Content Types endpoint. (BLOCKING)
+     *
+     * @param space String representing the Space key.
+     * @return {@link CDAArray} result.
+     */
+    @GET("/spaces/{space}/content_types")
+    CDAArray fetchContentTypesBlocking(
+            @Path("space") String space
+    );
+
+    /**
      * Content Type endpoint with UID.
      *
      * @param space      String representing the Space key.
@@ -96,6 +107,19 @@ interface CDAService {
             @Path("space") String space,
             @Path("identifier") String identifier,
             CDACallback<CDAContentType> callback
+    );
+
+    /**
+     * Content Type endpoint with UID. (BLOCKING)
+     *
+     * @param space      String representing the Space key.
+     * @param identifier String representing the Content Type UID.
+     * @return {@link CDAArray} result.
+     */
+    @GET("/spaces/{space}/content_types/{identifier}")
+    CDAContentType fetchContentTypeWithIdentifierBlocking(
+            @Path("space") String space,
+            @Path("identifier") String identifier
     );
 
     /**
