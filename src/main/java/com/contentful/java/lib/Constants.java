@@ -16,10 +16,13 @@ public class Constants {
 
     // HTTP constants
     public static final String SCHEME_HTTPS = "https";
+    public static final String HTTP_HEADER_USER_AGENT = "User-Agent";
     public static final String HTTP_HEADER_AUTH = "Authorization";
     public static final String HTTP_OAUTH_PATTERN = "Bearer %s";
 
-    // Default configuration
+
+    // Configuration
+    public static final String VERSION_NAME = "1.0";
     public static final String CDA_SERVER_HOSTNAME = "cdn.contentful.com";
     public static final String CDA_SERVER_URI = String.format("%s://%s", SCHEME_HTTPS, CDA_SERVER_HOSTNAME);
     public static final String DEFAULT_LOCALE = "en-US";

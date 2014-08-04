@@ -29,6 +29,8 @@ import static com.contentful.java.lib.Constants.*;
 @SuppressWarnings("UnusedDeclaration")
 public class CDAClient {
     // Definitions & Configuration
+    static final String USER_AGENT = String.format("contentful.java/%s", VERSION_NAME);
+
     private String accessToken;
     private String spaceKey;
 
@@ -109,6 +111,8 @@ public class CDAClient {
                     requestFacade.addHeader(HTTP_HEADER_AUTH,
                             String.format(HTTP_OAUTH_PATTERN, accessToken));
                 }
+
+                requestFacade.addHeader(HTTP_HEADER_USER_AGENT, USER_AGENT);
             }
         };
     }
