@@ -2,7 +2,6 @@ package com.contentful.java.api;
 
 import com.contentful.java.model.ArrayResource;
 import com.contentful.java.model.CDAArray;
-import com.contentful.java.model.CDASyncedSpace;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
@@ -24,17 +23,11 @@ class ArrayResourceTypeAdapter implements JsonDeserializer<ArrayResource> {
                                      Type type,
                                      JsonDeserializationContext context) throws JsonParseException {
 
-        ArrayResource result = null;
+        ArrayResource result = gson.fromJson(jsonElement, type);
 
         if (CDAArray.class.equals(type)) {
             try {
-                result = deserialize(CDAArray.class, jsonElement);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (CDASyncedSpace.class.equals(type)) {
-            try {
-                result = deserialize(CDASyncedSpace.class, jsonElement);
+                result = parseArray(CDAArray.class, (CDAArray) result);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -43,9 +36,9 @@ class ArrayResourceTypeAdapter implements JsonDeserializer<ArrayResource> {
         return result;
     }
 
-    <T extends ArrayResource> T deserialize(Class<T> clazz, JsonElement jsonElement) throws Exception {
+    <T extends ArrayResource> T parseArray(Class<T> clazz, T source) throws Exception {
         return new ArrayParser<T>(
-                gson.fromJson(jsonElement, clazz),
+                source,
                 client.getSpace())
                 .call();
     }

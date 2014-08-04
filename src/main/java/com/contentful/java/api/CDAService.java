@@ -142,7 +142,7 @@ interface CDAService {
     void performSynchronization(
             @Path("space") String space,
             @Query("initial") Boolean initial,
-            CDACallback<CDASyncedSpace> callback
+            SyncSpaceCallback callback
     );
 
     /**
@@ -154,7 +154,7 @@ interface CDAService {
     @GET("/{dynamic_path}")
     void fetchSyncedSpaceWithPath(
             @Path("dynamic_path") String dynamicPath,
-            CDACallback<CDASyncedSpace> callback);
+            SyncSpaceCallback callback);
 
     /**
      * Fetch any type of resource from a Space.

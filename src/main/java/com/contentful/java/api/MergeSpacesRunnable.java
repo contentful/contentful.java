@@ -33,32 +33,42 @@ class MergeSpacesRunnable implements Runnable {
 
     @Override
     public void run() {
-        ArrayList<CDAResource> originalItems = new ArrayList<CDAResource>(originalSpace.getItems());
-        ArrayList<CDAResource> updatedItems = updatedSpace.getItems();
+        if (originalSpace != null) {
+            ArrayList<CDAResource> originalItems = new ArrayList<CDAResource>(originalSpace.getItems());
+            ArrayList<CDAResource> updatedItems = updatedSpace.getItems();
 
-        for (int i = updatedItems.size() - 1; i >= 0; i--) {
-            CDAResource item = updatedItems.get(i);
-            CDAResourceType resourceType = CDAResourceType.valueOf((String) item.getSys().get("type"));
+            for (int i = updatedItems.size() - 1; i >= 0; i--) {
+                CDAResource item = updatedItems.get(i);
+                CDAResourceType resourceType = CDAResourceType.valueOf((String) item.getSys().get("type"));
 
-            if (CDAResourceType.DeletedAsset.equals(resourceType)) {
-                item.getSys().put("type", CDAResourceType.Asset.toString());
-                originalItems.remove(item);
-            } else if (CDAResourceType.DeletedEntry.equals(resourceType)) {
-                item.getSys().put("type", CDAResourceType.Entry.toString());
-                originalItems.remove(item);
-            } else if (CDAResourceType.Asset.equals(resourceType) ||
-                    CDAResourceType.Entry.equals(resourceType)) {
+                if (CDAResourceType.DeletedAsset.equals(resourceType)) {
+                    item.getSys().put("type", CDAResourceType.Asset.toString());
+                    originalItems.remove(item);
+                } else if (CDAResourceType.DeletedEntry.equals(resourceType)) {
+                    item.getSys().put("type", CDAResourceType.Entry.toString());
+                    originalItems.remove(item);
+                } else if (CDAResourceType.Asset.equals(resourceType) ||
+                        CDAResourceType.Entry.equals(resourceType)) {
 
-                originalItems.remove(item);
-                originalItems.add(0, item);
+                    originalItems.remove(item);
+                    originalItems.add(0, item);
+                }
             }
+
+            updatedItems.clear();
+            updatedItems.addAll(originalItems);
         }
 
-        updatedItems.clear();
-        updatedItems.addAll(originalItems);
+        CDASyncedSpace result = null;
+
+        try {
+            result = new ArrayParser<CDASyncedSpace>(updatedSpace, space).call();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         if (!callback.isCancelled()) {
-            callback.success(updatedSpace, response);
+            callback.success(result, response);
         }
     }
 }

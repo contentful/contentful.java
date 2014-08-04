@@ -6,9 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
-import retrofit.RetrofitError;
 import retrofit.client.Client;
-import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
 import java.util.HashMap;
@@ -44,7 +42,7 @@ public class CDAClient {
     private Gson gson;
 
     // Executors
-    private ExecutorService executorService;
+    ExecutorService executorService;
 
     private CDAClient() {
     }
@@ -353,30 +351,19 @@ public class CDAClient {
         ensureSpace(true, new EnsureSpaceCallback(this, callback) {
             @Override
             void onSpaceReady() {
-                service.performSynchronization(spaceKey, true, callback);
+                service.performSynchronization(spaceKey, true,
+                        new SyncSpaceCallback(null, CDAClient.this, callback));
             }
         });
     }
 
     // TBD
-    public void performSynchronization(final CDASyncedSpace syncedSpace, final CDACallback<CDASyncedSpace> callback) {
+    public void performSynchronization(final CDASyncedSpace existingSpace, final CDACallback<CDASyncedSpace> callback) {
         ensureSpace(true, new EnsureSpaceCallback(this, callback) {
             @Override
             void onSpaceReady() {
-                service.fetchSyncedSpaceWithPath(syncedSpace.getNextSyncUrl(), new CDACallback<CDASyncedSpace>() {
-                    @Override
-                    protected void onSuccess(CDASyncedSpace updatedSpace, Response response) {
-                        executorService.submit(new MergeSpacesRunnable(
-                                syncedSpace,
-                                updatedSpace, callback,
-                                response, space));
-                    }
-
-                    @Override
-                    protected void onFailure(RetrofitError retrofitError) {
-                        callback.onFailure(retrofitError);
-                    }
-                });
+                service.fetchSyncedSpaceWithPath(existingSpace.getNextSyncUrl(),
+                        new SyncSpaceCallback(existingSpace, CDAClient.this, callback));
             }
         });
     }
