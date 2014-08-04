@@ -187,6 +187,19 @@ interface CDAService {
     );
 
     /**
+     * Space Sync endpoint. (BLOCKING)
+     *
+     * @param space   String representing the Space key.
+     * @param initial Boolean indicating whether this is the initial sync request or not.
+     * @return {@link CDASyncedSpace} result.
+     */
+    @GET("/spaces/{space}/sync")
+    CDASyncedSpace performSynchronizationBlocking(
+            @Path("space") String space,
+            @Query("initial") Boolean initial
+    );
+
+    /**
      * Execute a request using a path determined at runtime.
      *
      * @param dynamicPath String representing the path.

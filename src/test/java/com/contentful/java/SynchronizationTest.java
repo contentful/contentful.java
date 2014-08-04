@@ -12,6 +12,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests for consuming the Sync API.
@@ -30,10 +31,68 @@ public class SynchronizationTest extends AbsTestCase {
         client.performInitialSynchronization(callback);
         callback.await();
         verifyResultNotEmpty(callback);
+        CDASyncedSpace firstResult = callback.value;
+        verifySynchronizationFirst(firstResult);
 
-        ArrayList<CDAResource> items = callback.value.getItems();
+        // #2 - get delta update
+        callback = new TestCallback<CDASyncedSpace>();
+
+        client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_test_sync_update.json"))
+                .build();
+
+        client.performSynchronization(firstResult, callback);
+        callback.await();
+        verifyResultNotEmpty(callback);
+        CDASyncedSpace secondResult = callback.value;
+        verifySynchronizationSecond(secondResult);
+
+        // #3 - empty update
+        callback = new TestCallback<CDASyncedSpace>();
+
+        client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_test_sync_update_empty.json"))
+                .build();
+
+        client.performSynchronization(secondResult, callback);
+        callback.await();
+        verifyResultNotEmpty(callback);
+        CDASyncedSpace thirdResult = callback.value;
+        verifySynchronizationThird(thirdResult);
+    }
+
+    @Test
+    public void testSynchronizationBlocking() throws Exception {
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_test_sync_initial.json"))
+                .build();
+
+        // #1 - perform initial synchronization
+        CDASyncedSpace firstResult = client.performInitialSynchronizationBlocking();
+        verifySynchronizationFirst(firstResult);
+
+        // #2 - get delta update
+        client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_test_sync_update.json"))
+                .build();
+
+        CDASyncedSpace secondResult = client.performSynchronizationBlocking(firstResult);
+        verifySynchronizationSecond(secondResult);
+
+        // #3 - empty update
+        client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_test_sync_update_empty.json"))
+                .build();
+
+        CDASyncedSpace thirdResult = client.performSynchronizationBlocking(secondResult);
+        verifySynchronizationThird(thirdResult);
+    }
+
+    void verifySynchronizationFirst(CDASyncedSpace result) {
+        assertNotNull(result);
+
+        ArrayList<CDAResource> items = result.getItems();
         assertEquals(3, items.size());
-
 
         CDAEntry entry = (CDAEntry) items.get(0);
         assertEquals("Yiltiquoar", entry.getFields().get("name"));
@@ -46,23 +105,15 @@ public class SynchronizationTest extends AbsTestCase {
         entry = (CDAEntry) items.get(2);
         assertEquals("Za'ha'zah", entry.getFields().get("name"));
         assertEquals(Double.valueOf(2789), entry.getFields().get("age"));
+    }
 
-        // #2 - get delta update
-        CDASyncedSpace initialSyncResult = callback.value;
-        callback = new TestCallback<CDASyncedSpace>();
+    void verifySynchronizationSecond(CDASyncedSpace result) {
+        assertNotNull(result);
 
-        client = TestClientFactory.newInstance()
-                .setClient(new MockClient("result_test_sync_update.json"))
-                .build();
-
-        client.performSynchronization(initialSyncResult, callback);
-        callback.await();
-        verifyResultNotEmpty(callback);
-
-        items = callback.value.getItems();
+        ArrayList<CDAResource> items = result.getItems();
         assertEquals(3, items.size());
 
-        entry = (CDAEntry) items.get(0);
+        CDAEntry entry = (CDAEntry) items.get(0);
         assertEquals("Ooctaiphus", entry.getFields().get("name"));
         assertEquals(Double.valueOf(2), entry.getFields().get("age"));
 
@@ -73,20 +124,11 @@ public class SynchronizationTest extends AbsTestCase {
         entry = (CDAEntry) items.get(2);
         assertEquals("Za'ha'zah", entry.getFields().get("name"));
         assertEquals(Double.valueOf(2789), entry.getFields().get("age"));
+    }
 
-        // #3 - empty update
-        CDASyncedSpace updatedSpace = callback.value;
+    void verifySynchronizationThird(CDASyncedSpace result) {
+        assertNotNull(result);
 
-        callback = new TestCallback<CDASyncedSpace>();
-
-        client = TestClientFactory.newInstance()
-                .setClient(new MockClient("result_test_sync_update_empty.json"))
-                .build();
-
-        client.performSynchronization(updatedSpace, callback);
-        callback.await();
-        verifyResultNotEmpty(callback);
-
-        assertEquals(3, callback.value.getItems().size());
+        assertEquals(3, result.getItems().size());
     }
 }

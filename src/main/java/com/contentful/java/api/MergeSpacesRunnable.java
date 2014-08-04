@@ -6,13 +6,14 @@ import com.contentful.java.model.CDASyncedSpace;
 import retrofit.client.Response;
 
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 import static com.contentful.java.lib.Constants.CDAResourceType;
 
 /**
  * TBD
  */
-class MergeSpacesRunnable implements Runnable {
+class MergeSpacesRunnable implements Callable<CDASyncedSpace> {
     private final CDASyncedSpace originalSpace;
     private final CDASyncedSpace updatedSpace;
     private CDACallback<CDASyncedSpace> callback;
@@ -32,7 +33,7 @@ class MergeSpacesRunnable implements Runnable {
     }
 
     @Override
-    public void run() {
+    public CDASyncedSpace call() throws Exception {
         if (originalSpace != null) {
             ArrayList<CDAResource> originalItems = new ArrayList<CDAResource>(originalSpace.getItems());
             ArrayList<CDAResource> updatedItems = updatedSpace.getItems();
@@ -67,8 +68,10 @@ class MergeSpacesRunnable implements Runnable {
             e.printStackTrace();
         }
 
-        if (!callback.isCancelled()) {
+        if (callback != null && !callback.isCancelled()) {
             callback.success(result, response);
         }
+
+        return result;
     }
 }

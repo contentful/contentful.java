@@ -491,8 +491,26 @@ public class CDAClient {
         });
     }
 
+    /**
+     * Initial sync for a Space. (BLOCKING)
+     *
+     * @return {@link CDASyncedSpace} result.
+     */
+    public CDASyncedSpace performInitialSynchronizationBlocking() throws Exception {
+        if (ensureSpaceBlocking(true)) {
+            CDASyncedSpace result = service.performSynchronizationBlocking(spaceKey, true);
+            return new MergeSpacesRunnable(null, result, null, null, getSpace()).call();
+        }
+
+        return null; // todo throw exception and pass to custom error handler if there is one
+    }
+
     // TBD
     public void performSynchronization(final CDASyncedSpace existingSpace, final CDACallback<CDASyncedSpace> callback) {
+        if (existingSpace == null) {
+            throw new IllegalArgumentException("Existing space may not be null.");
+        }
+
         ensureSpace(true, new EnsureSpaceCallback(this, callback) {
             @Override
             void onSpaceReady() {
@@ -500,6 +518,19 @@ public class CDAClient {
                         new SyncSpaceCallback(existingSpace, CDAClient.this, callback));
             }
         });
+    }
+
+    public CDASyncedSpace performSynchronizationBlocking(CDASyncedSpace existingSpace) throws Exception {
+        if (existingSpace == null) {
+            throw new IllegalArgumentException("Existing space may not be null.");
+        }
+
+        if (ensureSpaceBlocking(true)) {
+            CDASyncedSpace result = service.performSynchronizationBlocking(spaceKey, false);
+            return new MergeSpacesRunnable(existingSpace, result, null, null, getSpace()).call();
+        }
+
+        return null; // todo throw exception and pass to custom error handler if there is one
     }
 
 /*
