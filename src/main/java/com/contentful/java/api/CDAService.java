@@ -14,32 +14,6 @@ import java.util.Map;
  */
 interface CDAService {
     /**
-     * Assets endpoint.
-     *
-     * @param space    String representing the Space key.
-     * @param callback {@link CDACallback} instance to be used.
-     */
-    @GET("/spaces/{space}/assets")
-    void fetchAssets(
-            @Path("space") String space,
-            CDACallback<CDAArray> callback
-    );
-
-    /**
-     * Assets endpoint with a query.
-     *
-     * @param space    String representing the Space key.
-     * @param query    Map representing the query.
-     * @param callback {@link CDACallback} instance to be used.
-     */
-    @GET("/spaces/{space}/assets")
-    void fetchAssetsMatching(
-            @Path("space") String space,
-            @QueryMap Map<String, String> query,
-            CDACallback<CDAArray> callback
-    );
-
-    /**
      * Asset endpoint with UID.
      *
      * @param space      String representing the Space key.
@@ -77,32 +51,6 @@ interface CDAService {
             @Path("space") String space,
             @Path("identifier") String identifier,
             CDACallback<CDAContentType> callback
-    );
-
-    /**
-     * Entries endpoint.
-     *
-     * @param space    String representing the Space key.
-     * @param callback {@link CDACallback} instance to be used.
-     */
-    @GET("/spaces/{space}/entries")
-    void fetchEntries(
-            @Path("space") String space,
-            CDACallback<CDAArray> callback
-    );
-
-    /**
-     * Entries endpoint with a query.
-     *
-     * @param space    String representing the Space key.
-     * @param query    Map representing the query.
-     * @param callback {@link CDACallback} instance to be used.
-     */
-    @GET("/spaces/{space}/entries")
-    void fetchEntriesMatching(
-            @Path("space") String space,
-            @QueryMap Map<String, String> query,
-            CDACallback<CDAArray> callback
     );
 
     /**

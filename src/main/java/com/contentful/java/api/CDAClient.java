@@ -1,6 +1,5 @@
 package com.contentful.java.api;
 
-import com.contentful.java.lib.Utils;
 import com.contentful.java.model.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -400,7 +399,8 @@ public class CDAClient {
         });
     }
 
-    // TBD
+/*
+    TBD
     public void fetchNextItemsFromList(CDAArray previousResult, CDACallback<CDAArray> callback) {
         HashMap<String, String> map = Utils.getNextBatchQueryMapForList(previousResult);
 
@@ -410,6 +410,7 @@ public class CDAClient {
 
         service.fetchEntriesMatching(this.spaceKey, map, callback);
     }
+*/
 
     void setSpace(CDASpace space) {
         this.space = space;
