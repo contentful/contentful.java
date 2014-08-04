@@ -33,11 +33,17 @@ public class EntriesTest extends AbsTestCase {
 
         callback.await();
         verifyResultNotEmpty(callback);
+        verifyEntries(callback.value);
+    }
 
-        CDAArray result = callback.value;
-        ArrayList<CDAResource> items = result.getItems();
+    @Test
+    public void testFetchEntriesBlocking() throws Exception {
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_entries.json"))
+                .build();
 
-        assertEquals(11, items.size());
+        CDAArray result = client.fetchEntriesBlocking();
+        verifyEntries(result);
     }
 
     @Test
@@ -55,15 +61,20 @@ public class EntriesTest extends AbsTestCase {
         callback.await();
 
         verifyResultNotEmpty(callback);
+        verifyEntriesMatching(callback.value);
+    }
 
-        CDAArray result = callback.value;
-        ArrayList<CDAResource> items = result.getItems();
+    @Test
+    public void testEntriesMatchingBlocking() throws Exception {
+        HashMap<String, String> query = new HashMap<String, String>();
+        query.put("sys.id", "nyancat");
 
-        assertEquals(1, items.size());
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_entries_matching.json"))
+                .build();
 
-        Object item = items.get(0);
-        assertTrue(item instanceof CDAEntry);
-        verifyNyanCatEntry((CDAEntry) item);
+        CDAArray result = client.fetchEntriesMatchingBlocking(query);
+        verifyEntriesMatching(result);
     }
 
     @Test
@@ -82,6 +93,16 @@ public class EntriesTest extends AbsTestCase {
     }
 
     @Test
+    public void testFetchEntryWithIdentifierBlocking() throws Exception {
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_entry_nyancat.json"))
+                .build();
+
+        CDAEntry result = client.fetchEntryWithIdentifierBlocking("nyancat");
+        verifyNyanCatEntry(result);
+    }
+
+    @Test
     public void testFetchEntryOfCustomClass() throws Exception {
         TestCallback<NyanCat> callback = new TestCallback<NyanCat>();
 
@@ -97,6 +118,18 @@ public class EntriesTest extends AbsTestCase {
         verifyResultNotEmpty(callback);
 
         verifyNyanCatEntryWithClass(callback.value);
+    }
+
+    @Test
+    public void testFetchEntryOfCustomClassBlocking() throws Exception {
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_entry_nyancat.json"))
+                .build();
+
+        client.registerCustomClass("cat", NyanCat.class);
+
+        CDAEntry result = client.fetchEntryWithIdentifierBlocking("nyancat");
+        verifyNyanCatEntryWithClass(result);
     }
 
     @Test
@@ -141,7 +174,26 @@ public class EntriesTest extends AbsTestCase {
         assertEquals("image/png", ((CDAAsset) value).getMimeType());
     }
 
-    private void verifyNyanCatEntry(CDAEntry entry) {
+    void verifyEntries(CDAArray result) {
+        assertNotNull(result);
+        assertEquals(11, result.getItems().size());
+    }
+
+    void verifyEntriesMatching(CDAArray result) {
+        assertNotNull(result);
+
+        ArrayList<CDAResource> items = result.getItems();
+
+        assertEquals(1, items.size());
+
+        Object item = items.get(0);
+        assertTrue(item instanceof CDAEntry);
+        verifyNyanCatEntry((CDAEntry) item);
+    }
+
+    void verifyNyanCatEntry(CDAEntry entry) {
+        assertNotNull(entry);
+
         // name
         assertTrue("Nyan Cat".equals(entry.getFields().get("name")));
 
@@ -162,7 +214,12 @@ public class EntriesTest extends AbsTestCase {
         assertEquals("2011-04-04T22:00:00+00:00", entry.getFields().get("birthday"));
     }
 
-    public static void verifyNyanCatEntryWithClass(NyanCat cat) {
+    public static void verifyNyanCatEntryWithClass(CDAEntry entry) {
+        assertNotNull(entry);
+        assertTrue(entry instanceof NyanCat);
+
+        NyanCat cat = (NyanCat) entry;
+
         // name
         assertTrue("Nyan Cat".equals(cat.getName()));
 

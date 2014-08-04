@@ -137,6 +137,19 @@ interface CDAService {
     );
 
     /**
+     * Entry endpoint with UID. (BLOCKING)
+     *
+     * @param space      String representing the Space key.
+     * @param identifier String representing the Asset UID.
+     * @return {@link CDAEntry} result.
+     */
+    @GET("/spaces/{space}/entries/{identifier}")
+    CDAEntry fetchEntryWithIdentifierBlocking(
+            @Path("space") String space,
+            @Path("identifier") String identifier
+    );
+
+    /**
      * Space endpoint.
      *
      * @param space    String representing the Space key.

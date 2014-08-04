@@ -234,6 +234,16 @@ public class CDAClient {
     }
 
     /**
+     * Fetch Entries. (BLOCKING)
+     *
+     * @return {@link CDAArray} result.
+     * @throws Exception in case of an error.
+     */
+    public CDAArray fetchEntriesBlocking() throws Exception {
+        return fetchArrayWithPathSegmentBlocking(PATH_ENTRIES, null);
+    }
+
+    /**
      * Fetch Entries matching a specific query.
      *
      * @param query    Map representing the query.
@@ -241,6 +251,17 @@ public class CDAClient {
      */
     public void fetchEntriesMatching(Map<String, String> query, CDACallback<CDAArray> callback) {
         fetchArrayWithPathSegment(PATH_ENTRIES, query, callback);
+    }
+
+    /**
+     * Fetch Entries matching a specific query. (BLOCKING)
+     *
+     * @param query Map representing the query.
+     * @return {@link CDAArray} result.
+     * @throws Exception in case of an error.
+     */
+    public CDAArray fetchEntriesMatchingBlocking(Map<String, String> query) throws Exception {
+        return fetchArrayWithPathSegmentBlocking(PATH_ENTRIES, query);
     }
 
     /**
@@ -260,6 +281,23 @@ public class CDAClient {
                 service.fetchEntryWithIdentifier(CDAClient.this.spaceKey, identifier, callback);
             }
         });
+    }
+
+    /**
+     * Fetch a single Entry with identifier.
+     *
+     * @param identifier String representing the UID of the Entry.
+     * @return {@link CDAEntry} or a subclass of it.
+     * @throws Exception in case of an error.
+     * @see #fetchEntryWithIdentifier(String, CDACallback)
+     */
+    @SuppressWarnings("unchecked")
+    public CDAEntry fetchEntryWithIdentifierBlocking(String identifier) throws Exception {
+        if (ensureSpaceBlocking(false)) {
+            return service.fetchEntryWithIdentifierBlocking(spaceKey, identifier);
+        }
+
+        return null; // todo throw exception and pass to custom error handler if there is one
     }
 
     /**
