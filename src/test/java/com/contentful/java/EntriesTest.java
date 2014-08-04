@@ -1,5 +1,6 @@
 package com.contentful.java;
 
+import com.contentful.java.api.CDAClient;
 import com.contentful.java.lib.MockClient;
 import com.contentful.java.lib.NyanCat;
 import com.contentful.java.lib.TestCallback;
@@ -24,8 +25,9 @@ public class EntriesTest extends AbsTestCase {
     public void testFetchEntries() throws Exception {
         TestCallback<CDAArray> callback = new TestCallback<CDAArray>();
 
-        client = TestClientFactory.newInstanceWithClient(
-                new MockClient("result_fetch_entries.json"));
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_entries.json"))
+                .build();
 
         client.fetchEntries(callback);
 
@@ -45,8 +47,9 @@ public class EntriesTest extends AbsTestCase {
         HashMap<String, String> query = new HashMap<String, String>();
         query.put("sys.id", "nyancat");
 
-        client = TestClientFactory.newInstanceWithClient(
-                new MockClient("result_fetch_entries_matching.json"));
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_entries_matching.json"))
+                .build();
 
         client.fetchEntriesMatching(query, callback);
         callback.await();
@@ -67,8 +70,9 @@ public class EntriesTest extends AbsTestCase {
     public void testFetchEntryWithIdentifier() throws Exception {
         TestCallback<CDAEntry> callback = new TestCallback<CDAEntry>();
 
-        client = TestClientFactory.newInstanceWithClient(
-                new MockClient("result_fetch_entry_nyancat.json"));
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_entry_nyancat.json"))
+                .build();
 
         client.fetchEntryWithIdentifier("nyancat", callback);
         callback.await();
@@ -81,8 +85,9 @@ public class EntriesTest extends AbsTestCase {
     public void testFetchEntryOfCustomClass() throws Exception {
         TestCallback<NyanCat> callback = new TestCallback<NyanCat>();
 
-        client = TestClientFactory.newInstanceWithClient(
-                new MockClient("result_fetch_entry_nyancat.json"));
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_entry_nyancat.json"))
+                .build();
 
         client.registerCustomClass("cat", NyanCat.class);
 
@@ -99,8 +104,9 @@ public class EntriesTest extends AbsTestCase {
         TestCallback<CDAArray> callback = new TestCallback<CDAArray>();
 
         // use a new client instance
-        client = TestClientFactory.newInstanceWithClient(
-                new MockClient("result_fetch_entries_with_includes.json"));
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_entries_with_includes.json"))
+                .build();
 
         // register custom class
         client.registerCustomClass("cat", NyanCat.class);

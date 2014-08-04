@@ -4,6 +4,7 @@ import com.contentful.java.lib.Utils;
 import com.contentful.java.model.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import retrofit.ErrorHandler;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.Client;
@@ -49,25 +50,33 @@ public class CDAClient {
 
     /**
      * Initialization method - should be called once all configuration properties are set.
+     *
+     * @param builder
      */
-    private void init() {
+    private void init(Builder builder) {
         // Initialize members
         customTypesMap = new HashMap<String, Class<?>>();
+        this.spaceKey = builder.spaceKey;
+        this.accessToken = builder.accessToken;
 
         // Initialize Gson
         initGson();
 
         // Create a service
-        RestAdapter.Builder builder = new RestAdapter.Builder()
+        RestAdapter.Builder restBuilder = new RestAdapter.Builder()
                 .setEndpoint(CDA_SERVER_URI)
                 .setConverter(new GsonConverter(gson))
                 .setRequestInterceptor(getRequestInterceptor());
 
-        if (clientProvider != null) {
-            builder.setClient(clientProvider);
+        if (builder.clientProvider != null) {
+            restBuilder.setClient(builder.clientProvider);
         }
 
-        service = builder.build().create(CDAService.class);
+        if (builder.errorHandler != null) {
+            restBuilder.setErrorHandler(builder.errorHandler);
+        }
+
+        service = restBuilder.build().create(CDAService.class);
 
         // Init ExecutorService (will be used for parsing of array results and spaces synchronization).
         executorService = Executors.newCachedThreadPool(new ThreadFactory() {
@@ -320,7 +329,7 @@ public class CDAClient {
      *
      * @return {@link CDASpace} instance.
      */
-    public CDASpace fetchSpaceBlocking() {
+    public CDASpace fetchSpaceBlocking() throws Exception {
         return service.fetchSpaceBlocking(this.spaceKey);
     }
 
@@ -349,6 +358,20 @@ public class CDAClient {
         } else {
             callback.onSuccess(space, null);
         }
+    }
+
+    private boolean ensureSpaceBlocking(boolean invalidate) {
+        if (invalidate || space == null) {
+            space = null;
+
+            try {
+                space = fetchSpaceBlocking();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return space != null;
     }
 
     /**
@@ -419,12 +442,13 @@ public class CDAClient {
         private String spaceKey;
         private String accessToken;
         private Client.Provider clientProvider;
+        private ErrorHandler errorHandler;
 
         /**
          * Sets the space key to be used with this client.
          *
          * @param spaceKey String representing the space key.
-         * @return this {@link Builder} instance.
+         * @return this {@code Builder} instance.
          */
         public Builder setSpaceKey(String spaceKey) {
             if (spaceKey == null) {
@@ -439,7 +463,7 @@ public class CDAClient {
          * Sets the access token to be used with this client.
          *
          * @param accessToken String representing access token to be used when authenticating against the CDA.
-         * @return this {@link Builder} instance.
+         * @return this {@code Builder} instance.
          */
         public Builder setAccessToken(String accessToken) {
             if (accessToken == null) {
@@ -454,7 +478,7 @@ public class CDAClient {
          * Sets a custom client to be used for making HTTP requests.
          *
          * @param client {@link retrofit.client.Client} instance.
-         * @return this {@link Builder} instance.
+         * @return this {@code Builder} instance.
          */
         public Builder setClient(final Client client) {
             if (client == null) {
@@ -473,7 +497,7 @@ public class CDAClient {
          * Sets a provider of clients to be used for making HTTP requests.
          *
          * @param clientProvider {@link retrofit.client.Client.Provider} instance.
-         * @return this {@link Builder} instance.
+         * @return this {@code Builder} instance.
          */
         public Builder setClient(Client.Provider clientProvider) {
             if (clientProvider == null) {
@@ -485,16 +509,28 @@ public class CDAClient {
         }
 
         /**
+         * The error handler allows you to customize the type of exception thrown for errors on synchronous requests.
+         *
+         * @param errorHandler Error handler to use.
+         * @return this {@code Builder} instance.
+         */
+        public Builder setErrorHandler(ErrorHandler errorHandler) {
+            if (errorHandler == null) {
+                throw new NullPointerException("Error handler may not be null.");
+            }
+
+            this.errorHandler = errorHandler;
+            return this;
+        }
+
+        /**
          * Builds and returns a {@link CDAClient}.
          *
          * @return Client instance.
          */
         public CDAClient build() {
             CDAClient client = new CDAClient();
-            client.spaceKey = this.spaceKey;
-            client.accessToken = this.accessToken;
-            client.clientProvider = this.clientProvider;
-            client.init();
+            client.init(this);
 
             return client;
         }

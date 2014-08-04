@@ -1,5 +1,6 @@
 package com.contentful.java;
 
+import com.contentful.java.api.CDAClient;
 import com.contentful.java.lib.MockClient;
 import com.contentful.java.lib.TestCallback;
 import com.contentful.java.lib.TestClientFactory;
@@ -21,8 +22,9 @@ public class AssetsTest extends AbsTestCase {
     public void testFetchAssets() throws Exception {
         TestCallback<CDAArray> callback = new TestCallback<CDAArray>();
 
-        client = TestClientFactory.newInstanceWithClient(
-                new MockClient("result_fetch_assets.json"));
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_assets.json"))
+                .build();
 
         client.fetchAssets(callback);
 
@@ -50,8 +52,9 @@ public class AssetsTest extends AbsTestCase {
         HashMap<String, String> query = new HashMap<String, String>();
         query.put("sys.id", "jake");
 
-        client = TestClientFactory.newInstanceWithClient(
-                new MockClient("result_fetch_assets_matching.json"));
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_assets_matching.json"))
+                .build();
 
         client.fetchAssetsMatching(query, callback);
         callback.await();
@@ -76,8 +79,9 @@ public class AssetsTest extends AbsTestCase {
     public void testFetchAssetWithIdentifier() throws Exception {
         TestCallback<CDAAsset> callback = new TestCallback<CDAAsset>();
 
-        client = TestClientFactory.newInstanceWithClient(
-                new MockClient("result_fetch_asset_with_identifier.json"));
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_asset_with_identifier.json"))
+                .build();
 
         client.fetchAssetWithIdentifier("fake", callback);
 

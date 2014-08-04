@@ -1,8 +1,6 @@
 package com.contentful.java;
 
-import com.contentful.java.api.CDAClient;
 import com.contentful.java.lib.TestCallback;
-import com.contentful.java.lib.TestClientFactory;
 import org.junit.Before;
 
 import static org.junit.Assert.assertNotNull;
@@ -12,11 +10,11 @@ import static org.junit.Assert.assertNull;
  * Base class for all test cases.
  */
 public abstract class AbsTestCase {
-    protected CDAClient client;
+//    protected CDAClient client;
 
     @Before
     public void setUp() throws Exception {
-        client = TestClientFactory.newInstance();
+//        client = TestClientFactory.newInstance().build();
     }
 
     protected void verifyResultNotEmpty(TestCallback result) {

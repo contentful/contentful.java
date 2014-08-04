@@ -1,5 +1,6 @@
 package com.contentful.java;
 
+import com.contentful.java.api.CDAClient;
 import com.contentful.java.lib.MockClient;
 import com.contentful.java.lib.TestCallback;
 import com.contentful.java.lib.TestClientFactory;
@@ -22,8 +23,9 @@ public class ContentTypeTest extends AbsTestCase {
     public void testFetchContentTypes() throws Exception {
         TestCallback<CDAArray> callback = new TestCallback<CDAArray>();
 
-        client = TestClientFactory.newInstanceWithClient(
-                new MockClient("result_test_fetch_content_types.json"));
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_test_fetch_content_types.json"))
+                .build();
 
         client.fetchContentTypes(callback);
         callback.await();
@@ -81,8 +83,9 @@ public class ContentTypeTest extends AbsTestCase {
     public void testFetchContentTypeWithIdentifier() throws Exception {
         TestCallback<CDAContentType> callback = new TestCallback<CDAContentType>();
 
-        client = TestClientFactory.newInstanceWithClient(
-                new MockClient("result_test_fetch_content_type_with_id.json"));
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_test_fetch_content_type_with_id.json"))
+                .build();
 
         client.fetchContentTypeWithIdentifier("MOCK", callback);
         callback.await();

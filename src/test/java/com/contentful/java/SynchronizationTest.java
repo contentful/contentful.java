@@ -1,5 +1,6 @@
 package com.contentful.java;
 
+import com.contentful.java.api.CDAClient;
 import com.contentful.java.lib.MockClient;
 import com.contentful.java.lib.TestCallback;
 import com.contentful.java.lib.TestClientFactory;
@@ -21,8 +22,9 @@ public class SynchronizationTest extends AbsTestCase {
     public void testSynchronization() throws Exception {
         TestCallback<CDASyncedSpace> callback = new TestCallback<CDASyncedSpace>();
 
-        client = TestClientFactory.newInstanceWithClient(
-                new MockClient("result_test_sync_initial.json"));
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_test_sync_initial.json"))
+                .build();
 
         // #1 - perform initial synchronization
         client.performInitialSynchronization(callback);
@@ -49,8 +51,9 @@ public class SynchronizationTest extends AbsTestCase {
         CDASyncedSpace initialSyncResult = callback.value;
         callback = new TestCallback<CDASyncedSpace>();
 
-        client = TestClientFactory.newInstanceWithClient(
-                new MockClient("result_test_sync_update.json"));
+        client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_test_sync_update.json"))
+                .build();
 
         client.performSynchronization(initialSyncResult, callback);
         callback.await();
@@ -76,8 +79,9 @@ public class SynchronizationTest extends AbsTestCase {
 
         callback = new TestCallback<CDASyncedSpace>();
 
-        client = TestClientFactory.newInstanceWithClient(
-                new MockClient("result_test_sync_update_empty.json"));
+        client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_test_sync_update_empty.json"))
+                .build();
 
         client.performSynchronization(updatedSpace, callback);
         callback.await();
