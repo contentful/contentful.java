@@ -3,7 +3,6 @@ package com.contentful.java.api;
 import com.contentful.java.model.CDAResource;
 import com.contentful.java.model.CDASpace;
 import com.contentful.java.model.CDASyncedSpace;
-import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 import java.util.ArrayList;
@@ -58,22 +57,8 @@ class MergeSpacesRunnable implements Runnable {
         updatedItems.clear();
         updatedItems.addAll(originalItems);
 
-        new ArrayParserRunnable<CDASyncedSpace>(updatedSpace, new CDACallback<CDASyncedSpace>() {
-            @Override
-            protected void onSuccess(CDASyncedSpace syncedSpace, Response response) {
-                if (!callback.isCancelled()) {
-                    callback.success(syncedSpace, response);
-                }
-            }
-
-            @Override
-            protected void onFailure(RetrofitError retrofitError) {
-                super.onFailure(retrofitError);
-
-                if (!callback.isCancelled()) {
-                    callback.onFailure(retrofitError);
-                }
-            }
-        }, space, response).run();
+        if (!callback.isCancelled()) {
+            callback.success(updatedSpace, response);
+        }
     }
 }

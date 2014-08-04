@@ -90,12 +90,20 @@ public class CDAClient {
      * Initialize Gson instance.
      */
     private void initGson() {
-        gson = new GsonBuilder()
-                .registerTypeAdapter(CDAResource.class, new ResourceTypeAdapter(CDAClient.this))
-                .registerTypeAdapter(CDAEntry.class, new ResourceTypeAdapter(CDAClient.this))
-                .registerTypeAdapter(CDAAsset.class, new ResourceTypeAdapter(CDAClient.this))
-                .registerTypeAdapter(CDAContentType.class, new ResourceTypeAdapter(CDAClient.this))
+        Gson arrayGson = setBaseTypeAdapters(new GsonBuilder(), this).create();
+
+        gson = setBaseTypeAdapters(new GsonBuilder(), this)
+                .registerTypeAdapter(CDAArray.class, new ArrayResourceTypeAdapter(CDAClient.this, arrayGson))
+                .registerTypeAdapter(CDASyncedSpace.class, new ArrayResourceTypeAdapter(CDAClient.this, arrayGson))
                 .create();
+    }
+
+    static GsonBuilder setBaseTypeAdapters(GsonBuilder gsonBuilder, CDAClient client) {
+        return gsonBuilder
+                .registerTypeAdapter(CDAResource.class, new ResourceTypeAdapter(client))
+                .registerTypeAdapter(CDAEntry.class, new ResourceTypeAdapter(client))
+                .registerTypeAdapter(CDAAsset.class, new ResourceTypeAdapter(client))
+                .registerTypeAdapter(CDAContentType.class, new ResourceTypeAdapter(client));
     }
 
     /**
@@ -319,24 +327,7 @@ public class CDAClient {
                 service.fetchArrayWithPath(CDAClient.this.spaceKey,
                         pathSegment,
                         query,
-                        new CDACallback<CDAArray>() {
-                            @Override
-                            protected void onSuccess(CDAArray cdaArray, Response response) {
-                                if (!callback.isCancelled()) {
-                                    executorService.submit(new ArrayParserRunnable<CDAArray>(
-                                            cdaArray, callback, space, response));
-                                }
-                            }
-
-                            @Override
-                            protected void onFailure(RetrofitError retrofitError) {
-                                super.onFailure(retrofitError);
-
-                                if (!callback.isCancelled()) {
-                                    callback.onFailure(retrofitError);
-                                }
-                            }
-                        });
+                        callback);
             }
         });
     }
@@ -362,25 +353,7 @@ public class CDAClient {
         ensureSpace(true, new EnsureSpaceCallback(this, callback) {
             @Override
             void onSpaceReady() {
-
-                service.performSynchronization(spaceKey, true, new CDACallback<CDASyncedSpace>() {
-                    @Override
-                    protected void onSuccess(CDASyncedSpace syncedSpace, Response response) {
-                        if (!callback.isCancelled()) {
-                            executorService.submit(new ArrayParserRunnable<CDASyncedSpace>(
-                                    syncedSpace, callback, space, response));
-                        }
-                    }
-
-                    @Override
-                    protected void onFailure(RetrofitError retrofitError) {
-                        super.onFailure(retrofitError);
-
-                        if (!callback.isCancelled()) {
-                            callback.onFailure(retrofitError);
-                        }
-                    }
-                });
+                service.performSynchronization(spaceKey, true, callback);
             }
         });
     }
