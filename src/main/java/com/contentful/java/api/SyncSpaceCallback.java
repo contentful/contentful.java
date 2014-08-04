@@ -5,7 +5,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * Convenience callback wrapped which merges two an existing Space with an updated one.
+ * Convenience callback wrapper which merges an existing Space with an updated one.
  */
 public class SyncSpaceCallback extends CDACallback<CDASyncedSpace> {
     private final CDASyncedSpace originalSpace;
