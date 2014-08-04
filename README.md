@@ -15,7 +15,7 @@ Download the [latest JAR][2] or grab via Maven:
 ```xml
 <dependency>
   <groupId>com.contentful.java</groupId>
-  <artifactId>sdk</artifactId>
+  <artifactId>contentful-java-sdk</artifactId>
   <version>1.0</version>
 </dependency>
 ```
