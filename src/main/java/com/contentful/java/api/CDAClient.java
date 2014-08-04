@@ -315,6 +315,15 @@ public class CDAClient {
         service.fetchSpace(this.spaceKey, callback);
     }
 
+    /**
+     * Fetch a single Space. (BLOCKING)
+     *
+     * @return {@link CDASpace} instance.
+     */
+    public CDASpace fetchSpaceBlocking() {
+        return service.fetchSpaceBlocking(this.spaceKey);
+    }
+
     private void fetchArrayWithPathSegment(final String pathSegment,
                                            final Map<String, String> query,
                                            final CDACallback<CDAArray> callback) {

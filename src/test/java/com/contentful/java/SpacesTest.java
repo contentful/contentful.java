@@ -27,9 +27,20 @@ public class SpacesTest extends AbsTestCase {
         callback.await();
 
         verifyResultNotEmpty(callback);
+        verifySpace(callback.value);
+    }
 
-        CDASpace space = callback.value;
+    @Test
+    public void testFetchSpaceBlocking() throws Exception {
+        client = TestClientFactory.newInstanceWithClient(
+                new MockClient("result_test_fetch_space.json"));
 
+        CDASpace result = client.fetchSpaceBlocking();
+        verifySpace(result);
+    }
+
+    void verifySpace(CDASpace space) {
+        assertNotNull(space);
         assertEquals("Contentful Example API", space.getName());
         assertEquals("Space", space.getSys().get("type"));
         assertEquals("cfexampleapi", space.getSys().get("id"));

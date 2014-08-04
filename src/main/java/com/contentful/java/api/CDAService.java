@@ -132,6 +132,17 @@ interface CDAService {
     );
 
     /**
+     * Space endpoint. (BLOCKING)
+     *
+     * @param space String representing the Space key.
+     * @return {@link CDASpace} instance.
+     */
+    @GET("/spaces/{space}")
+    CDASpace fetchSpaceBlocking(
+            @Path("space") String space
+    );
+
+    /**
      * Space Sync endpoint.
      *
      * @param space    String representing the Space key.
