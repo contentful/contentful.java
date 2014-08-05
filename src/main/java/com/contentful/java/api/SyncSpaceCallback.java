@@ -21,7 +21,7 @@ public class SyncSpaceCallback extends CDACallback<CDASyncedSpace> {
     @Override
     protected void onSuccess(CDASyncedSpace updatedSpace, Response response) {
         if (!wrappedCallback.isCancelled()) {
-            client.executorService.submit(new MergeSpacesRunnable(
+            client.executorService.submit(new SpacesMerger(
                     originalSpace,
                     updatedSpace,
                     wrappedCallback,

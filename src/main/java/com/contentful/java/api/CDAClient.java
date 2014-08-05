@@ -499,7 +499,7 @@ public class CDAClient {
     public CDASyncedSpace performInitialSynchronizationBlocking() throws Exception {
         if (ensureSpaceBlocking(true)) {
             CDASyncedSpace result = service.performSynchronizationBlocking(spaceKey, true);
-            return new MergeSpacesRunnable(null, result, null, null, getSpace()).call();
+            return new SpacesMerger(null, result, null, null, getSpace()).call();
         }
 
         return null; // todo throw exception and pass to custom error handler if there is one
@@ -527,7 +527,7 @@ public class CDAClient {
 
         if (ensureSpaceBlocking(true)) {
             CDASyncedSpace result = service.performSynchronizationBlocking(spaceKey, false);
-            return new MergeSpacesRunnable(existingSpace, result, null, null, getSpace()).call();
+            return new SpacesMerger(existingSpace, result, null, null, getSpace()).call();
         }
 
         return null; // todo throw exception and pass to custom error handler if there is one
