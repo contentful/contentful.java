@@ -23,7 +23,8 @@ class SpaceMerger implements Callable<CDASyncedSpace> {
     public SpaceMerger(CDASyncedSpace originalSpace,
                        CDASyncedSpace updatedSpace,
                        CDACallback<CDASyncedSpace> callback,
-                       Response response, CDASpace space) {
+                       Response response,
+                       CDASpace space) {
 
         this.originalSpace = originalSpace;
         this.updatedSpace = updatedSpace;

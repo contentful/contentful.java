@@ -56,11 +56,6 @@ class Utils {
         // calculate next offset
         int nextOffset = skip + limit;
 
-        // ensure next batch is available
-        if (nextOffset >= total) {
-            return null;
-        }
-
         return prepareQueryMap(URI.create(array.getOriginalUrl()), nextOffset, limit);
     }
 
