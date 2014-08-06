@@ -219,11 +219,8 @@ public class CDAClient {
      * @throws Exception in case of an error.
      */
     public CDAAsset fetchAssetWithIdentifierBlocking(String identifier) throws Exception {
-        if (ensureSpaceBlocking(false)) {
-            return service.fetchAssetWithIdentifierBlocking(spaceKey, identifier);
-        }
-
-        return null; // todo throw exception and pass to custom error handler if there is one
+        ensureSpaceBlocking(false);
+        return service.fetchAssetWithIdentifierBlocking(spaceKey, identifier);
     }
 
     /**
@@ -295,11 +292,8 @@ public class CDAClient {
      */
     @SuppressWarnings("unchecked")
     public CDAEntry fetchEntryWithIdentifierBlocking(String identifier) throws Exception {
-        if (ensureSpaceBlocking(false)) {
-            return service.fetchEntryWithIdentifierBlocking(spaceKey, identifier);
-        }
-
-        return null; // todo throw exception and pass to custom error handler if there is one
+        ensureSpaceBlocking(false);
+        return service.fetchEntryWithIdentifierBlocking(spaceKey, identifier);
     }
 
     /**
@@ -323,11 +317,8 @@ public class CDAClient {
      * @throws Exception in case of an error.
      */
     public CDAArray fetchContentTypesBlocking() throws Exception {
-        if (ensureSpaceBlocking(false)) {
-            return service.fetchContentTypesBlocking(spaceKey);
-        }
-
-        return null; // todo throw exception and pass to custom error handler if there is one
+        ensureSpaceBlocking(false);
+        return service.fetchContentTypesBlocking(spaceKey);
     }
 
     /**
@@ -353,11 +344,8 @@ public class CDAClient {
      * @throws Exception
      */
     public CDAContentType fetchContentTypeWithIdentifierBlocking(String identifier) throws Exception {
-        if (ensureSpaceBlocking(false)) {
-            return service.fetchContentTypeWithIdentifierBlocking(spaceKey, identifier);
-        }
-
-        return null; // todo throw exception and pass to custom error handler if there is one
+        ensureSpaceBlocking(false);
+        return service.fetchContentTypeWithIdentifierBlocking(spaceKey, identifier);
     }
 
     /**
@@ -491,14 +479,11 @@ public class CDAClient {
     }
 
     private CDAArray fetchArrayWithTypeBlocking(String type, Map<String, String> query) throws Exception {
-        if (ensureSpaceBlocking(false)) {
-            Response response = service.fetchArrayWithTypeBlocking(spaceKey, type, query);
-            CDAArray result = gson.fromJson(new InputStreamReader(response.getBody().in()), CDAArray.class);
-            ArrayResponse.prepareResponse(result, response);
-            return result;
-        }
-
-        return null; // todo throw exception and pass to custom error handler if there is one
+        ensureSpaceBlocking(false);
+        Response response = service.fetchArrayWithTypeBlocking(spaceKey, type, query);
+        CDAArray result = gson.fromJson(new InputStreamReader(response.getBody().in()), CDAArray.class);
+        ArrayResponse.prepareResponse(result, response);
+        return result;
     }
 
     private void ensureSpace(EnsureSpaceCallback callback) {
@@ -513,12 +498,10 @@ public class CDAClient {
         }
     }
 
-    private boolean ensureSpaceBlocking(boolean invalidate) throws Exception {
+    private void ensureSpaceBlocking(boolean invalidate) throws Exception {
         if (invalidate || space == null) {
             space = fetchSpaceBlocking();
         }
-
-        return space != null;
     }
 
     /**
@@ -542,12 +525,9 @@ public class CDAClient {
      * @return {@link CDASyncedSpace} result.
      */
     public CDASyncedSpace performInitialSynchronizationBlocking() throws Exception {
-        if (ensureSpaceBlocking(true)) {
-            CDASyncedSpace result = service.performSynchronizationBlocking(spaceKey, true);
-            return new SpaceMerger(null, result, null, null, getSpace()).call();
-        }
-
-        return null; // todo throw exception and pass to custom error handler if there is one
+        ensureSpaceBlocking(true);
+        CDASyncedSpace result = service.performSynchronizationBlocking(spaceKey, true);
+        return new SpaceMerger(null, result, null, null, getSpace()).call();
     }
 
     // TBD
@@ -570,12 +550,9 @@ public class CDAClient {
             throw new IllegalArgumentException("Existing space may not be null.");
         }
 
-        if (ensureSpaceBlocking(true)) {
-            CDASyncedSpace result = service.performSynchronizationBlocking(spaceKey, false);
-            return new SpaceMerger(existingSpace, result, null, null, getSpace()).call();
-        }
-
-        return null; // todo throw exception and pass to custom error handler if there is one
+        ensureSpaceBlocking(true);
+        CDASyncedSpace result = service.performSynchronizationBlocking(spaceKey, false);
+        return new SpaceMerger(existingSpace, result, null, null, getSpace()).call();
     }
 
     public CDASpace getSpace() {
