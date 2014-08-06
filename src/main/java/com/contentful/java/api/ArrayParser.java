@@ -15,9 +15,9 @@ import java.util.concurrent.Callable;
  * This will attempt to resolve all links within an {@link ArrayResource} instance,
  * while iterating through all of it's normal and included resources.
  */
-public class ArrayParser<T extends ArrayResource> implements Callable<T> {
-    final T source;
-    final CDASpace space;
+class ArrayParser<T extends ArrayResource> implements Callable<T> {
+    private final T source;
+    private final CDASpace space;
 
     public ArrayParser(T source, CDASpace space) {
         this.source = source;

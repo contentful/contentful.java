@@ -5,10 +5,10 @@ package com.contentful.java.model;
  */
 public class CDAAsset extends ResourceWithMap {
     // Asset URL
-    String url;
+    private String url;
 
     // MIME type
-    String mimeType;
+    private String mimeType;
 
     /**
      * Gets the URL of this Asset.

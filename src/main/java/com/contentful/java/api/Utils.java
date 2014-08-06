@@ -1,40 +1,57 @@
-package com.contentful.java.lib;
+package com.contentful.java.api;
 
 import com.contentful.java.model.CDAArray;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 
 /**
  * SDK utilities
  */
-public class Utils {
-    // todo tmp
+class Utils {
+    static String getNextPageType(CDAArray array) {
+        String url = assertArray(array);
+        String result = null;
+
+        try {
+            URI uri = new URI(url);
+            String[] split = uri.getPath().split("/");
+            result = split[split.length - 1];
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    private static String assertArray(CDAArray array) {
+        String url = array.getOriginalUrl();
+
+        if (url == null) {
+            throw new IllegalArgumentException("Invalid array instance! (empty or unsuccessful response)");
+        }
+
+        return url;
+    }
 
     /**
      * Populates a {@link java.util.Map} object with items to fetch the next
      * batch of items from a previous {@link com.contentful.java.model.CDAArray} item.
      *
-     * @param listResult {@link com.contentful.java.model.CDAArray} instance which was successfully executed,
-     *                   meaning {@link com.contentful.java.api.CDACallback#onSuccess} was
-     *                   called.
+     * @param array {@link com.contentful.java.model.CDAArray} instance which was successfully executed,
+     *              meaning {@link com.contentful.java.api.CDACallback#onSuccess} was
+     *              called.
      * @return {@link java.util.Map} instance containing original query string parameters
      * and updated pagination parameters (skip/limit).
      */
-    public static HashMap<String, String> getNextBatchQueryMapForList(CDAArray listResult) {
-        // todo refactor
-/*
-        Response response = listResult.getResponse();
-
-        // ensure this instance has a reference to a valid response object
-        if (response == null) {
-            throw new IllegalArgumentException("Invalid CDAListResult instance! (empty or unsuccessful response)");
-        }
+    public static HashMap<String, String> getNextBatchQueryMapForArray(CDAArray array) {
+        assertArray(array);
 
         // extract pagination parameters
-        int skip = listResult.skip;
-        int limit = listResult.limit;
-        int total = listResult.total;
+        int skip = array.getSkip();
+        int limit = array.getLimit();
+        int total = array.getTotal();
 
         // calculate next offset
         int nextOffset = skip + limit;
@@ -44,12 +61,8 @@ public class Utils {
             return null;
         }
 
-        return prepareQueryMap(URI.create(response.getUrl()), nextOffset, limit);
-*/
-        return null;
+        return prepareQueryMap(URI.create(array.getOriginalUrl()), nextOffset, limit);
     }
-
-    // todo tmp
 
     /**
      * TBD (paging)

@@ -7,8 +7,10 @@ import retrofit.ErrorHandler;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.Client;
+import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -160,7 +162,7 @@ public class CDAClient {
      * @param callback {@link CDACallback} instance.
      */
     public void fetchAssets(CDACallback<CDAArray> callback) {
-        fetchArrayWithPathSegment(PATH_ASSETS, null, callback);
+        fetchArrayWithType(PATH_ASSETS, null, callback);
     }
 
     /**
@@ -170,7 +172,7 @@ public class CDAClient {
      * @throws Exception in case of an error.
      */
     public CDAArray fetchAssetsBlocking() throws Exception {
-        return fetchArrayWithPathSegmentBlocking(PATH_ASSETS, null);
+        return fetchArrayWithTypeBlocking(PATH_ASSETS, null);
     }
 
     /**
@@ -180,7 +182,7 @@ public class CDAClient {
      * @param callback {@link CDACallback} instance.
      */
     public void fetchAssetsMatching(Map<String, String> query, CDACallback<CDAArray> callback) {
-        fetchArrayWithPathSegment(PATH_ASSETS, query, callback);
+        fetchArrayWithType(PATH_ASSETS, query, callback);
     }
 
     /**
@@ -191,7 +193,7 @@ public class CDAClient {
      * @throws Exception in case of an error.
      */
     public CDAArray fetchAssetsMatchingBlocking(Map<String, String> query) throws Exception {
-        return fetchArrayWithPathSegmentBlocking(PATH_ASSETS, query);
+        return fetchArrayWithTypeBlocking(PATH_ASSETS, query);
     }
 
     /**
@@ -230,7 +232,7 @@ public class CDAClient {
      * @param callback {@link CDACallback} instance.
      */
     public void fetchEntries(CDACallback<CDAArray> callback) {
-        fetchArrayWithPathSegment(PATH_ENTRIES, null, callback);
+        fetchArrayWithType(PATH_ENTRIES, null, callback);
     }
 
     /**
@@ -240,7 +242,7 @@ public class CDAClient {
      * @throws Exception in case of an error.
      */
     public CDAArray fetchEntriesBlocking() throws Exception {
-        return fetchArrayWithPathSegmentBlocking(PATH_ENTRIES, null);
+        return fetchArrayWithTypeBlocking(PATH_ENTRIES, null);
     }
 
     /**
@@ -250,7 +252,7 @@ public class CDAClient {
      * @param callback {@link CDACallback} instance.
      */
     public void fetchEntriesMatching(Map<String, String> query, CDACallback<CDAArray> callback) {
-        fetchArrayWithPathSegment(PATH_ENTRIES, query, callback);
+        fetchArrayWithType(PATH_ENTRIES, query, callback);
     }
 
     /**
@@ -261,7 +263,7 @@ public class CDAClient {
      * @throws Exception in case of an error.
      */
     public CDAArray fetchEntriesMatchingBlocking(Map<String, String> query) throws Exception {
-        return fetchArrayWithPathSegmentBlocking(PATH_ENTRIES, query);
+        return fetchArrayWithTypeBlocking(PATH_ENTRIES, query);
     }
 
     /**
@@ -433,24 +435,67 @@ public class CDAClient {
         return service.fetchSpaceBlocking(this.spaceKey);
     }
 
-    private void fetchArrayWithPathSegment(final String pathSegment,
-                                           final Map<String, String> query,
-                                           final CDACallback<CDAArray> callback) {
+    /**
+     * Fetch the page of a {@link CDAArray} object.
+     *
+     * This method calculates the {@code skip} and {@code limit} parameters of the original request
+     * that was used to fetch this {@code array} instance, and attempts to fetch the next page
+     * even if the number exceeds the {@code total} attribute of the existing array, since the
+     * data may have changed in the server, in case the value exceeds the real number, a successful
+     * response will be returned along with an empty {@link CDAArray} instance as the result.
+     *
+     * @param array    {@link CDAArray} previously fetched array.
+     * @param callback {@link CDACallback} instance.
+     */
+    public void fetchArrayNextPage(final CDAArray array, final CDACallback<CDAArray> callback) {
+        if (array == null) {
+            throw new IllegalArgumentException("Array may not be empty.");
+        }
+
+        String nextPageType = Utils.getNextPageType(array);
+        HashMap<String, String> query = Utils.getNextBatchQueryMapForArray(array);
+        fetchArrayWithType(nextPageType, query, callback);
+    }
+
+    /**
+     * Synchronous version of {@link #fetchArrayNextPage}.
+     *
+     * @param array {@link CDAArray} previously fetched array.
+     * @return {@link CDAArray} result.
+     * @throws Exception in case of an error.
+     */
+    public CDAArray fetchArrayNextPageBlocking(CDAArray array) throws Exception {
+        if (array == null) {
+            throw new IllegalArgumentException("Array may not be empty.");
+        }
+
+        String nextPageType = Utils.getNextPageType(array);
+        HashMap<String, String> query = Utils.getNextBatchQueryMapForArray(array);
+
+        return fetchArrayWithTypeBlocking(nextPageType, query);
+    }
+
+    private void fetchArrayWithType(final String type,
+                                    final Map<String, String> query,
+                                    final CDACallback<CDAArray> callback) {
 
         ensureSpace(new EnsureSpaceCallback(this, callback) {
             @Override
             void onSpaceReady() {
-                service.fetchArrayWithPath(CDAClient.this.spaceKey,
-                        pathSegment,
+                service.fetchArrayWithType(CDAClient.this.spaceKey,
+                        type,
                         query,
-                        callback);
+                        new ArrayResponse(callback));
             }
         });
     }
 
-    private CDAArray fetchArrayWithPathSegmentBlocking(String pathSegment, Map<String, String> query) throws Exception {
+    private CDAArray fetchArrayWithTypeBlocking(String type, Map<String, String> query) throws Exception {
         if (ensureSpaceBlocking(false)) {
-            return service.fetchArrayWithPathBlocking(spaceKey, pathSegment, query);
+            Response response = service.fetchArrayWithTypeBlocking(spaceKey, type, query);
+            CDAArray result = gson.fromJson(new InputStreamReader(response.getBody().in()), CDAArray.class);
+            ArrayResponse.prepareResponse(result, response);
+            return result;
         }
 
         return null; // todo throw exception and pass to custom error handler if there is one
@@ -499,7 +544,7 @@ public class CDAClient {
     public CDASyncedSpace performInitialSynchronizationBlocking() throws Exception {
         if (ensureSpaceBlocking(true)) {
             CDASyncedSpace result = service.performSynchronizationBlocking(spaceKey, true);
-            return new SpacesMerger(null, result, null, null, getSpace()).call();
+            return new SpaceMerger(null, result, null, null, getSpace()).call();
         }
 
         return null; // todo throw exception and pass to custom error handler if there is one
@@ -527,24 +572,11 @@ public class CDAClient {
 
         if (ensureSpaceBlocking(true)) {
             CDASyncedSpace result = service.performSynchronizationBlocking(spaceKey, false);
-            return new SpacesMerger(existingSpace, result, null, null, getSpace()).call();
+            return new SpaceMerger(existingSpace, result, null, null, getSpace()).call();
         }
 
         return null; // todo throw exception and pass to custom error handler if there is one
     }
-
-/*
-    TBD
-    public void fetchNextItemsFromList(CDAArray previousResult, CDACallback<CDAArray> callback) {
-        HashMap<String, String> map = Utils.getNextBatchQueryMapForList(previousResult);
-
-        if (map == null) {
-            return;
-        }
-
-        service.fetchEntriesMatching(this.spaceKey, map, callback);
-    }
-*/
 
     public CDASpace getSpace() {
         return this.space;

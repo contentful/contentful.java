@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class ResourceWithList<T> extends CDAResource {
     // List of fields
-    List<T> fields;
+    private List<T> fields;
 
     /**
      * Gets the fields list for this resource.

@@ -15,7 +15,7 @@ import retrofit.client.Response;
  */
 abstract class EnsureSpaceCallback extends CDACallback<CDASpace> {
     private final CDAClient client;
-    private CDACallback<?> wrappedCallback;
+    private final CDACallback<?> wrappedCallback;
 
     EnsureSpaceCallback(CDAClient client, CDACallback<?> wrappedCallback) {
         this.client = client;

@@ -8,11 +8,11 @@ import java.util.Map;
  * Class representing a single Content Type resource.
  */
 public class CDAContentType extends ResourceWithList<Map> {
-    String displayField;
-    String name;
+    private String displayField;
+    private String name;
 
     @SerializedName("description")
-    String userDescription;
+    private String userDescription;
 
     public CDAContentType(String displayField, String name, String userDescription) {
         this.displayField = displayField;

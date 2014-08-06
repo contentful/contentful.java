@@ -1,6 +1,7 @@
 package com.contentful.java.api;
 
 import com.contentful.java.model.*;
+import retrofit.client.Response;
 import retrofit.http.GET;
 import retrofit.http.Path;
 import retrofit.http.Query;
@@ -20,14 +21,14 @@ interface CDAService {
      * @param space    String representing the Space key.
      * @param type     Type of resource to be fetched (i.e. "entries", "assets", ...).
      * @param query    Map representing the query.
-     * @param callback {@link CDACallback} instance to be used.
+     * @param response {@link ArrayResponse} instance to be used.
      */
     @GET("/spaces/{space}/{type}")
-    void fetchArrayWithPath(
+    void fetchArrayWithType(
             @Path("space") String space,
             @Path("type") String type,
             @QueryMap Map<String, String> query,
-            CDACallback<CDAArray> callback
+            ArrayResponse response
     );
 
     /**
@@ -39,7 +40,7 @@ interface CDAService {
      * @return {@link CDAArray} result.
      */
     @GET("/spaces/{space}/{type}")
-    CDAArray fetchArrayWithPathBlocking(
+    Response fetchArrayWithTypeBlocking(
             @Path("space") String space,
             @Path("type") String type,
             @QueryMap Map<String, String> query
@@ -202,11 +203,11 @@ interface CDAService {
     /**
      * Execute a request using a path determined at runtime.
      *
-     * @param dynamicPath String representing the path.
-     * @param callback    {@link CDACallback} instance to be used.
+     * @param path     String representing the path.
+     * @param callback {@link CDACallback} instance to be used.
      */
-    @GET("/{dynamic_path}")
+    @GET("/{path}")
     void fetchSyncedSpaceWithPath(
-            @Path("dynamic_path") String dynamicPath,
+            @Path("path") String path,
             SyncSpaceCallback callback);
 }

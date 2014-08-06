@@ -8,9 +8,9 @@ import java.util.Map;
  * Base class for CDA resources.
  */
 public class CDAResource {
-    Map<String, Object> sys;
+    private Map<String, Object> sys;
 
-    String locale;
+    private String locale;
 
     public CDAResource() {
         this.locale = Constants.DEFAULT_LOCALE; // todo use Locale of current Space

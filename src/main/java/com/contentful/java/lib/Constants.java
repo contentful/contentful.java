@@ -20,7 +20,6 @@ public class Constants {
     public static final String HTTP_HEADER_AUTH = "Authorization";
     public static final String HTTP_OAUTH_PATTERN = "Bearer %s";
 
-
     // Configuration
     public static final String VERSION_NAME = "1.0";
     public static final String CDA_SERVER_HOSTNAME = "cdn.contentful.com";

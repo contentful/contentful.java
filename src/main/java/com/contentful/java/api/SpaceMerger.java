@@ -13,17 +13,17 @@ import static com.contentful.java.lib.Constants.CDAResourceType;
 /**
  * TBD
  */
-class SpacesMerger implements Callable<CDASyncedSpace> {
+class SpaceMerger implements Callable<CDASyncedSpace> {
     private final CDASyncedSpace originalSpace;
     private final CDASyncedSpace updatedSpace;
-    private CDACallback<CDASyncedSpace> callback;
-    private Response response;
-    private CDASpace space;
+    private final CDACallback<CDASyncedSpace> callback;
+    private final Response response;
+    private final CDASpace space;
 
-    public SpacesMerger(CDASyncedSpace originalSpace,
-                        CDASyncedSpace updatedSpace,
-                        CDACallback<CDASyncedSpace> callback,
-                        Response response, CDASpace space) {
+    public SpaceMerger(CDASyncedSpace originalSpace,
+                       CDASyncedSpace updatedSpace,
+                       CDACallback<CDASyncedSpace> callback,
+                       Response response, CDASpace space) {
 
         this.originalSpace = originalSpace;
         this.updatedSpace = updatedSpace;

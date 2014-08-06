@@ -107,6 +107,7 @@ public class SynchronizationTest extends AbsTestCase {
         assertEquals(Double.valueOf(2789), entry.getFields().get("age"));
     }
 
+    @SuppressWarnings("UnnecessaryBoxing")
     void verifySynchronizationSecond(CDASyncedSpace result) {
         assertNotNull(result);
 

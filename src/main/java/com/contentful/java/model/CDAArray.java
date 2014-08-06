@@ -10,19 +10,22 @@ import java.util.List;
  */
 public class CDAArray extends ArrayResource {
     // Limit parameter.
-    int limit;
+    private int limit;
 
     // Skip parameter.
-    int skip;
+    private int skip;
 
     // Total number of items.
-    int total;
+    private int total;
 
     // List of items.
-    ArrayList<CDAResource> items;
+    private ArrayList<CDAResource> items;
 
     // Included resources.
-    Includes includes;
+    private Includes includes;
+
+    // Original Url used to fetch this array
+    private String originalUrl;
 
     /**
      * Gets the list of resource items associated with this instance.
@@ -68,6 +71,19 @@ public class CDAArray extends ArrayResource {
      */
     public Includes getIncludes() {
         return includes;
+    }
+
+    /**
+     * Gets the URL for the next page.
+     *
+     * @return String representing the URL.
+     */
+    public String getOriginalUrl() {
+        return originalUrl;
+    }
+
+    public void setOriginalUrl(String originalUrl) {
+        this.originalUrl = originalUrl;
     }
 
     // Included resources class

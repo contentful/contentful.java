@@ -5,12 +5,12 @@ import com.contentful.java.lib.Constants;
 import java.util.ArrayList;
 
 /**
- * Created by tomxor on 01/08/14.
+ * Class representing a single Space resource.
  */
 public class CDASpace extends ResourceWithMap {
-    String defaultLocale = Constants.DEFAULT_LOCALE; // todo tom TMP!!
-    ArrayList<Locale> locales;
-    String name;
+    private String defaultLocale = Constants.DEFAULT_LOCALE; // todo tom TMP!!
+    private ArrayList<Locale> locales;
+    private String name;
 
     public String getDefaultLocale() {
         return defaultLocale;

@@ -10,8 +10,8 @@ import java.lang.reflect.Type;
  * Custom type adapter for de-serializing array resources.
  */
 class ArrayResourceTypeAdapter implements JsonDeserializer<ArrayResource> {
-    private CDAClient client;
-    private Gson gson;
+    private final CDAClient client;
+    private final Gson gson;
 
     ArrayResourceTypeAdapter(CDAClient client, Gson gson) {
         this.client = client;

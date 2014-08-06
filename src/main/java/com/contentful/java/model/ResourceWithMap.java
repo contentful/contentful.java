@@ -8,10 +8,10 @@ import java.util.Map;
  */
 public class ResourceWithMap extends CDAResource {
     // Map of fields in their raw form as retrieved from the CDA.
-    Map<String, Object> rawFields;
+    private Map<String, Object> rawFields;
 
     // Custom map prepared out of the original fields sectioned by different locales.
-    HashMap<String, Map> localizedFieldsMap = new HashMap<String, Map>();
+    private HashMap<String, Map> localizedFieldsMap = new HashMap<String, Map>();
 
     /**
      * Sets the raw fields map of this resource.

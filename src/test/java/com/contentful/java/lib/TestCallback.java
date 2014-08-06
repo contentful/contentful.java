@@ -12,7 +12,7 @@ import java.util.concurrent.CountDownLatch;
 public class TestCallback<T> extends CDACallback<T> {
     public T value;
     public RetrofitError error;
-    private CountDownLatch cdl;
+    private final CountDownLatch cdl;
 
     public TestCallback() {
         this.cdl = new CountDownLatch(1);

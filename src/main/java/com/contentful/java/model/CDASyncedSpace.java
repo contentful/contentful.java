@@ -5,10 +5,11 @@ import java.util.ArrayList;
 /**
  * A class to represent the result of a Space synchronization.
  */
+@SuppressWarnings("UnusedDeclaration")
 public class CDASyncedSpace extends ArrayResource {
-    ArrayList<CDAResource> items;
+    private ArrayList<CDAResource> items;
 
-    String nextSyncUrl;
+    private String nextSyncUrl;
 
     public ArrayList<CDAResource> getItems() {
         return items;

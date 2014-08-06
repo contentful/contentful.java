@@ -13,7 +13,7 @@ import java.util.Map;
  */
 class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
     // Client reference.
-    private CDAClient client;
+    private final CDAClient client;
 
     public ResourceTypeAdapter(CDAClient client) {
         this.client = client;
