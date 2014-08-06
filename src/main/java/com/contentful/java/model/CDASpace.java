@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Class representing a single Space resource.
  */
 public class CDASpace extends ResourceWithMap {
-    private String defaultLocale = Constants.DEFAULT_LOCALE; // todo tom TMP!!
+    private String defaultLocale = Constants.DEFAULT_LOCALE;
     private ArrayList<Locale> locales;
     private String name;
 

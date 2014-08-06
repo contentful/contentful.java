@@ -45,7 +45,4 @@ public class CDAAsset extends ResourceWithMap {
     public void setMimeType(String mimeType) {
         this.mimeType = mimeType;
     }
-
-    // todo size
-    // todo isImage
 }
