@@ -13,7 +13,7 @@ public class CDAResource {
     protected String locale;
 
     public CDAResource() {
-        this.locale = Constants.DEFAULT_LOCALE; // todo use Locale of current Space
+        this.locale = Constants.DEFAULT_LOCALE;
     }
 
     public Map getSys() {
@@ -24,9 +24,13 @@ public class CDAResource {
         this.sys = sys;
     }
 
-    // todo get/set locale
+    public String getLocale() {
+        return locale;
+    }
 
-    // todo resolveWithSuccess
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
 
     @Override
     public boolean equals(Object o) {
