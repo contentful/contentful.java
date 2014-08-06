@@ -141,8 +141,9 @@ public class CDAClient {
      * @param contentTypeIdentifier String representing a specific Content Type UID.
      * @param clazz                 Class type to instantiate when creating objects of
      *                              the specified Content Type (i.e. "SomeCustomEntry.class").
+     *                              Note this has to be a subclass of {@link CDAEntry}.
      */
-    public void registerCustomClass(String contentTypeIdentifier, Class<?> clazz) {
+    public void registerCustomClass(String contentTypeIdentifier, Class<? extends CDAEntry> clazz) {
         customTypesMap.put(contentTypeIdentifier, clazz);
     }
 
