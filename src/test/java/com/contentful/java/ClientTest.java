@@ -10,9 +10,12 @@ import retrofit.RetrofitError;
 import retrofit.client.Client;
 import retrofit.client.Request;
 import retrofit.client.Response;
+import retrofit.mime.TypedString;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.junit.Assert.assertTrue;
 
@@ -58,5 +61,30 @@ public class ClientTest extends AbsTestCase {
                         return new TestException();
                     }
                 }).build().fetchSpaceBlocking();
+    }
+
+    @Test
+    public void testNoSSL() throws Exception {
+        final Boolean[] res = new Boolean[]{null};
+
+        CDAClient client = TestClientFactory
+                .newInstance()
+                .noSSL()
+                .setClient(new Client() {
+                    @Override
+                    public Response execute(Request request) throws IOException {
+                        URI uri = URI.create(request.getUrl());
+                        res[0] = Constants.SCHEME_HTTP.equalsIgnoreCase(uri.getScheme());
+
+                        return new Response(request.getUrl(),
+                                200,
+                                "OK",
+                                Collections.EMPTY_LIST,
+                                new TypedString("{}"));
+                    }
+                }).build();
+
+        client.fetchSpaceBlocking();
+        assertTrue(res[0]);
     }
 }

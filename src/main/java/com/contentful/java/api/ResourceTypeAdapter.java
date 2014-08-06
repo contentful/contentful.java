@@ -81,7 +81,7 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
         setBaseFields(result, sys, jsonElement, context);
 
         Map fileMap = (Map) result.getFields().get("file");
-        result.setUrl(String.format("%s:%s", Constants.SCHEME_HTTPS, fileMap.get("url")));
+        result.setUrl(String.format("%s:%s", client.getHttpScheme(), fileMap.get("url")));
         result.setMimeType((String) fileMap.get("contentType"));
 
         return result;

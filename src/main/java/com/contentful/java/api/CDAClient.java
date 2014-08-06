@@ -1,5 +1,6 @@
 package com.contentful.java.api;
 
+import com.contentful.java.lib.Constants;
 import com.contentful.java.model.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -30,6 +31,7 @@ import static com.contentful.java.lib.Constants.*;
 public class CDAClient {
     // Definitions & Configuration
     static final String USER_AGENT = String.format("contentful.java/%s", VERSION_NAME);
+    private String httpScheme;
 
     private String accessToken;
     private String spaceKey;
@@ -54,7 +56,7 @@ public class CDAClient {
      */
     private void init(Builder builder) {
         // Initialize members
-        customTypesMap = new HashMap<String, Class<?>>();
+        this.customTypesMap = new HashMap<String, Class<?>>();
         this.spaceKey = builder.spaceKey;
         this.accessToken = builder.accessToken;
 
@@ -63,9 +65,16 @@ public class CDAClient {
 
         // Create a service
         RestAdapter.Builder restBuilder = new RestAdapter.Builder()
-                .setEndpoint(CDA_SERVER_URI)
                 .setConverter(new GsonConverter(gson))
                 .setRequestInterceptor(getRequestInterceptor());
+
+        if (builder.dontUseSSL) {
+            restBuilder.setEndpoint(CDA_SERVER_URI_NOSSL);
+            httpScheme = Constants.SCHEME_HTTP;
+        } else {
+            restBuilder.setEndpoint(CDA_SERVER_URI);
+            httpScheme = Constants.SCHEME_HTTPS;
+        }
 
         if (builder.clientProvider != null) {
             restBuilder.setClient(builder.clientProvider);
@@ -566,6 +575,10 @@ public class CDAClient {
         }
     }
 
+    public String getHttpScheme() {
+        return httpScheme;
+    }
+
     /**
      * Build a new {@link CDAClient}.
      *
@@ -580,6 +593,7 @@ public class CDAClient {
         private String accessToken;
         private Client.Provider clientProvider;
         private ErrorHandler errorHandler;
+        private boolean dontUseSSL = false;
 
         /**
          * Sets the space key to be used with this client.
@@ -657,6 +671,16 @@ public class CDAClient {
             }
 
             this.errorHandler = errorHandler;
+            return this;
+        }
+
+        /**
+         * Makes the client execute all requests via HTTP instead of HTTPS - <b>use with caution</b>.
+         *
+         * @return this {@code Builder} instance.
+         */
+        public Builder noSSL() {
+            this.dontUseSSL = true;
             return this;
         }
 
