@@ -10,7 +10,7 @@ import java.util.Map;
 public class CDAResource {
     private Map<String, Object> sys;
 
-    private String locale;
+    protected String locale;
 
     public CDAResource() {
         this.locale = Constants.DEFAULT_LOCALE; // todo use Locale of current Space
