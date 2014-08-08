@@ -16,10 +16,20 @@ public class CDASyncedSpace extends ArrayResource {
         return items;
     }
 
+    /**
+     * Gets the next sync URL.
+     *
+     * @return String representing the next sync URL for this Space.
+     */
     public String getNextSyncUrl() {
         return nextSyncUrl;
     }
 
+    /**
+     * Gets the sync token from this Space's {@code nextSyncUrl} value.
+     *
+     * @return String representing the next token to be used for the next sync request.
+     */
     public String getSyncToken() {
         if (nextSyncUrl == null) {
             return null;

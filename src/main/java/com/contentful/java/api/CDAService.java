@@ -176,9 +176,10 @@ interface CDAService {
     /**
      * Space Sync endpoint.
      *
-     * @param space    String representing the Space key.
-     * @param initial  Boolean indicating whether this is the initial sync request or not.
-     * @param callback {@link CDACallback} instance to be used.
+     * @param space     String representing the Space key.
+     * @param initial   Boolean indicating whether this is the initial sync request or not.
+     * @param syncToken String representing the sync token.
+     * @param callback  {@link CDACallback} instance to be used.
      */
     @GET("/spaces/{space}/sync")
     void performSynchronization(
@@ -191,8 +192,9 @@ interface CDAService {
     /**
      * Space Sync endpoint. (BLOCKING)
      *
-     * @param space   String representing the Space key.
-     * @param initial Boolean indicating whether this is the initial sync request or not.
+     * @param space     String representing the Space key.
+     * @param initial   Boolean indicating whether this is the initial sync request or not.
+     * @param syncToken String representing the sync token.
      * @return {@link CDASyncedSpace} result.
      */
     @GET("/spaces/{space}/sync")

@@ -592,7 +592,7 @@ public class CDAClient {
             @Override
             void onSpaceReady() {
                 service.performSynchronization(spaceKey,
-                        false,
+                        null,
                         syncToken,
                         new SyncSpaceCallback(null, CDAClient.this, callback));
             }
