@@ -523,7 +523,7 @@ public class CDAClient {
         ensureSpace(true, new EnsureSpaceCallback(this, callback) {
             @Override
             void onSpaceReady() {
-                service.performSynchronization(spaceKey, true,
+                service.performSynchronization(spaceKey, true, null,
                         new SyncSpaceCallback(null, CDAClient.this, callback));
             }
         });
@@ -536,11 +536,16 @@ public class CDAClient {
      */
     public CDASyncedSpace performInitialSynchronizationBlocking() throws Exception {
         ensureSpaceBlocking(true);
-        CDASyncedSpace result = service.performSynchronizationBlocking(spaceKey, true);
+        CDASyncedSpace result = service.performSynchronizationBlocking(spaceKey, true, null);
         return new SpaceMerger(null, result, null, null, getSpace()).call();
     }
 
-    // TBD
+    /**
+     * Sync an existing Space.
+     *
+     * @param existingSpace {@link CDASyncedSpace} space to sync.
+     * @param callback      {@link CDASyncedSpace} result.
+     */
     public void performSynchronization(final CDASyncedSpace existingSpace, final CDACallback<CDASyncedSpace> callback) {
         if (existingSpace == null) {
             throw new IllegalArgumentException("Existing space may not be null.");
@@ -555,14 +560,60 @@ public class CDAClient {
         });
     }
 
+    /**
+     * Sync an existing Space. (BLOCKING)
+     *
+     * @param existingSpace {@link CDASyncedSpace} space to sync.
+     * @return {@link CDASyncedSpace} result
+     * @throws Exception in case of an error.
+     */
     public CDASyncedSpace performSynchronizationBlocking(CDASyncedSpace existingSpace) throws Exception {
         if (existingSpace == null) {
             throw new IllegalArgumentException("Existing space may not be null.");
         }
 
         ensureSpaceBlocking(true);
-        CDASyncedSpace result = service.performSynchronizationBlocking(spaceKey, false);
+        CDASyncedSpace result = service.performSynchronizationBlocking(spaceKey, false, null);
         return new SpaceMerger(existingSpace, result, null, null, getSpace()).call();
+    }
+
+    /**
+     * Sync an existing Space, given only a {@code syncToken}.
+     *
+     * @param syncToken String representing a previously persisted sync token.
+     * @param callback  {@link CDASyncedSpace} result.
+     */
+    public void performSynchronization(final String syncToken, final CDACallback<CDASyncedSpace> callback) {
+        if (syncToken == null) {
+            throw new IllegalArgumentException("Sync token may not be null.");
+        }
+
+        ensureSpace(true, new EnsureSpaceCallback(this, callback) {
+            @Override
+            void onSpaceReady() {
+                service.performSynchronization(spaceKey,
+                        false,
+                        syncToken,
+                        new SyncSpaceCallback(null, CDAClient.this, callback));
+            }
+        });
+    }
+
+    /**
+     * Sync an existing Space, given only a {@code syncToken}. (BLOCKING)
+     *
+     * @param syncToken String representing a previously persisted sync token.
+     * @return {@link CDASyncedSpace} result.
+     * @throws Exception in case of an error.
+     */
+    public CDASyncedSpace performSynchronization(String syncToken) throws Exception {
+        if (syncToken == null) {
+            throw new IllegalArgumentException("Sync token may not be null.");
+        }
+
+        ensureSpaceBlocking(true);
+        CDASyncedSpace result = service.performSynchronizationBlocking(spaceKey, null, syncToken);
+        return new SpaceMerger(null, result, null, null, getSpace()).call();
     }
 
     public CDASpace getSpace() {

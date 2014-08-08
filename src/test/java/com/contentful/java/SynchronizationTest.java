@@ -88,6 +88,20 @@ public class SynchronizationTest extends AbsTestCase {
         verifySynchronizationThird(thirdResult);
     }
 
+    @Test
+    public void testSynchronizationByToken() throws Exception {
+        CDAClient client = TestClientFactory.newInstance().build();
+
+        CDASyncedSpace result = client.performInitialSynchronizationBlocking();
+        assertNotNull(result);
+
+        String syncToken = result.getSyncToken();
+        assertNotNull(syncToken);
+
+        result = client.performSynchronization(syncToken);
+        assertNotNull(result);
+    }
+
     void verifySynchronizationFirst(CDASyncedSpace result) {
         assertNotNull(result);
 
@@ -105,6 +119,8 @@ public class SynchronizationTest extends AbsTestCase {
         entry = (CDAEntry) items.get(2);
         assertEquals("Za'ha'zah", entry.getFields().get("name"));
         assertEquals(Double.valueOf(2789), entry.getFields().get("age"));
+
+        assertEquals("FAKE", result.getSyncToken());
     }
 
     @SuppressWarnings("UnnecessaryBoxing")
@@ -125,11 +141,14 @@ public class SynchronizationTest extends AbsTestCase {
         entry = (CDAEntry) items.get(2);
         assertEquals("Za'ha'zah", entry.getFields().get("name"));
         assertEquals(Double.valueOf(2789), entry.getFields().get("age"));
+
+        assertEquals("FAKE", result.getSyncToken());
     }
 
     void verifySynchronizationThird(CDASyncedSpace result) {
         assertNotNull(result);
 
         assertEquals(3, result.getItems().size());
+        assertEquals("FAKE", result.getSyncToken());
     }
 }
