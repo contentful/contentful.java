@@ -647,6 +647,8 @@ public class CDAClient {
 
     /**
      * Read a previously saved serialized object and parse it.
+     * This method will will perform file IO on the thread of the calling
+     * method.
      *
      * @param file {@link java.io.File} reference with valid read permission.
      * @return {@link CDAResource} instance or a subclass of it, should be the same type as
