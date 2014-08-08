@@ -11,6 +11,8 @@ import retrofit.client.Client;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
@@ -167,6 +169,46 @@ public class CDAClient {
     }
 
     /**
+     * Fetch the page of a {@link CDAArray} object.
+     *
+     * This method calculates the {@code skip} and {@code limit} parameters of the original request
+     * that was used to fetch this {@code array} instance, and attempts to fetch the next page
+     * even if the number exceeds the {@code total} attribute of the existing array, since the
+     * data may have changed in the server, in case the value exceeds the real number, a successful
+     * response will be returned along with an empty {@link CDAArray} instance as the result.
+     *
+     * @param array    {@link CDAArray} previously fetched array.
+     * @param callback {@link CDACallback} instance.
+     */
+    public void fetchArrayNextPage(final CDAArray array, final CDACallback<CDAArray> callback) {
+        if (array == null) {
+            throw new IllegalArgumentException("Array may not be empty.");
+        }
+
+        String nextPageType = Utils.getNextPageType(array);
+        HashMap<String, String> query = Utils.getNextBatchQueryMapForArray(array);
+        fetchArrayWithType(nextPageType, query, callback);
+    }
+
+    /**
+     * Synchronous version of {@link #fetchArrayNextPage}.
+     *
+     * @param array {@link CDAArray} previously fetched array.
+     * @return {@link CDAArray} result.
+     * @throws Exception in case of an error.
+     */
+    public CDAArray fetchArrayNextPageBlocking(CDAArray array) throws Exception {
+        if (array == null) {
+            throw new IllegalArgumentException("Array may not be empty.");
+        }
+
+        String nextPageType = Utils.getNextPageType(array);
+        HashMap<String, String> query = Utils.getNextBatchQueryMapForArray(array);
+
+        return fetchArrayWithTypeBlocking(nextPageType, query);
+    }
+
+    /**
      * Fetch Assets.
      *
      * @param callback {@link CDACallback} instance.
@@ -231,6 +273,58 @@ public class CDAClient {
     public CDAAsset fetchAssetWithIdentifierBlocking(String identifier) throws Exception {
         ensureSpaceBlocking(false);
         return service.fetchAssetWithIdentifierBlocking(spaceKey, identifier);
+    }
+
+    /**
+     * Fetch all Content Types from a Space.
+     *
+     * @param callback {@link CDACallback} instance.
+     */
+    public void fetchContentTypes(final CDACallback<CDAArray> callback) {
+        ensureSpace(new EnsureSpaceCallback(this, callback) {
+            @Override
+            void onSpaceReady() {
+                service.fetchContentTypes(CDAClient.this.spaceKey, callback);
+            }
+        });
+    }
+
+    /**
+     * Fetch all Content Types from a Space. (BLOCKING)
+     *
+     * @return {@link CDAArray} result.
+     * @throws Exception in case of an error.
+     */
+    public CDAArray fetchContentTypesBlocking() throws Exception {
+        ensureSpaceBlocking(false);
+        return service.fetchContentTypesBlocking(spaceKey);
+    }
+
+    /**
+     * Fetch a single Content Type with identifier.
+     *
+     * @param identifier String representing the Content Type UID.
+     * @param callback   {@link CDACallback} instance.
+     */
+    public void fetchContentTypeWithIdentifier(final String identifier, final CDACallback<CDAContentType> callback) {
+        ensureSpace(new EnsureSpaceCallback(this, callback) {
+            @Override
+            void onSpaceReady() {
+                service.fetchContentTypeWithIdentifier(CDAClient.this.spaceKey, identifier, callback);
+            }
+        });
+    }
+
+    /**
+     * Fetch a single Content Type with identifier. (BLOCKING)
+     *
+     * @param identifier String representing the Content Type UID.
+     * @return {@link CDAContentType} result.
+     * @throws Exception
+     */
+    public CDAContentType fetchContentTypeWithIdentifierBlocking(String identifier) throws Exception {
+        ensureSpaceBlocking(false);
+        return service.fetchContentTypeWithIdentifierBlocking(spaceKey, identifier);
     }
 
     /**
@@ -307,58 +401,6 @@ public class CDAClient {
     }
 
     /**
-     * Fetch all Content Types from a Space.
-     *
-     * @param callback {@link CDACallback} instance.
-     */
-    public void fetchContentTypes(final CDACallback<CDAArray> callback) {
-        ensureSpace(new EnsureSpaceCallback(this, callback) {
-            @Override
-            void onSpaceReady() {
-                service.fetchContentTypes(CDAClient.this.spaceKey, callback);
-            }
-        });
-    }
-
-    /**
-     * Fetch all Content Types from a Space. (BLOCKING)
-     *
-     * @return {@link CDAArray} result.
-     * @throws Exception in case of an error.
-     */
-    public CDAArray fetchContentTypesBlocking() throws Exception {
-        ensureSpaceBlocking(false);
-        return service.fetchContentTypesBlocking(spaceKey);
-    }
-
-    /**
-     * Fetch a single Content Type with identifier.
-     *
-     * @param identifier String representing the Content Type UID.
-     * @param callback   {@link CDACallback} instance.
-     */
-    public void fetchContentTypeWithIdentifier(final String identifier, final CDACallback<CDAContentType> callback) {
-        ensureSpace(new EnsureSpaceCallback(this, callback) {
-            @Override
-            void onSpaceReady() {
-                service.fetchContentTypeWithIdentifier(CDAClient.this.spaceKey, identifier, callback);
-            }
-        });
-    }
-
-    /**
-     * Fetch a single Content Type with identifier. (BLOCKING)
-     *
-     * @param identifier String representing the Content Type UID.
-     * @return {@link CDAContentType} result.
-     * @throws Exception
-     */
-    public CDAContentType fetchContentTypeWithIdentifierBlocking(String identifier) throws Exception {
-        ensureSpaceBlocking(false);
-        return service.fetchContentTypeWithIdentifierBlocking(spaceKey, identifier);
-    }
-
-    /**
      * Fetch any kind of Resource from the server.
      * This method can be used in cases where the actual type of Resource to be fetched is determined at runtime.
      *
@@ -431,87 +473,6 @@ public class CDAClient {
      */
     public CDASpace fetchSpaceBlocking() throws Exception {
         return service.fetchSpaceBlocking(this.spaceKey);
-    }
-
-    /**
-     * Fetch the page of a {@link CDAArray} object.
-     *
-     * This method calculates the {@code skip} and {@code limit} parameters of the original request
-     * that was used to fetch this {@code array} instance, and attempts to fetch the next page
-     * even if the number exceeds the {@code total} attribute of the existing array, since the
-     * data may have changed in the server, in case the value exceeds the real number, a successful
-     * response will be returned along with an empty {@link CDAArray} instance as the result.
-     *
-     * @param array    {@link CDAArray} previously fetched array.
-     * @param callback {@link CDACallback} instance.
-     */
-    public void fetchArrayNextPage(final CDAArray array, final CDACallback<CDAArray> callback) {
-        if (array == null) {
-            throw new IllegalArgumentException("Array may not be empty.");
-        }
-
-        String nextPageType = Utils.getNextPageType(array);
-        HashMap<String, String> query = Utils.getNextBatchQueryMapForArray(array);
-        fetchArrayWithType(nextPageType, query, callback);
-    }
-
-    /**
-     * Synchronous version of {@link #fetchArrayNextPage}.
-     *
-     * @param array {@link CDAArray} previously fetched array.
-     * @return {@link CDAArray} result.
-     * @throws Exception in case of an error.
-     */
-    public CDAArray fetchArrayNextPageBlocking(CDAArray array) throws Exception {
-        if (array == null) {
-            throw new IllegalArgumentException("Array may not be empty.");
-        }
-
-        String nextPageType = Utils.getNextPageType(array);
-        HashMap<String, String> query = Utils.getNextBatchQueryMapForArray(array);
-
-        return fetchArrayWithTypeBlocking(nextPageType, query);
-    }
-
-    private void fetchArrayWithType(final String type,
-                                    final Map<String, String> query,
-                                    final CDACallback<CDAArray> callback) {
-
-        ensureSpace(new EnsureSpaceCallback(this, callback) {
-            @Override
-            void onSpaceReady() {
-                service.fetchArrayWithType(CDAClient.this.spaceKey,
-                        type,
-                        query,
-                        new ArrayResponse(callback));
-            }
-        });
-    }
-
-    private CDAArray fetchArrayWithTypeBlocking(String type, Map<String, String> query) throws Exception {
-        ensureSpaceBlocking(false);
-        Response response = service.fetchArrayWithTypeBlocking(spaceKey, type, query);
-        CDAArray result = gson.fromJson(new InputStreamReader(response.getBody().in()), CDAArray.class);
-        ArrayResponse.prepareResponse(result, response);
-        return result;
-    }
-
-    private void ensureSpace(EnsureSpaceCallback callback) {
-        ensureSpace(false, callback);
-    }
-
-    private void ensureSpace(boolean invalidate, final EnsureSpaceCallback callback) {
-        if (invalidate || space == null) {
-            fetchSpace(callback);
-        } else {
-            callback.onSuccess(space, null);
-        }
-    }
-
-    private void ensureSpaceBlocking(boolean invalidate) throws Exception {
-        if (invalidate || space == null) {
-            space = fetchSpaceBlocking();
-        }
     }
 
     /**
@@ -628,6 +589,75 @@ public class CDAClient {
 
     public String getHttpScheme() {
         return httpScheme;
+    }
+
+    private void ensureSpace(EnsureSpaceCallback callback) {
+        ensureSpace(false, callback);
+    }
+
+    private void ensureSpace(boolean invalidate, final EnsureSpaceCallback callback) {
+        if (invalidate || space == null) {
+            fetchSpace(callback);
+        } else {
+            callback.onSuccess(space, null);
+        }
+    }
+
+    private void ensureSpaceBlocking(boolean invalidate) throws Exception {
+        if (invalidate || space == null) {
+            space = fetchSpaceBlocking();
+        }
+    }
+
+    private void fetchArrayWithType(final String type,
+                                    final Map<String, String> query,
+                                    final CDACallback<CDAArray> callback) {
+
+        ensureSpace(new EnsureSpaceCallback(this, callback) {
+            @Override
+            void onSpaceReady() {
+                service.fetchArrayWithType(CDAClient.this.spaceKey,
+                        type,
+                        query,
+                        new ArrayResponse(callback));
+            }
+        });
+    }
+
+    private CDAArray fetchArrayWithTypeBlocking(String type, Map<String, String> query) throws Exception {
+        ensureSpaceBlocking(false);
+        Response response = service.fetchArrayWithTypeBlocking(spaceKey, type, query);
+        CDAArray result = gson.fromJson(new InputStreamReader(response.getBody().in()), CDAArray.class);
+        ArrayResponse.prepareResponse(result, response);
+        return result;
+    }
+
+    /**
+     * Serialize a resource and save it to a local file.
+     * This method will will perform file IO on the thread of the calling
+     * method.
+     *
+     * @param resource {@link CDAResource} or a subclass of it.
+     * @param file     Valid {@link java.io.File} reference with valid write permission.
+     * @throws java.io.IOException in case writing fails.
+     */
+    public void saveResourceToFile(CDAResource resource, File file) throws IOException {
+        Utils.saveResourceToFile(resource, file);
+    }
+
+    /**
+     * Read a previously saved serialized object and parse it.
+     * This method will will perform file IO on the thread of the calling
+     * method.
+     *
+     * @param file {@link java.io.File} reference with valid read permission.
+     * @return {@link CDAResource} instance or a subclass of it, should be the same type as
+     * the original object.
+     * @throws IOException            in case reading fails.
+     * @throws ClassNotFoundException in case the persisted data references a class which is no longer available.
+     */
+    public CDAResource readResourceFromFile(File file) throws IOException, ClassNotFoundException {
+        return Utils.readResourceFromFile(file);
     }
 
     /**
