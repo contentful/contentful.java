@@ -184,6 +184,7 @@ interface CDAService {
     void performSynchronization(
             @Path("space") String space,
             @Query("initial") Boolean initial,
+            @Query("sync_token") String syncToken,
             SyncSpaceCallback callback
     );
 
@@ -197,7 +198,8 @@ interface CDAService {
     @GET("/spaces/{space}/sync")
     CDASyncedSpace performSynchronizationBlocking(
             @Path("space") String space,
-            @Query("initial") Boolean initial
+            @Query("initial") Boolean initial,
+            @Query("sync_token") String syncToken
     );
 
     /**
