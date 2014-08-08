@@ -2,12 +2,13 @@ package com.contentful.java.model;
 
 import com.contentful.java.lib.Constants;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * Base class for CDA resources.
  */
-public class CDAResource {
+public class CDAResource implements Serializable {
     private Map<String, Object> sys;
 
     protected String locale;

@@ -2,6 +2,7 @@ package com.contentful.java.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,7 +88,7 @@ public class CDAArray extends ArrayResource {
     }
 
     // Included resources class
-    public static class Includes {
+    public static class Includes implements Serializable {
         @SerializedName("Asset")
         public List<CDAAsset> assets;
 

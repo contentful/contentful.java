@@ -1,7 +1,9 @@
 package com.contentful.java.api;
 
 import com.contentful.java.model.CDAArray;
+import com.contentful.java.model.CDAResource;
 
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -93,5 +95,63 @@ class Utils {
         return queryMap;
     }
 
+    static void saveResourceToFile(CDAResource resource, File file) throws IOException {
+        FileOutputStream fos = null;
+        ObjectOutputStream oos = null;
+
+        try {
+            fos = new FileOutputStream(file);
+            oos = new ObjectOutputStream(fos);
+
+            oos.writeObject(resource);
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (oos != null) {
+                try {
+                    oos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    static CDAResource readResourceFromFile(File file) throws IOException, ClassNotFoundException {
+        FileInputStream fis = null;
+        ObjectInputStream oos = null;
+        CDAResource result = null;
+
+        try {
+            fis = new FileInputStream(file);
+            oos = new ObjectInputStream(fis);
+
+            result = (CDAResource) oos.readObject();
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (oos != null) {
+                try {
+                    oos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return result;
+    }
 }
 
