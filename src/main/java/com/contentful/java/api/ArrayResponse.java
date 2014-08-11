@@ -32,6 +32,12 @@ class ArrayResponse extends CDACallback<CDAArray> {
         }
     }
 
+    /**
+     * Sets any additional values on the result, whilst having the {@code Response} context.
+     *
+     * @param result   Result object.
+     * @param response {@link retrofit.client.Response} object as returned by the original callback.
+     */
     static void prepareResponse(CDAArray result, Response response) {
         result.setOriginalUrl(response.getUrl());
     }

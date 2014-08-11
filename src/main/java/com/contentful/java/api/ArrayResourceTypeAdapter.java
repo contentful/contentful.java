@@ -36,6 +36,15 @@ class ArrayResourceTypeAdapter implements JsonDeserializer<ArrayResource> {
         return result;
     }
 
+    /**
+     * Creates an executes a new {@link ArrayParser} Runnable with the given generic type.
+     *
+     * @param clazz  Type of result object expected to be returned.
+     * @param source Array instance to be parsed.
+     * @param <T>    Type of result object expected to be returned.
+     * @return The result as returned by {@link ArrayParser}.
+     * @throws Exception in case of an error.
+     */
     <T extends ArrayResource> T parseArray(Class<T> clazz, T source) throws Exception {
         return new ArrayParser<T>(
                 source,

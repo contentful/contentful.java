@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
- * A custom runnable used internally for preparing array result objects.
+ * A custom Callable used internally for preparing array result objects.
  *
  * This will attempt to resolve all links within an {@link ArrayResource} instance,
  * while iterating through all of it's normal and included resources.
@@ -59,8 +59,10 @@ class ArrayParser<T extends ArrayResource> implements Callable<T> {
         }
 
         for (CDAResource item : items) {
+            // Parse the resource - for Sync this will set the fields maps.
             parseResource(item);
 
+            // Store the resource in the proper array according to it's UID.
             if (item instanceof CDAAsset) {
                 assets.put((String) item.getSys().get("id"), item);
             } else if (item instanceof CDAEntry) {
@@ -68,6 +70,7 @@ class ArrayParser<T extends ArrayResource> implements Callable<T> {
             }
         }
 
+        // Iterate through all Entries and attempt to resolve contained links.
         for (Map.Entry<String, CDAResource> entry : entries.entrySet()) {
             CDAResource item = entry.getValue();
             resolveResourceLinks(item, assets, entries);
@@ -76,6 +79,11 @@ class ArrayParser<T extends ArrayResource> implements Callable<T> {
         return source;
     }
 
+    /**
+     * For Sync this will set all base fields for this Resource.
+     *
+     * @param resource Resource to be parsed.
+     */
     private void parseResource(CDAResource resource) {
         if (source instanceof CDASyncedSpace) {
             if (resource instanceof ResourceWithMap) {
@@ -104,6 +112,13 @@ class ArrayParser<T extends ArrayResource> implements Callable<T> {
         }
     }
 
+    /**
+     * Attempts to resolve all links referenced by a resource.
+     *
+     * @param resource Resource instance.
+     * @param assets   Mapping of Asset UIDs to objects.
+     * @param entries  Mapping of Entry UIDs to objects.
+     */
     private void resolveResourceLinks(CDAResource resource, HashMap<String, CDAResource> assets, HashMap<String, CDAResource> entries) {
         if (resource instanceof ResourceWithMap) {
             ResourceWithMap res = (ResourceWithMap) resource;
@@ -127,6 +142,16 @@ class ArrayParser<T extends ArrayResource> implements Callable<T> {
         }
     }
 
+    /**
+     * Gets a single field for a resource which references a different resource (link) and
+     * attempts to resolve it.
+     *
+     * @param map     Map representing the field's value (the link).
+     * @param assets  Mapping of Asset UIDs to objects.
+     * @param entries Mapping of Entry UIDs to objects.
+     * @return {@link CDAResource} or a subclass of it, depending on the resource type, or null in case
+     * the link is not resolvable from this context.
+     */
     private CDAResource getMatchForField(Map map, HashMap<String, CDAResource> assets, HashMap<String, CDAResource> entries) {
         CDAResource result = null;
 

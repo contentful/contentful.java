@@ -11,7 +11,15 @@ import java.util.concurrent.Callable;
 import static com.contentful.java.lib.Constants.CDAResourceType;
 
 /**
- * TBD
+ * A custom Callable used internally for preparing array sync result objects.
+ *
+ * This will attempt to merge two {@link CDASyncedSpace} objects together while taking into account
+ * created, deleted and updated resources.
+ *
+ * It is also possible to supply only one {@link CDASyncedSpace} object, and skip the merge process.
+ *
+ * This will also create and execute an {@link ArrayParser} callable before returning the result to resolve
+ * any links after the merge phase.
  */
 class SpaceMerger implements Callable<CDASyncedSpace> {
     private final CDASyncedSpace originalSpace;

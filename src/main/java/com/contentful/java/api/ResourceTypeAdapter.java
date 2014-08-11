@@ -3,8 +3,10 @@ package com.contentful.java.api;
 import com.contentful.java.lib.Constants;
 import com.contentful.java.model.*;
 import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,22 +26,27 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
                                    Type type,
                                    JsonDeserializationContext context) throws JsonParseException {
 
+        CDAResource result = null;
+
         JsonObject sys = jsonElement.getAsJsonObject()
                 .getAsJsonObject("sys");
 
-        Constants.CDAResourceType resourceType =
-                Constants.CDAResourceType.valueOf(sys.get("type").getAsString());
+        if (sys != null) {
+            Constants.CDAResourceType resourceType =
+                    Constants.CDAResourceType.valueOf(sys.get("type").getAsString());
 
-        CDAResource result;
 
-        if (Constants.CDAResourceType.Asset.equals(resourceType)) {
-            result = deserializeAsset(jsonElement, context, sys);
-        } else if (Constants.CDAResourceType.Entry.equals(resourceType)) {
-            result = deserializeEntry(jsonElement, context, sys);
-        } else if (Constants.CDAResourceType.ContentType.equals(resourceType)) {
-            result = deserializeContentType(jsonElement, context, sys);
-        } else {
-            result = deserializeResource(jsonElement, context, sys);
+            if (Constants.CDAResourceType.Asset.equals(resourceType)) {
+                result = deserializeAsset(jsonElement, context, sys);
+            } else if (Constants.CDAResourceType.Entry.equals(resourceType)) {
+                result = deserializeEntry(jsonElement, context, sys);
+            } else if (Constants.CDAResourceType.ContentType.equals(resourceType)) {
+                result = deserializeContentType(jsonElement, context, sys);
+            } else if (Constants.CDAResourceType.Space.equals(resourceType)) {
+                result = deserializeSpace(jsonElement, context, sys);
+            } else {
+                result = deserializeResource(jsonElement, context, sys);
+            }
         }
 
         return result;
@@ -169,6 +176,44 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
     }
 
     /**
+     * De-serialize a resource of type Space.
+     *
+     * @param jsonElement JsonElement representing the resource in JSON form.
+     * @param context     De-serialization context.
+     * @param sys         JsonObject representing the system attributes of the resource in JSON form.
+     * @return {@link CDASpace} instance.
+     * @throws JsonParseException on failure.
+     */
+    private CDASpace deserializeSpace(JsonElement jsonElement,
+                                      JsonDeserializationContext context,
+                                      JsonObject sys) {
+
+        // Name
+        String name = jsonElement.getAsJsonObject().get("name").getAsString();
+
+        // Locales
+        JsonArray localesArray = jsonElement.getAsJsonObject().get("locales").getAsJsonArray();
+        Type t = new TypeToken<ArrayList<Locale>>() {
+        }.getType();
+        ArrayList<Locale> locales = context.deserialize(localesArray, t);
+
+        // Default locale
+        String defaultLocale = Constants.DEFAULT_LOCALE;
+
+        for (Locale l : locales) {
+            if (l.isDefault) {
+                defaultLocale = l.code;
+                break;
+            }
+        }
+
+        CDASpace result = new CDASpace(defaultLocale, locales, name);
+        setBaseFields(result, sys, jsonElement, context);
+
+        return result;
+    }
+
+    /**
      * Sets the base fields for a {@link CDAResource} object.
      * This will set the list fields based on the target's type, depending on whether
      * it is an instance of the {@link ResourceWithMap} class or the {@link ResourceWithList},
@@ -197,6 +242,8 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
 
         if (target instanceof ResourceWithMap) {
             ResourceWithMap res = (ResourceWithMap) target;
+
+            target.setLocale(client.getSpace().getDefaultLocale());
 
             res.setRawFields(context.<Map<String, Object>>deserialize(
                     fields.getAsJsonObject(),

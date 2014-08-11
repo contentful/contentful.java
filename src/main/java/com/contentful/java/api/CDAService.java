@@ -10,7 +10,7 @@ import retrofit.http.QueryMap;
 import java.util.Map;
 
 /**
- * An interface being used internally to create a client via
+ * An interface being used internally to create a Retrofit Service via
  * {@link retrofit.RestAdapter#create}.
  */
 interface CDAService {

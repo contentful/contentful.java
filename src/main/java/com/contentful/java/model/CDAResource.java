@@ -1,7 +1,5 @@
 package com.contentful.java.model;
 
-import com.contentful.java.lib.Constants;
-
 import java.io.Serializable;
 import java.util.Map;
 
@@ -13,22 +11,38 @@ public class CDAResource implements Serializable {
 
     protected String locale;
 
-    public CDAResource() {
-        this.locale = Constants.DEFAULT_LOCALE;
-    }
-
+    /**
+     * Gets this resource's system attributes.
+     *
+     * @return Map populated with this resource's system attributes.
+     */
     public Map getSys() {
         return sys;
     }
 
+    /**
+     * Sets this resource's system attribtues map.
+     *
+     * @param sys Map instance.
+     */
     public void setSys(Map<String, Object> sys) {
         this.sys = sys;
     }
 
+    /**
+     * Gets the current locale for this resource.
+     *
+     * @return String representing the current locale for this resource.
+     */
     public String getLocale() {
         return locale;
     }
 
+    /**
+     * Sets the current locale for this resource.
+     *
+     * @param locale String representing the locale to be set.
+     */
     public void setLocale(String locale) {
         this.locale = locale;
     }
@@ -48,6 +62,12 @@ public class CDAResource implements Serializable {
         return uniqueIdForResource(this).hashCode();
     }
 
+    /**
+     * Gets a UID for a resource combining it's {@code id} and {@code type} system attributes values.
+     *
+     * @param resource Resource instance.
+     * @return String representing the UID.
+     */
     private static String uniqueIdForResource(CDAResource resource) {
         Map sysMap = resource.getSys();
         return String.format("%s:%s", sysMap.get("id"), sysMap.get("type"));

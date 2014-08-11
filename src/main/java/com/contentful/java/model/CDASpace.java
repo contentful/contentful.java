@@ -1,16 +1,20 @@
 package com.contentful.java.model;
 
-import com.contentful.java.lib.Constants;
-
 import java.util.ArrayList;
 
 /**
  * Class representing a single Space resource.
  */
-public class CDASpace extends ResourceWithMap {
-    private String defaultLocale = Constants.DEFAULT_LOCALE;
+public class CDASpace extends CDAResource {
+    private String defaultLocale;
     private ArrayList<Locale> locales;
     private String name;
+
+    public CDASpace(String defaultLocale, ArrayList<Locale> locales, String name) {
+        this.defaultLocale = defaultLocale;
+        this.locales = locales;
+        this.name = name;
+    }
 
     public String getDefaultLocale() {
         return defaultLocale;

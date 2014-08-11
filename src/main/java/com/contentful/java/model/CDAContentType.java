@@ -20,14 +20,30 @@ public class CDAContentType extends ResourceWithList<Map> {
         this.userDescription = userDescription;
     }
 
+    /**
+     * Gets the display field of this Content Type.
+     *
+     * @return String representing the field's name.
+     */
     public String getDisplayField() {
         return displayField;
     }
 
+    /**
+     * Gets the name of this Content Type.
+     *
+     * @return String representing the name.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Gets the description of this Content Type.
+     * Note this attribute is optional for the time this is being written so it may or may not return null.
+     *
+     * @return String representing the description.
+     */
     public String getUserDescription() {
         return userDescription;
     }

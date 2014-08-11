@@ -12,6 +12,12 @@ import java.util.HashMap;
  * SDK utilities
  */
 class Utils {
+    /**
+     * Extracts to CDA endpoint used to to fetch an array by inspecting it's original request URL.
+     *
+     * @param array {@link CDAArray} instance.
+     * @return String representing the last path segment of the original URL.
+     */
     static String getNextPageType(CDAArray array) {
         String url = assertArray(array);
         String result = null;
@@ -27,6 +33,13 @@ class Utils {
         return result;
     }
 
+    /**
+     * Helper method to ensure an array has it's original URL associated with it, otherwise
+     * throws an {@link java.lang.IllegalArgumentException}.
+     *
+     * @param array {@link CDAArray} instance.
+     * @return String representing the original URL.
+     */
     private static String assertArray(CDAArray array) {
         String url = array.getOriginalUrl();
 
@@ -38,22 +51,17 @@ class Utils {
     }
 
     /**
-     * Populates a {@link java.util.Map} object with items to fetch the next
-     * batch of items from a previous {@link com.contentful.java.model.CDAArray} item.
+     * Prepares a query map to be used for fetching the next page of an array.
      *
-     * @param array {@link com.contentful.java.model.CDAArray} instance which was successfully executed,
-     *              meaning {@link com.contentful.java.api.CDACallback#onSuccess} was
-     *              called.
-     * @return {@link java.util.Map} instance containing original query string parameters
-     * and updated pagination parameters (skip/limit).
+     * @param array {@link CDAArray} instance returned by a successful request.
+     * @return Map containing original query string parameters and updated pagination parameters (skip/limit).
      */
-    public static HashMap<String, String> getNextBatchQueryMapForArray(CDAArray array) {
+    static HashMap<String, String> getNextBatchQueryMapForArray(CDAArray array) {
         assertArray(array);
 
         // extract pagination parameters
         int skip = array.getSkip();
         int limit = array.getLimit();
-        int total = array.getTotal();
 
         // calculate next offset
         int nextOffset = skip + limit;
@@ -62,7 +70,12 @@ class Utils {
     }
 
     /**
-     * TBD (paging)
+     * Helper method for {@link #getNextBatchQueryMapForArray} that actually creates the query map.
+     *
+     * @param uri        Original request URL.
+     * @param nextOffset {@code skip} value to be used.
+     * @param limit      {@code limit} value to be used.
+     * @return Map representing the query.
      */
     private static HashMap<String, String> prepareQueryMap(URI uri, int nextOffset, int limit) {
         // prepare the new map
@@ -95,6 +108,13 @@ class Utils {
         return queryMap;
     }
 
+    /**
+     * Saves a {@link CDAResource} or a subclass of it to the given {@code file}.
+     *
+     * @param resource Resource to be saved.
+     * @param file     {@link java.io.File} instance with valid write permission.
+     * @throws java.io.IOException in case writing fails.
+     */
     static void saveResourceToFile(CDAResource resource, File file) throws IOException {
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
@@ -123,6 +143,15 @@ class Utils {
         }
     }
 
+    /**
+     * Restores a previously persisted resource from a local file.
+     *
+     * @param file {@link java.io.File} instance with valid read permission.
+     * @return {@link CDAResource} instance or a subclass of it, should be the same type as
+     * the original object.
+     * @throws IOException            in case reading fails.
+     * @throws ClassNotFoundException in case the persisted data references a class which is no longer available.
+     */
     static CDAResource readResourceFromFile(File file) throws IOException, ClassNotFoundException {
         FileInputStream fis = null;
         ObjectInputStream oos = null;

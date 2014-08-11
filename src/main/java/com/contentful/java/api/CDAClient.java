@@ -65,7 +65,7 @@ public class CDAClient {
         // Initialize Gson
         initGson();
 
-        // Create a service
+        // Create a RestAdapter
         RestAdapter.Builder restBuilder = new RestAdapter.Builder()
                 .setConverter(new GsonConverter(gson))
                 .setRequestInterceptor(getRequestInterceptor());
@@ -86,6 +86,7 @@ public class CDAClient {
             restBuilder.setErrorHandler(builder.errorHandler);
         }
 
+        // Create a Service
         service = restBuilder.build().create(CDAService.class);
 
         // Init ExecutorService (will be used for parsing of array results and spaces synchronization).
@@ -104,7 +105,7 @@ public class CDAClient {
     }
 
     /**
-     * Initialize Gson instance.
+     * Initialize {@link com.google.gson.Gson} instances.
      */
     private void initGson() {
         Gson arrayGson = setBaseTypeAdapters(new GsonBuilder(), this).create();
@@ -115,18 +116,34 @@ public class CDAClient {
                 .create();
     }
 
+    /**
+     * Helper method to register {@link com.google.gson.TypeAdapter} instances for
+     * dealing with CDA entities.
+     *
+     * @param gsonBuilder {@link com.google.gson.GsonBuilder} instance.
+     * @param client      {@link CDAClient} that will use the produced {@link Gson} object.
+     * @return The same {@link com.google.gson.GsonBuilder} reference for convenience.
+     */
     static GsonBuilder setBaseTypeAdapters(GsonBuilder gsonBuilder, CDAClient client) {
+        ResourceTypeAdapter rta = new ResourceTypeAdapter(client);
+
         return gsonBuilder
-                .registerTypeAdapter(CDAResource.class, new ResourceTypeAdapter(client))
-                .registerTypeAdapter(CDAEntry.class, new ResourceTypeAdapter(client))
-                .registerTypeAdapter(CDAAsset.class, new ResourceTypeAdapter(client))
-                .registerTypeAdapter(CDAContentType.class, new ResourceTypeAdapter(client));
+                .registerTypeAdapter(CDAResource.class, rta)
+                .registerTypeAdapter(CDAEntry.class, rta)
+                .registerTypeAdapter(CDAAsset.class, rta)
+                .registerTypeAdapter(CDAContentType.class, rta)
+                .registerTypeAdapter(CDASpace.class, rta);
     }
 
     /**
-     * Returns a {@link retrofit.RequestInterceptor} instance.
-     * This ensures requests will include authentication headers following
-     * the standardized OAuth 2.0 Bearer Token Specification as per the Content Delivery API.
+     * Creates a {@link retrofit.RequestInterceptor}.
+     * The procuded request interceptor will be in charge of attaching any headers to the request
+     * prior to it being executed.
+     *
+     * For now this makes sure all requests carry a proper {@code "Authorization"} header with an
+     * access token following the standardized OAuth 2.0 Bearer Token Specification as per the Content Delivery API.
+     *
+     * This also sets the {@code "User-Agent"} header on the request.
      */
     private RequestInterceptor getRequestInterceptor() {
         return new RequestInterceptor() {
@@ -146,8 +163,9 @@ public class CDAClient {
      * Use this method in order to register custom {@link CDAEntry} subclasses to be instantiated by this client
      * when Entries of a specific Content Type are retrieved from the server.
      *
-     * This allows the integration of custom value objects with convenience accessors, additional
-     * conversions or custom functionality so that you can easily build your data model upon Entries.
+     * Note: in case custom fields are declared in the custom class those should either be
+     * {@link java.io.Serializable} or marked with the {@code transient} keyword in order to skip serialization,
+     * otherwise whenever trying to use {@link #saveResourceToFile} an exception will probably be thrown.
      *
      * @param contentTypeIdentifier String representing a specific Content Type UID.
      * @param clazz                 Class type to instantiate when creating objects of
@@ -169,13 +187,15 @@ public class CDAClient {
     }
 
     /**
-     * Fetch the page of a {@link CDAArray} object.
+     * Fetch the next page of a {@link CDAArray} object.
      *
      * This method calculates the {@code skip} and {@code limit} parameters of the original request
-     * that was used to fetch this {@code array} instance, and attempts to fetch the next page
-     * even if the number exceeds the {@code total} attribute of the existing array, since the
-     * data may have changed in the server, in case the value exceeds the real number, a successful
-     * response will be returned along with an empty {@link CDAArray} instance as the result.
+     * that was used to fetch this {@code array} instance, and attempts to fetch the next page.
+     *
+     * In case of the calculated offset exceeding the {@code total} attribute of the existing array,
+     * request will still be executed, since the data may have changed in the server,
+     * in case the value exceeds the real number, a successful response will be returned along with
+     * an empty {@link CDAArray} instance as the result.
      *
      * @param array    {@link CDAArray} previously fetched array.
      * @param callback {@link CDACallback} instance.
@@ -218,7 +238,7 @@ public class CDAClient {
     }
 
     /**
-     * Fetch Assets. (BLOCKING)
+     * Synchronous version of {@link #fetchAssets}.
      *
      * @return {@link CDAArray} result.
      * @throws Exception in case of an error.
@@ -238,7 +258,7 @@ public class CDAClient {
     }
 
     /**
-     * Fetch Assets matching a specific query. (BLOCKING)
+     * Synchronous version of {@link #fetchAssetsMatching}.
      *
      * @param query Map representing the query.
      * @return {@link CDAArray} result.
@@ -249,7 +269,7 @@ public class CDAClient {
     }
 
     /**
-     * Fetch a single Asset with identifier.
+     * Fetch a single Asset with an identifier.
      *
      * @param identifier {@link java.lang.String} representing the Asset UID.
      * @param callback   {@link CDACallback} instance.
@@ -264,7 +284,7 @@ public class CDAClient {
     }
 
     /**
-     * Fetch a single Asset with identifier. (BLOCKING)
+     * Synchronous version of {@link #fetchAssetWithIdentifier}.
      *
      * @param identifier {@link java.lang.String} representing the Asset UID.
      * @return {@link CDAArray} result.
@@ -290,7 +310,7 @@ public class CDAClient {
     }
 
     /**
-     * Fetch all Content Types from a Space. (BLOCKING)
+     * Synchronous version of {@link #fetchContentTypes}.
      *
      * @return {@link CDAArray} result.
      * @throws Exception in case of an error.
@@ -301,7 +321,7 @@ public class CDAClient {
     }
 
     /**
-     * Fetch a single Content Type with identifier.
+     * Fetch a single Content Type with an identifier.
      *
      * @param identifier String representing the Content Type UID.
      * @param callback   {@link CDACallback} instance.
@@ -316,7 +336,7 @@ public class CDAClient {
     }
 
     /**
-     * Fetch a single Content Type with identifier. (BLOCKING)
+     * Synchronous version of {@link #fetchContentTypeWithIdentifier}.
      *
      * @param identifier String representing the Content Type UID.
      * @return {@link CDAContentType} result.
@@ -337,7 +357,7 @@ public class CDAClient {
     }
 
     /**
-     * Fetch Entries. (BLOCKING)
+     * Synchronous version of {@link #fetchEntries}.
      *
      * @return {@link CDAArray} result.
      * @throws Exception in case of an error.
@@ -357,7 +377,7 @@ public class CDAClient {
     }
 
     /**
-     * Fetch Entries matching a specific query. (BLOCKING)
+     * Synchronous version of {@link #fetchEntriesMatching}.
      *
      * @param query Map representing the query.
      * @return {@link CDAArray} result.
@@ -372,7 +392,7 @@ public class CDAClient {
      *
      * When expecting result of a custom type which was previously registered using the {@link #registerCustomClass}
      * method, the type of the expected object can also be specified as the generic type of the
-     * {@link CDACallback} instance (i.e. {@literal "new CDACallback<SomeCustomClass>(){...}"}).
+     * {@link CDACallback} instance (i.e. {@code new CDACallback<SomeCustomClass>(){...}}).
      *
      * @param identifier String representing the UID of the Entry.
      * @param callback   {@link CDACallback} instance.
@@ -387,7 +407,7 @@ public class CDAClient {
     }
 
     /**
-     * Fetch a single Entry with identifier.
+     * Synchronous version of {@link #fetchEntryWithIdentifier}.
      *
      * @param identifier String representing the UID of the Entry.
      * @return {@link CDAEntry} or a subclass of it.
@@ -467,7 +487,7 @@ public class CDAClient {
     }
 
     /**
-     * Fetch a single Space. (BLOCKING)
+     * Synchronous version of {@link #fetchSpace}.
      *
      * @return {@link CDASpace} result.
      */
@@ -491,7 +511,7 @@ public class CDAClient {
     }
 
     /**
-     * Initial sync for a Space. (BLOCKING)
+     * Synchronous version of {@link #performInitialSynchronization}.
      *
      * @return {@link CDASyncedSpace} result.
      */
@@ -522,7 +542,7 @@ public class CDAClient {
     }
 
     /**
-     * Sync an existing Space. (BLOCKING)
+     * Synchronous version of {@link #performSynchronization(com.contentful.java.model.CDASyncedSpace, CDACallback)}.
      *
      * @param existingSpace {@link CDASyncedSpace} space to sync.
      * @return {@link CDASyncedSpace} result
@@ -561,7 +581,7 @@ public class CDAClient {
     }
 
     /**
-     * Sync an existing Space, given only a {@code syncToken}. (BLOCKING)
+     * Synchronous version of {@link #performSynchronization(String)}.
      *
      * @param syncToken String representing a previously persisted sync token.
      * @return {@link CDASyncedSpace} result.
@@ -577,24 +597,57 @@ public class CDAClient {
         return new SpaceMerger(null, result, null, null, getSpace()).call();
     }
 
+    /**
+     * Gets the {@code CDASpace} object associated with this client.
+     * Note that a Space is attached to a client <b>only</b> after it's first request was successfully executed.
+     *
+     * @return {@link CDASpace} instance, null if it doesn't yet exist.
+     */
     public CDASpace getSpace() {
         return this.space;
     }
 
+    /**
+     * Callback to be invoked internally via {@link EnsureSpaceCallback} to update
+     * the current Space attached to this client.
+     *
+     * @param space Updated {@link CDASpace} instance.
+     */
     void onSpaceReady(CDASpace space) {
         if (space != null && this.space != space) {
             this.space = space;
         }
     }
 
+    /**
+     * Gets the HTTP scheme configured for this client.
+     *
+     * @return String representing the HTTP scheme to be used for all requests.
+     * This can either be {@code HTTP} or {@code HTTPS}.
+     */
     public String getHttpScheme() {
         return httpScheme;
     }
 
+    /**
+     * Calls {@link #ensureSpace(boolean, EnsureSpaceCallback)} with default values.
+     *
+     * @param callback {@link EnsureSpaceCallback} instance wrapping the original callback to be used.
+     */
     private void ensureSpace(EnsureSpaceCallback callback) {
         ensureSpace(false, callback);
     }
 
+    /**
+     * Helper method to ensure a Space is associated with a client prior to executing any
+     * requests that depend on that.
+     *
+     * If a Space is already attached to the client, no extra request will be executed, unless
+     * {@code invalidate} is set to true.
+     *
+     * @param invalidate String indicating whether to force-fetching the Space metadata even if it already exists.
+     * @param callback   {@link EnsureSpaceCallback} instance wrapping the original callback to be used.
+     */
     private void ensureSpace(boolean invalidate, final EnsureSpaceCallback callback) {
         if (invalidate || space == null) {
             fetchSpace(callback);
@@ -603,12 +656,25 @@ public class CDAClient {
         }
     }
 
+    /**
+     * Synchronous version of {@link #ensureSpace(boolean, EnsureSpaceCallback)}.
+     *
+     * @param invalidate String indicating whether to force-fetching the Space metadata even if it already exists.
+     * @throws Exception in case of an error.
+     */
     private void ensureSpaceBlocking(boolean invalidate) throws Exception {
         if (invalidate || space == null) {
             space = fetchSpaceBlocking();
         }
     }
 
+    /**
+     * Fetches an array of entities with type defined at run-time.
+     *
+     * @param type     String representing the resource type.
+     * @param query    Optional query.
+     * @param callback {@link CDACallback} instance.
+     */
     private void fetchArrayWithType(final String type,
                                     final Map<String, String> query,
                                     final CDACallback<CDAArray> callback) {
@@ -624,6 +690,14 @@ public class CDAClient {
         });
     }
 
+    /**
+     * Synchronous version of {@link #fetchArrayWithType}.
+     *
+     * @param type  String representing the resource type.
+     * @param query Optional query.
+     * @return {@link CDAArray} result.
+     * @throws Exception in case of an error.
+     */
     private CDAArray fetchArrayWithTypeBlocking(String type, Map<String, String> query) throws Exception {
         ensureSpaceBlocking(false);
         Response response = service.fetchArrayWithTypeBlocking(spaceKey, type, query);
@@ -634,8 +708,8 @@ public class CDAClient {
 
     /**
      * Serialize a resource and save it to a local file.
-     * This method will will perform file IO on the thread of the calling
-     * method.
+     * This method will perform file IO on the thread of the calling method.
+     * This can also be used to save arrays.
      *
      * @param resource {@link CDAResource} or a subclass of it.
      * @param file     Valid {@link java.io.File} reference with valid write permission.
@@ -647,8 +721,7 @@ public class CDAClient {
 
     /**
      * Read a previously saved serialized object and parse it.
-     * This method will will perform file IO on the thread of the calling
-     * method.
+     * This method will perform file IO on the thread of the calling method.
      *
      * @param file {@link java.io.File} reference with valid read permission.
      * @return {@link CDAResource} instance or a subclass of it, should be the same type as
@@ -741,7 +814,7 @@ public class CDAClient {
         }
 
         /**
-         * The error handler allows you to customize the type of exception thrown for errors on synchronous requests.
+         * The error handler allows you to customize the type of exception thrown for errors of request executions.
          *
          * @param errorHandler Error handler to use.
          * @return this {@code Builder} instance.
