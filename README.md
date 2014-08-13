@@ -15,13 +15,13 @@ Download the [latest JAR][2] or grab via Maven:
 ```xml
 <dependency>
   <groupId>com.contentful.java</groupId>
-  <artifactId>contentful-java-sdk</artifactId>
+  <artifactId>java-sdk</artifactId>
   <version>1.0</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.contentful.java:contentful-java-sdk:1.0'
+compile 'com.contentful.java:java-sdk:1.0'
 ```
 
  [1]: https://www.contentful.com
