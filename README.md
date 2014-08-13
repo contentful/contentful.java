@@ -107,7 +107,7 @@ For further information, check out the [JavaDoc website][3] or browse the [API d
 License
 =======
 
-Copyright (c) 2014 Contentful GmbH. See LICENSE for further details.
+Copyright (c) 2014 Contentful GmbH. See LICENSE.txt for further details.
 
 
  [1]: https://www.contentful.com

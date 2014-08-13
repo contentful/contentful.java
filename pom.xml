@@ -9,7 +9,7 @@
     <version>1.0</version>
 
     <name>contentful.java</name>
-    <description>description</description>
+    <description>Java SDK for Contentful's Content Delivery API.</description>
     <url>http://github.com/contentful/contentful.java</url>
 
     <properties>
@@ -40,7 +40,12 @@
         <url>http://github.com/square/retrofit/issues</url>
     </issueManagement>
 
-    <!-- todo license -->
+    <licenses>
+        <license>
+            <name>Apache 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
 
     <organization>
         <name>Contentful, GmbH.</name>
