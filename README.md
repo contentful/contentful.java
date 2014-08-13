@@ -24,5 +24,91 @@ or Gradle:
 compile 'com.contentful.java:java-sdk:1.0'
 ```
 
+Usage
+=====
+
+The `CDAClient` manages all your interaction with the Contentful Delivery API.
+```java
+CDAClient client = new CDAClient.Builder()
+        .setSpaceKey("space-key-goes-here")
+        .setAccessToken("access-token-goes-here")
+        .create();
+```
+
+Items can be fetched synchronously:
+```java
+try {
+    CDAArray array = client.fetchEntriesBlocking();
+    // success
+} catch (Exception e) {
+    // failure
+}
+```
+
+Or asynchronously:
+```java
+client.fetchEntries(new CDACallback<CDAArray>() {
+    @Override
+    protected void onSuccess(CDAArray array, Response response) {
+        // success
+    }
+
+    @Override
+    protected void onFailure(RetrofitError retrofitError) {
+        // failure
+    }
+});
+```
+
+Note that a `CDACallback` instance can be cancelled, so keep a reference to it in order to do so:
+
+```java
+CDACallback<CDAArray> cb;
+
+client.fetchEntries(cb = new CDACallback<CDAArray>() {
+    ...
+}
+
+cb.cancel(); // onSuccess or onFailure will not be invoked.
+```
+
+### Using Custom Entry Classes
+
+You might want to subclass `CDAEntry` to store additional data alongside Entries or to decouple the rest of your app from the Contentful SDK's API. For this purpose, it is possible to register your own custom classes for specific Content Types, like this:
+
+```java
+client.registerCustomClass("content-type-id-goes-here", CustomEntry.class);
+```
+
+Each time, the receiver needs to create a new Entry object of the given Content Type, it will create instances of `CustomEntry`. Make sure that the class inherits from `CDAEntry` or this mechanism will break at runtime.
+
+### Offline Support
+
+Mobile devices will not always have a data connection, so it makes sense to cache data received from Contentful for offline use. 
+
+All `CDAResource` base class implements the `Serializable` interface.
+This means you can save / restore any kind of Resource, including `CDAArray`, via local files:
+
+```java
+// save Resource to local file:
+client.saveResourceToFile(someEntry, new File("/path/to/save"));
+
+// restore Resource from local file:
+CDAResource resource = client.readResourceFromFile(new File("/path/to/restore"));
+```
+
+Note that in case you attempt to restore a previously saved Resource, if the original class does not exist the `readResourceFromFile()` method will throw a `ClassNotFoundException`. 
+
+Documentation
+=============
+
+For further information, check out the [JavaDoc website][3] or browse the [API documentation][4].
+
+License
+=======
+
+Copyright (c) 2014 Contentful GmbH. See LICENSE for further details.
+
+
  [1]: https://www.contentful.com
  [2]: https://www.jars.com
