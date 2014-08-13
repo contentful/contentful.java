@@ -67,7 +67,7 @@ CDACallback<CDAArray> cb;
 
 client.fetchEntries(cb = new CDACallback<CDAArray>() {
     ...
-}
+});
 
 cb.cancel(); // onSuccess or onFailure will not be invoked.
 ```
