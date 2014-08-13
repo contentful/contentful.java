@@ -85,7 +85,7 @@ Each time, the receiver needs to create a new Entry object of the given Content 
 
 Mobile devices will not always have a data connection, so it makes sense to cache data received from Contentful for offline use. 
 
-All `CDAResource` base class implements the `Serializable` interface.
+The `CDAResource` base class implements the `Serializable` interface.
 This means you can save / restore any kind of Resource, including `CDAArray`, via local files:
 
 ```java
