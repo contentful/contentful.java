@@ -21,7 +21,6 @@
 
         <!-- Dependencies -->
         <retrofit.version>1.6.1</retrofit.version>
-        <json.version>20140107</json.version>
         <commonsio.version>2.4</commonsio.version>
 
         <!-- Test Dependencies -->
