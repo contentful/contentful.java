@@ -98,12 +98,12 @@ CDAResource resource = client.readResourceFromFile(new File("/path/to/restore"))
 ```
 
 Note that in case you attempt to restore a previously saved Resource, if the original class does not exist the `readResourceFromFile()` method will throw a `ClassNotFoundException`. 
-
+<!--
 Documentation
 =============
 
 For further information, check out the [JavaDoc website][3] or browse the [API documentation][4].
-
+-->
 License
 =======
 
