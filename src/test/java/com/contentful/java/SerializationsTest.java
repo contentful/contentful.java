@@ -3,6 +3,7 @@ package com.contentful.java;
 import com.contentful.java.api.CDAClient;
 import com.contentful.java.lib.MockClient;
 import com.contentful.java.lib.NyanCat;
+import com.contentful.java.lib.ResourceUtils;
 import com.contentful.java.lib.TestClientFactory;
 import com.contentful.java.model.CDAArray;
 import com.contentful.java.model.CDAAsset;
@@ -33,8 +34,8 @@ public class SerializationsTest extends AbsTestCase {
         File f = new File("asset.dat");
         f.deleteOnExit();
 
-        client.saveResourceToFile(asset, f);
-        asset = (CDAAsset) client.readResourceFromFile(f);
+        ResourceUtils.saveResourceToFile(asset, f);
+        asset = (CDAAsset) ResourceUtils.readResourceFromFile(f);
         assertNotNull(asset);
 
         Map fields = asset.getFields();
@@ -59,8 +60,8 @@ public class SerializationsTest extends AbsTestCase {
         File f = new File("array.dat");
         f.deleteOnExit();
 
-        client.saveResourceToFile(array, f);
-        array = (CDAArray) client.readResourceFromFile(f);
+        ResourceUtils.saveResourceToFile(array, f);
+        array = (CDAArray) ResourceUtils.readResourceFromFile(f);
         assertNotNull(array);
 
         ArrayList<CDAResource> items = array.getItems();

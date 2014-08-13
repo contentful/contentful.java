@@ -91,10 +91,10 @@ This means you can save / restore any kind of Resource, including `CDAArray`, vi
 
 ```java
 // save Resource to local file:
-client.saveResourceToFile(someEntry, new File("/path/to/save"));
+ResourceUtils.saveResourceToFile(someEntry, new File("/path/to/save"));
 
 // restore Resource from local file:
-CDAResource resource = client.readResourceFromFile(new File("/path/to/restore"));
+CDAResource resource = ResourceUtils.readResourceFromFile(new File("/path/to/restore"));
 ```
 
 Note that in case you attempt to restore a previously saved Resource, if the original class does not exist the `readResourceFromFile()` method will throw a `ClassNotFoundException`. 

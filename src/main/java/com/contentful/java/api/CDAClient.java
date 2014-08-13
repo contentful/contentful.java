@@ -11,8 +11,6 @@ import retrofit.client.Client;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
@@ -704,33 +702,6 @@ public class CDAClient {
         CDAArray result = gson.fromJson(new InputStreamReader(response.getBody().in()), CDAArray.class);
         ArrayResponse.prepareResponse(result, response);
         return result;
-    }
-
-    /**
-     * Serialize a resource and save it to a local file.
-     * This method will perform file IO on the thread of the calling method.
-     * This can also be used to save arrays.
-     *
-     * @param resource {@link CDAResource} or a subclass of it.
-     * @param file     Valid {@link java.io.File} reference with valid write permission.
-     * @throws java.io.IOException in case writing fails.
-     */
-    public void saveResourceToFile(CDAResource resource, File file) throws IOException {
-        Utils.saveResourceToFile(resource, file);
-    }
-
-    /**
-     * Read a previously saved serialized object and parse it.
-     * This method will perform file IO on the thread of the calling method.
-     *
-     * @param file {@link java.io.File} reference with valid read permission.
-     * @return {@link CDAResource} instance or a subclass of it, should be the same type as
-     * the original object.
-     * @throws IOException            in case reading fails.
-     * @throws ClassNotFoundException in case the persisted data references a class which is no longer available.
-     */
-    public CDAResource readResourceFromFile(File file) throws IOException, ClassNotFoundException {
-        return Utils.readResourceFromFile(file);
     }
 
     /**

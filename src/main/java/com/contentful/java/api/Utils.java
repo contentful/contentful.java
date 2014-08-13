@@ -1,9 +1,7 @@
 package com.contentful.java.api;
 
 import com.contentful.java.model.CDAArray;
-import com.contentful.java.model.CDAResource;
 
-import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -106,81 +104,6 @@ class Utils {
         queryMap.put("limit", Integer.toString(limit));
 
         return queryMap;
-    }
-
-    /**
-     * Saves a {@link CDAResource} or a subclass of it to the given {@code file}.
-     *
-     * @param resource Resource to be saved.
-     * @param file     {@link java.io.File} instance with valid write permission.
-     * @throws java.io.IOException in case writing fails.
-     */
-    static void saveResourceToFile(CDAResource resource, File file) throws IOException {
-        FileOutputStream fos = null;
-        ObjectOutputStream oos = null;
-
-        try {
-            fos = new FileOutputStream(file);
-            oos = new ObjectOutputStream(fos);
-
-            oos.writeObject(resource);
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (oos != null) {
-                try {
-                    oos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    /**
-     * Restores a previously persisted resource from a local file.
-     *
-     * @param file {@link java.io.File} instance with valid read permission.
-     * @return {@link CDAResource} instance or a subclass of it, should be the same type as
-     * the original object.
-     * @throws IOException            in case reading fails.
-     * @throws ClassNotFoundException in case the persisted data references a class which is no longer available.
-     */
-    static CDAResource readResourceFromFile(File file) throws IOException, ClassNotFoundException {
-        FileInputStream fis = null;
-        ObjectInputStream oos = null;
-        CDAResource result = null;
-
-        try {
-            fis = new FileInputStream(file);
-            oos = new ObjectInputStream(fis);
-
-            result = (CDAResource) oos.readObject();
-        } finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (oos != null) {
-                try {
-                    oos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return result;
     }
 }
 
