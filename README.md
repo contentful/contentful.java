@@ -7,7 +7,6 @@ Java SDK for [Contentful's][1] Content Delivery API.
 
 [Contentful][1] is a content management platform for web applications, mobile apps and connected devices. It allows you to create, edit & manage content in the cloud and publish it anywhere via powerful API. Contentful offers tools for managing editorial teams and enabling cooperation between organizations.
 
-<!--
 Download
 ========
 
@@ -16,14 +15,14 @@ Download the [latest JAR][2] or grab via Maven:
 <dependency>
   <groupId>com.contentful.java</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>1.0</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.contentful.java:java-sdk:1.0'
+compile 'com.contentful.java:java-sdk:1.0.0'
 ```
--->
+
 Usage
 =====
 
@@ -111,6 +110,6 @@ Copyright (c) 2014 Contentful GmbH. See LICENSE.txt for further details.
 
 
  [1]: https://www.contentful.com
- [2]: https://www.jars.com
+ [2]: https://oss.sonatype.org/service/local/repositories/releases/content/com/contentful/java/java-sdk/1.0.0/java-sdk-1.0.0.jar
  [3]: http://contentful.github.io/contentful.java/
  [4]: https://www.contentful.com/developers/documentation/content-delivery-api/
