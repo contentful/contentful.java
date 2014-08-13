@@ -98,12 +98,12 @@ CDAResource resource = client.readResourceFromFile(new File("/path/to/restore"))
 ```
 
 Note that in case you attempt to restore a previously saved Resource, if the original class does not exist the `readResourceFromFile()` method will throw a `ClassNotFoundException`. 
-<!--
+
 Documentation
 =============
 
-For further information, check out the [JavaDoc website][3] or browse the [API documentation][4].
--->
+For further information, check out our official [JavaDoc][3] site or browse the [API documentation][4].
+
 License
 =======
 
@@ -112,3 +112,5 @@ Copyright (c) 2014 Contentful GmbH. See LICENSE.txt for further details.
 
  [1]: https://www.contentful.com
  [2]: https://www.jars.com
+ [3]: http://contentful.github.io/contentful.java/
+ [4]: https://www.contentful.com/developers/documentation/content-delivery-api/
