@@ -7,7 +7,7 @@ import retrofit.client.Response;
 /**
  * Convenience callback wrapper which creates and executes a {@link SpaceMerger} Callable.
  */
-public class SyncSpaceCallback extends CDACallback<CDASyncedSpace> {
+class SyncSpaceCallback extends CDACallback<CDASyncedSpace> {
     private final CDASyncedSpace originalSpace;
     private final CDAClient client;
     private final CDACallback<CDASyncedSpace> wrappedCallback;
