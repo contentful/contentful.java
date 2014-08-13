@@ -8,7 +8,7 @@
     <packaging>jar</packaging>
     <version>1.0</version>
 
-    <name>contentful.java</name>
+    <name>${project.groupId}:${project.artifactId}</name>
     <description>Java SDK for Contentful's Content Delivery API.</description>
     <url>http://github.com/contentful/contentful.java</url>
 
@@ -32,7 +32,6 @@
         <url>http://github.com/contentful/contentful.java</url>
         <connection>scm:git:git://github.com/contentful/contentful.java.git</connection>
         <developerConnection>scm:git:ssh://git@github.com:contentful/contentful.java.git</developerConnection>
-        <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
@@ -51,6 +50,15 @@
         <name>Contentful, GmbH.</name>
         <url>http://contentful.com</url>
     </organization>
+
+    <developers>
+        <developer>
+            <name>Tom Reznik</name>
+            <email>tom@contentful.com</email>
+            <url>https://github.com/tomxor</url>
+            <id>tomxor</id>
+        </developer>
+    </developers>
 
     <dependencies>
         <dependency>
