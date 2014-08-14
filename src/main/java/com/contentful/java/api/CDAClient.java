@@ -163,7 +163,8 @@ public class CDAClient {
      *
      * Note: in case custom fields are declared in the custom class those should either be
      * {@link java.io.Serializable} or marked with the {@code transient} keyword in order to skip serialization,
-     * otherwise whenever trying to use {@link #saveResourceToFile} an exception will probably be thrown.
+     * otherwise whenever trying to use {@link com.contentful.java.lib.ResourceUtils#saveResourceToFile} an
+     * exception will probably be thrown.
      *
      * @param contentTypeIdentifier String representing a specific Content Type UID.
      * @param clazz                 Class type to instantiate when creating objects of
