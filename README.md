@@ -80,7 +80,7 @@ You might want to subclass `CDAEntry` to store additional data alongside Entries
 client.registerCustomClass("content-type-id-goes-here", CustomEntry.class);
 ```
 
-Each time, the receiver needs to create a new Entry object of the given Content Type, it will create instances of `CustomEntry`. Make sure that the class inherits from `CDAEntry` or this mechanism will break at runtime.
+Each time, the receiver needs to create a new Entry object of the given Content Type, it will create instances of `CustomEntry`. Make sure that the class inherits from `CDAEntry`.
 
 ### Offline Support
 
