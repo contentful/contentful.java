@@ -21,9 +21,9 @@
 
         <!-- Dependencies -->
         <retrofit.version>1.6.1</retrofit.version>
-        <commonsio.version>2.4</commonsio.version>
 
         <!-- Test Dependencies -->
+        <commonsio.version>2.4</commonsio.version>
         <junit.version>4.11</junit.version>
     </properties>
 
