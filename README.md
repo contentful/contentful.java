@@ -24,6 +24,25 @@ or Gradle:
 compile 'com.contentful.java:java-sdk:1.0.0'
 ```
 
+### Default client
+
+The SDK uses Retrofit(v1.6.1) under the hood as a REST client, which detects [OkHttp][5] in your classpath and uses it if it's available, otherwise falls back to the default `HttpURLConnection` (note that for Android projects with `minSdkVersion` < 9 the `AndroidApacheClient` will be used).
+
+The recommended approach would be to add [OkHttp][5] as a dependency to your project, but that is completely optional.
+
+You can also specify a custom client to be used, refer to the [official documentation][3] for instructions.
+
+### Proguard
+```
+-dontwarn rx.**
+-dontwarn retrofit.**
+-keep class retrofit.** { *; }
+-keep class com.contentful.java.** { *; }
+-keep class * extends com.contentful.java.model.** { *; }
+-keep class com.google.gson.** { *; }
+-keep class sun.misc.Unsafe { *; }
+```
+
 Usage
 =====
 
@@ -112,5 +131,6 @@ Copyright (c) 2014 Contentful GmbH. See LICENSE.txt for further details.
 
  [1]: https://www.contentful.com
  [2]: https://oss.sonatype.org/service/local/repositories/releases/content/com/contentful/java/java-sdk/1.0.0/java-sdk-1.0.0.jar
- [3]: http://contentful.github.io/contentful.java/
+ [3]: https://contentful.github.io/contentful.java/
  [4]: https://www.contentful.com/developers/documentation/content-delivery-api/
+ [5]: https://square.github.io/okhttp/
