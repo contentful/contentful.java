@@ -174,6 +174,23 @@ public class EntriesTest extends AbsTestCase {
         assertEquals("image/png", ((CDAAsset) value).getMimeType());
     }
 
+    @Test
+    public void testFetchEntriesWithNestedLinks() throws Exception {
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_fetch_entries_with_nested_links.json"))
+                .build();
+
+        CDAArray result = client.fetchEntriesBlocking();
+        assertNotNull(result);
+
+        ArrayList<CDAResource> items = result.getItems();
+        assertEquals(1, items.size());
+
+        CDAEntry entry = (CDAEntry) items.get(0);
+        ArrayList pictures = (ArrayList) entry.getFields().get("pictures");
+        assertTrue(pictures.get(0) instanceof CDAAsset);
+    }
+
     void verifyEntries(CDAArray result) {
         assertNotNull(result);
         assertEquals(11, result.getItems().size());
