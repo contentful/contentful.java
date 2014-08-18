@@ -136,6 +136,20 @@ class ArrayParser<T extends ArrayResource> implements Callable<T> {
                         if (match != null) {
                             fields.put(k, match);
                         }
+                    } else if (value instanceof List) {
+                        List list = (List) value;
+
+                        for (int i = 0; i < list.size(); i++) {
+                            Object item = list.get(i);
+
+                            if (item instanceof Map) {
+                                CDAResource match = getMatchForField((Map) item, assets, entries);
+
+                                if (match != null) {
+                                    list.set(i, match);
+                                }
+                            }
+                        }
                     }
                 }
             }
