@@ -59,7 +59,7 @@ Items can be fetched synchronously:
 try {
     CDAArray array = client.fetchEntriesBlocking();
     // success
-} catch (Exception e) {
+} catch (RetrofitError e) {
     // failure
 }
 ```

@@ -7,10 +7,12 @@ import com.google.gson.GsonBuilder;
 import retrofit.ErrorHandler;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
 import retrofit.client.Client;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
@@ -214,9 +216,9 @@ public class CDAClient {
      *
      * @param array {@link CDAArray} previously fetched array.
      * @return {@link CDAArray} result.
-     * @throws Exception in case of an error.
+     * @throws retrofit.RetrofitError in case of an error.
      */
-    public CDAArray fetchArrayNextPageBlocking(CDAArray array) throws Exception {
+    public CDAArray fetchArrayNextPageBlocking(CDAArray array) throws RetrofitError {
         if (array == null) {
             throw new IllegalArgumentException("Array may not be empty.");
         }
@@ -240,9 +242,9 @@ public class CDAClient {
      * Synchronous version of {@link #fetchAssets}.
      *
      * @return {@link CDAArray} result.
-     * @throws Exception in case of an error.
+     * @throws retrofit.RetrofitError in case of an error.
      */
-    public CDAArray fetchAssetsBlocking() throws Exception {
+    public CDAArray fetchAssetsBlocking() throws RetrofitError {
         return fetchArrayWithTypeBlocking(PATH_ASSETS, null);
     }
 
@@ -261,9 +263,9 @@ public class CDAClient {
      *
      * @param query Map representing the query.
      * @return {@link CDAArray} result.
-     * @throws Exception in case of an error.
+     * @throws retrofit.RetrofitError in case of an error.
      */
-    public CDAArray fetchAssetsMatchingBlocking(Map<String, String> query) throws Exception {
+    public CDAArray fetchAssetsMatchingBlocking(Map<String, String> query) throws RetrofitError {
         return fetchArrayWithTypeBlocking(PATH_ASSETS, query);
     }
 
@@ -287,9 +289,9 @@ public class CDAClient {
      *
      * @param identifier {@link java.lang.String} representing the Asset UID.
      * @return {@link CDAArray} result.
-     * @throws Exception in case of an error.
+     * @throws retrofit.RetrofitError in case of an error.
      */
-    public CDAAsset fetchAssetWithIdentifierBlocking(String identifier) throws Exception {
+    public CDAAsset fetchAssetWithIdentifierBlocking(String identifier) throws RetrofitError {
         ensureSpaceBlocking(false);
         return service.fetchAssetWithIdentifierBlocking(spaceKey, identifier);
     }
@@ -312,9 +314,9 @@ public class CDAClient {
      * Synchronous version of {@link #fetchContentTypes}.
      *
      * @return {@link CDAArray} result.
-     * @throws Exception in case of an error.
+     * @throws retrofit.RetrofitError in case of an error.
      */
-    public CDAArray fetchContentTypesBlocking() throws Exception {
+    public CDAArray fetchContentTypesBlocking() throws RetrofitError {
         ensureSpaceBlocking(false);
         return service.fetchContentTypesBlocking(spaceKey);
     }
@@ -339,9 +341,9 @@ public class CDAClient {
      *
      * @param identifier String representing the Content Type UID.
      * @return {@link CDAContentType} result.
-     * @throws Exception
+     * @throws retrofit.RetrofitError in case of on error.
      */
-    public CDAContentType fetchContentTypeWithIdentifierBlocking(String identifier) throws Exception {
+    public CDAContentType fetchContentTypeWithIdentifierBlocking(String identifier) throws RetrofitError {
         ensureSpaceBlocking(false);
         return service.fetchContentTypeWithIdentifierBlocking(spaceKey, identifier);
     }
@@ -359,9 +361,9 @@ public class CDAClient {
      * Synchronous version of {@link #fetchEntries}.
      *
      * @return {@link CDAArray} result.
-     * @throws Exception in case of an error.
+     * @throws retrofit.RetrofitError in case of an error.
      */
-    public CDAArray fetchEntriesBlocking() throws Exception {
+    public CDAArray fetchEntriesBlocking() throws RetrofitError {
         return fetchArrayWithTypeBlocking(PATH_ENTRIES, null);
     }
 
@@ -380,9 +382,9 @@ public class CDAClient {
      *
      * @param query Map representing the query.
      * @return {@link CDAArray} result.
-     * @throws Exception in case of an error.
+     * @throws retrofit.RetrofitError in case of an error.
      */
-    public CDAArray fetchEntriesMatchingBlocking(Map<String, String> query) throws Exception {
+    public CDAArray fetchEntriesMatchingBlocking(Map<String, String> query) throws RetrofitError {
         return fetchArrayWithTypeBlocking(PATH_ENTRIES, query);
     }
 
@@ -410,11 +412,11 @@ public class CDAClient {
      *
      * @param identifier String representing the UID of the Entry.
      * @return {@link CDAEntry} or a subclass of it.
-     * @throws Exception in case of an error.
+     * @throws retrofit.RetrofitError in case of an error.
      * @see #fetchEntryWithIdentifier(String, CDACallback)
      */
     @SuppressWarnings("unchecked")
-    public CDAEntry fetchEntryWithIdentifierBlocking(String identifier) throws Exception {
+    public CDAEntry fetchEntryWithIdentifierBlocking(String identifier) throws RetrofitError {
         ensureSpaceBlocking(false);
         return service.fetchEntryWithIdentifierBlocking(spaceKey, identifier);
     }
@@ -489,8 +491,9 @@ public class CDAClient {
      * Synchronous version of {@link #fetchSpace}.
      *
      * @return {@link CDASpace} result.
+     * @throws retrofit.RetrofitError in case of an error.
      */
-    public CDASpace fetchSpaceBlocking() throws Exception {
+    public CDASpace fetchSpaceBlocking() throws RetrofitError {
         return service.fetchSpaceBlocking(this.spaceKey);
     }
 
@@ -513,11 +516,23 @@ public class CDAClient {
      * Synchronous version of {@link #performInitialSynchronization}.
      *
      * @return {@link CDASyncedSpace} result.
+     * @throws retrofit.RetrofitError in case of an error.
      */
-    public CDASyncedSpace performInitialSynchronizationBlocking() throws Exception {
+    public CDASyncedSpace performInitialSynchronizationBlocking() throws RetrofitError {
         ensureSpaceBlocking(true);
-        CDASyncedSpace result = service.performSynchronizationBlocking(spaceKey, true, null);
-        return new SpaceMerger(null, result, null, null, getSpace()).call();
+        Response response = service.performSynchronizationBlocking(spaceKey, true, null);
+        CDASyncedSpace result;
+
+        try {
+            result = gson.fromJson(
+                    new InputStreamReader(response.getBody().in()), CDASyncedSpace.class);
+
+            result = new SpaceMerger(null, result, null, null, getSpace()).call();
+        } catch (Exception e) {
+            throw RetrofitError.unexpectedError(response.getUrl(), e);
+        }
+
+        return result;
     }
 
     /**
@@ -545,16 +560,25 @@ public class CDAClient {
      *
      * @param existingSpace {@link CDASyncedSpace} space to sync.
      * @return {@link CDASyncedSpace} result
-     * @throws Exception in case of an error.
+     * @throws retrofit.RetrofitError in case of an error.
      */
-    public CDASyncedSpace performSynchronizationBlocking(CDASyncedSpace existingSpace) throws Exception {
+    public CDASyncedSpace performSynchronizationBlocking(CDASyncedSpace existingSpace) throws RetrofitError {
         if (existingSpace == null) {
             throw new IllegalArgumentException("Existing space may not be null.");
         }
 
         ensureSpaceBlocking(true);
-        CDASyncedSpace result = service.performSynchronizationBlocking(spaceKey, false, null);
-        return new SpaceMerger(existingSpace, result, null, null, getSpace()).call();
+        Response response = service.performSynchronizationBlocking(spaceKey, false, null);
+        CDASyncedSpace result;
+
+        try {
+            CDASyncedSpace updatedSpace = gson.fromJson(new InputStreamReader(response.getBody().in()), CDASyncedSpace.class);
+            result = new SpaceMerger(existingSpace, updatedSpace, null, response, getSpace()).call();
+        } catch (Exception e) {
+            throw RetrofitError.unexpectedError(response.getUrl(), e);
+        }
+
+        return result;
     }
 
     /**
@@ -584,16 +608,27 @@ public class CDAClient {
      *
      * @param syncToken String representing a previously persisted sync token.
      * @return {@link CDASyncedSpace} result.
-     * @throws Exception in case of an error.
+     * @throws retrofit.RetrofitError in case of an error.
      */
-    public CDASyncedSpace performSynchronization(String syncToken) throws Exception {
+    public CDASyncedSpace performSynchronization(String syncToken) throws RetrofitError {
         if (syncToken == null) {
             throw new IllegalArgumentException("Sync token may not be null.");
         }
 
         ensureSpaceBlocking(true);
-        CDASyncedSpace result = service.performSynchronizationBlocking(spaceKey, null, syncToken);
-        return new SpaceMerger(null, result, null, null, getSpace()).call();
+        Response response = service.performSynchronizationBlocking(spaceKey, null, syncToken);
+        CDASyncedSpace result;
+
+        try {
+            result = gson.fromJson(
+                    new InputStreamReader(response.getBody().in()), CDASyncedSpace.class);
+
+            result = new SpaceMerger(null, result, null, null, getSpace()).call();
+        } catch (Exception e) {
+            throw RetrofitError.unexpectedError(response.getUrl(), e);
+        }
+
+        return result;
     }
 
     /**
@@ -659,9 +694,9 @@ public class CDAClient {
      * Synchronous version of {@link #ensureSpace(boolean, EnsureSpaceCallback)}.
      *
      * @param invalidate String indicating whether to force-fetching the Space metadata even if it already exists.
-     * @throws Exception in case of an error.
+     * @throws retrofit.RetrofitError in case of an error.
      */
-    private void ensureSpaceBlocking(boolean invalidate) throws Exception {
+    private void ensureSpaceBlocking(boolean invalidate) throws RetrofitError {
         if (invalidate || space == null) {
             space = fetchSpaceBlocking();
         }
@@ -695,13 +730,21 @@ public class CDAClient {
      * @param type  String representing the resource type.
      * @param query Optional query.
      * @return {@link CDAArray} result.
-     * @throws Exception in case of an error.
+     * @throws retrofit.RetrofitError in case of an error.
      */
-    private CDAArray fetchArrayWithTypeBlocking(String type, Map<String, String> query) throws Exception {
+    private CDAArray fetchArrayWithTypeBlocking(String type, Map<String, String> query) throws RetrofitError {
         ensureSpaceBlocking(false);
         Response response = service.fetchArrayWithTypeBlocking(spaceKey, type, query);
-        CDAArray result = gson.fromJson(new InputStreamReader(response.getBody().in()), CDAArray.class);
-        ArrayResponse.prepareResponse(result, response);
+
+        CDAArray result;
+
+        try {
+            result = gson.fromJson(new InputStreamReader(response.getBody().in()), CDAArray.class);
+            ArrayResponse.prepareResponse(result, response);
+        } catch (IOException e) {
+            throw RetrofitError.unexpectedError(response.getUrl(), e);
+        }
+
         return result;
     }
 
