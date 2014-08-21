@@ -37,7 +37,7 @@ interface CDAService {
      * @param space String representing the Space key.
      * @param type  Type of resource to be fetched (i.e. "entries", "assets", ...).
      * @param query Map representing the query.
-     * @return {@link CDAArray} result.
+     * @return {@link retrofit.client.Response} result.
      */
     @GET("/spaces/{space}/{type}")
     Response fetchArrayWithTypeBlocking(
@@ -195,10 +195,10 @@ interface CDAService {
      * @param space     String representing the Space key.
      * @param initial   Boolean indicating whether this is the initial sync request or not.
      * @param syncToken String representing the sync token.
-     * @return {@link CDASyncedSpace} result.
+     * @return {@link retrofit.client.Response} result.
      */
     @GET("/spaces/{space}/sync")
-    CDASyncedSpace performSynchronizationBlocking(
+    Response performSynchronizationBlocking(
             @Path("space") String space,
             @Query("initial") Boolean initial,
             @Query("sync_token") String syncToken

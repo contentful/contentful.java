@@ -63,6 +63,16 @@ public class ClientTest extends AbsTestCase {
                 }).build().fetchSpaceBlocking();
     }
 
+    @Test(expected = RetrofitError.class)
+    public void testSynchronousException() throws Exception {
+        CDAClient client = TestClientFactory.newInstance()
+                .setAccessToken("error")
+                .setSpaceKey("error")
+                .build();
+
+        client.fetchEntriesBlocking();
+    }
+
     @Test
     public void testNoSSL() throws Exception {
         final Boolean[] res = new Boolean[]{null};
