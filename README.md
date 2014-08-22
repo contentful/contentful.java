@@ -126,7 +126,7 @@ For further information, check out our official [JavaDoc][3] site or browse the 
 License
 =======
 
-Copyright (c) 2014 Contentful GmbH. See LICENSE.txt for further details.
+Copyright (c) 2014 Contentful GmbH. See [LICENSE.txt][6] for further details.
 
 
  [1]: https://www.contentful.com
@@ -134,3 +134,4 @@ Copyright (c) 2014 Contentful GmbH. See LICENSE.txt for further details.
  [3]: https://contentful.github.io/contentful.java/
  [4]: https://www.contentful.com/developers/documentation/content-delivery-api/
  [5]: https://square.github.io/okhttp/
+ [6]: LICENSE.txt
