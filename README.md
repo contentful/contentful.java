@@ -110,7 +110,7 @@ This means you can save / restore any kind of Resource, including `CDAArray`, vi
 
 ```java
 // save Resource to local file:
-ResourceUtils.saveResourceToFile(someEntry, new File("/path/to/save"));
+ResourceUtils.saveResourceToFile(someResource, new File("/path/to/save"));
 
 // restore Resource from local file:
 CDAResource resource = ResourceUtils.readResourceFromFile(new File("/path/to/restore"));
