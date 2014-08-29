@@ -549,7 +549,7 @@ public class CDAClient {
         ensureSpace(true, new EnsureSpaceCallback(this, callback) {
             @Override
             void onSpaceReady() {
-                service.fetchSyncedSpaceWithPath(existingSpace.getNextSyncUrl(),
+                service.performSynchronization(spaceKey, null, existingSpace.getSyncToken(),
                         new SyncSpaceCallback(existingSpace, CDAClient.this, callback));
             }
         });
@@ -568,7 +568,7 @@ public class CDAClient {
         }
 
         ensureSpaceBlocking(true);
-        Response response = service.performSynchronizationBlocking(spaceKey, false, null);
+        Response response = service.performSynchronizationBlocking(spaceKey, null, existingSpace.getSyncToken());
         CDASyncedSpace result;
 
         try {

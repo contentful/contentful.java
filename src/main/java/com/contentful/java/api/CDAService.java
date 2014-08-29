@@ -203,15 +203,4 @@ interface CDAService {
             @Query("initial") Boolean initial,
             @Query("sync_token") String syncToken
     );
-
-    /**
-     * Execute a request using a path determined at runtime.
-     *
-     * @param path     String representing the path.
-     * @param callback {@link CDACallback} instance to be used.
-     */
-    @GET("/{path}")
-    void fetchSyncedSpaceWithPath(
-            @Path("path") String path,
-            SyncSpaceCallback callback);
 }

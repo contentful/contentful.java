@@ -11,8 +11,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Tests for consuming the Sync API.
@@ -150,5 +149,25 @@ public class SynchronizationTest extends AbsTestCase {
 
         assertEquals(3, result.getItems().size());
         assertEquals("FAKE", result.getSyncToken());
+    }
+
+    @Test
+    public void testRemoteSynchronization() throws Exception {
+        CDAClient client = TestClientFactory.newInstance().build();
+
+        CDASyncedSpace syncedSpace = client.performInitialSynchronizationBlocking();
+        client.performSynchronizationBlocking(syncedSpace);
+
+        TestCallback<CDASyncedSpace> cb;
+        client.performInitialSynchronization(cb = new TestCallback<CDASyncedSpace>());
+        cb.await();
+        assertNull(cb.error);
+        assertNotNull(cb.value);
+
+        syncedSpace = cb.value;
+        client.performSynchronization(syncedSpace, cb = new TestCallback<CDASyncedSpace>());
+        cb.await();
+        assertNull(cb.error);
+        assertNotNull(cb.value);
     }
 }
