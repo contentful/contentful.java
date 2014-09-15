@@ -32,7 +32,9 @@ import static com.contentful.java.lib.Constants.*;
 @SuppressWarnings("UnusedDeclaration")
 public class CDAClient {
     // Definitions & Configuration
-    static final String USER_AGENT = String.format("contentful.java/%s", VERSION_NAME);
+    static String sVersionName;
+    static String sUserAgent;
+
     private String httpScheme;
 
     private String accessToken;
@@ -158,7 +160,7 @@ public class CDAClient {
                             String.format(HTTP_OAUTH_PATTERN, accessToken));
                 }
 
-                requestFacade.addHeader(HTTP_HEADER_USER_AGENT, USER_AGENT);
+                requestFacade.addHeader(HTTP_HEADER_USER_AGENT, getUserAgent());
             }
         };
     }
@@ -704,6 +706,22 @@ public class CDAClient {
         if (invalidate || space == null) {
             space = fetchSpaceBlocking();
         }
+    }
+
+    /**
+     * Sets the value for {@code sUserAgent} variable if needed.
+     */
+    private String getUserAgent() {
+        if (sUserAgent == null) {
+            try {
+                sVersionName = Utils.getFromProperties(Utils.PROP_VERSION_NAME);
+                sUserAgent = String.format("contentful.java/%s", sVersionName);
+            } catch (IOException e) {
+                throw new RuntimeException("Unable to retrieve version name", e);
+            }
+        }
+
+        return sUserAgent;
     }
 
     /**

@@ -2,14 +2,19 @@ package com.contentful.java.api;
 
 import com.contentful.java.model.CDAArray;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.Properties;
 
 /**
  * SDK utilities
  */
 class Utils {
+    static final String SDK_PROPERTIES = "sdk.properties";
+    static final String PROP_VERSION_NAME = "version.name";
+
     /**
      * Extracts to CDA endpoint used to to fetch an array by inspecting it's original request URL.
      *
@@ -104,6 +109,12 @@ class Utils {
         queryMap.put("limit", Integer.toString(limit));
 
         return queryMap;
+    }
+
+    static String getFromProperties(String field) throws IOException {
+        Properties properties = new Properties();
+        properties.load(Utils.class.getClassLoader().getResourceAsStream(SDK_PROPERTIES));
+        return properties.getProperty(field);
     }
 }
 
