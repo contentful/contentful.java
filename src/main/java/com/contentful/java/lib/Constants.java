@@ -4,7 +4,7 @@ package com.contentful.java.lib;
  * Library constants.
  */
 public class Constants {
-    public enum CDAResourceType {
+    public static enum CDAResourceType {
         Asset,
         ContentType,
         DeletedAsset,
@@ -12,6 +12,19 @@ public class Constants {
         Entry,
         Link,
         Space
+    }
+
+    public static enum CDAFieldType {
+        Array,
+        Boolean,
+        Date,
+        Integer,
+        Link,
+        Location,
+        Number,
+        Object,
+        Symbol,
+        Text
     }
 
     // HTTP constants
