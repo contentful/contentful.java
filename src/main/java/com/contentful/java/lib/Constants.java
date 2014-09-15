@@ -35,7 +35,6 @@ public class Constants {
     public static final String HTTP_OAUTH_PATTERN = "Bearer %s";
 
     // Configuration
-    public static final String VERSION_NAME = "1.0";
     public static final String CDA_SERVER_HOSTNAME = "cdn.contentful.com";
     public static final String CDA_SERVER_URI = String.format("%s://%s", SCHEME_HTTPS, CDA_SERVER_HOSTNAME);
     public static final String CDA_SERVER_URI_NOSSL = String.format("%s://%s", SCHEME_HTTP, CDA_SERVER_HOSTNAME);
