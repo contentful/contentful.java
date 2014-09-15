@@ -86,6 +86,10 @@ public class CDAClient {
             restBuilder.setErrorHandler(builder.errorHandler);
         }
 
+        if (builder.logLevel != null) {
+            restBuilder.setLogLevel(builder.logLevel);
+        }
+
         // Create a Service
         service = restBuilder.build().create(CDAService.class);
 
@@ -604,7 +608,7 @@ public class CDAClient {
     }
 
     /**
-     * Synchronous version of {@link #performSynchronization(String)}.
+     * Synchronous version of {@link #performSynchronization(CDASyncedSpace, CDACallback)}.
      *
      * @param syncToken String representing a previously persisted sync token.
      * @return {@link CDASyncedSpace} result.
@@ -763,6 +767,7 @@ public class CDAClient {
         private Client.Provider clientProvider;
         private ErrorHandler errorHandler;
         private boolean dontUseSSL = false;
+        private RestAdapter.LogLevel logLevel;
 
         /**
          * Sets the space key to be used with this client.
@@ -850,6 +855,21 @@ public class CDAClient {
          */
         public Builder noSSL() {
             this.dontUseSSL = true;
+            return this;
+        }
+
+        /**
+         * Change the level of logging.
+         *
+         * @param logLevel {@link retrofit.RestAdapter.LogLevel} value.
+         * @return this {@code Builder} instance.
+         */
+        public Builder setLogLevel(RestAdapter.LogLevel logLevel) {
+            if (logLevel == null) {
+                throw new NullPointerException("LogLevel may not be null.");
+            }
+
+            this.logLevel = logLevel;
             return this;
         }
 
