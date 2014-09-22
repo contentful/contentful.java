@@ -34,6 +34,7 @@ You can also specify a custom client to be used, refer to the [official document
 
 ### Proguard
 ```
+-keepattributes Signature
 -dontwarn rx.**
 -dontwarn retrofit.**
 -keep class retrofit.** { *; }
