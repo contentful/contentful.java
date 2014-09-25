@@ -24,7 +24,7 @@ or Gradle:
 compile 'com.contentful.java:java-sdk:1.0.4'
 ```
 
-### Default client
+### Default Client
 
 The SDK uses Retrofit(v1.6.1) under the hood as a REST client, which detects [OkHttp][5] in your classpath and uses it if it's available, otherwise falls back to the default `HttpURLConnection` (note that for Android devices running API 8 or lower, the `AndroidApacheClient` will be used).
 
@@ -91,6 +91,19 @@ client.fetchEntries(cb = new CDACallback<CDAArray>() {
 
 cb.cancel(); // onSuccess and onFailure will not be invoked.
 ```
+
+### Default Ordering
+
+Bear in mind that there is no default ordering included for any method which returns a `CDAArray` instance. This means that if you plan to page through more than 100 results with multiple requests, there is no guarantee that you will cover all entries. It is however possible to specify ordering for a query with any of the `fetch*Matching*` methods, for instance:
+
+```java
+HashMap<String, String> query = new HashMap<String, String>();
+
+query.put("order", "-sys.createdAt");
+client.fetchEntriesMatching(query, ...);
+```
+
+The above snippet will fetch all Entries, ordered by newest-to-oldest. Another important thing is that if you use the `fetchArrayNextPage()` method with a `CDAArray` instance which was fetched with specific ordering, the original request parameters will be used, hence that specified ordering will be preserved.
 
 ### Using Custom Entry Classes
 
