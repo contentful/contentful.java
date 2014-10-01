@@ -96,7 +96,7 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
 
     /**
      * De-serialize a resource of type Entry.
-     *
+     * <p/>
      * This method should return an {@link CDAEntry} object or in case the resource
      * matches a previously registered custom class via {@link CDAClient#registerCustomClass}
      * an object of the custom class type will be created.
@@ -155,18 +155,13 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
 
         // display field
         JsonObject attrs = jsonElement.getAsJsonObject();
-        String displayField = attrs.get("displayField").getAsString();
+        String displayField = getFieldAsString(attrs, "displayField");
 
         // name
-        String name = attrs.get("name").getAsString();
+        String name = getFieldAsString(attrs, "name");
 
-        // description (optional)
-        String userDescription = null;
-        JsonElement descriptionField = attrs.get("description");
-
-        if (descriptionField != null) {
-            userDescription = descriptionField.getAsString();
-        }
+        // description
+        String userDescription = getFieldAsString(attrs, "description");
 
         CDAContentType result = new CDAContentType(displayField, name, userDescription);
 
@@ -218,7 +213,7 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
      * This will set the list fields based on the target's type, depending on whether
      * it is an instance of the {@link ResourceWithMap} class or the {@link ResourceWithList},
      * different results will be provided.
-     *
+     * <p/>
      * This method will also set the map of system attributes for the resource.
      *
      * @param target      Target {@link CDAResource} object to set fields for.
@@ -259,5 +254,15 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
                     fields.getAsJsonArray(),
                     List.class));
         }
+    }
+
+    private String getFieldAsString(JsonObject jsonObject, String name) {
+        JsonElement value = jsonObject.get(name);
+
+        if (value != null) {
+            return value.getAsString();
+        }
+
+        return null;
     }
 }

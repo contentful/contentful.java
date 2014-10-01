@@ -66,6 +66,15 @@ public class ContentTypeTest extends AbsTestCase {
         client.fetchContentTypeWithIdentifierBlocking("MOCK");
     }
 
+    @Test
+    public void testNoDisplayField() throws Exception {
+        CDAClient client = TestClientFactory.newInstance()
+                .setClient(new MockClient("result_test_no_display_field.json"))
+                .build();
+
+        client.fetchContentTypesBlocking();
+    }
+
     void verifyContentTypes(CDAArray result) {
         assertNotNull(result);
 
