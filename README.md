@@ -52,7 +52,7 @@ The `CDAClient` manages all your interaction with the Contentful Delivery API.
 CDAClient client = new CDAClient.Builder()
         .setSpaceKey("space-key-goes-here")
         .setAccessToken("access-token-goes-here")
-        .create();
+        .build();
 ```
 
 Items can be fetched synchronously:
