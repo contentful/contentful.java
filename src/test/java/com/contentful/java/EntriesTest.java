@@ -215,6 +215,7 @@ public class EntriesTest extends AbsTestCase {
     verifyNyanCatEntry((CDAEntry) item);
   }
 
+  @SuppressWarnings("unchecked")
   void verifyNyanCatEntry(CDAEntry entry) {
     assertNotNull(entry);
 

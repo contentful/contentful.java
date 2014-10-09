@@ -27,7 +27,7 @@ public class NyanCat extends CDAEntry {
     return (String) getFields().get("name");
   }
 
-  public List<String> getLikes() {
+  @SuppressWarnings("unchecked") public List<String> getLikes() {
     return (List<String>) getFields().get("likes");
   }
 

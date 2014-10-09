@@ -47,6 +47,7 @@ public class MockClient implements Client {
     this.spaceFileName = spaceFileName;
   }
 
+  @SuppressWarnings("unchecked")
   @Override public Response execute(Request request) throws IOException {
     InputStream is = null;
     String responseString = "";

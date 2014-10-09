@@ -88,6 +88,7 @@ public class ClientTest extends AbsTestCase {
     client.fetchEntriesBlocking();
   }
 
+  @SuppressWarnings("unchecked")
   @Test public void testNoSSL() throws Exception {
     final Boolean[] res = new Boolean[] { null };
 
