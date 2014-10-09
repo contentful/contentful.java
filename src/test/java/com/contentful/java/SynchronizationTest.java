@@ -4,6 +4,7 @@ import com.contentful.java.api.CDAClient;
 import com.contentful.java.lib.MockClient;
 import com.contentful.java.lib.TestCallback;
 import com.contentful.java.lib.TestClientFactory;
+import com.contentful.java.model.CDAAsset;
 import com.contentful.java.model.CDAEntry;
 import com.contentful.java.model.CDAResource;
 import com.contentful.java.model.CDASyncedSpace;
@@ -99,6 +100,24 @@ public class SynchronizationTest extends AbsTestCase {
 
         result = client.performSynchronization(syncToken);
         assertNotNull(result);
+    }
+
+    @Test
+    public void testSyncWithLocalizedAsset() throws Exception {
+        CDAClient client = TestClientFactory.newInstance()
+            .setClient(new MockClient("result_test_sync_localized_asset.json"))
+            .build();
+
+        CDASyncedSpace syncedSpace = client.performInitialSynchronizationBlocking();
+        assertNotNull(syncedSpace);
+        CDAAsset asset = (CDAAsset) syncedSpace.getItems().get(0);
+        assertEquals("https://whatever.com/abc.gif", asset.getUrl());
+        assertEquals("image/gif", asset.getMimeType());
+        assertEquals("english", asset.getFields().get("description"));
+        assertEquals("english", asset.getFields().get("title"));
+        asset.setLocale("tlh");
+        assertEquals("tlh", asset.getFields().get("description"));
+        assertEquals("tlh", asset.getFields().get("title"));
     }
 
     void verifySynchronizationFirst(CDASyncedSpace result) {
