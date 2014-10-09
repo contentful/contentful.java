@@ -50,9 +50,7 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
 
   @Override public CDAResource deserialize(JsonElement jsonElement, Type type,
       JsonDeserializationContext context) throws JsonParseException {
-
     CDAResource result = null;
-
     JsonObject sys = jsonElement.getAsJsonObject().getAsJsonObject("sys");
 
     if (sys != null) {
@@ -85,7 +83,6 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
    */
   private CDAResource deserializeResource(JsonElement jsonElement,
       JsonDeserializationContext context, JsonObject sys) {
-
     CDAResource result = new CDAResource();
     setBaseFields(result, sys, jsonElement, context);
     return result;
@@ -101,11 +98,19 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
    */
   private CDAAsset deserializeAsset(JsonElement jsonElement, JsonDeserializationContext context,
       JsonObject sys) {
-
     CDAAsset result = new CDAAsset();
     setBaseFields(result, sys, jsonElement, context);
-
     Map fileMap = (Map) result.getFields().get("file");
+    String defaultLocale = client.getSpace().getDefaultLocale();
+    
+    if (fileMap.containsKey(defaultLocale)) {
+      Object map = fileMap.get(defaultLocale);
+      
+      if (map instanceof Map) {
+        fileMap = (Map) map;
+      }
+    }
+    
     result.setUrl(String.format("%s:%s", client.getHttpScheme(), fileMap.get("url")));
     result.setMimeType((String) fileMap.get("contentType"));
 
@@ -122,7 +127,6 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
    */
   private CDAContentType deserializeContentType(JsonElement jsonElement,
       JsonDeserializationContext context, JsonObject sys) {
-
     // Display field
     JsonObject attrs = jsonElement.getAsJsonObject();
     String displayField = getFieldAsString(attrs, "displayField");
@@ -150,7 +154,6 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
    */
   private CDAEntry deserializeEntry(JsonElement jsonElement, JsonDeserializationContext context,
       JsonObject sys) {
-
     CDAEntry result;
 
     String contentTypeId = sys.get("contentType")
