@@ -234,7 +234,9 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
       JsonDeserializationContext context) {
     // System attributes
     Map<String, Object> sysMap = context.deserialize(sys, Map.class);
-    sysMap.put("space", client.getSpace());
+    if (sysMap.containsKey("space")) {
+      sysMap.put("space", client.getSpace());
+    }
     target.setSys(sysMap);
 
     // Fields
