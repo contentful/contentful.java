@@ -30,4 +30,12 @@ public class Locale implements Serializable {
   public boolean isDefault;
 
   public String name;
+
+  @Override public String toString() {
+    return "Locale{"
+        + "code='" + code + '\''
+        + ", isDefault=" + isDefault
+        + ", name='" + name + '\''
+        + '}';
+  }
 }
