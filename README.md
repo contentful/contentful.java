@@ -105,6 +105,17 @@ query.put("order", "-sys.createdAt");
 client.fetchEntriesMatching(query, ...);
 ```
 
+```java
+client.fetchEntriesMatching(new HashMap<String, String>() {{
+    put("order", "-sys.createdAt");
+}}, new CDACallback<CDAArray>() {
+    @Override
+    protected void onSuccess(CDAArray array, Response response) {
+      // ...
+    }
+});    
+```
+
 The above snippet will fetch all Entries, ordered by newest-to-oldest. Another important thing is that if you use the `fetchArrayNextPage()` method with a `CDAArray` instance which was fetched with specific ordering, the original request parameters will be used, hence that specified ordering will be preserved.
 
 ### Using Custom Entry Classes
