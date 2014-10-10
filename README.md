@@ -99,13 +99,6 @@ cb.cancel(); // onSuccess and onFailure will not be invoked.
 Bear in mind that there is no default ordering included for any method which returns a `CDAArray` instance. This means that if you plan to page through more than 100 results with multiple requests, there is no guarantee that you will cover all entries. It is however possible to specify ordering for a query with any of the `fetch*Matching*` methods, for instance:
 
 ```java
-HashMap<String, String> query = new HashMap<String, String>();
-
-query.put("order", "-sys.createdAt");
-client.fetchEntriesMatching(query, ...);
-```
-
-```java
 client.fetchEntriesMatching(new HashMap<String, String>() {{
     put("order", "-sys.createdAt");
 }}, new CDACallback<CDAArray>() {
