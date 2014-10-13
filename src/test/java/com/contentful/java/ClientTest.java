@@ -106,4 +106,13 @@ public class ClientTest extends AbsTestCase {
     client.fetchSpaceBlocking();
     assertTrue(res[0]);
   }
+
+  @Test public void testPreview() throws Exception {
+    CDAClient client = TestClientFactory.newInstance()
+        .setAccessToken("e5e8d4c5c122cf28fc1af3ff77d28bef78a3952957f15067bbc29f2f0dde0b50")
+        .preview()
+        .build();
+
+    client.fetchSpaceBlocking();
+  }
 }

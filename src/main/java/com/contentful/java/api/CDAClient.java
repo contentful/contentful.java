@@ -43,8 +43,6 @@ import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
 import static com.contentful.java.lib.Constants.CDAResourceType;
-import static com.contentful.java.lib.Constants.CDA_SERVER_URI;
-import static com.contentful.java.lib.Constants.CDA_SERVER_URI_NOSSL;
 import static com.contentful.java.lib.Constants.HTTP_HEADER_AUTH;
 import static com.contentful.java.lib.Constants.HTTP_HEADER_USER_AGENT;
 import static com.contentful.java.lib.Constants.HTTP_OAUTH_PATTERN;
@@ -104,14 +102,22 @@ public class CDAClient {
         new RestAdapter.Builder().setConverter(new GsonConverter(gson))
             .setRequestInterceptor(getRequestInterceptor());
 
+    String endpoint;
+    if (builder.previewMode) {
+      endpoint = Constants.ENDPOINT_PREVIEW;
+    } else {
+      endpoint = Constants.ENDPOINT_CDA;
+    }
+
     // SSL
     if (builder.dontUseSSL) {
-      restBuilder.setEndpoint(CDA_SERVER_URI_NOSSL);
       httpScheme = Constants.SCHEME_HTTP;
     } else {
-      restBuilder.setEndpoint(CDA_SERVER_URI);
       httpScheme = Constants.SCHEME_HTTPS;
     }
+
+    restBuilder.setEndpoint(String.format("%s://%s",
+        httpScheme, endpoint));
 
     // Client provider
     if (builder.clientProvider != null) {
@@ -799,6 +805,7 @@ public class CDAClient {
     private ErrorHandler errorHandler;
     private boolean dontUseSSL = false;
     private RestAdapter.LogLevel logLevel;
+    private boolean previewMode = false;
 
     /**
      * Sets the access token to be used with this client.
@@ -903,6 +910,15 @@ public class CDAClient {
      */
     public Builder noSSL() {
       this.dontUseSSL = true;
+      return this;
+    }
+
+    /**
+     * Sets this client to use the Preview API endpoint.
+     * @return this {@code Builder} instance
+     */
+    public Builder preview() {
+      this.previewMode = true;
       return this;
     }
 
