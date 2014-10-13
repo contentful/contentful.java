@@ -138,6 +138,20 @@ CDAResource resource = ResourceUtils.readResourceFromFile(new File("/path/to/res
 
 Note that in case you attempt to restore a previously saved Resource, if the original class does not exist the `readResourceFromFile()` method will throw a `ClassNotFoundException`. 
 
+### Preview Mode
+
+The Content Delivery API only returns published Entries. However, you might want to preview content in your app before making it public for your users. For this, you can use the preview mode, which will return **all** Entries, regardless of their published status:
+
+```java
+CDAClient client = new CDAClient.Builder()
+        .setSpaceKey("space-key-goes-here")
+        .setAccessToken("access-token-goes-here")
+        .preview()
+        .build();
+```
+
+Apart from the configuration option, you can use the SDK without modifications with one exception: you need to obtain a different access token from [here][7].  In preview mode, data can be invalid, because no validation is performed on unpublished entries. Your app needs to deal with that. Be aware that the access token is read-write and should in no case be shipped with a production app.
+
 Documentation
 =============
 
@@ -155,3 +169,4 @@ Copyright (c) 2014 Contentful GmbH. See [LICENSE.txt][6] for further details.
  [4]: https://www.contentful.com/developers/documentation/content-delivery-api/
  [5]: https://square.github.io/okhttp/
  [6]: LICENSE.txt
+ [7]: https://www.contentful.com/developers/documentation/content-management-api/#getting-started
