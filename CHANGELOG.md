@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-<!--Version 1.0.6 *(2014-XX-XX)*
+Version 1.0.6 *(2014-09-20)*
 ----------------------------
 
  * Client support for the Preview API.
@@ -10,7 +10,7 @@ Change Log
  * Fix: `CDASpace` instances will no longer have an empty `space` value in their sys map.
  * Fix: Assets with localized fields should now have `url` and `mimeType` attributes properly set.
 
--->
+
 Version 1.0.5 *(2014-10-01)*
 ----------------------------
 
