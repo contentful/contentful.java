@@ -28,7 +28,7 @@ The SDK requires at minimum Java 6 or Android 2.3.
 
 ### Default Client
 
-The SDK uses Retrofit(v1.6.1) under the hood as a REST client, which detects [OkHttp][5] in your classpath and uses it if it's available, otherwise falls back to the default `HttpURLConnection`.
+The SDK uses Retrofit under the hood as a REST client, which detects [OkHttp][5] in your classpath and uses it if it's available, otherwise falls back to the default `HttpURLConnection`.
 
 The recommended approach would be to add [OkHttp][5] as a dependency to your project, but that is completely optional.
 
