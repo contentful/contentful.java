@@ -30,7 +30,7 @@ import retrofit.client.Response;
  * implementation for handling errors.
  *
  * @param <T> The type of object to be expected as a result. For methods that return a collection
- * of CDA resources it is required to use {@code CDAArray} as the type
+ * of CDA resources it is required to use {@code CDAArray} as the type.
  */
 @SuppressWarnings("UnusedDeclaration")
 public abstract class CDACallback<T> implements Callback<T> {
@@ -55,7 +55,7 @@ public abstract class CDACallback<T> implements Callback<T> {
   /**
    * Callback to be invoked in case the request was successful.
    *
-   * @param t type of object to be expected as a result. Use {@code CDAArray} for requests
+   * @param t result object
    * that return multiple items
    * @param response {@code retrofit.client.Response} instance
    */
