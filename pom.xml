@@ -21,6 +21,8 @@
 
         <!-- Dependencies -->
         <retrofit.version>1.7.0</retrofit.version>
+        <rxjava.version>1.0.0</rxjava.version>
+        <httpcomp.version>4.3.6</httpcomp.version>
 
         <!-- Test Dependencies -->
         <commonsio.version>2.4</commonsio.version>
@@ -64,6 +66,18 @@
             <groupId>com.squareup.retrofit</groupId>
             <artifactId>retrofit</artifactId>
             <version>${retrofit.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.reactivex</groupId>
+            <artifactId>rxjava</artifactId>
+            <version>${rxjava.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpcomp.version}</version>
         </dependency>
 
         <dependency>

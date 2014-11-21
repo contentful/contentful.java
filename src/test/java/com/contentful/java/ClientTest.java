@@ -65,36 +65,30 @@ public class ClientTest extends AbsTestCase {
     assertTrue(cat.getBestFriend().getBestFriend() == cat);
   }
 
-  @Test(expected = TestException.class)
-  public void testCustomErrorHandler() throws Exception {
+  @Test(expected = TestException.class) public void testCustomErrorHandler() throws Exception {
     TestClientFactory.newInstance().setClient(new Client() {
-      @Override
-      public Response execute(Request request) throws IOException {
+      @Override public Response execute(Request request) throws IOException {
         throw new RuntimeException();
       }
     }).setErrorHandler(new ErrorHandler() {
-      @Override
-      public Throwable handleError(RetrofitError retrofitError) {
+      @Override public Throwable handleError(RetrofitError retrofitError) {
         return new TestException();
       }
     }).build().fetchSpaceBlocking();
   }
 
-  @Test(expected = RetrofitError.class)
-  public void testSynchronousException() throws Exception {
+  @Test(expected = RetrofitError.class) public void testSynchronousException() throws Exception {
     CDAClient client =
         TestClientFactory.newInstance().setAccessToken("error").setSpaceKey("error").build();
 
     client.fetchEntriesBlocking();
   }
 
-  @SuppressWarnings("unchecked")
-  @Test public void testNoSSL() throws Exception {
+  @SuppressWarnings("unchecked") @Test public void testNoSSL() throws Exception {
     final Boolean[] res = new Boolean[] { null };
 
     CDAClient client = TestClientFactory.newInstance().noSSL().setClient(new Client() {
-      @Override
-      public Response execute(Request request) throws IOException {
+      @Override public Response execute(Request request) throws IOException {
         URI uri = URI.create(request.getUrl());
         res[0] = Constants.SCHEME_HTTP.equalsIgnoreCase(uri.getScheme());
 
