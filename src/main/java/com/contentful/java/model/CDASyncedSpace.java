@@ -26,24 +26,28 @@ import java.util.ArrayList;
 public class CDASyncedSpace extends ArrayResource {
   private ArrayList<CDAResource> items;
   private String nextSyncUrl;
+  private String nextPageUrl;
 
   public ArrayList<CDAResource> getItems() {
     return items;
   }
 
   /**
-   * Gets the next sync URL.
-   *
-   * @return String representing the next sync URL for this Space.
+   * Returns the next sync URL.
    */
   public String getNextSyncUrl() {
     return nextSyncUrl;
   }
 
   /**
-   * Gets the sync token from this Space's {@code nextSyncUrl} value.
-   *
-   * @return String representing the next token to be used for the next sync request.
+   * Returns the next page URL.
+   */
+  public String getNextPageUrl() {
+    return nextPageUrl;
+  }
+
+  /**
+   * Returns the sync token from this Space's {@code nextSyncUrl} value.
    */
   public String getSyncToken() {
     if (nextSyncUrl == null) {

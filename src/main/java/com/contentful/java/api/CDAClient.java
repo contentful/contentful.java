@@ -575,12 +575,11 @@ public class CDAClient {
    * @param callback callback to attach to the request
    */
   public void performInitialSynchronization(final CDACallback<CDASyncedSpace> callback) {
-    ensureSpace(true, new EnsureSpaceCallback(this, callback) {
-      @Override void onSpaceReady() {
-        service.performSynchronization(spaceKey, true, null,
-            new SyncSpaceCallback(null, CDAClient.this, callback));
+    RxExtensions.defer(new RxExtensions.DefFunc<CDASyncedSpace>() {
+      @Override CDASyncedSpace method() {
+        return performInitialSynchronizationBlocking();
       }
-    });
+    }, callback);
   }
 
   /**
@@ -594,14 +593,30 @@ public class CDAClient {
     CDASyncedSpace result;
 
     try {
-      result = gson.fromJson(new InputStreamReader(response.getBody().in()), CDASyncedSpace.class);
+      CDASyncedSpace tmp = gson.fromJson(new InputStreamReader(
+          response.getBody().in()), CDASyncedSpace.class);
 
-      result = new SpaceMerger(null, result, null, null, getSpace()).call();
+      result = iterateSpace(new SpaceMerger(null, tmp, null, null, getSpace()).call());
     } catch (Exception e) {
       throw RetrofitError.unexpectedError(response.getUrl(), e);
     }
 
     return result;
+  }
+
+  private CDASyncedSpace iterateSpace(CDASyncedSpace space) throws Exception {
+    String nextPageUrl = space.getNextPageUrl();
+    while (nextPageUrl != null) {
+      String syncToken = Utils.getQueryParamFromUrl(nextPageUrl, "sync_token");
+      if (syncToken == null) {
+        break;
+      }
+
+      CDASyncedSpace nextPage = performSynchronization(syncToken);
+      space = new SpaceMerger(space, nextPage, null, null, getSpace()).call();
+      nextPageUrl = space.getNextPageUrl();
+    }
+    return space;
   }
 
   /**
@@ -616,12 +631,11 @@ public class CDAClient {
       throw new IllegalArgumentException("Existing space may not be null.");
     }
 
-    ensureSpace(true, new EnsureSpaceCallback(this, callback) {
-      @Override void onSpaceReady() {
-        service.performSynchronization(spaceKey, null, existingSpace.getSyncToken(),
-            new SyncSpaceCallback(existingSpace, CDAClient.this, callback));
+    RxExtensions.defer(new RxExtensions.DefFunc<CDASyncedSpace>() {
+      @Override CDASyncedSpace method() {
+        return performSynchronizationBlocking(existingSpace);
       }
-    });
+    }, callback);
   }
 
   /**
@@ -644,7 +658,9 @@ public class CDAClient {
     try {
       CDASyncedSpace updatedSpace =
           gson.fromJson(new InputStreamReader(response.getBody().in()), CDASyncedSpace.class);
-      result = new SpaceMerger(existingSpace, updatedSpace, null, response, getSpace()).call();
+
+      result = iterateSpace(
+          new SpaceMerger(existingSpace, updatedSpace, null, response, getSpace()).call());
     } catch (Exception e) {
       throw RetrofitError.unexpectedError(response.getUrl(), e);
     }
@@ -660,16 +676,11 @@ public class CDAClient {
    */
   public void performSynchronization(final String syncToken,
       final CDACallback<CDASyncedSpace> callback) {
-    if (syncToken == null) {
-      throw new IllegalArgumentException("Sync token may not be null.");
-    }
-
-    ensureSpace(true, new EnsureSpaceCallback(this, callback) {
-      @Override void onSpaceReady() {
-        service.performSynchronization(spaceKey, null, syncToken,
-            new SyncSpaceCallback(null, CDAClient.this, callback));
+    RxExtensions.defer(new RxExtensions.DefFunc<CDASyncedSpace>() {
+      @Override CDASyncedSpace method() {
+        return performSynchronization(syncToken);
       }
-    });
+    }, callback);
   }
 
   /**
@@ -689,8 +700,7 @@ public class CDAClient {
 
     try {
       result = gson.fromJson(new InputStreamReader(response.getBody().in()), CDASyncedSpace.class);
-
-      result = new SpaceMerger(null, result, null, null, getSpace()).call();
+      result = iterateSpace(new SpaceMerger(null, result, null, null, getSpace()).call());
     } catch (Exception e) {
       throw RetrofitError.unexpectedError(response.getUrl(), e);
     }

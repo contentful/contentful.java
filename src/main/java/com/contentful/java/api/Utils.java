@@ -22,6 +22,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Properties;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URIBuilder;
 
 /**
  * SDK utilities
@@ -130,6 +132,24 @@ class Utils {
     Properties properties = new Properties();
     properties.load(Utils.class.getClassLoader().getResourceAsStream(SDK_PROPERTIES));
     return properties.getProperty(field);
+  }
+
+  static String getQueryParamFromUrl(String url, String param) {
+    String result = null;
+
+    try {
+      URIBuilder builder = new URIBuilder(url);
+      for (NameValuePair pair : builder.getQueryParams()) {
+        if (pair.getName().equalsIgnoreCase(param)) {
+          result = pair.getValue();
+          break;
+        }
+      }
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
+
+    return result;
   }
 }
 
