@@ -1,8 +1,14 @@
 Change Log
 ==========
 
-Version 1.0.7 *(in development)*
+Version 1.0.8 *(in development)*
 --------------------------------
+
+
+Version 1.0.7 *(2014-11-21)*
+----------------------------
+ * Fix: Client sync methods iterate through paginated responses.
+ * Fix: Rename SDK properties file for compatability with the CMA SDK.
 
 
 Version 1.0.6 *(2014-10-20)*
