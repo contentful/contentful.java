@@ -16,12 +16,12 @@ Grab via Maven:
 <dependency>
   <groupId>com.contentful.java</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>1.0.6</version>
+  <version>1.0.7</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.contentful.java:java-sdk:1.0.6'
+compile 'com.contentful.java:java-sdk:1.0.7'
 ```
 
 The SDK requires at minimum Java 6 or Android 2.3.
@@ -164,7 +164,7 @@ Copyright (c) 2014 Contentful GmbH. See [LICENSE.txt][6] for further details.
 
 
  [1]: https://www.contentful.com
- [2]: https://oss.sonatype.org/service/local/repositories/releases/content/com/contentful/java/java-sdk/1.0.6/java-sdk-1.0.6.jar
+ [2]: https://oss.sonatype.org/service/local/repositories/releases/content/com/contentful/java/java-sdk/1.0.7/java-sdk-1.0.7.jar
  [3]: https://contentful.github.io/contentful.java/
  [4]: https://www.contentful.com/developers/documentation/content-delivery-api/
  [5]: https://square.github.io/okhttp/
