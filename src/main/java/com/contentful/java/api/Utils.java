@@ -18,12 +18,12 @@ package com.contentful.java.api;
 
 import com.contentful.java.model.CDAArray;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Properties;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URIBuilder;
 
 /**
  * SDK utilities
@@ -134,22 +134,27 @@ class Utils {
     return properties.getProperty(field);
   }
 
-  static String getQueryParamFromUrl(String url, String param) {
-    String result = null;
+  static String getQueryParamFromUrl(String url, String param) throws UnsupportedEncodingException {
+    URI uri = URI.create(url);
+    String query = uri.getQuery();
 
-    try {
-      URIBuilder builder = new URIBuilder(url);
-      for (NameValuePair pair : builder.getQueryParams()) {
-        if (pair.getName().equalsIgnoreCase(param)) {
-          result = pair.getValue();
-          break;
-        }
-      }
-    } catch (URISyntaxException e) {
-      e.printStackTrace();
+    if (query == null) {
+      return null;
     }
 
-    return result;
+    String[] pairs = query.split("&");
+    for (String pair : pairs) {
+      String[] split = pair.split("=");
+      if (split.length != 2) {
+        continue;
+      }
+
+      if (param.equalsIgnoreCase(split[0])) {
+        return URLDecoder.decode(split[1], "UTF-8");
+      }
+    }
+
+    return null;
   }
 }
 

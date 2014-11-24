@@ -18,11 +18,13 @@ package com.contentful.java.api;
 
 import com.contentful.java.model.ArrayResource;
 import com.contentful.java.model.CDAArray;
+import com.contentful.java.model.CDASyncedSpace;
 import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 
 /**
@@ -46,6 +48,17 @@ class ArrayResourceTypeAdapter implements JsonDeserializer<ArrayResource> {
         result = parseArray((CDAArray) result);
       } catch (Exception e) {
         throw new JsonParseException(e);
+      }
+    } else if (CDASyncedSpace.class.equals(type)) {
+      CDASyncedSpace syncedSpace = (CDASyncedSpace) result;
+
+      String nextSyncUrl = syncedSpace.getNextSyncUrl();
+      if (nextSyncUrl != null) {
+        try {
+          syncedSpace.setSyncToken(Utils.getQueryParamFromUrl(nextSyncUrl, "sync_token"));
+        } catch (UnsupportedEncodingException e) {
+          throw new JsonParseException("Unable to retrieve sync token.");
+        }
       }
     }
 
