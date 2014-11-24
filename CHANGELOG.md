@@ -1,8 +1,13 @@
 Change Log
 ==========
 
-Version 1.0.8 *(in development)*
+Version 1.0.9 *(in development)*
 --------------------------------
+
+
+Version 1.0.8 *(2014-11-24)*
+----------------------------
+ * Fix: Apache HttpComponents dependency is stripped from Android builds
 
 
 Version 1.0.7 *(2014-11-21)*
