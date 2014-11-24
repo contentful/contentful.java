@@ -16,7 +16,6 @@
 
 package com.contentful.java.model;
 
-import java.net.URI;
 import java.util.ArrayList;
 
 /**
@@ -27,6 +26,7 @@ public class CDASyncedSpace extends ArrayResource {
   private ArrayList<CDAResource> items;
   private String nextSyncUrl;
   private String nextPageUrl;
+  private String syncToken;
 
   public ArrayList<CDAResource> getItems() {
     return items;
@@ -50,24 +50,15 @@ public class CDASyncedSpace extends ArrayResource {
    * Returns the sync token from this Space's {@code nextSyncUrl} value.
    */
   public String getSyncToken() {
-    if (nextSyncUrl == null) {
-      return null;
-    }
+    return syncToken;
+  }
 
-    URI uri = URI.create(nextSyncUrl);
-
-    String query = uri.getQuery();
-
-    if (query == null) {
-      return null;
-    }
-
-    String[] split = query.split("=");
-
-    if (split.length < 2) {
-      return null;
-    }
-
-    return split[1];
+  /**
+   * Sets the sync token for this synced Space.
+   *
+   * @param syncToken String representing the sync token
+   */
+  public void setSyncToken(String syncToken) {
+    this.syncToken = syncToken;
   }
 }
