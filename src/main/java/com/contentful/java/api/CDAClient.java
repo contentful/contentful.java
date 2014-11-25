@@ -593,10 +593,10 @@ public class CDAClient {
     CDASyncedSpace result;
 
     try {
-      CDASyncedSpace tmp = gson.fromJson(new InputStreamReader(
+      result = gson.fromJson(new InputStreamReader(
           response.getBody().in()), CDASyncedSpace.class);
 
-      result = iterateSpace(new SpaceMerger(null, tmp, null, null, getSpace()).call());
+      result = iterateSpace(new SpaceMerger(null, result, null, null, getSpace()).call());
     } catch (Exception e) {
       throw RetrofitError.unexpectedError(response.getUrl(), e);
     }
@@ -612,9 +612,9 @@ public class CDAClient {
         break;
       }
 
-      CDASyncedSpace nextPage = performSynchronization(syncToken);
+      CDASyncedSpace nextPage = performSynchronization(syncToken, false);
       space = new SpaceMerger(space, nextPage, null, null, getSpace()).call();
-      nextPageUrl = space.getNextPageUrl();
+      nextPageUrl = nextPage.getNextPageUrl();
     }
     return space;
   }
@@ -690,6 +690,11 @@ public class CDAClient {
    * @return {@code CDASyncedSpace} result object
    */
   public CDASyncedSpace performSynchronization(String syncToken) throws RetrofitError {
+    return performSynchronization(syncToken, true);
+  }
+
+  private CDASyncedSpace performSynchronization(String syncToken, boolean iterate)
+      throws RetrofitError {
     if (syncToken == null) {
       throw new IllegalArgumentException("Sync token may not be null.");
     }
@@ -700,7 +705,11 @@ public class CDAClient {
 
     try {
       result = gson.fromJson(new InputStreamReader(response.getBody().in()), CDASyncedSpace.class);
-      result = iterateSpace(new SpaceMerger(null, result, null, null, getSpace()).call());
+      result = new SpaceMerger(null, result, null, null, getSpace()).call();
+
+      if (iterate) {
+        result = iterateSpace(result);
+      }
     } catch (Exception e) {
       throw RetrofitError.unexpectedError(response.getUrl(), e);
     }
