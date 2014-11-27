@@ -49,9 +49,13 @@ final class RxExtensions {
       super(callback);
     }
 
-    @Override public void call(T t) {
+    @Override public void call(final T t) {
       if (!callback.isCancelled()) {
-        callback.onSuccess(t, null);
+        Platform.get().callbackExecutor().execute(new Runnable() {
+          @Override public void run() {
+            callback.onSuccess(t, null);
+          }
+        });
       }
     }
   }
@@ -65,13 +69,17 @@ final class RxExtensions {
       super(callback);
     }
 
-    @Override public void call(Throwable t) {
+    @Override public void call(final Throwable t) {
       if (!callback.isCancelled()) {
-        if (t instanceof RetrofitError) {
-          callback.onFailure((RetrofitError) t);
-        } else {
-          callback.onFailure(RetrofitError.unexpectedError(null, t));
-        }
+        Platform.get().callbackExecutor().execute(new Runnable() {
+          @Override public void run() {
+            if (t instanceof RetrofitError) {
+              callback.onFailure((RetrofitError) t);
+            } else {
+              callback.onFailure(RetrofitError.unexpectedError(null, t));
+            }
+          }
+        });
       }
     }
   }
@@ -98,7 +106,7 @@ final class RxExtensions {
     }
 
     Observable.defer(func)
-        .observeOn(Schedulers.io())
+        .subscribeOn(Schedulers.io())
         .subscribe(
             new ActionSuccess<R>(callback),
             new ActionError(callback));

@@ -24,6 +24,7 @@ import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Properties;
+import java.util.concurrent.Executor;
 
 /**
  * SDK utilities
@@ -155,6 +156,12 @@ class Utils {
     }
 
     return null;
+  }
+
+  static class SynchronousExecutor implements Executor {
+    @Override public void execute(Runnable runnable) {
+      runnable.run();
+    }
   }
 }
 
