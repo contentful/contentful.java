@@ -40,8 +40,8 @@ You can also specify a custom client to be used, refer to the [official document
 -dontwarn rx.**
 -dontwarn retrofit.**
 -keep class retrofit.** { *; }
--keep class com.contentful.java.** { *; }
--keep class * extends com.contentful.java.model.** { *; }
+-keep class com.contentful.java.cda.** { *; }
+-keep class * extends com.contentful.java.cda.model.** { *; }
 -keep class com.google.gson.** { *; }
 -keep class sun.misc.Unsafe { *; }
 ```
