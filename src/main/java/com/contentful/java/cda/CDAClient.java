@@ -82,14 +82,15 @@ public class CDAClient {
   // Executors
   ExecutorService executorService;
 
-  private CDAClient() {
-  }
+  private CDAClient(Builder builder) {
+    if (builder.accessToken == null) {
+      throw new IllegalArgumentException("Access token must be defined.");
+    }
 
-  /**
-   * Initialization method - should be called once all configuration properties are set.
-   */
-  private void init(Builder builder) {
-    // Initialize members
+    if (builder.spaceKey == null) {
+      throw new IllegalArgumentException("Space ID must be defined.");
+    }
+
     this.customTypesMap = new HashMap<String, Class<?>>();
     this.spaceKey = builder.spaceKey;
     this.accessToken = builder.accessToken;
@@ -102,37 +103,10 @@ public class CDAClient {
         new RestAdapter.Builder().setConverter(new GsonConverter(gson))
             .setRequestInterceptor(getRequestInterceptor());
 
-    String endpoint;
-    if (builder.previewMode) {
-      endpoint = Constants.ENDPOINT_PREVIEW;
-    } else {
-      endpoint = Constants.ENDPOINT_CDA;
-    }
-
-    // SSL
-    if (builder.dontUseSSL) {
-      httpScheme = Constants.SCHEME_HTTP;
-    } else {
-      httpScheme = Constants.SCHEME_HTTPS;
-    }
-
-    restBuilder.setEndpoint(String.format("%s://%s",
-        httpScheme, endpoint));
-
-    // Client provider
-    if (builder.clientProvider != null) {
-      restBuilder.setClient(builder.clientProvider);
-    }
-
-    // Error handler
-    if (builder.errorHandler != null) {
-      restBuilder.setErrorHandler(builder.errorHandler);
-    }
-
-    // Log level
-    if (builder.logLevel != null) {
-      restBuilder.setLogLevel(builder.logLevel);
-    }
+    setEndPoint(builder, restBuilder);
+    setClientProvider(builder, restBuilder);
+    setErrorHandler(builder, restBuilder);
+    setLogLevel(builder, restBuilder);
 
     // Create a Retrofit service
     service = restBuilder.build().create(CDAService.class);
@@ -152,6 +126,42 @@ public class CDAClient {
         }, IDLE_THREAD_NAME);
       }
     });
+  }
+
+  private void setLogLevel(Builder builder, RestAdapter.Builder restBuilder) {
+    if (builder.logLevel != null) {
+      restBuilder.setLogLevel(builder.logLevel);
+    }
+  }
+
+  private void setErrorHandler(Builder builder, RestAdapter.Builder restBuilder) {
+    if (builder.errorHandler != null) {
+      restBuilder.setErrorHandler(builder.errorHandler);
+    }
+  }
+
+  private void setClientProvider(Builder builder, RestAdapter.Builder restBuilder) {
+    if (builder.clientProvider != null) {
+      restBuilder.setClient(builder.clientProvider);
+    }
+  }
+
+  private void setEndPoint(Builder builder, RestAdapter.Builder restBuilder) {
+    String endpoint;
+    if (builder.previewMode) {
+      endpoint = Constants.ENDPOINT_PREVIEW;
+    } else {
+      endpoint = Constants.ENDPOINT_CDA;
+    }
+
+    // SSL
+    if (builder.secure) {
+      httpScheme = Constants.SCHEME_HTTPS;
+    } else {
+      httpScheme = Constants.SCHEME_HTTP;
+    }
+
+    restBuilder.setEndpoint(String.format("%s://%s", httpScheme, endpoint));
   }
 
   /**
@@ -817,14 +827,18 @@ public class CDAClient {
    */
   public static class Builder {
     // Configuration
-    private String accessToken;
+    String accessToken;
+    String spaceKey;
+    Client.Provider clientProvider;
+    ErrorHandler errorHandler;
+    RestAdapter.LogLevel logLevel;
+    boolean secure;
+    boolean previewMode;
 
-    private String spaceKey;
-    private Client.Provider clientProvider;
-    private ErrorHandler errorHandler;
-    private boolean dontUseSSL = false;
-    private RestAdapter.LogLevel logLevel;
-    private boolean previewMode = false;
+    public Builder() {
+      // Default configuration
+      this.secure = true;
+    }
 
     /**
      * Sets the access token to be used with this client.
@@ -928,7 +942,7 @@ public class CDAClient {
      * @return this {@code Builder} instance
      */
     public Builder noSSL() {
-      this.dontUseSSL = true;
+      this.secure = false;
       return this;
     }
 
@@ -947,10 +961,7 @@ public class CDAClient {
      * @return Client instance
      */
     public CDAClient build() {
-      CDAClient client = new CDAClient();
-      client.init(this);
-
-      return client;
+      return new CDAClient(this);
     }
   }
 }
