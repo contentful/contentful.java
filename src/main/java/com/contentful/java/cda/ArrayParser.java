@@ -20,10 +20,9 @@ import com.contentful.java.cda.model.ArrayResource;
 import com.contentful.java.cda.model.CDAArray;
 import com.contentful.java.cda.model.CDAAsset;
 import com.contentful.java.cda.model.CDAEntry;
+import com.contentful.java.cda.model.CDALocale;
 import com.contentful.java.cda.model.CDAResource;
-import com.contentful.java.cda.model.CDASpace;
 import com.contentful.java.cda.model.CDASyncedSpace;
-import com.contentful.java.cda.model.Locale;
 import com.contentful.java.cda.model.ResourceWithMap;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import static com.contentful.java.cda.lib.Constants.CDAResourceType;
+import static com.contentful.java.cda.Constants.CDAResourceType;
 
 /**
  * Custom {@code Callable} used internally for preparing array result objects. This attempts to
@@ -40,11 +39,11 @@ import static com.contentful.java.cda.lib.Constants.CDAResourceType;
  */
 class ArrayParser<T extends ArrayResource> implements Callable<T> {
   private final T source;
-  private final CDASpace space;
+  private final ClientContext context;
 
-  public ArrayParser(T source, CDASpace space) {
+  public ArrayParser(T source, ClientContext context) {
     this.source = source;
-    this.space = space;
+    this.context = context;
   }
 
   @Override public T call() throws Exception {
@@ -78,7 +77,7 @@ class ArrayParser<T extends ArrayResource> implements Callable<T> {
         }
       }
     } else {
-      throw new IllegalArgumentException("Invalid result item.");
+      throw new IllegalArgumentException("Invalid input.");
     }
 
     for (CDAResource item : items) {
@@ -111,11 +110,11 @@ class ArrayParser<T extends ArrayResource> implements Callable<T> {
     HashMap<String, Map> localizedFieldsMap = res.getLocalizedFieldsMap();
 
     // Create a map for every locale
-    for (Locale locale : space.getLocales()) {
+    for (CDALocale locale : context.spaceWrapper.get().getLocales()) {
       HashMap<String, Object> map = new HashMap<String, Object>();
 
       for (Object key : rawFields.keySet()) {
-        String code = locale.code;
+        String code = locale.getCode();
         Map item = (Map) rawFields.get(key);
         Object value = item.get(code);
 
@@ -136,8 +135,8 @@ class ArrayParser<T extends ArrayResource> implements Callable<T> {
    * @param entries map of entries by ids
    */
   @SuppressWarnings("unchecked")
-  private void resolveResourceLinks(CDAResource resource, HashMap<String, CDAResource> assets,
-      HashMap<String, CDAResource> entries) {
+  private void resolveResourceLinks(CDAResource resource,
+      HashMap<String, CDAResource> assets, HashMap<String, CDAResource> entries) {
     ResourceWithMap res = (ResourceWithMap) resource;
     HashMap<String, Map> localizedFields = res.getLocalizedFieldsMap();
 
@@ -196,8 +195,6 @@ class ArrayParser<T extends ArrayResource> implements Callable<T> {
           result = assets.get(id);
         } else if (CDAResourceType.Entry.equals(linkType)) {
           result = entries.get(id);
-        } else if (CDAResourceType.Space.equals(linkType)) {
-          result = space;
         }
       }
     }

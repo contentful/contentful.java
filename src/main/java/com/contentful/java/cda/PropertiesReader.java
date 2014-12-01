@@ -14,33 +14,22 @@
  * limitations under the License.
  */
 
-package com.contentful.java.cda.model;
+package com.contentful.java.cda;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
- * Class representing a single Space resource.
+ * PropertiesReader.
  */
-public class CDASpace extends CDAResource {
-  private String defaultLocale;
-  private ArrayList<CDALocale> locales;
-  private String name;
-
-  public CDASpace(String defaultLocale, ArrayList<CDALocale> locales, String name) {
-    this.defaultLocale = defaultLocale;
-    this.locales = locales;
-    this.name = name;
+class PropertiesReader {
+  PropertiesReader() {
   }
 
-  public String getDefaultLocale() {
-    return defaultLocale;
-  }
-
-  public ArrayList<CDALocale> getLocales() {
-    return locales;
-  }
-
-  public String getName() {
-    return name;
+  String getField(String field) throws IOException {
+    Properties properties = new Properties();
+    properties.load(PropertiesReader.class.getClassLoader().getResourceAsStream(
+        Constants.SDK_PROPERTIES));
+    return properties.getProperty(field);
   }
 }

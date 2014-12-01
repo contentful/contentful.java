@@ -16,28 +16,27 @@
 
 package com.contentful.java.cda.model;
 
-import java.util.ArrayList;
+import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 
 /**
- * Class representing a single Space resource.
+ * Class representing a single Locale.
  */
-public class CDASpace extends CDAResource {
-  private String defaultLocale;
-  private ArrayList<CDALocale> locales;
+@SuppressWarnings("UnusedDeclaration")
+public class CDALocale implements Serializable {
+  private String code;
+
+  @SerializedName("default")
+  private boolean isDefault;
+
   private String name;
 
-  public CDASpace(String defaultLocale, ArrayList<CDALocale> locales, String name) {
-    this.defaultLocale = defaultLocale;
-    this.locales = locales;
-    this.name = name;
+  public String getCode() {
+    return code;
   }
 
-  public String getDefaultLocale() {
-    return defaultLocale;
-  }
-
-  public ArrayList<CDALocale> getLocales() {
-    return locales;
+  public boolean isDefault() {
+    return isDefault;
   }
 
   public String getName() {

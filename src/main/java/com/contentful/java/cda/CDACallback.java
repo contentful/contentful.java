@@ -16,50 +16,31 @@
 
 package com.contentful.java.cda;
 
-import retrofit.Callback;
 import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
- * Callback to be used when making asynchronous requests by a {@code CDAClient}.
+ * Callback to use with any of the asynchronous client methods.
  *
- * Implement the {@link #onSuccess} method for cases where the request was successful, the result
+ * Implement the {@link #onSuccess} method for cases where the request is successful, the result
  * object should be delivered as a parameter.
  *
- * It is also possible, but not mandatory to override {@link #onFailure} and provide an
+ * It is also encouraged, but still optional to override {@link #onFailure} and provide an
  * implementation for handling errors.
  *
- * @param <T> The type of object to be expected as a result. For methods that return a collection
- * of CDA resources it is required to use {@code CDAArray} as the type.
+ * @param <T> the type of object to be expected as a result.
+ *
+ * Callback can be cancelled at any point using the {@link #cancel()} method, that will prevent
+ * any future calls to {@link #onSuccess} and {@link #onFailure(RetrofitError)}.
  */
-@SuppressWarnings("UnusedDeclaration")
-public abstract class CDACallback<T> implements Callback<T> {
+public abstract class CDACallback<T> {
   private boolean cancelled;
-
-  @Override public final void success(T t, Response response) {
-    if (cancelled) {
-      return;
-    }
-
-    onSuccess(t, response);
-  }
-
-  @Override public final void failure(RetrofitError retrofitError) {
-    if (cancelled) {
-      return;
-    }
-
-    onFailure(retrofitError);
-  }
 
   /**
    * Callback to be invoked in case the request was successful.
    *
-   * @param t result object
-   * that return multiple items
-   * @param response {@code retrofit.client.Response} instance
+   * @param result result object
    */
-  protected abstract void onSuccess(T t, Response response);
+  protected abstract void onSuccess(T result);
 
   /**
    * Callback to be invoked in case the request was unsuccessful.
@@ -71,17 +52,15 @@ public abstract class CDACallback<T> implements Callback<T> {
   }
 
   /**
-   * Cancels the callback. Calling this method will result in any of the callbacks methods ({@link
-   * #onSuccess} / {@link #onFailure} not being called, this action cannot be reversed.
+   * Cancels this callback. This will prevent any future calls to {@link #onSuccess(Object)} and
+   * {@link #onFailure(RetrofitError)} methods. This action cannot be reversed.
    */
   public synchronized void cancel() {
     this.cancelled = true;
   }
 
   /**
-   * Check if this callback instance was cancelled using the {@link #cancel} method.
-   *
-   * @return boolean indicating whether or not the callback is cancelled
+   * Returns true in case this callback instance was previously cancelled.
    */
   public synchronized boolean isCancelled() {
     return cancelled;

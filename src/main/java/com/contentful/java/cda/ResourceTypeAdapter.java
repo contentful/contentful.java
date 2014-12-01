@@ -16,13 +16,12 @@
 
 package com.contentful.java.cda;
 
-import com.contentful.java.cda.lib.Constants;
 import com.contentful.java.cda.model.CDAAsset;
 import com.contentful.java.cda.model.CDAContentType;
 import com.contentful.java.cda.model.CDAEntry;
+import com.contentful.java.cda.model.CDALocale;
 import com.contentful.java.cda.model.CDAResource;
 import com.contentful.java.cda.model.CDASpace;
-import com.contentful.java.cda.model.Locale;
 import com.contentful.java.cda.model.ResourceWithList;
 import com.contentful.java.cda.model.ResourceWithMap;
 import com.google.gson.JsonArray;
@@ -41,11 +40,15 @@ import java.util.Map;
  * Custom type adapter for de-serializing resources.
  */
 class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
-  // Client reference
-  private final CDAClient client;
+  private final SpaceWrapper spaceWrapper;
+  private final Map<String, Class<?>> customTypesMap;
+  private final String httpScheme;
 
-  public ResourceTypeAdapter(CDAClient client) {
-    this.client = client;
+  public ResourceTypeAdapter(SpaceWrapper spaceWrapper, Map<String, Class<?>> customTypesMap,
+      String httpScheme) {
+    this.spaceWrapper = spaceWrapper;
+    this.customTypesMap = customTypesMap;
+    this.httpScheme = httpScheme;
   }
 
   @Override public CDAResource deserialize(JsonElement jsonElement, Type type,
@@ -101,7 +104,7 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
     CDAAsset result = new CDAAsset();
     setBaseFields(result, sys, jsonElement, context);
     Map fileMap = (Map) result.getFields().get("file");
-    String defaultLocale = client.getSpace().getDefaultLocale();
+    String defaultLocale = spaceWrapper.get().getDefaultLocale();
 
     if (fileMap.containsKey(defaultLocale)) {
       Object map = fileMap.get(defaultLocale);
@@ -111,7 +114,7 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
       }
     }
 
-    result.setUrl(String.format("%s:%s", client.getHttpScheme(), fileMap.get("url")));
+    result.setUrl(String.format("%s:%s", httpScheme, fileMap.get("url")));
     result.setMimeType((String) fileMap.get("contentType"));
 
     return result;
@@ -145,7 +148,7 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
   /**
    * De-serialize a resource of type Entry. This method should return a {@code CDAEntry} object or
    * in case the resource matches a previously registered custom class via {@link
-   * CDAClient#registerCustomClass}, an object of that custom class type will be created.
+   * CDAClient.Builder#setCustomClasses(Map)}, an object of that custom class type will be created.
    *
    * @param jsonElement the resource in JSON form
    * @param context gson context
@@ -163,7 +166,7 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
         .get("id")
         .getAsString();
 
-    Class<?> clazz = client.getCustomTypesMap().get(contentTypeId);
+    Class<?> clazz = customTypesMap.get(contentTypeId);
 
     if (clazz == null) {
       // Create a regular Entry, no custom class was registered.
@@ -198,14 +201,14 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
 
     // Locales
     JsonArray localesArray = jsonElement.getAsJsonObject().get("locales").getAsJsonArray();
-    Type t = new TypeToken<ArrayList<Locale>>() { } .getType();
-    ArrayList<Locale> locales = context.deserialize(localesArray, t);
+    Type t = new TypeToken<ArrayList<CDALocale>>() { } .getType();
+    ArrayList<CDALocale> locales = context.deserialize(localesArray, t);
 
     // Default locale
     String defaultLocale = Constants.DEFAULT_LOCALE;
-    for (Locale l : locales) {
-      if (l.isDefault) {
-        defaultLocale = l.code;
+    for (CDALocale l : locales) {
+      if (l.isDefault()) {
+        defaultLocale = l.getCode();
         break;
       }
     }
@@ -232,10 +235,12 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
   @SuppressWarnings("unchecked")
   private void setBaseFields(CDAResource target, JsonObject sys, JsonElement jsonElement,
       JsonDeserializationContext context) {
+    CDASpace space = spaceWrapper.get();
+
     // System attributes
     Map<String, Object> sysMap = context.deserialize(sys, Map.class);
     if (sysMap.containsKey("space")) {
-      sysMap.put("space", client.getSpace());
+      sysMap.put("space", space);
     }
     target.setSys(sysMap);
 
@@ -243,10 +248,10 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
     JsonElement fields = jsonElement.getAsJsonObject().get("fields");
     if (target instanceof ResourceWithMap) {
       ResourceWithMap res = (ResourceWithMap) target;
-      target.setLocale(client.getSpace().getDefaultLocale());
+      target.setLocale(space.getDefaultLocale());
       res.setRawFields(
           context.<Map<String, Object>>deserialize(fields.getAsJsonObject(), Map.class));
-      res.getLocalizedFieldsMap().put(client.getSpace().getDefaultLocale(), res.getRawFields());
+      res.getLocalizedFieldsMap().put(space.getDefaultLocale(), res.getRawFields());
     } else if (target instanceof ResourceWithList) {
       ResourceWithList<Object> res = (ResourceWithList<Object>) target;
       res.setFields(context.<List<Object>>deserialize(fields.getAsJsonArray(), List.class));

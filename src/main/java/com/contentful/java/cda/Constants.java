@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package com.contentful.java.cda.lib;
+package com.contentful.java.cda;
 
 /**
  * Library constants.
  */
-public class Constants {
+public final class Constants {
   private Constants() {
+    throw new UnsupportedOperationException();
   }
 
   public static enum CDAResourceType {
+    Array,
     Asset,
     ContentType,
     DeletedAsset,
@@ -33,7 +35,6 @@ public class Constants {
     Space
   }
 
-  @SuppressWarnings("UnusedDeclaration")
   public static enum CDAFieldType {
     Array,
     Boolean,
@@ -59,10 +60,12 @@ public class Constants {
   public static final String ENDPOINT_PREVIEW = "preview.contentful.com";
   public static final String DEFAULT_LOCALE = "en-US";
 
-  // Idle thread name
-  public static final String IDLE_THREAD_NAME = "Contentful-Idle";
-
   // Resource types
   public static final String PATH_ASSETS = "assets";
+  public static final String PATH_CONTENT_TYPES = "content_types";
   public static final String PATH_ENTRIES = "entries";
+
+  // Properties
+  static final String SDK_PROPERTIES = "contentful_cda.properties";
+  static final String PROP_VERSION_NAME = "version.name";
 }

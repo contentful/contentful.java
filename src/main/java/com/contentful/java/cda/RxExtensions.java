@@ -16,6 +16,7 @@
 
 package com.contentful.java.cda;
 
+import java.util.concurrent.Executor;
 import retrofit.RetrofitError;
 import rx.Observable;
 import rx.functions.Action1;
@@ -34,9 +35,11 @@ final class RxExtensions {
    * Base Action.
    */
   abstract static class AbsAction<T> implements Action1<T> {
+    final Executor executor;
     final CDACallback<T> callback;
 
-    public AbsAction(CDACallback<T> callback) {
+    public AbsAction(Executor executor, CDACallback<T> callback) {
+      this.executor = executor;
       this.callback = callback;
     }
   }
@@ -45,15 +48,15 @@ final class RxExtensions {
    * Success Action.
    */
   static class ActionSuccess<T> extends AbsAction<T> {
-    public ActionSuccess(CDACallback<T> callback) {
-      super(callback);
+    public ActionSuccess(Executor executor, CDACallback<T> callback) {
+      super(executor, callback);
     }
 
     @Override public void call(final T t) {
       if (!callback.isCancelled()) {
-        Platform.get().callbackExecutor().execute(new Runnable() {
+        executor.execute(new Runnable() {
           @Override public void run() {
-            callback.onSuccess(t, null);
+            callback.onSuccess(t);
           }
         });
       }
@@ -65,19 +68,23 @@ final class RxExtensions {
    */
   static class ActionError extends AbsAction<Throwable> {
     @SuppressWarnings("unchecked")
-    public ActionError(CDACallback callback) {
-      super(callback);
+    public ActionError(Executor executor, CDACallback callback) {
+      super(executor, callback);
     }
 
     @Override public void call(final Throwable t) {
+      final RetrofitError retrofitError;
+
+      if (t instanceof RetrofitError) {
+        retrofitError = (RetrofitError) t;
+      } else {
+        retrofitError = RetrofitError.unexpectedError(null, t);
+      }
+
       if (!callback.isCancelled()) {
-        Platform.get().callbackExecutor().execute(new Runnable() {
+        executor.execute(new Runnable() {
           @Override public void run() {
-            if (t instanceof RetrofitError) {
-              callback.onFailure((RetrofitError) t);
-            } else {
-              callback.onFailure(RetrofitError.unexpectedError(null, t));
-            }
+            callback.onFailure(retrofitError);
           }
         });
       }
@@ -96,20 +103,19 @@ final class RxExtensions {
   }
 
   /**
-   * Creates an Observable with the given {@code func} function and subscribes to it
-   * with a set of pre-defined actions. The provided {@code callback} will be passed to these
-   * actions in order to populate the events.
+   * Defers the given {@code func} and returns an {@code Observable} from it, by default
+   * the {@code Observable} is configured to subscribe on an IO-bound worker.
    */
-  static <R> CDACallback<R> defer(DefFunc<R> func, CDACallback<R> callback) {
-    if (callback == null) {
-      throw new IllegalArgumentException("callback may not be null.");
-    }
+  static <R> Observable<R> defer(RxExtensions.DefFunc<R> func) {
+    return Observable.defer(func).subscribeOn(Schedulers.io());
+  }
 
-    Observable.defer(func)
-        .subscribeOn(Schedulers.io())
-        .subscribe(
-            new ActionSuccess<R>(callback),
-            new ActionError(callback));
+  static <R> CDACallback<R> subscribe(Observable<R> observable, CDACallback<R> callback,
+      ClientContext context) {
+    Utils.assertNotNull(callback, "callback");
+    observable.subscribe(
+        new RxExtensions.ActionSuccess<R>(context.callbackExecutor, callback),
+        new RxExtensions.ActionError(context.callbackExecutor, callback));
     return callback;
   }
 }

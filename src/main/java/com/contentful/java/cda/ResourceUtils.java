@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.contentful.java.cda.lib;
+package com.contentful.java.cda;
 
 import com.contentful.java.cda.model.CDAResource;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -27,8 +28,9 @@ import java.io.ObjectOutputStream;
 /**
  * Resource Utilities.
  */
-public class ResourceUtils {
+public final class ResourceUtils {
   private ResourceUtils() {
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -51,19 +53,11 @@ public class ResourceUtils {
       oos.writeObject(resource);
     } finally {
       if (fos != null) {
-        try {
-          fos.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
+        closeStream(fos);
       }
 
       if (oos != null) {
-        try {
-          oos.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
+        closeStream(oos);
       }
     }
   }
@@ -92,22 +86,23 @@ public class ResourceUtils {
       result = (CDAResource) oos.readObject();
     } finally {
       if (fis != null) {
-        try {
-          fis.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
+        closeStream(fis);
       }
 
       if (oos != null) {
-        try {
-          oos.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
+        closeStream(oos);
       }
     }
 
     return result;
+  }
+
+  static boolean closeStream(Closeable stream) {
+    try {
+      stream.close();
+      return true;
+    } catch (IOException e) {
+      return false;
+    }
   }
 }
