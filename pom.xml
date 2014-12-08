@@ -1,223 +1,305 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-    <modelVersion>4.0.0</modelVersion>
+  <groupId>com.contentful.java</groupId>
+  <artifactId>java-sdk</artifactId>
+  <version>2.0.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
 
-    <groupId>com.contentful.java</groupId>
-    <artifactId>java-sdk</artifactId>
-    <packaging>jar</packaging>
-    <version>1.0.11-SNAPSHOT</version>
+  <name>${project.groupId}:${project.artifactId}</name>
+  <description>Java SDK for Contentful's Content Delivery API.</description>
+  <url>http://github.com/contentful/contentful.java</url>
 
-    <name>${project.groupId}:${project.artifactId}</name>
-    <description>Java SDK for Contentful's Content Delivery API.</description>
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
+
+  <scm>
     <url>http://github.com/contentful/contentful.java</url>
+    <connection>scm:git:git://github.com/contentful/contentful.java.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/contentful/contentful.java.git</developerConnection>
+  </scm>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.sourceEncoding>UTF-8</project.reporting.sourceEncoding>
+  <issueManagement>
+    <system>GitHub Issues</system>
+    <url>http://github.com/contentful/contentful.java/issues</url>
+  </issueManagement>
 
-        <!-- Compilation -->
-        <java.version>1.6</java.version>
+  <licenses>
+    <license>
+      <name>Apache 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
 
-        <!-- Dependencies -->
-        <retrofit.version>1.8.0</retrofit.version>
-        <rxjava.version>1.0.0</rxjava.version>
-        <android.version>4.1.1.4</android.version>
-        <android.platform>16</android.platform>
+  <organization>
+    <name>Contentful, GmbH.</name>
+    <url>http://contentful.com</url>
+  </organization>
 
-        <!-- Test Dependencies -->
-        <commonsio.version>2.4</commonsio.version>
-        <junit.version>4.11</junit.version>
-    </properties>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.sourceEncoding>UTF-8</project.reporting.sourceEncoding>
 
-    <scm>
-        <url>http://github.com/contentful/contentful.java</url>
-        <connection>scm:git:git://github.com/contentful/contentful.java.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:contentful/contentful.java.git</developerConnection>
-    </scm>
+    <!-- Compilation -->
+    <java.version>1.6</java.version>
 
-    <issueManagement>
-        <system>GitHub Issues</system>
-        <url>http://github.com/contentful/contentful.java/issues</url>
-    </issueManagement>
+    <!-- Dependencies -->
+    <retrofit.version>1.8.0</retrofit.version>
 
-    <licenses>
-        <license>
-            <name>Apache 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
+    <!-- Test Dependencies -->
+    <commonsio.version>2.4</commonsio.version>
+    <junit.version>4.11</junit.version>
+    <kotlin-stdlib.version>0.9.206</kotlin-stdlib.version>
+    <mockwebserver.version>2.0.0</mockwebserver.version>
+    <okhttp.version>2.0.0</okhttp.version>
+    <okhttp-urlconnection.version>2.0.0</okhttp-urlconnection.version>
+    <rxjava.version>1.0.0</rxjava.version>
+    <mockito.version>1.10.8</mockito.version>
+    <android.version>4.1.1.4</android.version>
+    <android.platform>16</android.platform>
+    <robolectric.version>2.4</robolectric.version>
+  </properties>
 
-    <organization>
-        <name>Contentful, GmbH.</name>
-        <url>http://contentful.com</url>
-    </organization>
+  <dependencies>
+    <dependency>
+      <groupId>com.google.android</groupId>
+      <artifactId>android</artifactId>
+      <version>${android.version}</version>
+      <optional>true</optional>
+    </dependency>
 
-    <developers>
-        <developer>
-            <name>Tom Reznik</name>
-            <email>tom@contentful.com</email>
-            <url>https://github.com/tomxor</url>
-            <id>tomxor</id>
-        </developer>
-    </developers>
+    <dependency>
+      <groupId>com.squareup.retrofit</groupId>
+      <artifactId>retrofit</artifactId>
+      <version>${retrofit.version}</version>
+    </dependency>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.google.android</groupId>
-            <artifactId>android</artifactId>
-            <version>${android.version}</version>
-            <optional>true</optional>
-        </dependency>
+    <dependency>
+      <groupId>io.reactivex</groupId>
+      <artifactId>rxjava</artifactId>
+      <version>${rxjava.version}</version>
+    </dependency>
 
-        <dependency>
-            <groupId>com.squareup.retrofit</groupId>
-            <artifactId>retrofit</artifactId>
-            <version>${retrofit.version}</version>
-        </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-stdlib</artifactId>
+      <version>${kotlin-stdlib.version}</version>
+      <scope>test</scope>
+    </dependency>
 
-        <dependency>
-            <groupId>io.reactivex</groupId>
-            <artifactId>rxjava</artifactId>
-            <version>${rxjava.version}</version>
-        </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>${commonsio.version}</version>
+      <scope>test</scope>
+    </dependency>
 
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commonsio.version}</version>
-            <scope>test</scope>
-        </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <dependency>
+      <groupId>com.squareup.okhttp</groupId>
+      <artifactId>mockwebserver</artifactId>
+      <version>${mockwebserver.version}</version>
+      <scope>test</scope>
+    </dependency>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
+    <dependency>
+      <groupId>com.squareup.okhttp</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>${okhttp.version}</version>
+      <scope>test</scope>
+    </dependency>
 
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-        <plugins>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-checkstyle-plugin</artifactId>
-              <version>2.9.1</version>
-              <configuration>
-                <failsOnError>true</failsOnError>
-                <configLocation>checkstyle.xml</configLocation>
-                <consoleOutput>true</consoleOutput>
-              </configuration>
-              <executions>
-                <execution>
-                  <phase>verify</phase>
-                  <goals>
-                    <goal>checkstyle</goal>
-                  </goals>
-                </execution>
-              </executions>
-            </plugin>
+    <dependency>
+      <groupId>com.squareup.okhttp</groupId>
+      <artifactId>okhttp-urlconnection</artifactId>
+      <version>${okhttp-urlconnection.version}</version>
+      <scope>test</scope>
+    </dependency>
 
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.2</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-            </plugin>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <version>${mockito.version}</version>
+      <scope>test</scope>
+    </dependency>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.0</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
-            </plugin>
+    <dependency>
+      <groupId>org.robolectric</groupId>
+      <artifactId>robolectric</artifactId>
+      <version>${robolectric.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+    <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
+    <plugins>
+      <plugin>
+        <artifactId>kotlin-maven-plugin</artifactId>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <version>0.9.976</version>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+        <executions>
+          <execution>
+            <id>compile</id>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
+          <execution>
+            <id>test-compile</id>
+            <phase>process-test-sources</phase>
+            <goals>
+              <goal>test-compile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
-                <configuration>
-                    <useAgent>true</useAgent>
-                </configuration>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.18</version>
+        <configuration>
+          <includes>
+            <include>**/*Tests.class</include>
+          </includes>
+        </configuration>
+      </plugin>
 
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+      <plugin>
+        <groupId>org.eluder.coveralls</groupId>
+        <artifactId>coveralls-maven-plugin</artifactId>
+        <version>3.0.1</version>
+      </plugin>
 
-            <plugin>
-                <groupId>org.eluder.coveralls</groupId>
-                <artifactId>coveralls-maven-plugin</artifactId>
-                <version>3.0.1</version>
-            </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>cobertura-maven-plugin</artifactId>
+        <version>2.5.2</version>
+        <configuration>
+          <format>xml</format>
+          <maxmem>256m</maxmem>
+          <!-- aggregated reports for multi-module projects -->
+          <aggregate>true</aggregate>
+        </configuration>
+      </plugin>
 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.6</version>
-                <configuration>
-                    <format>xml</format>
-                    <maxmem>256m</maxmem>
-                    <!-- aggregated reports for multi-module projects -->
-                    <aggregate>true</aggregate>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>2.9.1</version>
+        <configuration>
+          <failsOnError>true</failsOnError>
+          <configLocation>checkstyle.xml</configLocation>
+          <consoleOutput>true</consoleOutput>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>checkstyle</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.2.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9.1</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.5</version>
+
+        <configuration>
+          <useAgent>true</useAgent>
+        </configuration>
+
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <repositories>
+    <repository>
+      <id>jetbrains-all</id>
+      <url>http://repository.jetbrains.com/all</url>
+    </repository>
+    <repository>
+      <id>sonatype.oss.snapshots</id>
+      <name>Sonatype OSS Snapshot Repository</name>
+      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>sonatype.oss.snapshots</id>
+      <name>Sonatype OSS Snapshot Repository</name>
+      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
 </project>

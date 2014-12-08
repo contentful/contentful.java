@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 2.0.0 *(in development)*
+--------------------------------
+ * ..
+
+
 Version 1.0.10 *(2014-11-28)*
 -----------------------------
  * Fix: RxJava now defers to IO thread.

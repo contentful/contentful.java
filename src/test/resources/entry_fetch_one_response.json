@@ -1,0 +1,35 @@
+{
+  "sys": {
+    "space": {
+      "sys": {
+        "type": "Link",
+        "linkType": "Space",
+        "id": "cfexampleapi"
+      }
+    },
+    "type": "Entry",
+    "contentType": {
+      "sys": {
+        "type": "Link",
+        "linkType": "ContentType",
+        "id": "dog"
+      }
+    },
+    "id": "jake",
+    "revision": 2,
+    "createdAt": "2013-11-06T09:45:27.475Z",
+    "updatedAt": "2013-11-18T09:13:37.808Z",
+    "locale": "en-US"
+  },
+  "fields": {
+    "name": "Doge",
+    "image": {
+      "sys": {
+        "type": "Link",
+        "linkType": "Asset",
+        "id": "1x0xpXu4pSGS4OukSyWGUK"
+      }
+    },
+    "description": "such json\nwow"
+  }
+}

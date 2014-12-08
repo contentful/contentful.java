@@ -1,0 +1,161 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 2,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    {
+      "fields": {
+        "name": "Jake",
+        "description": "Bacon pancakes, makin' bacon pancakes!",
+        "image": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Asset",
+            "id": "jake"
+          }
+        },
+        "entry": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "doge"
+          }
+        }
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "dog"
+          }
+        },
+        "id": "jake",
+        "revision": 5,
+        "createdAt": "2013-06-27T22:46:22.096Z",
+        "updatedAt": "2013-12-18T13:10:26.212Z",
+        "locale": "en-US"
+      }
+    },
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "xx"
+          }
+        },
+        "id": "5e9hw302IMsEisEuqCgOk6",
+        "revision": 1,
+        "createdAt": "2014-12-03T16:56:47.813Z",
+        "updatedAt": "2014-12-03T16:56:47.813Z",
+        "locale": "en-US"
+      },
+      "fields": {
+        "aaa": "b",
+        "sss": [
+          {
+            "sys": {
+              "type": "Link",
+              "linkType": "Entry",
+              "id": "doge"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "includes": {
+    "Asset": [
+      {
+        "fields": {
+          "title": "Jake",
+          "file": {
+            "fileName": "jake.png",
+            "contentType": "image/png",
+            "details": {
+              "image": {
+                "width": 100,
+                "height": 161
+              },
+              "size": 20480
+            },
+            "url": "//images.contentful.com/cfexampleapi/a/b/jake.png"
+          }
+        },
+        "sys": {
+          "space": {
+            "sys": {
+              "type": "Link",
+              "linkType": "Space",
+              "id": "cfexampleapi"
+            }
+          },
+          "type": "Asset",
+          "id": "jake",
+          "revision": 2,
+          "createdAt": "2013-09-02T14:56:34.260Z",
+          "updatedAt": "2013-09-02T15:22:39.466Z",
+          "locale": "en-US"
+        }
+      }
+    ],
+    "Entry": [
+      {
+        "sys": {
+          "space": {
+            "sys": {
+              "type": "Link",
+              "linkType": "Space",
+              "id": "cfexampleapi"
+            }
+          },
+          "type": "Entry",
+          "contentType": {
+            "sys": {
+              "type": "Link",
+              "linkType": "ContentType",
+              "id": "dog"
+            }
+          },
+          "id": "doge",
+          "revision": 2,
+          "createdAt": "2013-11-06T09:45:27.475Z",
+          "updatedAt": "2013-11-18T09:13:37.808Z",
+          "locale": "en-US"
+        },
+        "fields": {
+          "name": "Doge",
+          "image": {
+            "sys": {
+              "type": "Link",
+              "linkType": "Asset",
+              "id": "1x0xpXu4pSGS4OukSyWGUK"
+            }
+          },
+          "description": "such json\nwow"
+        }
+      }
+    ]
+  }
+}

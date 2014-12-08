@@ -1,0 +1,42 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 1,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    {
+      "fields": [
+        {
+          "name": "Name",
+          "id": "name",
+          "type": "Text",
+          "required": true
+        },
+        {
+          "name": "Center",
+          "id": "center",
+          "type": "Location",
+          "required": true
+        }
+      ],
+      "name": "City",
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "type": "ContentType",
+        "id": "1t9IbcfdCk6m04uISSsaIK",
+        "revision": 1,
+        "createdAt": "2014-02-21T13:42:33.009Z",
+        "updatedAt": "2014-02-21T13:42:33.009Z"
+      },
+      "displayField": "name"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "title": "Nyan Cat",
+    "file": {
+      "fileName": "Nyan_cat_250px_frame.png",
+      "contentType": "image/png",
+      "details": {
+        "image": {
+          "width": 1,
+          "height": 2
+        },
+        "size": 12273
+      },
+      "url": "//images.contentful.com/cfexampleapi/a/b/Nyan_cat_250px_frame.png"
+    }
+  },
+  "sys": {
+    "space": {
+      "sys": {
+        "type": "Link",
+        "linkType": "Space",
+        "id": "cfexampleapi"
+      }
+    },
+    "type": "Asset",
+    "id": "nyancat",
+    "revision": 1,
+    "createdAt": "2013-09-02T14:56:34.240Z",
+    "updatedAt": "2013-09-02T14:56:34.240Z",
+    "locale": "en-US"
+  }
+}
