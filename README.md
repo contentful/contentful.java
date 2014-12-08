@@ -185,6 +185,10 @@ CDAClient client = new CDAClient.Builder()
 
 Apart from the configuration option, you can use the SDK without modifications with one exception: you need to obtain a preview access token, which you can get in the "API" tab of the Contentful app. In preview mode, data can be invalid, because no validation is performed on unpublished entries. Your app needs to deal with that. Be aware that the access token is read-write and should in no case be shipped with a production app.
 
+### Migration
+
+v2.0 has introduced some backward-incompatible changes, a migration guide is [available in the wiki][7].
+
 Documentation
 =============
 
@@ -202,3 +206,4 @@ Copyright (c) 2014 Contentful GmbH. See [LICENSE.txt][6] for further details.
  [4]: https://www.contentful.com/developers/documentation/content-delivery-api/
  [5]: https://square.github.io/okhttp/
  [6]: LICENSE.txt
+ [7]: https://github.com/contentful/contentful.java/wiki/2.0-Migration
