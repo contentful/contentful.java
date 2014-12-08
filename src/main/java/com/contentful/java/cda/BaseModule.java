@@ -125,8 +125,8 @@ abstract class BaseModule<T extends CDAResource>
      * @param callback callback
      * @return the given {@code callback} instance
      */
-    @SuppressWarnings("unchecked") public CDACallback<CDAArray> fetchAll(
-        final CDACallback<CDAArray> callback) {
+    @SuppressWarnings("unchecked")
+    public CDACallback<CDAArray> fetchAll(CDACallback<CDAArray> callback) {
       return subscribe(rx().fetchAll(), callback, context);
     }
 
