@@ -1,9 +1,17 @@
 Change Log
 ==========
 
-Version 2.0.0 *(in development)*
---------------------------------
- * ..
+Version 2.0.0 *(2014-12-09)*
+----------------------------
+ * Fix: Pass `CDAClient.Builder` to a private constructor
+ * Fix: Remove HTTP Response Object From `CDACallback.onSuccess()`
+ * Fix: Sync Generates New `Executor` For Every Callback Invoked
+ * Fix: Asynchronous Methods Should Defer Synchronous Methods
+ * Fix: Unify the API with the CMA SDK
+ * New: Support RxJava For Client Methods
+ * New: Support Custom API EndPoint
+ * New: Support Custom Callback Executor
+ * New: Kotlin Test Suite
 
 
 Version 1.0.10 *(2014-11-28)*

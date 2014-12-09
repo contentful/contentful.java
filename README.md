@@ -10,7 +10,6 @@ Java SDK for [Contentful's][1] Content Delivery API.
 Setup
 =====
 
-<!--Download the [latest JAR][2] or grab via Maven:-->
 Grab via Maven:
 ```xml
 <dependency>
