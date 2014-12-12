@@ -112,7 +112,7 @@ Note that a `CDACallback` instance can be cancelled, so keep a reference to it i
 ```java
 CDACallback<CDAArray> cb;
 
-client.entries().fetchAll(cb = new CDACallback<CDAArray>() {
+client.entries().async().fetchAll(cb = new CDACallback<CDAArray>() {
     ...
 });
 
