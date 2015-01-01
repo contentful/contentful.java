@@ -26,6 +26,7 @@ import com.contentful.java.cda.model.CDASyncedSpace;
 import com.contentful.java.cda.model.ResourceWithMap;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -98,7 +99,7 @@ class ArrayParser<T extends ArrayResource> implements Callable<T> {
       CDAResource item = entry.getValue();
 
       if (item instanceof ResourceWithMap) {
-        resolveResourceLinks(item, assets, entries);
+        resolveResourceLinks((ResourceWithMap) item, assets, entries);
       }
     }
 
@@ -128,45 +129,67 @@ class ArrayParser<T extends ArrayResource> implements Callable<T> {
   }
 
   /**
-   * Resolves any links contained in a {@code CDAEntry} object.
+   * Resolves any links contained in a {@code ResourceWithMap} object.
    *
-   * @param resource entry to resolve
+   * @param res entry to resolve
    * @param assets map of assets by ids
    * @param entries map of entries by ids
    */
   @SuppressWarnings("unchecked")
-  private void resolveResourceLinks(CDAResource resource,
-      HashMap<String, CDAResource> assets, HashMap<String, CDAResource> entries) {
-    ResourceWithMap res = (ResourceWithMap) resource;
+  private void resolveResourceLinks(ResourceWithMap res, HashMap<String, CDAResource> assets,
+      HashMap<String, CDAResource> entries) {
     HashMap<String, Map> localizedFields = res.getLocalizedFieldsMap();
 
     for (Map fields : localizedFields.values()) {
+      HashSet removeFromFields = new HashSet();
+
       for (Object k : fields.keySet()) {
         Object value = fields.get(k);
 
         if (value instanceof Map) {
-          CDAResource match = getMatchForField((Map) value, assets, entries);
-
-          if (match != null) {
-            fields.put(k, match);
+          Map sys = (Map) ((Map) value).get("sys");
+          if (sys != null && containsLink(sys)) {
+            CDAResource match = getMatchForField((Map) value, assets, entries);
+            if (match != null) {
+              fields.put(k, match);
+            } else if (context.nullifyUnresolved) {
+              removeFromFields.add(k);
+            }
           }
         } else if (value instanceof List) {
           List list = (List) value;
+          List modifiedList = new ArrayList();
 
-          for (int i = 0; i < list.size(); i++) {
-            Object item = list.get(i);
+          for (Object item : list) {
+            modifiedList.add(item);
+            int pos = modifiedList.size() - 1;
 
             if (item instanceof Map) {
-              CDAResource match = getMatchForField((Map) item, assets, entries);
-
-              if (match != null) {
-                list.set(i, match);
+              Map sys = (Map) ((Map) item).get("sys");
+              if (sys != null && containsLink(sys)) {
+                CDAResource match = getMatchForField((Map) item, assets, entries);
+                if (match != null) {
+                  modifiedList.set(pos, match);
+                } else if (context.nullifyUnresolved) {
+                  modifiedList.remove(pos);
+                }
               }
             }
           }
+
+          fields.put(k, modifiedList);
         }
       }
+
+      if (removeFromFields.size() > 0) {
+        fields.keySet().removeAll(removeFromFields);
+      }
     }
+  }
+
+  private boolean containsLink(Map map) {
+    String type = (String) map.get("type");
+    return CDAResourceType.Link.equals(CDAResourceType.valueOf(type));
   }
 
   /**

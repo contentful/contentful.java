@@ -77,6 +77,6 @@ open class BaseTest {
 
     fun getServerUrl(): String {
         val url = server!!.getUrl("/")
-        return url.toString().substring(url.getProtocol().length + 3)
+        return url.toString().substring(url.getProtocol().length() + 3)
     }
 }
