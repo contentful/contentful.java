@@ -35,7 +35,7 @@ You can also specify a custom client to be used, refer to the [official document
 
 ### Dependencies
 
-In addition to Retrofit, the library depends on RxJava, the version number can be seen in the dependencies section of the [pom.xml][8] file.
+In addition to Retrofit, the library depends on RxJava, the version number can be seen in the `properties` section of the [pom.xml][8] file.
 
 ### Proguard
 ```
