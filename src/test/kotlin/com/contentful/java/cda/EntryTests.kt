@@ -24,11 +24,44 @@ import com.contentful.java.cda.model.CDAEntry
 import com.contentful.java.cda.model.CDAAsset
 import com.contentful.java.cda.model.CDAArray
 import kotlin.test.assertNotNull
+import retrofit.RestAdapter
+import kotlin.test.assertNull
 
 /**
  * Entry Tests.
  */
 class EntryTests : BaseTest() {
+    test fun testFetchAllWithUnresolvedLink() {
+        enqueue("entry_fetch_all_unresolved_link.json")
+        val entry = client!!.entries().fetchAll().getItems()[0] as CDAEntry
+        assertTrue(entry.getFields().get("linked") is Map<*, *>)
+
+        val list = entry.getFields().get("linked_list") as List<*>
+        assertEquals(2, list.size())
+        assertTrue(list[0] is Map<*, *>)
+    }
+
+    test fun testNullifyUnresolvedLinks() {
+        val cli = CDAClient.Builder()
+                .setAccessToken("token")
+                .setSpaceKey("spaceid")
+                .setEndpoint(getServerUrl())
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .nullifyUnresolvedLinks()
+                .noSSL()
+                .build()
+
+        enqueue("space_fetch_response.json")
+        enqueue("entry_fetch_all_unresolved_link.json")
+
+        val entry = cli!!.entries().fetchAll().getItems()[0] as CDAEntry
+        assertNull(entry.getFields().get("linked"))
+
+        val list = entry.getFields().get("linked_list") as List<*>
+        assertEquals(1, list.size())
+        assertTrue(list[0] is CDAEntry)
+    }
+
     test fun testCustomClass() {
         val cli = CDAClient.Builder()
                 .setAccessToken("token")

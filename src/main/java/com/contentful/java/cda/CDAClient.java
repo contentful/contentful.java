@@ -85,7 +85,7 @@ public class CDAClient {
 
     // Modules
     ClientContext context = new ClientContext(service, callbackExecutor, spaceKey,
-        gson, spaceWrapper, classMap);
+        gson, spaceWrapper, classMap, builder.nullifyUnresolved);
 
     this.moduleAssets = new ModuleAssets(context);
     this.moduleContentTypes = new ModuleContentTypes(context);
@@ -266,10 +266,12 @@ public class CDAClient {
     Executor callbackExecutor;
     Map<String, Class<?>> classMap;
     boolean secure;
+    boolean nullifyUnresolved;
 
     public Builder() {
       // Defaults
       this.secure = true;
+      this.nullifyUnresolved = false;
     }
 
     /**
@@ -425,6 +427,17 @@ public class CDAClient {
      */
     public Builder preview() {
       return setEndpoint(Constants.ENDPOINT_PREVIEW);
+    }
+
+    /**
+     * By default, unresolved links will point to a {@code Map} instance containing all the links
+     * details. This changes the default behaviour to remove any unresolved links.
+     *
+     * @return this {@code Builder} instance
+     */
+    public Builder nullifyUnresolvedLinks() {
+      this.nullifyUnresolved = true;
+      return this;
     }
 
     /**
