@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 2.0.1 *(2014-01-05)*
+----------------------------
+ * New: Nullify unresolved links (optional)
+
+
 Version 2.0.0 *(2014-12-09)*
 ----------------------------
  * Fix: Pass `CDAClient.Builder` to a private constructor
