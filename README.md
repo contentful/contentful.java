@@ -33,6 +33,10 @@ The recommended approach would be to add [OkHttp][5] as a dependency to your pro
 
 You can also specify a custom client to be used, refer to the [official documentation][3] for instructions.
 
+### Dependencies
+
+In addition to Retrofit, the library depends on RxJava, the version number can be seen in the dependencies section of the [pom.xml][8] file.
+
 ### Proguard
 ```
 -keepattributes Signature
@@ -207,3 +211,4 @@ Copyright (c) 2014 Contentful GmbH. See [LICENSE.txt][6] for further details.
  [5]: https://square.github.io/okhttp/
  [6]: LICENSE.txt
  [7]: https://github.com/contentful/contentful.java/wiki/2.0-Migration
+ [8]: pom.xml
