@@ -201,7 +201,7 @@ For further information, check out our official [JavaDoc][3] site or browse the 
 License
 =======
 
-Copyright (c) 2014 Contentful GmbH. See [LICENSE.txt][6] for further details.
+Copyright (c) 2015 Contentful GmbH. See [LICENSE.txt][6] for further details.
 
 
  [1]: https://www.contentful.com
