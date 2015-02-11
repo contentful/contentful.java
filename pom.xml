@@ -48,7 +48,7 @@
 
     <!-- Dependencies -->
     <retrofit.version>1.9.0</retrofit.version>
-    <rxjava.version>1.0.4</rxjava.version>
+    <rxjava.version>1.0.5</rxjava.version>
 
     <!-- Test Dependencies -->
     <commonsio.version>2.4</commonsio.version>
