@@ -1,0 +1,133 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE-edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>contentful.java</title><link rel="stylesheet" href="assets/styles/application.css"></head><body><header class="header"><div class="container"><div class="row"><div class="col-md-6"><img src="assets/images/logo.svg" alt="Contentful" class="header__logo"><div class="header__text"><h1 class="header__title">contentful.java</h1><div class="header__subtitle">Java SDK for Contentful's Content Delivery API</div></div></div><div class="col-md-6 visible-lg"><nav class="header__nav pull-right"><a href="https://search.maven.org/remote_content?g=com.contentful.java&amp;a=java-sdk&amp;v=LATEST" class="header__link fi-download">Download v2.0.1</a><a href="https://github.com/contentful/contentful.java" class="header__link fi-social-github">GitHub</a><a href="http://www.contentful.com" class="header__link fi-home">Contentful</a></nav></div></div></div></header><section class="content"><div class="container"><div class="row"><div data-action="cnav" class="content__text col-md-9"><h1>contentful.java</h1><p><a href="https://travis-ci.org/contentful/contentful.java/builds#"><img src="https://travis-ci.org/contentful/contentful.java.svg" alt="Build Status"></a> <a href="https://coveralls.io/r/contentful/contentful.java?branch=master"><img src="https://img.shields.io/coveralls/contentful/contentful.java.svg" alt="Coverage Status"></a></p>
+<p>Java SDK for <a href="https://www.contentful.com">Contentful&#39;s</a> Content Delivery API.</p>
+<p><a href="https://www.contentful.com">Contentful</a> is a content management platform for web applications, mobile apps and connected devices. It allows you to create, edit &amp; manage content in the cloud and publish it anywhere via powerful API. Contentful offers tools for managing editorial teams and enabling cooperation between organizations.</p>
+<h1>Setup</h1><p>Grab via Maven:</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+  &lt;groupId&gt;com.contentful.java&lt;/groupId&gt;
+  &lt;artifactId&gt;java-sdk&lt;/artifactId&gt;
+  &lt;version&gt;2.0.1&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>or Gradle:</p>
+<pre><code class="language-groovy">compile &#39;com.contentful.java:java-sdk:2.0.1&#39;
+</code></pre>
+<p>The SDK requires at minimum Java 6 or Android 2.3.</p>
+<h3>Default Client</h3><p>The SDK uses Retrofit under the hood as a REST client, which detects <a href="https://square.github.io/okhttp/">OkHttp</a> in your classpath and uses it if it&#39;s available, otherwise falls back to the default <code>HttpURLConnection</code>.</p>
+<p>The recommended approach would be to add <a href="https://square.github.io/okhttp/">OkHttp</a> as a dependency to your project, but that is completely optional.</p>
+<p>You can also specify a custom client to be used, refer to the <a href="https://contentful.github.io/contentful.java/">official documentation</a> for instructions.</p>
+<h3>Dependencies</h3><p>In addition to Retrofit, the library depends on RxJava, the version number can be seen in the <code>properties</code> section of the <a href="pom.xml">pom.xml</a> file.</p>
+<h3>Proguard</h3><pre><code>-keepattributes Signature
+-dontwarn rx.**
+-dontwarn retrofit.**
+-keep class retrofit.** { *; }
+-keep class com.contentful.java.cda.** { *; }
+-keep class * extends com.contentful.java.cda.model.** { *; }
+-keep class com.google.gson.** { *; }
+-keep class sun.misc.Unsafe { *; }
+</code></pre><h1>Usage</h1><p>The <code>CDAClient</code> manages all your interaction with the Contentful Delivery API.</p>
+<pre><code class="language-java">CDAClient client = new CDAClient.Builder()
+    .setSpaceKey(&quot;space-key-goes-here&quot;)
+    .setAccessToken(&quot;access-token-goes-here&quot;)
+    .build();
+</code></pre>
+<p>A client can perform various operations on different types of resources (Assets, Content Types, Entries and Spaces). Every type of resource is represented by a module in the <code>CDAClient</code> class, for example:</p>
+<pre><code class="language-java">client.assets()       // returns the Assets module
+client.contentTypes() // returns the Content Types module
+client.entries()      // returns the Entries module
+client.spaces()       // returns the Spaces module
+client.sync()         // returns the Synchronization module
+</code></pre>
+<p>Each module contains a set of methods which can be used to perform various operations on the specified resource type. Every method has a corresponding asynchronous extension which can be accessed through the <code>async()</code> method of the module, for example:</p>
+<p>Retrieving all entries (synchronously):</p>
+<pre><code class="language-java">try {
+  CDAArray result = client.entries().fetchAll();
+  // success
+} catch (RetrofitError e) {
+  // failure
+}
+</code></pre>
+<p>or asynchronously:</p>
+<pre><code class="language-java">client.entries().async().fetchAll(new CDACallback&lt;CDAArray&gt;() {
+  @Override protected void onSuccess(CDAArray result) {
+    // success
+  }
+
+  @Override protected void onFailure(RetrofitError error) {
+    // failure
+  }
+});
+</code></pre>
+<p>or with RxJava:</p>
+<pre><code class="language-java">client.entries().rx().fetchAll().subscribe(new Action1&lt;CDAArray&gt;() {
+  @Override public void call(CDAArray result) {
+    // success
+  }
+}, new Action1&lt;Throwable&gt;() {
+  @Override public void call(Throwable throwable) {
+    // failure
+  }
+});
+</code></pre>
+<p>Note that a <code>CDACallback</code> instance can be cancelled, so keep a reference to it in order to do so:</p>
+<pre><code class="language-java">CDACallback&lt;CDAArray&gt; cb;
+
+client.entries().async().fetchAll(cb = new CDACallback&lt;CDAArray&gt;() {
+    ...
+});
+
+cb.cancel(); // onSuccess and onFailure will not be invoked
+</code></pre>
+<h3>Default Ordering</h3><p>Bear in mind that there is no default ordering included for any method which returns a <code>CDAArray</code> instance. This means that if you plan to page through more than 100 results with multiple requests, there is no guarantee that you will cover all entries. It is however possible to specify ordering for a query using the <code>fetchAll()</code> methods that take a query parameter, for instance:</p>
+<pre><code class="language-java">client.entries().async().fetchAll(new HashMap&lt;String, String&gt;() {{
+  put(&quot;order&quot;, &quot;-sys.createdAt&quot;);
+}}, new CDACallback&lt;CDAArray&gt;() {
+  @Override protected void onSuccess(CDAArray result) {
+    // ...
+  }
+});
+</code></pre>
+<p>The above snippet will fetch all Entries, ordered by newest-to-oldest.</p>
+<h3>Using Custom Entry Classes</h3><p>You might want to subclass <code>CDAEntry</code> to store additional data alongside Entries or to decouple the rest of your app from the Contentful SDK&#39;s API. For this purpose, it is possible to register your own custom classes for specific Content Types, when creating a client:</p>
+<pre><code class="language-java">HashMap&lt;String, Class&lt;?&gt;&gt; classMap = new HashMap&lt;String, Class&lt;?&gt;&gt;();
+classMap.put(&quot;content-type-id&quot;, CustomEntry.class);
+
+CDAClient client = new Builder()
+    .setSpaceKey(&quot;space-key-goes-here&quot;)
+    .setAccessToken(&quot;access-token-goes-here&quot;)
+    .setCustomClasses(classMap)
+    .build();
+</code></pre>
+<p>Each time, the receiver needs to create a new Entry object of the given Content Type, it will create instances of <code>CustomEntry</code>. Make sure that the class inherits from <code>CDAEntry</code>.</p>
+<h3>Offline Support</h3><p>Mobile devices will not always have a data connection, so it makes sense to cache data received from Contentful for offline use. </p>
+<p>The <code>CDAResource</code> base class implements the <code>Serializable</code> interface.
+This means you can save / restore any kind of Resource, including <code>CDAArray</code>, via local files:</p>
+<pre><code class="language-java">// save Resource to local file:
+ResourceUtils.saveResourceToFile(someResource, new File(&quot;/path/to/save&quot;));
+
+// restore Resource from local file:
+CDAResource resource = ResourceUtils.readResourceFromFile(new File(&quot;/path/to/restore&quot;));
+</code></pre>
+<p>Note that in case you attempt to restore a previously saved Resource, if the original class does not exist the <code>readResourceFromFile()</code> method will throw a <code>ClassNotFoundException</code>. 
+Another important thing to note is that this method is not the most efficient in terms of performance, as it relies heavily on reflection. If you need to persist large objects consider alternate storage solutions.</p>
+<h3>Preview Mode</h3><p>The Content Delivery API only returns published Entries. However, you might want to preview content in your app before making it public for your users. For this, you can use the preview mode, which will return <strong>all</strong> Entries, regardless of their published status:</p>
+<pre><code class="language-java">CDAClient client = new CDAClient.Builder()
+    .setSpaceKey(&quot;space-key-goes-here&quot;)
+    .setAccessToken(&quot;access-token-goes-here&quot;)
+    .preview()
+    .build();
+</code></pre>
+<p>Apart from the configuration option, you can use the SDK without modifications with one exception: you need to obtain a preview access token, which you can get in the &quot;API&quot; tab of the Contentful app. In preview mode, data can be invalid, because no validation is performed on unpublished entries. Your app needs to deal with that. Be aware that the access token is read-write and should in no case be shipped with a production app.</p>
+<h1>Migration</h1><p>v2.0 has introduced some backward-incompatible changes, a migration guide is <a href="https://github.com/contentful/contentful.java/wiki/2.0-Migration">available in the wiki</a>.</p>
+<h1>Documentation</h1><p>For further information, check out our official <a href="https://contentful.github.io/contentful.java/">JavaDoc</a> site or browse the <a href="https://www.contentful.com/developers/documentation/content-delivery-api/">API documentation</a>.</p>
+<h1>License</h1><p>Copyright (c) 2015 Contentful GmbH. See <a href="LICENSE.txt">LICENSE.txt</a> for further details.</p>
+</div><div class="col-md-3 visible-lg"><nav data-action="sticky" class="content__navigation cnav"></nav><div class="content__additional"><a href="javadoc" class="content__links fi-page">JavaDoc</a><a href="http://stackoverflow.com/questions/tagged/contentful.java?sort=active" class="content__links fi-social-stack-overflow">StackOverFlow</a></div></div></div></div></section><script src="//code.jquery.com/jquery-latest.min.js"></script><script src="//use.typekit.net/clw6asg.js"></script><script src="//google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script><script src="assets/js/sticky.js"></script><script src="assets/js/cnav.js"></script><script src="assets/js/scrollspy.js"></script><script>$(function() {
+  try{Typekit.load();}catch(e){}
+  
+  $("[data-action='sticky']").sticky({topSpacing:24});
+  
+  $('pre > code').each(function(idx) {
+    $(this).parent().addClass('prettyprint');
+  });
+});
+
+</script></body></html>
