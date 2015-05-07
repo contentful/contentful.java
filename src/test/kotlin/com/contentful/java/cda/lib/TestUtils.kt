@@ -9,10 +9,8 @@ import org.apache.commons.io.IOUtils
  * Utils.
  */
 class TestUtils {
-    class object {
+    companion object {
         fun fileToString(fileName: String): String =
                 FileUtils.readFileToString(File("src/test/resources/${fileName}"), "UTF-8")
     }
 }
-
-fun RecordedRequest.getBodyAsString() = IOUtils.toString(getBody(), "UTF-8")

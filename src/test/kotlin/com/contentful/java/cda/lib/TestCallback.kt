@@ -28,7 +28,7 @@ class TestCallback<T>(val allowEmpty: Boolean = false) : CDACallback<T>() {
     var value: T = null
     var error: RetrofitError? = null
 
-    {
+    init {
         cdl = CountDownLatch(1)
     }
 

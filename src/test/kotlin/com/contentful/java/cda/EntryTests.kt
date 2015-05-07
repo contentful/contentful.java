@@ -17,15 +17,15 @@
 package com.contentful.java.cda
 
 import com.contentful.java.cda.lib.TestCallback
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 import org.junit.Test as test
 import com.contentful.java.cda.model.CDAEntry
 import com.contentful.java.cda.model.CDAAsset
 import com.contentful.java.cda.model.CDAArray
 import kotlin.test.assertNotNull
 import retrofit.RestAdapter
+import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 /**
  * Entry Tests.
@@ -141,7 +141,7 @@ class EntryTests : BaseTest() {
         assertEquals("/spaces/spaceid/entries/jake", recordedRequest.getPath())
     }
 
-    class object {
+    companion object {
         fun verifyFetchAll(result: CDAArray, client: CDAClient) {
             assertEquals(2, result.getTotal())
             assertEquals(0, result.getSkip())

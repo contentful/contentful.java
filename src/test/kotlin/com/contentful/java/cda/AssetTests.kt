@@ -16,10 +16,10 @@
 
 package com.contentful.java.cda
 
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 import com.contentful.java.cda.model.CDAAsset
 import com.contentful.java.cda.lib.TestCallback
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import org.junit.Test as test
 
 /**
