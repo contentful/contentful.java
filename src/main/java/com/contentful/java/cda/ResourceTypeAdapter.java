@@ -51,7 +51,7 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
     this.httpScheme = httpScheme;
   }
 
-  @Override public CDAResource deserialize(JsonElement jsonElement, Type type,
+  public CDAResource deserialize(JsonElement jsonElement, Type type,
       JsonDeserializationContext context) throws JsonParseException {
     CDAResource result = null;
     JsonObject sys = jsonElement.getAsJsonObject().getAsJsonObject("sys");
@@ -103,19 +103,25 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
       JsonObject sys) {
     CDAAsset result = new CDAAsset();
     setBaseFields(result, sys, jsonElement, context);
-    Map fileMap = (Map) result.getFields().get("file");
-    String defaultLocale = spaceWrapper.get().getDefaultLocale();
 
-    if (fileMap.containsKey(defaultLocale)) {
-      Object map = fileMap.get(defaultLocale);
+    Map fields = result.getFields();
+    if (fields != null) {
+      Map fileMap = (Map) fields.get("file");
+      if (fileMap != null) {
+        String defaultLocale = spaceWrapper.get().getDefaultLocale();
 
-      if (map instanceof Map) {
-        fileMap = (Map) map;
+        if (fileMap.containsKey(defaultLocale)) {
+          Object map = fileMap.get(defaultLocale);
+
+          if (map instanceof Map) {
+            fileMap = (Map) map;
+          }
+        }
+
+        result.setUrl(String.format("%s:%s", httpScheme, fileMap.get("url")));
+        result.setMimeType((String) fileMap.get("contentType"));
       }
     }
-
-    result.setUrl(String.format("%s:%s", httpScheme, fileMap.get("url")));
-    result.setMimeType((String) fileMap.get("contentType"));
 
     return result;
   }
