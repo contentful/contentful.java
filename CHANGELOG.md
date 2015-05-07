@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+Version 2.0.2 *(2015-05-07)*
+----------------------------
+ * Fix: NPE when for assets in draft state with no media (#63)
+ * Retrofit v1.9.0
+ * RxJava v1.0.5
+
+
 Version 2.0.1 *(2014-01-05)*
 ----------------------------
  * New: Nullify unresolved links (optional)
