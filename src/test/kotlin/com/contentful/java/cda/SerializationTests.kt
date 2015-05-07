@@ -82,7 +82,7 @@ class SerializationTests : BaseTest() {
 
     class BadClass1(val whatever: String) : CDAResource()
     class BadClass2() : CDAEntry() {
-        {
+        init {
             throw IllegalAccessException()
         }
     }
