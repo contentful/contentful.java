@@ -69,7 +69,7 @@ class AndroidTests : BaseTest() {
                 }
             }
 
-            val androidClient = CDAClient.Builder()
+            val androidClient = CDAClient.builder()
                     .setSpaceKey("space")
                     .setAccessToken("token")
                     .setEndpoint(getIntent().getStringExtra("EXTRA_URL"))

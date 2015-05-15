@@ -34,7 +34,7 @@ class ContentTypeTests : BaseTest() {
                 client!!.contentTypes().async().fetchAll(TestCallback()))
 
         assertEquals(1, result.getTotal())
-        assertEquals(1, result.getItems().size)
+        assertEquals(1, result.getItems().size())
 
         assertTrue(result.getItems()[0] is CDAContentType)
         val city = result.getItems()[0] as CDAContentType
@@ -44,7 +44,7 @@ class ContentTypeTests : BaseTest() {
 
         // Fields
         val fields = city.getFields()
-        assertEquals(2, fields.size)
+        assertEquals(2, fields.size())
 
         // Field: Name
         assertEquals("Name", fields[0].get("name"))
@@ -91,7 +91,7 @@ class ContentTypeTests : BaseTest() {
 
         // Fields
         val fields = result.getFields()
-        assertEquals(10, fields.size)
+        assertEquals(10, fields.size())
 
         val fieldTypes = listOf(
                 CDAFieldType.Text,
@@ -105,11 +105,12 @@ class ContentTypeTests : BaseTest() {
                 CDAFieldType.Object,
                 CDAFieldType.Array)
 
-        fieldTypes.withIndices().forEach {
-            val field = fields[it.first]
-            assertEquals("id${it.first}", field["id"])
-            assertEquals("name${it.first}", field["name"])
-            it.second.assertFrom(field["type"]!!)
+        fieldTypes.withIndex().forEach {
+            val i = it.index
+            val field = fields[i]
+            assertEquals("id${i}", field["id"])
+            assertEquals("name${i}", field["name"])
+            it.value.assertFrom(field["type"]!!)
         }
 
         // Request

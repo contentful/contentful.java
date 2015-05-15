@@ -45,7 +45,7 @@ class SyncTests : BaseTest() {
     }
 
     test fun testRemoteSynchronization() {
-        val cli = CDAClient.Builder()
+        val cli = CDAClient.builder()
                 .setAccessToken("9caa9b36fbb4250508b8e3322861dbddd7527bc02ba28f44b926c5d99f22d2ab")
                 .setSpaceKey("hvjkfbzcwrfn")
                 .build()

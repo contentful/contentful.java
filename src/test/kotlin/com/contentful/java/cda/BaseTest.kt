@@ -39,7 +39,7 @@ open class BaseTest {
         server!!.play()
 
         // Client
-        client = CDAClient.Builder()
+        client = CDAClient.builder()
                 .setAccessToken("token")
                 .setSpaceKey("spaceid")
                 .setEndpoint(getServerUrl())
