@@ -56,6 +56,7 @@ public class CDAClient {
   final Gson gson;
   final SpaceWrapper spaceWrapper;
   final Executor callbackExecutor;
+  final boolean skipLinks;
 
   // Modules
   final ModuleAssets moduleAssets;
@@ -63,6 +64,7 @@ public class CDAClient {
   final ModuleEntries moduleEntries;
   final ModuleSpaces moduleSpaces;
   final ModuleSync moduleSync;
+  final boolean nullifyUnresolved;
 
   private CDAClient(Builder builder) {
     if (builder.accessToken == null) {
@@ -82,17 +84,28 @@ public class CDAClient {
     this.callbackExecutor = createCallbackExecutor(builder);
     this.gson = createGson();
     this.service = createRetrofitService(builder);
+    this.skipLinks = builder.skipLinks;
+    this.nullifyUnresolved = builder.nullifyUnresolved;
 
-    // Modules
-    ClientContext context =
-        new ClientContext(service, callbackExecutor, spaceKey, gson, spaceWrapper, classMap,
-            builder.skipLinks, builder.nullifyUnresolved);
-
+    ClientContext context = createContext();
     this.moduleAssets = new ModuleAssets(context);
     this.moduleContentTypes = new ModuleContentTypes(context);
     this.moduleEntries = new ModuleEntries(context);
     this.moduleSpaces = new ModuleSpaces(context);
     this.moduleSync = new ModuleSync(context);
+  }
+
+  private ClientContext createContext() {
+    return ClientContext.builder()
+          .setService(service)
+          .setCallbackExecutor(callbackExecutor)
+          .setSpaceId(spaceKey)
+          .setGson(gson)
+          .setSpaceWrapper(spaceWrapper)
+          .setCustomTypesMap(classMap)
+          .setSkipLinks(skipLinks)
+          .setNullifyUnresolved(nullifyUnresolved)
+          .build();
   }
 
   /**

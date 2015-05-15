@@ -33,16 +33,80 @@ final class ClientContext {
   final boolean skipLinks;
   final boolean nullifyUnresolved;
 
-  public ClientContext(CDAService service, Executor callbackExecutor, String spaceId, Gson gson,
-      SpaceWrapper spaceWrapper, Map<String, Class<?>> customTypesMap, boolean skipLinks,
-      boolean nullifyUnresolved) {
-    this.service = service;
-    this.callbackExecutor = callbackExecutor;
-    this.spaceId = spaceId;
-    this.gson = gson;
-    this.spaceWrapper = spaceWrapper;
-    this.customTypesMap = customTypesMap;
-    this.skipLinks = skipLinks;
-    this.nullifyUnresolved = nullifyUnresolved;
+  private ClientContext() {
+    throw new AssertionError();
+  }
+
+  public ClientContext(Builder builder) {
+    this.service = builder.service;
+    this.callbackExecutor = builder.callbackExecutor;
+    this.spaceId = builder.spaceId;
+    this.gson = builder.gson;
+    this.spaceWrapper = builder.spaceWrapper;
+    this.customTypesMap = builder.customTypesMap;
+    this.skipLinks = builder.skipLinks;
+    this.nullifyUnresolved = builder.nullifyUnresolved;
+  }
+
+  static Builder builder() {
+    return new Builder();
+  }
+
+  static class Builder {
+    private CDAService service;
+    private Executor callbackExecutor;
+    private String spaceId;
+    private Gson gson;
+    private SpaceWrapper spaceWrapper;
+    private Map<String, Class<?>> customTypesMap;
+    private boolean skipLinks;
+    private boolean nullifyUnresolved;
+
+    private Builder() {
+    }
+
+    public Builder setService(CDAService service) {
+      this.service = service;
+      return this;
+    }
+
+    public Builder setCallbackExecutor(Executor callbackExecutor) {
+      this.callbackExecutor = callbackExecutor;
+      return this;
+    }
+
+    public Builder setSpaceId(String spaceId) {
+      this.spaceId = spaceId;
+      return this;
+    }
+
+    public Builder setGson(Gson gson) {
+      this.gson = gson;
+      return this;
+    }
+
+    public Builder setSpaceWrapper(SpaceWrapper spaceWrapper) {
+      this.spaceWrapper = spaceWrapper;
+      return this;
+    }
+
+    public Builder setCustomTypesMap(Map<String, Class<?>> customTypesMap) {
+      this.customTypesMap = customTypesMap;
+      return this;
+    }
+
+    public Builder setSkipLinks(boolean skipLinks) {
+      this.skipLinks = skipLinks;
+      return this;
+    }
+
+    public Builder setNullifyUnresolved(boolean nullifyUnresolved) {
+      this.nullifyUnresolved = nullifyUnresolved;
+      return this;
+    }
+
+    public ClientContext build() {
+      return new ClientContext(this);
+    }
   }
 }
