@@ -73,7 +73,6 @@ class AndroidTests : BaseTest() {
                     .setSpaceKey("space")
                     .setAccessToken("token")
                     .setEndpoint(getIntent().getStringExtra("EXTRA_URL"))
-                    .setLogLevel(RestAdapter.LogLevel.FULL)
                     .noSSL()
                     .build()
 

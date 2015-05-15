@@ -46,7 +46,6 @@ class EntryTests : BaseTest() {
                 .setAccessToken("token")
                 .setSpaceKey("spaceid")
                 .setEndpoint(getServerUrl())
-                .setLogLevel(RestAdapter.LogLevel.FULL)
                 .nullifyUnresolvedLinks()
                 .noSSL()
                 .build()

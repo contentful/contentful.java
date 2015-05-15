@@ -43,7 +43,6 @@ open class BaseTest {
                 .setAccessToken("token")
                 .setSpaceKey("spaceid")
                 .setEndpoint(getServerUrl())
-                .setLogLevel(RestAdapter.LogLevel.FULL)
                 .noSSL()
                 .build()
 
