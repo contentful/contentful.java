@@ -108,7 +108,7 @@ class ArrayParser<T extends ArrayResource> implements Callable<T> {
 
   private void setLocalizedFields(ResourceWithMap res) {
     Map rawFields = res.getRawFields();
-    HashMap<String, Map> localizedFieldsMap = res.getLocalizedFieldsMap();
+    Map<String, Map> localizedFieldsMap = res.getLocalizedFieldsMap();
 
     // Create a map for every locale
     for (CDALocale locale : context.spaceWrapper.get().getLocales()) {
@@ -138,7 +138,7 @@ class ArrayParser<T extends ArrayResource> implements Callable<T> {
   @SuppressWarnings("unchecked")
   private void resolveResourceLinks(ResourceWithMap res, HashMap<String, CDAResource> assets,
       HashMap<String, CDAResource> entries) {
-    HashMap<String, Map> localizedFields = res.getLocalizedFieldsMap();
+    Map<String, Map> localizedFields = res.getLocalizedFieldsMap();
 
     for (Map fields : localizedFields.values()) {
       HashSet removeFromFields = new HashSet();

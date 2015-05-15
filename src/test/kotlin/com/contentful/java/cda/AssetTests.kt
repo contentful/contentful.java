@@ -33,7 +33,7 @@ class AssetTests : BaseTest() {
                 client!!.assets().async().fetchAll(TestCallback()))
 
         assertEquals(1, result.getTotal())
-        assertEquals(1, result.getItems().size)
+        assertEquals(1, result.getItems().size())
 
         assertTrue(result.getItems()[0] is CDAAsset)
         val jake = result.getItems()[0] as CDAAsset

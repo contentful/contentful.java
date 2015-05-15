@@ -24,7 +24,7 @@ public final class Constants {
     throw new UnsupportedOperationException();
   }
 
-  public static enum CDAResourceType {
+  public enum CDAResourceType {
     Array,
     Asset,
     ContentType,
@@ -35,7 +35,7 @@ public final class Constants {
     Space
   }
 
-  public static enum CDAFieldType {
+  public enum CDAFieldType {
     Array,
     Boolean,
     Date,

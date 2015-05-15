@@ -27,7 +27,7 @@ public class ResourceWithMap extends CDAResource {
   private Map<String, Object> rawFields;
 
   // Custom map prepared out of the original fields sectioned by different locales.
-  private HashMap<String, Map> localizedFieldsMap = new HashMap<String, Map>();
+  private final Map<String, Map> localizedFieldsMap = new HashMap<String, Map>();
 
   /**
    * Sets the raw fields map of this resource.
@@ -52,7 +52,7 @@ public class ResourceWithMap extends CDAResource {
    *
    * @return A custom map prepared out of the original fields sectioned by different locales.
    */
-  public HashMap<String, Map> getLocalizedFieldsMap() {
+  public Map<String, Map> getLocalizedFieldsMap() {
     return localizedFieldsMap;
   }
 

@@ -25,8 +25,8 @@ import java.util.concurrent.Executor;
  * SDK utilities
  */
 class Utils {
-  static Decoder decoder = new Decoder() {
-    @Override public String decode(String url) throws UnsupportedEncodingException {
+  static final Decoder decoder = new Decoder() {
+    public String decode(String url) throws UnsupportedEncodingException {
       return URLDecoder.decode(url, "UTF-8");
     }
   };
@@ -82,7 +82,7 @@ class Utils {
   }
 
   static class SynchronousExecutor implements Executor {
-    @Override public void execute(Runnable runnable) {
+    public void execute(Runnable runnable) {
       runnable.run();
     }
   }

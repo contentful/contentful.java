@@ -146,7 +146,7 @@ class EntryTests : BaseTest() {
             assertEquals(2, result.getTotal())
             assertEquals(0, result.getSkip())
             assertEquals(100, result.getLimit())
-            assertEquals(2, result.getItems().size)
+            assertEquals(2, result.getItems().size())
 
             assertTrue(result.getItems()[0] is CDAEntry)
             val jake = result.getItems()[0] as CDAEntry
@@ -162,7 +162,7 @@ class EntryTests : BaseTest() {
                     image.getUrl())
             assertEquals("image/png", image.getMimeType())
             assertEquals("Jake", image.getFields().get("title"))
-            assertEquals(4, (image.getFields().get("file") as Map<*, *>).size)
+            assertEquals(4, (image.getFields().get("file") as Map<*, *>).size())
 
             // Entry Link
             assertTrue(fields.get("entry") is CDAEntry)

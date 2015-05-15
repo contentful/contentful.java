@@ -40,7 +40,7 @@ class SpaceTests : BaseTest() {
         assertEquals("en-US", result.getDefaultLocale())
 
         val locales = result.getLocales()
-        assertEquals(2, locales.size)
+        assertEquals(2, locales.size())
         assertEquals("en-US", locales[0].getCode())
         assertEquals("English", locales[0].getName())
         assertTrue(locales[0].isDefault())

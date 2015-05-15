@@ -22,9 +22,11 @@ import java.util.ArrayList;
  * Class representing a single Space resource.
  */
 public class CDASpace extends CDAResource {
-  private String defaultLocale;
-  private ArrayList<CDALocale> locales;
-  private String name;
+  private final String defaultLocale;
+
+  private final ArrayList<CDALocale> locales;
+
+  private final String name;
 
   public CDASpace(String defaultLocale, ArrayList<CDALocale> locales, String name) {
     this.defaultLocale = defaultLocale;

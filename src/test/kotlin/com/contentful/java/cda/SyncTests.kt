@@ -78,7 +78,7 @@ class SyncTests : BaseTest() {
 
     fun verifySyncFirst(result: CDASyncedSpace, request: RecordedRequest) {
         val items = result.getItems()
-        assertEquals(4, items.size)
+        assertEquals(4, items.size())
 
         assertTrue(items[0] is CDAEntry)
         assertTrue(items[1] is CDAEntry)
@@ -110,7 +110,7 @@ class SyncTests : BaseTest() {
 
     fun verifySyncSecond(result: CDASyncedSpace, request: RecordedRequest) {
         val items = result.getItems()
-        assertEquals(3, items.size)
+        assertEquals(3, items.size())
 
         assertTrue(items[0] is CDAEntry)
         assertTrue(items[1] is CDAEntry)
