@@ -16,25 +16,48 @@
 
 package com.contentful.java.cda
 
-import kotlin.test.assertEquals
 import com.contentful.java.cda.lib.TestCallback
+import com.contentful.java.cda.model.CDAEntry
+import com.contentful.java.cda.model.CDAResource
+import com.contentful.java.cda.model.CDASpace
+import com.squareup.okhttp.mockwebserver.MockResponse
+import org.mockito.Mockito
+import retrofit.RestAdapter
 import retrofit.RetrofitError
+import rx.Observable
+import java.io.IOException
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
-import com.squareup.okhttp.mockwebserver.MockResponse
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import java.io.IOException
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
-import rx.Observable
 import org.junit.Test as test
-import com.contentful.java.cda.model.CDASpace
-import org.mockito.Mockito
 
 /**
  * Client Tests.
  */
 class ClientTests : BaseTest() {
+    test fun testDontResolveLinks() {
+        enqueue("space_fetch_response.json")
+        enqueue("entry_fetch_all_response.json")
+
+        val cli = CDAClient.builder()
+                .setAccessToken("token")
+                .setSpaceKey("spaceid")
+                .setEndpoint(getServerUrl())
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .skipLinks()
+                .noSSL()
+                .build()
+
+        val array = cli.entries().fetchAll()
+        var jake = array.getItems()[0] as? CDAEntry
+        assertNotNull(jake)
+        assertEquals("Jake", jake!!.getFields()["name"])
+        assertFalse(jake!!.getFields()["image"] is CDAResource)
+    }
+
     test fun testCancelledCallback() {
         enqueue("space_fetch_response.json")
 
@@ -61,7 +84,7 @@ class ClientTests : BaseTest() {
     }
 
     test fun testCallbackRetrofitError() {
-        val badClient = CDAClient.Builder()
+        val badClient = CDAClient.builder()
                 .setSpaceKey("space")
                 .setAccessToken("token")
                 .setCallbackExecutor { it.run() }
@@ -100,7 +123,7 @@ class ClientTests : BaseTest() {
     }
 
     test fun testPreview() {
-        val cli = CDAClient.Builder()
+        val cli = CDAClient.builder()
                 .setSpaceKey("cfexampleapi")
                 .setAccessToken("e5e8d4c5c122cf28fc1af3ff77d28bef78a3952957f15067bbc29f2f0dde0b50")
                 .preview()
@@ -150,7 +173,7 @@ class ClientTests : BaseTest() {
     test(expected = javaClass<IllegalArgumentException>())
     fun failsNoAccessToken() {
         try {
-            CDAClient.Builder().build()
+            CDAClient.builder().build()
         } catch (e: IllegalArgumentException) {
             assertEquals("Access token must be defined.", e.getMessage())
             throw e
@@ -160,7 +183,7 @@ class ClientTests : BaseTest() {
     test(expected = javaClass<IllegalArgumentException>())
     fun failsNoSpace() {
         try {
-            CDAClient.Builder().setAccessToken("token").build()
+            CDAClient.builder().setAccessToken("token").build()
         } catch (e: IllegalArgumentException) {
             assertEquals("Space ID must be defined.", e.getMessage())
             throw e
@@ -170,7 +193,7 @@ class ClientTests : BaseTest() {
     test(expected = javaClass<IllegalArgumentException>())
     fun failsSetNullAccessToken() {
         try {
-            CDAClient.Builder().setAccessToken(null)
+            CDAClient.builder().setAccessToken(null)
         } catch (e: IllegalArgumentException) {
             assertEquals("Cannot call setAccessToken() with null.", e.getMessage())
             throw e
@@ -180,7 +203,7 @@ class ClientTests : BaseTest() {
     test(expected = javaClass<IllegalArgumentException>())
     fun failsSetSpaceKey() {
         try {
-            CDAClient.Builder().setSpaceKey(null)
+            CDAClient.builder().setSpaceKey(null)
         } catch (e: IllegalArgumentException) {
             assertEquals("Cannot call setSpaceKey() with null.", e.getMessage())
             throw e
@@ -190,7 +213,7 @@ class ClientTests : BaseTest() {
     test(expected = javaClass<IllegalArgumentException>())
     fun failsSetNullCallbackExecutor() {
         try {
-            CDAClient.Builder().setCallbackExecutor(null)
+            CDAClient.builder().setCallbackExecutor(null)
         } catch (e: IllegalArgumentException) {
             assertEquals("Cannot call setCallbackExecutor() with null.", e.getMessage())
             throw e
@@ -200,7 +223,7 @@ class ClientTests : BaseTest() {
     test(expected = javaClass<IllegalArgumentException>())
     fun failsSetNullCustomClasses() {
         try {
-            CDAClient.Builder().setCustomClasses(null)
+            CDAClient.builder().setCustomClasses(null)
         } catch (e: IllegalArgumentException) {
             assertEquals("Cannot call setCustomClasses() with null.", e.getMessage())
             throw e
@@ -210,7 +233,7 @@ class ClientTests : BaseTest() {
     test(expected = javaClass<IllegalArgumentException>())
     fun failsSetNullClient() {
         try {
-            CDAClient.Builder().setClient(null)
+            CDAClient.builder().setClient(null)
         } catch (e: IllegalArgumentException) {
             assertEquals("Cannot call setClient() with null.", e.getMessage())
             throw e
@@ -220,7 +243,7 @@ class ClientTests : BaseTest() {
     test(expected = javaClass<IllegalArgumentException>())
     fun failsSetNullLogLevel() {
         try {
-            CDAClient.Builder().setLogLevel(null)
+            CDAClient.builder().setLogLevel(null)
         } catch (e: IllegalArgumentException) {
             assertEquals("Cannot call setLogLevel() with null.", e.getMessage())
             throw e
@@ -230,7 +253,7 @@ class ClientTests : BaseTest() {
     test(expected = javaClass<IllegalArgumentException>())
     fun failsSetNullClientProvider() {
         try {
-            CDAClient.Builder().setClientProvider(null)
+            CDAClient.builder().setClientProvider(null)
         } catch (e: IllegalArgumentException) {
             assertEquals("Cannot call setClientProvider() with null.", e.getMessage())
             throw e
@@ -240,7 +263,7 @@ class ClientTests : BaseTest() {
     test(expected = javaClass<IllegalArgumentException>())
     fun failsSetNullEndPoint() {
         try {
-            CDAClient.Builder().setEndpoint(null)
+            CDAClient.builder().setEndpoint(null)
         } catch (e: IllegalArgumentException) {
             assertEquals("Cannot call setEndpoint() with null.", e.getMessage())
             throw e

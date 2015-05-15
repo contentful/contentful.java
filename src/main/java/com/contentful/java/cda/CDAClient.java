@@ -84,8 +84,9 @@ public class CDAClient {
     this.service = createRetrofitService(builder);
 
     // Modules
-    ClientContext context = new ClientContext(service, callbackExecutor, spaceKey,
-        gson, spaceWrapper, classMap, builder.nullifyUnresolved);
+    ClientContext context =
+        new ClientContext(service, callbackExecutor, spaceKey, gson, spaceWrapper, classMap,
+            builder.skipLinks, builder.nullifyUnresolved);
 
     this.moduleAssets = new ModuleAssets(context);
     this.moduleContentTypes = new ModuleContentTypes(context);
@@ -237,7 +238,7 @@ public class CDAClient {
 
   private RequestInterceptor createInterceptor() {
     return new RequestInterceptor() {
-      @Override public void intercept(RequestFacade requestFacade) {
+      public void intercept(RequestFacade requestFacade) {
         if (accessToken != null && !accessToken.isEmpty()) {
           requestFacade.addHeader(HTTP_HEADER_AUTH, String.format(HTTP_OAUTH_PATTERN, accessToken));
         }
@@ -245,6 +246,11 @@ public class CDAClient {
         requestFacade.addHeader(HTTP_HEADER_USER_AGENT, createUserAgent(propertiesReader));
       }
     };
+  }
+
+  /** Creates a new {@link Builder} instance. */
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -267,11 +273,11 @@ public class CDAClient {
     Map<String, Class<?>> classMap;
     boolean secure;
     boolean nullifyUnresolved;
+    boolean skipLinks;
 
-    public Builder() {
+    private Builder() {
       // Defaults
       this.secure = true;
-      this.nullifyUnresolved = false;
     }
 
     /**
@@ -344,7 +350,7 @@ public class CDAClient {
       }
 
       return setClientProvider(new Client.Provider() {
-        @Override public Client get() {
+        public Client get() {
           return client;
         }
       });
@@ -427,6 +433,16 @@ public class CDAClient {
      */
     public Builder preview() {
       return setEndpoint(Constants.ENDPOINT_PREVIEW);
+    }
+
+    /**
+     * Sets the behavior of this client to never resolve any links.
+     *
+     * @return this {@code Builder} instance
+     */
+    public Builder skipLinks() {
+      this.skipLinks = true;
+      return this;
     }
 
     /**

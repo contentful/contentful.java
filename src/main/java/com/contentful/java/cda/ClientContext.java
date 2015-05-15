@@ -30,16 +30,19 @@ final class ClientContext {
   final Gson gson;
   final SpaceWrapper spaceWrapper;
   final Map<String, Class<?>> customTypesMap;
+  final boolean skipLinks;
   final boolean nullifyUnresolved;
 
   public ClientContext(CDAService service, Executor callbackExecutor, String spaceId, Gson gson,
-      SpaceWrapper spaceWrapper, Map<String, Class<?>> customTypesMap, boolean nullifyUnresolved) {
+      SpaceWrapper spaceWrapper, Map<String, Class<?>> customTypesMap, boolean skipLinks,
+      boolean nullifyUnresolved) {
     this.service = service;
     this.callbackExecutor = callbackExecutor;
     this.spaceId = spaceId;
     this.gson = gson;
     this.spaceWrapper = spaceWrapper;
     this.customTypesMap = customTypesMap;
+    this.skipLinks = skipLinks;
     this.nullifyUnresolved = nullifyUnresolved;
   }
 }

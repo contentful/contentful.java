@@ -47,7 +47,7 @@ class ArrayParser<T extends ArrayResource> implements Callable<T> {
     this.context = context;
   }
 
-  @Override public T call() throws Exception {
+  public T call() throws Exception {
     HashMap<String, CDAResource> assets = new HashMap<String, CDAResource>();
     HashMap<String, CDAResource> entries = new HashMap<String, CDAResource>();
     boolean sync = source instanceof CDASyncedSpace;
@@ -94,12 +94,12 @@ class ArrayParser<T extends ArrayResource> implements Callable<T> {
       }
     }
 
-    // Iterate through all entries and attempt to resolve contained links.
-    for (Map.Entry<String, CDAResource> entry : entries.entrySet()) {
-      CDAResource item = entry.getValue();
-
-      if (item instanceof ResourceWithMap) {
-        resolveResourceLinks((ResourceWithMap) item, assets, entries);
+    if (!context.skipLinks) {
+      // Iterate through all entries and attempt to resolve contained links.
+      for (CDAResource resource : entries.values()) {
+        if (resource instanceof ResourceWithMap) {
+          resolveResourceLinks((ResourceWithMap) resource, assets, entries);
+        }
       }
     }
 

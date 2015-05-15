@@ -42,7 +42,7 @@ class EntryTests : BaseTest() {
     }
 
     test fun testNullifyUnresolvedLinks() {
-        val cli = CDAClient.Builder()
+        val cli = CDAClient.builder()
                 .setAccessToken("token")
                 .setSpaceKey("spaceid")
                 .setEndpoint(getServerUrl())
@@ -63,7 +63,7 @@ class EntryTests : BaseTest() {
     }
 
     test fun testCustomClass() {
-        val cli = CDAClient.Builder()
+        val cli = CDAClient.builder()
                 .setAccessToken("token")
                 .setSpaceKey("space")
                 .setEndpoint(getServerUrl())

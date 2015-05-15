@@ -44,7 +44,7 @@ class SerializationTests : BaseTest() {
 
     test(expected = javaClass<JsonParseException>())
     fun testTypeAdapterInstantiationException() {
-        val cli = CDAClient.Builder()
+        val cli = CDAClient.builder()
                 .setSpaceKey("space")
                 .setAccessToken("token")
                 .setCustomClasses(hashMapOf(
@@ -63,7 +63,7 @@ class SerializationTests : BaseTest() {
 
     test(expected = javaClass<JsonParseException>())
     fun testTypeAdapterIllegalAccessException() {
-        val cli = CDAClient.Builder()
+        val cli = CDAClient.builder()
                 .setSpaceKey("space")
                 .setAccessToken("token")
                 .setCustomClasses(hashMapOf(
