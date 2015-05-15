@@ -38,26 +38,6 @@ import org.junit.Test as test
  * Client Tests.
  */
 class ClientTests : BaseTest() {
-    test fun testDontResolveLinks() {
-        enqueue("space_fetch_response.json")
-        enqueue("entry_fetch_all_response.json")
-
-        val cli = CDAClient.builder()
-                .setAccessToken("token")
-                .setSpaceKey("spaceid")
-                .setEndpoint(getServerUrl())
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .skipLinks()
-                .noSSL()
-                .build()
-
-        val array = cli.entries().fetchAll()
-        var jake = array.getItems()[0] as? CDAEntry
-        assertNotNull(jake)
-        assertEquals("Jake", jake!!.getFields()["name"])
-        assertFalse(jake!!.getFields()["image"] is CDAResource)
-    }
-
     test fun testCancelledCallback() {
         enqueue("space_fetch_response.json")
 

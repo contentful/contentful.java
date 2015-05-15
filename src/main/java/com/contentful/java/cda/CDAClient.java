@@ -56,7 +56,7 @@ public class CDAClient {
   final Gson gson;
   final SpaceWrapper spaceWrapper;
   final Executor callbackExecutor;
-  final boolean skipLinks;
+  final boolean nullifyUnresolved;
 
   // Modules
   final ModuleAssets moduleAssets;
@@ -64,7 +64,6 @@ public class CDAClient {
   final ModuleEntries moduleEntries;
   final ModuleSpaces moduleSpaces;
   final ModuleSync moduleSync;
-  final boolean nullifyUnresolved;
 
   private CDAClient(Builder builder) {
     if (builder.accessToken == null) {
@@ -84,7 +83,6 @@ public class CDAClient {
     this.callbackExecutor = createCallbackExecutor(builder);
     this.gson = createGson();
     this.service = createRetrofitService(builder);
-    this.skipLinks = builder.skipLinks;
     this.nullifyUnresolved = builder.nullifyUnresolved;
 
     ClientContext context = createContext();
@@ -103,7 +101,6 @@ public class CDAClient {
           .setGson(gson)
           .setSpaceWrapper(spaceWrapper)
           .setCustomTypesMap(classMap)
-          .setSkipLinks(skipLinks)
           .setNullifyUnresolved(nullifyUnresolved)
           .build();
   }
@@ -286,7 +283,6 @@ public class CDAClient {
     Map<String, Class<?>> classMap;
     boolean secure;
     boolean nullifyUnresolved;
-    boolean skipLinks;
 
     private Builder() {
       // Defaults
@@ -446,16 +442,6 @@ public class CDAClient {
      */
     public Builder preview() {
       return setEndpoint(Constants.ENDPOINT_PREVIEW);
-    }
-
-    /**
-     * Sets the behavior of this client to never resolve any links.
-     *
-     * @return this {@code Builder} instance
-     */
-    public Builder skipLinks() {
-      this.skipLinks = true;
-      return this;
     }
 
     /**

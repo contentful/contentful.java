@@ -30,7 +30,6 @@ final class ClientContext {
   final Gson gson;
   final SpaceWrapper spaceWrapper;
   final Map<String, Class<?>> customTypesMap;
-  final boolean skipLinks;
   final boolean nullifyUnresolved;
 
   private ClientContext() {
@@ -44,7 +43,6 @@ final class ClientContext {
     this.gson = builder.gson;
     this.spaceWrapper = builder.spaceWrapper;
     this.customTypesMap = builder.customTypesMap;
-    this.skipLinks = builder.skipLinks;
     this.nullifyUnresolved = builder.nullifyUnresolved;
   }
 
@@ -59,7 +57,6 @@ final class ClientContext {
     private Gson gson;
     private SpaceWrapper spaceWrapper;
     private Map<String, Class<?>> customTypesMap;
-    private boolean skipLinks;
     private boolean nullifyUnresolved;
 
     private Builder() {
@@ -92,11 +89,6 @@ final class ClientContext {
 
     public Builder setCustomTypesMap(Map<String, Class<?>> customTypesMap) {
       this.customTypesMap = customTypesMap;
-      return this;
-    }
-
-    public Builder setSkipLinks(boolean skipLinks) {
-      this.skipLinks = skipLinks;
       return this;
     }
 

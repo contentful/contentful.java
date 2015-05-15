@@ -94,12 +94,10 @@ class ArrayParser<T extends ArrayResource> implements Callable<T> {
       }
     }
 
-    if (!context.skipLinks) {
-      // Iterate through all entries and attempt to resolve contained links.
-      for (CDAResource resource : entries.values()) {
-        if (resource instanceof ResourceWithMap) {
-          resolveResourceLinks((ResourceWithMap) resource, assets, entries);
-        }
+    // Iterate through all entries and attempt to resolve contained links.
+    for (CDAResource resource : entries.values()) {
+      if (resource instanceof ResourceWithMap) {
+        resolveResourceLinks((ResourceWithMap) resource, assets, entries);
       }
     }
 
