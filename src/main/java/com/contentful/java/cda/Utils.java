@@ -25,7 +25,7 @@ import java.util.concurrent.Executor;
  * SDK utilities
  */
 class Utils {
-  static final Decoder decoder = new Decoder() {
+  static final Decoder DECODER = new Decoder() {
     public String decode(String url) throws UnsupportedEncodingException {
       return URLDecoder.decode(url, "UTF-8");
     }
@@ -47,7 +47,7 @@ class Utils {
   }
 
   static String getQueryParamFromUrl(String url, String param) {
-    return getQueryParamFromUrl(url, param, decoder);
+    return getQueryParamFromUrl(url, param, DECODER);
   }
 
   static String getQueryParamFromUrl(String url, String param, Decoder decoder) {
