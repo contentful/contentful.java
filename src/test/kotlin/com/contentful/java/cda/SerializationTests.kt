@@ -29,6 +29,11 @@ import kotlin.test.assertTrue
  * Serialization Tests.
  */
 class SerializationTests : BaseTest() {
+    test fun testNoFields() {
+        enqueue("entry_no_fields.json")
+        client!!.entries().fetchOne("id")
+    }
+
     test fun testSerialization() {
         enqueue("entry_fetch_all_response.json")
         val original = client!!.entries().fetchAll()
