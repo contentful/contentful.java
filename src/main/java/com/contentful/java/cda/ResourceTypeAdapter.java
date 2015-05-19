@@ -33,6 +33,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -253,14 +254,25 @@ class ResourceTypeAdapter implements JsonDeserializer<CDAResource> {
     // Fields
     JsonElement fields = jsonElement.getAsJsonObject().get("fields");
     if (target instanceof ResourceWithMap) {
+      Map fieldsMap;
+      if (fields == null) {
+        fieldsMap = Collections.emptyMap();
+      } else {
+        fieldsMap = context.<Map<String, Object>>deserialize(fields.getAsJsonObject(), Map.class);
+      }
+
       ResourceWithMap res = (ResourceWithMap) target;
       target.setLocale(space.getDefaultLocale());
-      res.setRawFields(
-          context.<Map<String, Object>>deserialize(fields.getAsJsonObject(), Map.class));
-      res.getLocalizedFieldsMap().put(space.getDefaultLocale(), res.getRawFields());
+      res.setRawFields(fieldsMap);
+      res.getLocalizedFieldsMap().put(space.getDefaultLocale(), fieldsMap);
     } else if (target instanceof ResourceWithList) {
-      ResourceWithList<Object> res = (ResourceWithList<Object>) target;
-      res.setFields(context.<List<Object>>deserialize(fields.getAsJsonArray(), List.class));
+      List fieldsList;
+      if (fields == null) {
+        fieldsList = Collections.emptyList();
+      } else {
+        fieldsList = context.<List<Object>>deserialize(fields.getAsJsonArray(), List.class);
+      }
+      ((ResourceWithList<Object>) target).setFields(fieldsList);
     }
   }
 
