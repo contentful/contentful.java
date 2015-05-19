@@ -284,7 +284,7 @@ public class CDAClient {
     boolean secure;
     boolean nullifyUnresolved;
 
-    private Builder() {
+    public Builder() {
       // Defaults
       this.secure = true;
     }
