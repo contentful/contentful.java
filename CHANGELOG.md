@@ -1,9 +1,19 @@
 Change Log
 ==========
 
+Version 3.0.0 *(in development)*
+--------------------------------
+ * ..
+
+
+Version 2.0.3 *(2015-05-19)*
+----------------------------
+ * Fix: NPE for entry with no fields (#69)
+
+
 Version 2.0.2 *(2015-05-07)*
 ----------------------------
- * Fix: NPE when for assets in draft state with no media (#63)
+ * Fix: NPE for assets in draft state with no media (#63)
  * Retrofit v1.9.0
  * RxJava v1.0.5
 
