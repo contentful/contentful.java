@@ -23,6 +23,8 @@ or Gradle:
 compile 'com.contentful.java:java-sdk:2.0.2'
 ```
 
+Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
+
 The SDK requires at minimum Java 6 or Android 2.3.
 
 ### Default Client
@@ -212,3 +214,4 @@ Copyright (c) 2015 Contentful GmbH. See [LICENSE.txt][6] for further details.
  [6]: LICENSE.txt
  [7]: https://github.com/contentful/contentful.java/wiki/2.0-Migration
  [8]: pom.xml
+ [snap]: https://oss.sonatype.org/content/repositories/snapshots/
