@@ -133,9 +133,8 @@ class ArrayParser<T extends ArrayResource> implements Callable<T> {
    * @param assets map of assets by ids
    * @param entries map of entries by ids
    */
-  @SuppressWarnings("unchecked")
-  private void resolveResourceLinks(ResourceWithMap res, HashMap<String, CDAResource> assets,
-      HashMap<String, CDAResource> entries) {
+  @SuppressWarnings("unchecked") private void resolveResourceLinks(ResourceWithMap res,
+      HashMap<String, CDAResource> assets, HashMap<String, CDAResource> entries) {
     Map<String, Map> localizedFields = res.getLocalizedFieldsMap();
 
     for (Map fields : localizedFields.values()) {
