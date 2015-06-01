@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version [3.0.0][unreleased] - (in development)
 - TBD
 
+## Version [2.0.4] - 2015-06-01
+- Fixed: Default to UTF-8 charset.
+
 ## Version [2.0.3] - 2015-05-19
 - Fixed: NPE for entry with no fields.
 
@@ -62,7 +65,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/2.0.3...HEAD
+[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-2.0.4...HEAD
+[2.0.4]: https://github.com/contentful/contentful.java/compare/2.0.3...java-sdk-2.0.4
 [2.0.3]: https://github.com/contentful/contentful.java/compare/2.0.2...2.0.3
 [2.0.2]: https://github.com/contentful/contentful.java/compare/2.0.1...2.0.2
 [2.0.1]: https://github.com/contentful/contentful.java/compare/2.0.0...2.0.1
