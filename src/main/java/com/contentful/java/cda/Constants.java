@@ -58,6 +58,7 @@ public final class Constants {
   // Configuration
   public static final String ENDPOINT_CDA = "cdn.contentful.com";
   public static final String ENDPOINT_PREVIEW = "preview.contentful.com";
+  public static final String DEFAULT_CHARSET = "UTF-8";
   public static final String DEFAULT_LOCALE = "en-US";
 
   // Resource types

@@ -24,6 +24,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import rx.Observable;
 
+import static com.contentful.java.cda.Constants.DEFAULT_CHARSET;
 import static com.contentful.java.cda.RxExtensions.DefFunc;
 import static com.contentful.java.cda.RxExtensions.defer;
 import static com.contentful.java.cda.RxExtensions.subscribe;
@@ -88,7 +89,8 @@ abstract class BaseModule<T extends CDAResource>
         context.service.fetchResource(context.spaceId, getResourcePath(), identifier);
 
     try {
-      return prepare(createCdaResource(new InputStreamReader(response.getBody().in())));
+      return prepare(createCdaResource(new InputStreamReader(response.getBody().in(),
+          DEFAULT_CHARSET)));
     } catch (Exception e) {
       throw RetrofitError.unexpectedError(response.getUrl(), e);
     }
@@ -101,10 +103,10 @@ abstract class BaseModule<T extends CDAResource>
 
     try {
       CDAArray array =
-          context.gson.fromJson(new InputStreamReader(response.getBody().in()), CDAArray.class);
+          context.gson.fromJson(new InputStreamReader(response.getBody().in(), DEFAULT_CHARSET),
+              CDAArray.class);
 
       array.setOriginalUrl(response.getUrl());
-
       return prepare(new ArrayParser<CDAArray>(array, context).call());
     } catch (Exception e) {
       throw RetrofitError.unexpectedError(response.getUrl(), e);
