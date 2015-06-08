@@ -1,7 +1,7 @@
 contentful.java
 ===============
 
-[![Build Status](https://travis-ci.org/contentful/contentful.java.svg)](https://travis-ci.org/contentful/contentful.java/builds#) [![Coverage Status](https://img.shields.io/coveralls/contentful/contentful.java.svg)](https://coveralls.io/r/contentful/contentful.java?branch=master)
+[![Build Status](https://travis-ci.org/contentful/contentful.java.svg)](https://travis-ci.org/contentful/contentful.java/builds#)
 
 Java SDK for [Contentful's][1] Content Delivery API.
 
