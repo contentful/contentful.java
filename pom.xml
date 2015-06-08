@@ -144,6 +144,7 @@
         <filtering>true</filtering>
       </resource>
     </resources>
+
     <plugins>
       <plugin>
         <groupId>org.eluder.coveralls</groupId>
