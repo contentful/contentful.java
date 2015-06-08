@@ -30,7 +30,7 @@ public class ClientTest extends BaseTest {
   @Test
   @Enqueue
   public void oauthHeader() throws Exception {
-    client.observeSpace().toBlocking().first();
+    client.fetchSpace();
     RecordedRequest request = server.takeRequest();
     assertThat(request.getHeader("authorization")).isEqualTo("Bearer token");
   }
@@ -40,7 +40,7 @@ public class ClientTest extends BaseTest {
   public void userAgentHeader() throws Exception {
     String versionName = Util.getProperty("version.name");
     assertThat(versionName).isNotEmpty();
-    client.observeSpace().toBlocking().first();
+    client.fetchSpace();
     RecordedRequest request = server.takeRequest();
     assertThat(request.getHeader("User-Agent")).isEqualTo("contentful.java/" + versionName);
   }

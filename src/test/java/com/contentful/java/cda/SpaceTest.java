@@ -10,7 +10,7 @@ public class SpaceTest extends BaseTest {
   @Test
   @Enqueue("space.json")
   public void fetchSpace() throws Exception {
-    CDASpace space = client.observeSpace().toBlocking().first();
+    CDASpace space = client.fetchSpace();
     assertThat(space.name()).isEqualTo("Contentful Example API");
     assertThat(space.id()).isEqualTo("cfexampleapi");
     assertThat(space.type()).isEqualTo(SPACE);

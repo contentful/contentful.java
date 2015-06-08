@@ -9,7 +9,7 @@ public class AssetTest extends BaseTest {
   @Test
   @Enqueue("assets_jake.json")
   public void fetchAsset() throws Exception {
-    CDAAsset asset = client.observe(CDAAsset.class).one("jake").toBlocking().first();
+    CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
     assertThat(asset.id()).isEqualTo("jake");
     assertThat(asset.title()).isEqualTo("Jake");
     assertThat(asset.mimeType()).isEqualTo("image/png");
