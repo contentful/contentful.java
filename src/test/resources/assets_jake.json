@@ -1,0 +1,42 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 1,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    {
+      "fields": {
+        "title": "Jake",
+        "file": {
+          "fileName": "jake.png",
+          "contentType": "image/png",
+          "details": {
+            "image": {
+              "width": 100,
+              "height": 161
+            },
+            "size": 20480
+          },
+          "url": "//images.contentful.com/cfexampleapi/4hlteQAXS8iS0YCMU6QMWg/2a4d826144f014109364ccf5c891d2dd/jake.png"
+        }
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "type": "Asset",
+        "id": "jake",
+        "revision": 2,
+        "createdAt": "2013-09-02T14:56:34.260Z",
+        "updatedAt": "2013-09-02T15:22:39.466Z",
+        "locale": "en-US"
+      }
+    }
+  ]
+}
