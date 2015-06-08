@@ -2,6 +2,7 @@ package com.contentful.java.cda;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
 import retrofit.RestAdapter;
 import retrofit.RestAdapter.LogLevel;
 import retrofit.client.Response;
@@ -21,12 +22,15 @@ public final class CDAClient {
 
   final Cache cache;
 
+  final Executor callbackExecutor;
+
   private CDAClient(Builder builder) {
     validate(builder);
     this.spaceId = builder.space;
     this.token = builder.token;
     this.service = createService(builder);
     this.cache = new Cache();
+    this.callbackExecutor = Platform.get().callbackExecutor();
   }
 
   private void validate(Builder builder) {
@@ -116,7 +120,10 @@ public final class CDAClient {
     return observeSpace().toBlocking().first();
   }
 
-  // TODO fetchSpace(callback)
+  @SuppressWarnings("unchecked")
+  public <C extends CDACallback<CDASpace>> C fetchSpace(C callback) {
+    return (C) Callbacks.subscribeAsync(observeSpace(), callback, this);
+  }
 
   public static Builder builder() {
     return new Builder();
