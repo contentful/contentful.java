@@ -2,7 +2,7 @@ package com.contentful.java.cda;
 
 import retrofit.RequestInterceptor;
 
-public class Interceptor implements RequestInterceptor {
+final class Interceptor implements RequestInterceptor {
   static final String USER_AGENT = createUserAgent();
 
   private final String token;
