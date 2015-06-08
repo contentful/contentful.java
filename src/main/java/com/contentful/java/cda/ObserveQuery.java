@@ -19,7 +19,6 @@ public final class ObserveQuery<T extends CDAResource> extends AbsQuery<T, Obser
     Observable<T> observable = where("sys.id", id).all().map(new Func1<CDAArray, T>() {
       @Override @SuppressWarnings("unchecked") public T call(CDAArray array) {
         CDAType resourceType = typeForClass(type);
-        Map<String, ? extends CDAResource> map;
         if (ASSET.equals(resourceType)) {
           return (T) array.assets().get(id);
         } else if (ENTRY.equals(resourceType)) {

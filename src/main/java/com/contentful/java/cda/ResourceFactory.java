@@ -12,6 +12,7 @@ import static com.contentful.java.cda.CDAType.ASSET;
 import static com.contentful.java.cda.CDAType.ENTRY;
 import static com.contentful.java.cda.Constants.CHARSET;
 import static com.contentful.java.cda.Constants.LOCALE;
+import static com.contentful.java.cda.Util.extractNested;
 
 final class ResourceFactory {
   private static final Gson GSON = createGson();
@@ -37,10 +38,11 @@ final class ResourceFactory {
     for (CDAEntry entry : array.entries().values()) {
       String contentTypeId = extractContentTypeId(entry);
 
-      CDAContentType contentType = client.cachedType(contentTypeId).toBlocking().first();
+      CDAContentType contentType = client.cacheTypeWithId(contentTypeId).toBlocking().first();
       if (contentType == null) {
-        throw new RuntimeException(String.format("Resource ID: \"%s\" has non-existing content type mapping \"%s\".",
-            entry.id(), contentTypeId));
+        throw new RuntimeException(
+            String.format("Resource ID: \"%s\" has non-existing content type mapping \"%s\".",
+                entry.id(), contentTypeId));
       }
 
       for (CDAField field : contentType.fields()) {
@@ -57,7 +59,7 @@ final class ResourceFactory {
   private static void resolveField(CDAEntry entry, CDAField field, CDAArray array) {
     CDAType linkType = CDAType.valueOf(field.linkType().toUpperCase(LOCALE));
     for (Map<String, ? super Object> fields : entry.localized.values()) {
-      String id = Util.extractNested(fields, field.id(), "sys", "id");
+      String id = extractNested(fields, field.id(), "sys", "id");
       if (id == null) {
         return;
       }

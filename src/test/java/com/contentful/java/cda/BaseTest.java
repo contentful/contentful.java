@@ -1,6 +1,7 @@
 package com.contentful.java.cda;
 
 import com.contentful.java.cda.lib.EnqueueResponseRule;
+import com.contentful.java.cda.lib.TestCallback;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import java.io.File;
@@ -13,6 +14,7 @@ import org.junit.Before;
 import org.junit.Rule;
 
 import static com.contentful.java.cda.Util.checkNotNull;
+import static com.google.common.truth.Truth.assertThat;
 
 public class BaseTest {
   CDAClient client;
@@ -68,5 +70,11 @@ public class BaseTest {
   public BaseTest setResponseQueue(List<String> responseQueue) {
     this.responseQueue = responseQueue;
     return this;
+  }
+
+  protected <T extends CDAResource> T assertCallback(TestCallback<T> callback) {
+    assertThat(callback.error()).isNull();
+    assertThat(callback.result()).isNotNull();
+    return callback.result();
   }
 }
