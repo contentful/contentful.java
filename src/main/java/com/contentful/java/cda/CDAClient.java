@@ -2,7 +2,6 @@ package com.contentful.java.cda;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RestAdapter.LogLevel;
 import retrofit.client.Response;
@@ -42,19 +41,11 @@ public final class CDAClient {
     }
 
     RestAdapter.Builder restBuilder = new RestAdapter.Builder()
-        .setEndpoint(endpoint);
+        .setEndpoint(endpoint)
+        .setRequestInterceptor(new Interceptor(token));
 
     setLogLevel(restBuilder, clientBuilder);
-    restBuilder.setRequestInterceptor(createInterceptor());
     return restBuilder.build().create(CDAService.class);
-  }
-
-  private RequestInterceptor createInterceptor() {
-    return new RequestInterceptor() {
-      @Override public void intercept(RequestFacade requestFacade) {
-        requestFacade.addHeader("Authorization", "Bearer " + token);
-      }
-    };
   }
 
   private void setLogLevel(RestAdapter.Builder restBuilder, Builder clientBuilder) {

@@ -22,4 +22,6 @@ public class Constants {
   static final String PATH_CONTENT_TYPES = "content_type";
 
   static final String PATH_ENTRIES = "entries";
+
+  static final String PROPERTIES = "contentful_cda.properties";
 }

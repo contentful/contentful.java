@@ -6,7 +6,6 @@ jdk:
 
 after_success:
   - .buildscript/deploy_snapshot.sh
-  - mvn clean cobertura:cobertura coveralls:report
 
 env:
   global:

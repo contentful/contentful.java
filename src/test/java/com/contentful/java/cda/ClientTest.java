@@ -34,4 +34,14 @@ public class ClientTest extends BaseTest {
     RecordedRequest request = server.takeRequest();
     assertThat(request.getHeader("authorization")).isEqualTo("Bearer token");
   }
+
+  @Test
+  @Enqueue
+  public void userAgentHeader() throws Exception {
+    String versionName = Util.getProperty("version.name");
+    assertThat(versionName).isNotEmpty();
+    client.observeSpace().toBlocking().first();
+    RecordedRequest request = server.takeRequest();
+    assertThat(request.getHeader("User-Agent")).isEqualTo("contentful.java/" + versionName);
+  }
 }
