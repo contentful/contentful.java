@@ -10,13 +10,13 @@ public class EntryTest extends BaseTest {
   @Test
   @Enqueue("entries_nyancat.json")
   public void fetchEntry() throws Exception {
-    assertNyanCat(client.observe(CDAEntry.class).one("nyancat").toBlocking().first());
+    assertNyanCat(client.fetch(CDAEntry.class).one("nyancat"));
   }
 
   @Test
   @Enqueue("entries.json")
   public void fetchAllEntries() throws Exception {
-    CDAArray array = client.observe(CDAEntry.class).all().toBlocking().first();
+    CDAArray array = client.fetch(CDAEntry.class).all();
     assertThat(array.items()).hasSize(15);
     assertThat(array.assets()).hasSize(4);
     assertThat(array.entries()).hasSize(11);

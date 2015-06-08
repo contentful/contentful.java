@@ -6,7 +6,7 @@ public final class FetchQuery<T extends CDAResource> extends AbsQuery<T, Observe
   }
 
   public T one(String id) {
-    return client.observe(type).one(id).toBlocking().first();
+    return client.observe(type).where(params).one(id).toBlocking().first();
   }
 
   public CDAArray all() {

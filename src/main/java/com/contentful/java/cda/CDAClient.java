@@ -58,6 +58,10 @@ public final class CDAClient {
     return new ObserveQuery<T>(type, this);
   }
 
+  public <T extends CDAResource> FetchQuery<T> fetch(Class<T> type) {
+    return new FetchQuery<T>(type, this);
+  }
+
   Observable<CDASpace> cacheSpace(boolean invalidate) {
     CDASpace space = invalidate ? null : cache.space();
     if (space == null) {
@@ -107,6 +111,12 @@ public final class CDAClient {
   public Observable<CDASpace> observeSpace() {
     return cacheSpace(true);
   }
+
+  public CDASpace fetchSpace() {
+    return observeSpace().toBlocking().first();
+  }
+
+  // TODO fetchSpace(callback)
 
   public static Builder builder() {
     return new Builder();
