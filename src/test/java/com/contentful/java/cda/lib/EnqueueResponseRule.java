@@ -1,0 +1,32 @@
+package com.contentful.java.cda.lib;
+
+import com.contentful.java.cda.BaseTest;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.junit.rules.MethodRule;
+import org.junit.runners.model.FrameworkMethod;
+import org.junit.runners.model.Statement;
+
+public class EnqueueResponseRule implements MethodRule {
+  static final String[] DEFAULTS = new String[]{
+      "space.json", "content_types.json"
+  };
+
+  @Override public Statement apply(Statement statement, FrameworkMethod method, Object o) {
+    Enqueue enqueue = method.getAnnotation(Enqueue.class);
+    if (enqueue != null) {
+      if (!(o instanceof BaseTest)) {
+        throw new RuntimeException("Test class must extend "
+            + BaseTest.class.getName()
+            + "when using @"
+            + Enqueue.class.getSimpleName());
+      }
+      List<String> responses = new ArrayList<String>();
+      responses.addAll(Arrays.asList(DEFAULTS));
+      responses.addAll(Arrays.asList(enqueue.value()));
+      ((BaseTest) o).setResponseQueue(responses);
+    }
+    return statement;
+  }
+}
