@@ -73,16 +73,6 @@ final class ResourceFactory {
     }
   }
 
-  private static CDAResource resolveField(CDAArray array, CDAField field, String linkType) {
-    CDAResource linkedResource = null;
-    if (ASSET.toString().equals(linkType)) {
-      linkedResource = array.assets().get(field.id());
-    } else if (ENTRY.toString().equals(linkType)) {
-      linkedResource = array.entries().get(field.id());
-    }
-    return linkedResource;
-  }
-
   private static String extractContentTypeId(CDAEntry entry) {
     Map contentType = entry.getAttribute("contentType");
     Map sys = (Map) contentType.get("sys");
