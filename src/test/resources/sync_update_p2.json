@@ -1,0 +1,278 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "items": [
+    {
+      "sys": {
+        "type": "DeletedEntry",
+        "id": "ge1xHyH3QOWucKWCCAgIG",
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "revision": 2,
+        "createdAt": "2014-07-31T15:14:59.226Z",
+        "updatedAt": "2014-07-31T15:14:59.226Z",
+        "deletedAt": "2014-07-31T15:14:59.226Z"
+      }
+    },
+    {
+      "sys": {
+        "type": "DeletedEntry",
+        "id": "4MU1s3potiUEM2G4okYOqw",
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "revision": 2,
+        "createdAt": "2014-07-31T15:14:59.226Z",
+        "updatedAt": "2014-07-31T15:14:59.226Z",
+        "deletedAt": "2014-07-31T15:14:59.226Z"
+      }
+    },
+    {
+      "sys": {
+        "type": "DeletedEntry",
+        "id": "jake",
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "revision": 2,
+        "createdAt": "2014-07-31T15:14:59.226Z",
+        "updatedAt": "2014-07-31T15:14:59.226Z",
+        "deletedAt": "2014-07-31T15:14:59.226Z"
+      }
+    },
+    {
+      "sys": {
+        "type": "DeletedEntry",
+        "id": "6KntaYXaHSyIw8M6eo26OK",
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "revision": 2,
+        "createdAt": "2014-07-31T15:14:59.226Z",
+        "updatedAt": "2014-07-31T15:14:59.226Z",
+        "deletedAt": "2014-07-31T15:14:59.226Z"
+      }
+    },
+    {
+      "sys": {
+        "type": "DeletedEntry",
+        "id": "5ETMRzkl9KM4omyMwKAOki",
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "revision": 2,
+        "createdAt": "2014-07-31T15:14:59.226Z",
+        "updatedAt": "2014-07-31T15:14:59.226Z",
+        "deletedAt": "2014-07-31T15:14:59.226Z"
+      }
+    },
+    {
+      "sys": {
+        "type": "DeletedEntry",
+        "id": "finn",
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "revision": 2,
+        "createdAt": "2014-07-31T15:14:59.226Z",
+        "updatedAt": "2014-07-31T15:14:59.226Z",
+        "deletedAt": "2014-07-31T15:14:59.226Z"
+      }
+    },
+    {
+      "sys": {
+        "type": "DeletedEntry",
+        "id": "garfield",
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "revision": 2,
+        "createdAt": "2014-07-31T15:14:59.226Z",
+        "updatedAt": "2014-07-31T15:14:59.226Z",
+        "deletedAt": "2014-07-31T15:14:59.226Z"
+      }
+    },
+    {
+      "sys": {
+        "type": "DeletedEntry",
+        "id": "CVebBDcQsSsu6yKKIayy",
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "revision": 2,
+        "createdAt": "2014-07-31T15:14:59.226Z",
+        "updatedAt": "2014-07-31T15:14:59.226Z",
+        "deletedAt": "2014-07-31T15:14:59.226Z"
+      }
+    },
+    {
+      "sys": {
+        "type": "DeletedAsset",
+        "id": "1x0xpXu4pSGS4OukSyWGUK",
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "revision": 2,
+        "createdAt": "2014-07-31T15:14:59.226Z",
+        "updatedAt": "2014-07-31T15:14:59.226Z",
+        "deletedAt": "2014-07-31T15:14:59.226Z"
+      }
+    },
+    {
+      "sys": {
+        "type": "DeletedAsset",
+        "id": "jake",
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "revision": 2,
+        "createdAt": "2014-07-31T15:14:59.226Z",
+        "updatedAt": "2014-07-31T15:14:59.226Z",
+        "deletedAt": "2014-07-31T15:14:59.226Z"
+      }
+    },
+    {
+      "fields": {
+        "name": {
+          "en-US": "foo",
+          "tlh": "bar'"
+        },
+        "likes": {
+          "en-US": [
+            "a",
+            "b",
+            "c"
+          ]
+        },
+        "color": {
+          "en-US": "red"
+        },
+        "bestFriend": {
+          "en-US": {
+            "sys": {
+              "type": "Link",
+              "linkType": "Entry",
+              "id": "supercat"
+            }
+          }
+        },
+        "birthday": {
+          "en-US": "2011-04-04T22:00:00+00:00"
+        },
+        "lives": {
+          "en-US": 1337
+        },
+        "image": {
+          "en-US": {
+            "sys": {
+              "type": "Link",
+              "linkType": "Asset",
+              "id": "nyancat"
+            }
+          }
+        }
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "cat"
+          }
+        },
+        "id": "nyancat",
+        "revision": 6,
+        "createdAt": "2013-06-27T22:46:19.513Z",
+        "updatedAt": "2013-09-04T09:19:39.027Z"
+      }
+    },
+    {
+      "fields": {
+        "name": {
+          "en-US": "Super Cat",
+          "tlh": "Gunga Qemubh"
+        },
+        "likes": {
+          "en-US": [
+            "nothing"
+          ]
+        },
+        "color": {
+          "en-US": "black"
+        }
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "cat"
+          }
+        },
+        "id": "supercat",
+        "revision": 1,
+        "createdAt": "2013-06-27T22:46:19.513Z",
+        "updatedAt": "2013-09-04T09:19:39.027Z"
+      }
+    }
+  ],
+  "nextSyncUrl": "https://cdn.contentful.com/spaces/cfexampleapi/sync?sync_token=bar"
+}

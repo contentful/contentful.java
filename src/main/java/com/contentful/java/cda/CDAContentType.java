@@ -26,4 +26,12 @@ public final class CDAContentType extends CDAResource {
   public String description() {
     return description;
   }
+
+  @Override public String toString() {
+    return "CDAContentType{" +
+        "id='" + id() + '\'' +
+        ", name='" + name + '\'' +
+        ", description='" + description + '\'' +
+        '}';
+  }
 }

@@ -23,8 +23,7 @@ public class BaseTest {
 
   List<String> responseQueue;
 
-  @Rule
-  public EnqueueResponseRule enqueueResponse = new EnqueueResponseRule();
+  @Rule public EnqueueResponseRule enqueueResponse = new EnqueueResponseRule();
 
   @Before public void setUp() throws Exception {
     server = createServer();

@@ -58,12 +58,64 @@ public final class CDAClient {
     }
   }
 
+  public <T extends CDAResource> FetchQuery<T> fetch(Class<T> type) {
+    return new FetchQuery<T>(type, this);
+  }
+
   public <T extends CDAResource> ObserveQuery<T> observe(Class<T> type) {
     return new ObserveQuery<T>(type, this);
   }
 
-  public <T extends CDAResource> FetchQuery<T> fetch(Class<T> type) {
-    return new FetchQuery<T>(type, this);
+  public SyncQuery sync() {
+    return sync(null, null);
+  }
+
+  public SyncQuery sync(String syncToken) {
+    return sync(syncToken, null);
+  }
+
+  public SyncQuery sync(SynchronizedSpace synchronizedSpace) {
+    return sync(null, synchronizedSpace);
+  }
+
+  private SyncQuery sync(String syncToken, SynchronizedSpace synchronizedSpace) {
+    SyncQuery.Builder builder = SyncQuery.builder().setClient(this);
+    if (synchronizedSpace != null) {
+      builder.setSpace(synchronizedSpace);
+    }
+    if (syncToken != null) {
+      builder.setSyncToken(syncToken);
+    }
+    return builder.build();
+  }
+
+  /** Space */
+  public CDASpace fetchSpace() {
+    return observeSpace().toBlocking().first();
+  }
+
+  @SuppressWarnings("unchecked")
+  public <C extends CDACallback<CDASpace>> C fetchSpace(C callback) {
+    return (C) Callbacks.subscribeAsync(observeSpace(), callback, this);
+  }
+
+  public Observable<CDASpace> observeSpace() {
+    return cacheSpace(true);
+  }
+
+  /** Caching */
+  Observable<Cache> cacheAll(final boolean invalidate) {
+    return cacheSpace(invalidate)
+        .flatMap(new Func1<CDASpace, Observable<Map<String, CDAContentType>>>() {
+          @Override public Observable<Map<String, CDAContentType>> call(CDASpace cdaSpace) {
+            return cacheTypes(invalidate);
+          }
+        })
+        .map(new Func1<Map<String, CDAContentType>, Cache>() {
+          @Override public Cache call(Map<String, CDAContentType> stringCDAContentTypeMap) {
+            return cache;
+          }
+        });
   }
 
   Observable<CDASpace> cacheSpace(boolean invalidate) {
@@ -110,19 +162,6 @@ public final class CDAClient {
       });
     }
     return Observable.just(contentType);
-  }
-
-  public Observable<CDASpace> observeSpace() {
-    return cacheSpace(true);
-  }
-
-  public CDASpace fetchSpace() {
-    return observeSpace().toBlocking().first();
-  }
-
-  @SuppressWarnings("unchecked")
-  public <C extends CDACallback<CDASpace>> C fetchSpace(C callback) {
-    return (C) Callbacks.subscribeAsync(observeSpace(), callback, this);
   }
 
   public static Builder builder() {
