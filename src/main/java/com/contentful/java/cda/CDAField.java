@@ -17,9 +17,9 @@ public final class CDAField {
 
   boolean localized;
 
-  Map items;
+  Map<?, ?> items;
 
-  Map validations;
+  Map<?, ?> validations;
 
   public String name() {
     return name;
@@ -49,11 +49,11 @@ public final class CDAField {
     return localized;
   }
 
-  public Map items() {
+  public Map<?, ?> items() {
     return items;
   }
 
-  public Map validations() {
+  public Map<?, ?> validations() {
     return validations;
   }
 }

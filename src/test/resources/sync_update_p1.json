@@ -1,0 +1,25 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "items": [
+    {
+      "sys": {
+        "type": "DeletedEntry",
+        "id": "7qVBlCjpWE86Oseo40gAEY",
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "revision": 3,
+        "createdAt": "2014-07-31T15:14:59.226Z",
+        "updatedAt": "2014-07-31T15:14:59.226Z",
+        "deletedAt": "2014-07-31T15:14:59.226Z"
+      }
+    }
+  ],
+  "nextPageUrl": "http://cdn.contentful.com/spaces/cfexampleapi/sync?sync_token=foo"
+}

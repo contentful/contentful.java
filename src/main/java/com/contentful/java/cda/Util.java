@@ -1,12 +1,14 @@
 package com.contentful.java.cda;
 
+import com.squareup.okhttp.HttpUrl;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 
-import static com.contentful.java.cda.CDAType.ARRAY;
 import static com.contentful.java.cda.CDAType.ASSET;
 import static com.contentful.java.cda.CDAType.CONTENTTYPE;
+import static com.contentful.java.cda.CDAType.DELETEDASSET;
+import static com.contentful.java.cda.CDAType.DELETEDENTRY;
 import static com.contentful.java.cda.CDAType.ENTRY;
 import static com.contentful.java.cda.CDAType.SPACE;
 import static com.contentful.java.cda.Constants.PATH_ASSETS;
@@ -47,9 +49,7 @@ final class Util {
   }
 
   static Class<? extends CDAResource> classForType(CDAType type) {
-    if (ARRAY.equals(type)) {
-      return CDAArray.class;
-    } else if (ASSET.equals(type)) {
+    if (ASSET.equals(type)) {
       return CDAAsset.class;
     } else if (CONTENTTYPE.equals(type)) {
       return CDAContentType.class;
@@ -57,6 +57,8 @@ final class Util {
       return CDAEntry.class;
     } else if (SPACE.equals(type)) {
       return CDASpace.class;
+    } else if (DELETEDASSET.equals(type) || DELETEDENTRY.equals(type)) {
+      return DeletedResource.class;
     }
     throw new IllegalArgumentException("Invalid type provided: " + type);
   }
@@ -75,8 +77,8 @@ final class Util {
   }
 
   @SuppressWarnings("unchecked")
-  static <T> T extractNested(Map source, String... keys) {
-    Map curr = source;
+  static <T> T extractNested(Map<?, ?> source, String... keys) {
+    Map<?, ?> curr = source;
     for (int i = 0; i < keys.length; i++) {
       if (i == keys.length - 1) {
         return (T) curr.get(keys[i]);
@@ -99,5 +101,13 @@ final class Util {
     } catch (IOException e) {
       throw new RuntimeException("Unable to read from properties file.", e);
     }
+  }
+
+  static String queryParam(String url, String name) {
+    HttpUrl httpUrl = HttpUrl.parse(url);
+    if (httpUrl == null) {
+      return null;
+    }
+    return httpUrl.queryParameter(name);
   }
 }

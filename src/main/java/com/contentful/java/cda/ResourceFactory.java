@@ -4,15 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import retrofit.client.Response;
 
-import static com.contentful.java.cda.CDAType.ASSET;
-import static com.contentful.java.cda.CDAType.ENTRY;
 import static com.contentful.java.cda.Constants.CHARSET;
-import static com.contentful.java.cda.Constants.LOCALE;
-import static com.contentful.java.cda.Util.extractNested;
 
 final class ResourceFactory {
   private static final Gson GSON = createGson();
@@ -24,97 +22,48 @@ final class ResourceFactory {
   }
 
   static CDAArray array(Response response, CDAClient client) {
-    CDAArray array = fromResponse(response);
+    CDAArray array = fromResponse(response, CDAArray.class);
     array.assets = new HashMap<String, CDAAsset>();
     array.entries = new HashMap<String, CDAEntry>();
-    arrayMergeIncludes(array);
-    arrayMapItems(array);
-    arrayLocalizeItems(array);
-    arrayResolveLinks(array, client);
+    ArrayUtil.mergeIncludes(array);
+    Localization.localizeResources(array.items(), client.cache.space());
+    ArrayUtil.mapResources(array.items(), array.assets, array.entries);
+    ArrayUtil.resolveLinks(array, client);
     return array;
   }
 
-  private static void arrayResolveLinks(CDAArray array, CDAClient client) {
-    for (CDAEntry entry : array.entries().values()) {
-      String contentTypeId = extractContentTypeId(entry);
+  static SynchronizedSpace sync(Response response, SynchronizedSpace old, CDAClient client) {
+    Map<String, CDAAsset> assets = new HashMap<String, CDAAsset>();
+    Map<String, CDAEntry> entries = new HashMap<String, CDAEntry>();
 
-      CDAContentType contentType = client.cacheTypeWithId(contentTypeId).toBlocking().first();
-      if (contentType == null) {
-        throw new RuntimeException(
-            String.format("Resource ID: \"%s\" has non-existing content type mapping \"%s\".",
-                entry.id(), contentTypeId));
-      }
-
-      for (CDAField field : contentType.fields()) {
-        String linkType = field.linkType();
-        if (linkType == null) {
-          continue;
-        }
-
-        resolveField(entry, field, array);
-      }
+    // Map resources from existing space
+    if (old != null) {
+      ArrayUtil.mapResources(old.items(), assets, entries);
     }
-  }
 
-  private static void resolveField(CDAEntry entry, CDAField field, CDAArray array) {
-    CDAType linkType = CDAType.valueOf(field.linkType().toUpperCase(LOCALE));
-    for (Map<String, ? super Object> fields : entry.localized.values()) {
-      String id = extractNested(fields, field.id(), "sys", "id");
-      if (id == null) {
-        return;
-      }
-      CDAResource linkedResource = null;
-      if (ASSET.equals(linkType)) {
-        linkedResource = array.assets().get(id);
-      } else if (ENTRY.equals(linkType)) {
-        linkedResource = array.entries().get(id);
-      }
-      fields.put(field.id(), linkedResource);
-    }
-  }
+    SynchronizedSpace result = ArrayUtil.iterate(response, client);
+    ArrayUtil.mapResources(result.items(), assets, entries);
 
-  private static String extractContentTypeId(CDAEntry entry) {
-    Map contentType = entry.getAttribute("contentType");
-    Map sys = (Map) contentType.get("sys");
-    return (String) sys.get("id");
-  }
+    List<CDAResource> items = new ArrayList<CDAResource>();
+    items.addAll(assets.values());
+    items.addAll(entries.values());
+    result.items = items;
+    result.assets = assets;
+    result.entries = entries;
 
-  private static void arrayLocalizeItems(CDAArray array) {
-    for (CDAResource resource : array.items()) {
-      CDAType type = resource.type();
-      if (ASSET.equals(type) || ENTRY.equals(type)) {
-        localize((LocalizedResource) resource);
-      }
-    }
-  }
+    ArrayUtil.resolveLinks(result, client);
 
-  private static void arrayMergeIncludes(CDAArray array) {
-    if (array.includes != null) {
-      if (array.includes.assets != null) {
-        array.items().addAll(array.includes.assets);
-      }
-      if (array.includes.entries != null) {
-        array.items().addAll(array.includes.entries);
-      }
-    }
-  }
-
-  private static void arrayMapItems(CDAArray array) {
-    for (CDAResource resource : array.items()) {
-      CDAType type = resource.type();
-      if (ASSET.equals(type)) {
-        array.assets().put(resource.id(), (CDAAsset) resource);
-      } else if (ENTRY.equals(type)) {
-        array.entries().put(resource.id(), (CDAEntry) resource);
-      }
-    }
+    return result;
   }
 
   @SuppressWarnings("unchecked")
-  private static <T extends CDAResource> T fromResponse(Response response) {
+  static <T extends CDAResource> T fromResponse(Response response) {
+    return (T) fromResponse(response, CDAResource.class);
+  }
+
+  static <T extends CDAResource> T fromResponse(Response response, Class<T> clazz) {
     try {
-      return (T) GSON.fromJson(new InputStreamReader(response.getBody().in(), CHARSET),
-          CDAResource.class);
+      return GSON.fromJson(new InputStreamReader(response.getBody().in(), CHARSET), clazz);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -133,12 +82,5 @@ final class ResourceFactory {
     return new GsonBuilder()
         .registerTypeAdapter(CDAResource.class, new ResourceDeserializer())
         .create();
-  }
-
-  private static void localize(LocalizedResource resource) {
-    resource.locale = resource.getAttribute("locale");
-    resource.activeFields = resource.rawFields;
-    resource.localized = new HashMap<String, Map<String, ? super Object>>();
-    resource.localized.put(resource.locale(), resource.activeFields);
   }
 }

@@ -9,10 +9,6 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 
 public class EnqueueResponseRule implements MethodRule {
-  static final String[] DEFAULTS = new String[]{
-      "space.json", "content_types.json"
-  };
-
   @Override public Statement apply(Statement statement, FrameworkMethod method, Object o) {
     Enqueue enqueue = method.getAnnotation(Enqueue.class);
     if (enqueue != null) {
@@ -23,7 +19,7 @@ public class EnqueueResponseRule implements MethodRule {
             + Enqueue.class.getSimpleName());
       }
       List<String> responses = new ArrayList<String>();
-      responses.addAll(Arrays.asList(DEFAULTS));
+      responses.addAll(Arrays.asList(enqueue.defaults()));
       responses.addAll(Arrays.asList(enqueue.value()));
       ((BaseTest) o).setResponseQueue(responses);
     }

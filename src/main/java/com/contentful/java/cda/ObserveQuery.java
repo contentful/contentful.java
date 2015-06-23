@@ -1,6 +1,5 @@
 package com.contentful.java.cda;
 
-import java.util.Map;
 import retrofit.client.Response;
 import rx.Observable;
 import rx.functions.Func1;
@@ -43,18 +42,12 @@ public final class ObserveQuery<T extends CDAResource> extends AbsQuery<T, Obser
   }
 
   public Observable<CDAArray> all() {
-    return client.cacheSpace(false)
-        .flatMap(new Func1<CDASpace, Observable<Map<String, CDAContentType>>>() {
-          @Override public Observable<Map<String, CDAContentType>> call(CDASpace space) {
-            return client.cacheTypes(false);
-          }
-        })
-        .flatMap(new Func1<Map<String, CDAContentType>, Observable<Response>>() {
-          @Override public Observable<Response> call(Map<String, CDAContentType> contentTypes) {
+    return client.cacheAll(false)
+        .flatMap(new Func1<Cache, Observable<Response>>() {
+          @Override public Observable<Response> call(Cache cache) {
             return client.service.array(client.spaceId, path(), params);
           }
-        })
-        .map(new Func1<Response, CDAArray>() {
+        }).map(new Func1<Response, CDAArray>() {
           @Override public CDAArray call(Response response) {
             return ResourceFactory.array(response, client);
           }
