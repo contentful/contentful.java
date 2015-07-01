@@ -4,6 +4,7 @@ import java.util.Map;
 import retrofit.client.Response;
 import retrofit.http.GET;
 import retrofit.http.Path;
+import retrofit.http.Query;
 import retrofit.http.QueryMap;
 import rx.Observable;
 
@@ -23,4 +24,10 @@ public interface CDAService {
       @Path("space") String space,
       @Path("type") String type,
       @QueryMap Map<String, String> query);
+
+  @GET("/spaces/{space}/sync")
+  Observable<Response> sync(
+      @Path("space") String space,
+      @Query("initial") Boolean initial,
+      @Query("syncToken") String sync_token);
 }

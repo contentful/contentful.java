@@ -4,6 +4,8 @@ public enum CDAType {
   ARRAY,
   ASSET,
   CONTENTTYPE,
+  DELETEDASSET,
+  DELETEDENTRY,
   ENTRY,
   SPACE
 }

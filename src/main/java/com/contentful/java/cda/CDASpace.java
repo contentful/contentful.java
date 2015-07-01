@@ -20,4 +20,11 @@ public final class CDASpace extends CDAResource {
   public CDALocale defaultLocale() {
     return defaultLocale;
   }
+
+  @Override public String toString() {
+    return "CDASpace{" +
+        "id='" + id() + '\'' +
+        ", name='" + name + '\'' +
+        '}';
+  }
 }

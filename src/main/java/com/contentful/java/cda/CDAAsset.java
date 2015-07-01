@@ -18,10 +18,17 @@ public final class CDAAsset extends LocalizedResource {
   @SuppressWarnings("unchecked")
   public <T> T fileField(String key) {
     T result = null;
-    Map file = getField("file");
+    Map<?, ?> file = getField("file");
     if (file != null) {
       result = (T) file.get(key);
     }
     return result;
+  }
+
+  @Override public String toString() {
+    return "CDAAsset{" +
+        "id='" + id() + '\'' +
+        ", title='" + title() + '\'' +
+        '}';
   }
 }

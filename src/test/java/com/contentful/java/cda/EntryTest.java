@@ -37,7 +37,7 @@ public class EntryTest extends BaseTest {
     assertThat(entry.getField("birthday")).isEqualTo("2011-04-04T22:00:00+00:00");
     assertThat(entry.getField("lives")).isEqualTo(1337.0);
 
-    List likes = entry.getField("likes");
+    List<String> likes = entry.getField("likes");
     assertThat(likes).containsExactly("rainbows", "fish");
 
     Object bestFriend = entry.getField("bestFriend");
