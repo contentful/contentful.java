@@ -7,7 +7,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 public class ContentTypeTest extends BaseTest {
   @Test
-  @Enqueue("content_types_cat.json")
+  @Enqueue("demo/content_types_cat.json")
   public void fetchContentType() throws Exception {
     CDAContentType cat = client.fetch(CDAContentType.class).one("cat");
     assertThat(cat.name()).isEqualTo("Cat");
@@ -17,7 +17,7 @@ public class ContentTypeTest extends BaseTest {
   }
 
   @Test
-  @Enqueue({ "content_types_cat.json", "content_types_fake.json" })
+  @Enqueue({ "demo/content_types_cat.json", "demo/content_types_fake.json" })
   public void manuallyFetchedContentTypeIsCached() throws Exception {
     client.fetch(CDAContentType.class).one("cat");
     assertThat(client.cache.types()).hasSize(5);
