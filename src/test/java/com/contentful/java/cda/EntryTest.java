@@ -2,6 +2,7 @@ package com.contentful.java.cda;
 
 import com.contentful.java.cda.lib.Enqueue;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -11,6 +12,28 @@ public class EntryTest extends BaseTest {
   @Enqueue("entries_nyancat.json")
   public void fetchEntry() throws Exception {
     assertNyanCat(client.fetch(CDAEntry.class).one("nyancat"));
+  }
+
+  @Test
+  @Enqueue("entries_nyancat.json")
+  public void fetchEntryAsync() throws Exception {
+    final CountDownLatch latch = new CountDownLatch(1);
+    final CDAEntry[] result = { null };
+
+    client.fetch(CDAEntry.class).one("nyancat", new CDACallback<CDAEntry>() {
+      @Override protected void onSuccess(CDAEntry entry) {
+        result[0] = entry;
+        latch.countDown();
+      }
+
+      @Override protected void onFailure(Throwable error) {
+        latch.countDown();
+      }
+    });
+
+    latch.await();
+    assertThat(result[0]).isNotNull();
+    assertNyanCat(result[0]);
   }
 
   @Test
