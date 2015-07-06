@@ -46,6 +46,15 @@ public final class SyncQuery {
         });
   }
 
+  public SynchronizedSpace fetch() {
+    return observe().toBlocking().first();
+  }
+
+  @SuppressWarnings("unchecked")
+  public <C extends CDACallback<SynchronizedSpace>> C fetch(C callback) {
+    return (C) Callbacks.subscribeAsync(observe(), callback, client);
+  }
+
   static Builder builder() {
     return new Builder();
   }
