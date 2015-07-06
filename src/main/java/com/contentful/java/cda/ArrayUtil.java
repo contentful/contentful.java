@@ -104,7 +104,11 @@ final class ArrayUtil {
       } else if (ENTRY.equals(linkType)) {
         linkedResource = array.entries().get(id);
       }
-      fields.put(field.id(), linkedResource);
+      if (linkedResource == null) {
+        fields.remove(field.id());
+      } else {
+        fields.put(field.id(), linkedResource);
+      }
     }
   }
 
