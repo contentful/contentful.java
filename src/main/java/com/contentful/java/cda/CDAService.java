@@ -29,5 +29,5 @@ public interface CDAService {
   Observable<Response> sync(
       @Path("space") String space,
       @Query("initial") Boolean initial,
-      @Query("syncToken") String sync_token);
+      @Query("sync_token") String sync_token);
 }

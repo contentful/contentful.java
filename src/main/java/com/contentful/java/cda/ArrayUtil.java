@@ -41,7 +41,7 @@ final class ArrayUtil {
     }
 
     Response response =
-        client.service.sync(client.spaceId, false, queryParam(nextPageUrl, "sync_token"))
+        client.service.sync(client.spaceId, null, queryParam(nextPageUrl, "sync_token"))
             .toBlocking()
             .first();
 

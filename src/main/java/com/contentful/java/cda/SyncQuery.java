@@ -37,7 +37,7 @@ public final class SyncQuery {
     return client.cacheAll(true)
         .flatMap(new Func1<Cache, Observable<Response>>() {
           @Override public Observable<Response> call(Cache cache) {
-            return client.service.sync(client.spaceId, token == null, token);
+            return client.service.sync(client.spaceId, initial ? initial : null, token);
           }
         }).map(new Func1<Response, SynchronizedSpace>() {
           @Override public SynchronizedSpace call(Response response) {
