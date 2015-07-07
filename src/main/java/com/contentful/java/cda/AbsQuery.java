@@ -5,7 +5,7 @@ import java.util.Map;
 
 import static com.contentful.java.cda.Util.resourcePath;
 
-public abstract class AbsQuery<T extends CDAResource, E extends AbsQuery<T, E>> {
+abstract class AbsQuery<T extends CDAResource, E extends AbsQuery<T, E>> {
   final Class<T> type;
 
   final CDAClient client;
