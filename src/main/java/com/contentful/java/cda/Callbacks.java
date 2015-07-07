@@ -27,7 +27,7 @@ final class Callbacks {
 
     protected final CDAClient client;
 
-    public BaseAction(CDACallback<? extends CDAResource> callback, CDAClient client) {
+    BaseAction(CDACallback<? extends CDAResource> callback, CDAClient client) {
       this.callback = callback;
       this.client = client;
     }
@@ -47,7 +47,7 @@ final class Callbacks {
   }
 
   static class SuccessAction<E extends CDAResource> extends BaseAction<E> {
-    public SuccessAction(CDACallback<? extends CDAResource> callback, CDAClient client) {
+    SuccessAction(CDACallback<? extends CDAResource> callback, CDAClient client) {
       super(callback, client);
     }
 
@@ -59,7 +59,7 @@ final class Callbacks {
   }
 
   static class FailureAction extends BaseAction<Throwable> {
-    public FailureAction(CDACallback<? extends CDAResource> callback, CDAClient client) {
+    FailureAction(CDACallback<? extends CDAResource> callback, CDAClient client) {
       super(callback, client);
     }
 
@@ -73,7 +73,7 @@ final class Callbacks {
 
     private final CDACallback<E> callback;
 
-    public SuccessRunnable(E result, CDACallback<E> callback) {
+    SuccessRunnable(E result, CDACallback<E> callback) {
       this.result = result;
       this.callback = callback;
     }
@@ -90,7 +90,7 @@ final class Callbacks {
 
     private final CDACallback<? extends CDAResource> callback;
 
-    public FailureRunnable(Throwable throwable, CDACallback<? extends CDAResource> callback) {
+    FailureRunnable(Throwable throwable, CDACallback<? extends CDAResource> callback) {
       this.throwable = throwable;
       this.callback = callback;
     }

@@ -2,6 +2,7 @@ package com.contentful.java.cda;
 
 import retrofit.client.Response;
 import rx.Observable;
+import rx.Scheduler;
 import rx.functions.Func1;
 
 import static com.contentful.java.cda.CDAType.ASSET;
@@ -9,11 +10,24 @@ import static com.contentful.java.cda.CDAType.CONTENTTYPE;
 import static com.contentful.java.cda.CDAType.ENTRY;
 import static com.contentful.java.cda.Util.typeForClass;
 
+/**
+ * Represents a query to the Delivery API which may be invoked via an {@link Observable}
+ * subscription.
+ *
+ * Observable requests are subscribed and observed on the same thread that executed
+ * the request. Call {@link Observable#subscribeOn(Scheduler)} and {@link Observable#observeOn(Scheduler)}
+ * to control that.
+ */
 public final class ObserveQuery<T extends CDAResource> extends AbsQuery<T, ObserveQuery<T>> {
   ObserveQuery(Class<T> type, CDAClient client) {
     super(type, client);
   }
 
+  /**
+   * Observe a resource matching the given {@code id}.
+   * @param id resource id.
+   * @return {@link Observable} instance.
+   */
   public Observable<T> one(final String id) {
     Observable<T> observable = where("sys.id", id).all().map(new Func1<CDAArray, T>() {
       @Override @SuppressWarnings("unchecked") public T call(CDAArray array) {
@@ -41,6 +55,10 @@ public final class ObserveQuery<T extends CDAResource> extends AbsQuery<T, Obser
     return observable;
   }
 
+  /**
+   * Observe an array of all resources matching the type of this query.
+   * @return {@link Observable} instance.
+   */
   public Observable<CDAArray> all() {
     return client.cacheAll(false)
         .flatMap(new Func1<Cache, Observable<Response>>() {

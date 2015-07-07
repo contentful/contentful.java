@@ -3,6 +3,7 @@ package com.contentful.java.cda;
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
+/** Collection of CDA resources. */
 public final class CDAArray extends ArrayResource {
   int total;
 
@@ -12,14 +13,17 @@ public final class CDAArray extends ArrayResource {
 
   Includes includes;
 
+  /** Total number of resources (linked excluded). */
   public int total() {
     return total;
   }
 
+  /** Skip attribute. */
   public int skip() {
     return skip;
   }
 
+  /** Limit attribute. */
   public int limit() {
     return limit;
   }

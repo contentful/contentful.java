@@ -2,6 +2,11 @@ package com.contentful.java.cda;
 
 import rx.Subscription;
 
+/**
+ * Communicates responses from a server or offline requests. One and only one method will be
+ * invoked in response to a given request.
+ * @param <T> expected response type.
+ */
 public abstract class CDACallback<T extends CDAResource> {
   private final Object LOCK = new Object();
 
@@ -9,17 +14,24 @@ public abstract class CDACallback<T extends CDAResource> {
 
   private Subscription subscription;
 
+  /** Successful response. */
   protected abstract void onSuccess(T result);
 
+  /** Invoked when a network or unexpected exception occurred during the HTTP request. */
   protected void onFailure(Throwable error) {
   }
 
+  /** Returns true in case {@link #cancel()} was called. */
   public boolean isCancelled() {
     synchronized (LOCK) {
       return cancelled;
     }
   }
 
+  /**
+   * Cancels the subscription for this callback, onFailure()/onSuccess() methods will not be
+   * called.
+   */
   public void cancel() {
     synchronized (LOCK) {
       cancelled = true;
@@ -27,7 +39,7 @@ public abstract class CDACallback<T extends CDAResource> {
     }
   }
 
-  public void setSubscription(Subscription subscription) {
+  void setSubscription(Subscription subscription) {
     synchronized (LOCK) {
       this.subscription = subscription;
     }

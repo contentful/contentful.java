@@ -8,7 +8,7 @@ import retrofit.http.Query;
 import retrofit.http.QueryMap;
 import rx.Observable;
 
-public interface CDAService {
+interface CDAService {
   @GET("/spaces/{space}")
   Observable<Response> space(
       @Path("space") String space);

@@ -13,6 +13,12 @@ import static com.contentful.java.cda.Constants.ENDPOINT_PROD;
 import static com.contentful.java.cda.Constants.PATH_CONTENT_TYPES;
 import static com.contentful.java.cda.Util.checkNotNull;
 
+/**
+ * Client to be used when requesting information from the Delivery API. Every client is associated
+ * with exactly one Space, but there is no limit to the concurrent number of clients existing at
+ * any one time. Avoid creating multiple clients for the same Space. Use {@link #builder()}
+ * to create a new client instance.
+ */
 public final class CDAClient {
   final String spaceId;
 
@@ -58,22 +64,51 @@ public final class CDAClient {
     }
   }
 
+  /**
+   * Returns a {@link FetchQuery} for a given {@code type}, which can be used to fulfill the
+   * request synchronously or asynchronously when a callback is provided.
+   * @param type resource type.
+   * @param <T> resource type.
+   * @return query instance.
+   */
   public <T extends CDAResource> FetchQuery<T> fetch(Class<T> type) {
     return new FetchQuery<T>(type, this);
   }
 
+  /**
+   * Returns an {@link ObserveQuery} for a given {@code type}, which can be used to return
+   * an {@link Observable} that fetches the desired resources.
+   * @param type resource type.
+   * @param <T> resource type.
+   * @return query instance.
+   */
   public <T extends CDAResource> ObserveQuery<T> observe(Class<T> type) {
     return new ObserveQuery<T>(type, this);
   }
 
+  /**
+   * Returns a {@link SyncQuery} for initial synchronization via the Sync API.
+   * @return query instance.
+   */
   public SyncQuery sync() {
     return sync(null, null);
   }
 
+  /**
+   * Returns a {@link SyncQuery} for synchronization with the provided {@code syncToken} via
+   * the Sync API.
+   * @param syncToken sync token.
+   * @return query instance.
+   */
   public SyncQuery sync(String syncToken) {
     return sync(syncToken, null);
   }
 
+  /**
+   * Returns a {@link SyncQuery} for synchronization with an existing space.
+   * @param synchronizedSpace space to sync.
+   * @return query instance.
+   */
   public SyncQuery sync(SynchronizedSpace synchronizedSpace) {
     return sync(null, synchronizedSpace);
   }
@@ -89,16 +124,18 @@ public final class CDAClient {
     return builder.build();
   }
 
-  /** Space */
+  /** Fetches the space for this client (synchronously). */
   public CDASpace fetchSpace() {
     return observeSpace().toBlocking().first();
   }
 
+  /** Fetches the space for this client (asynchronously). */
   @SuppressWarnings("unchecked")
   public <C extends CDACallback<CDASpace>> C fetchSpace(C callback) {
     return (C) Callbacks.subscribeAsync(observeSpace(), callback, this);
   }
 
+  /** Returns an {@link Observable} that fetches the space for this client. */
   public Observable<CDASpace> observeSpace() {
     return cacheSpace(true);
   }
@@ -164,6 +201,7 @@ public final class CDAClient {
     return Observable.just(contentType);
   }
 
+  /** Returns a {@link CDAClient} builder. */
   public static Builder builder() {
     return new Builder();
   }
@@ -180,26 +218,31 @@ public final class CDAClient {
 
     LogLevel logLevel;
 
+    /** Sets the space ID. */
     public Builder setSpace(String space) {
       this.space = space;
       return this;
     }
 
+    /** Sets the space access token. */
     public Builder setToken(String token) {
       this.token = token;
       return this;
     }
 
+    /** Sets a custom endpoint. */
     public Builder setEndpoint(String endpoint) {
       this.endpoint = endpoint;
       return this;
     }
 
+    /** Sets a custom log level. */
     public Builder setLogLevel(LogLevel logLevel) {
       this.logLevel = logLevel;
       return this;
     }
 
+    /** Sets the endpoint to point the Preview API. */
     public Builder preview() {
       return this.setEndpoint(Constants.ENDPOINT_PREVIEW);
     }
