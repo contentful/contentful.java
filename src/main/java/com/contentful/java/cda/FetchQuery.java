@@ -1,6 +1,6 @@
 package com.contentful.java.cda;
 
-public final class FetchQuery<T extends CDAResource> extends AbsQuery<T, ObserveQuery<T>> {
+public final class FetchQuery<T extends CDAResource> extends AbsQuery<T, FetchQuery<T>> {
   public FetchQuery(Class<T> type, CDAClient client) {
     super(type, client);
   }
