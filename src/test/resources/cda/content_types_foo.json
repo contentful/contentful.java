@@ -1,0 +1,35 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 1,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    {
+      "name": "foo",
+      "fields": [
+        {
+          "name": "link",
+          "id": "link",
+          "type": "Link",
+          "linkType": "Entry"
+        }
+      ],
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "amjnj7ldpank"
+          }
+        },
+        "type": "ContentType",
+        "id": "3XN5y2aye44m0Yioko6K6k",
+        "revision": 1,
+        "createdAt": "2015-07-06T14:55:11.166Z",
+        "updatedAt": "2015-07-06T14:55:11.166Z"
+      }
+    }
+  ]
+}

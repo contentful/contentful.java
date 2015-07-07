@@ -10,7 +10,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 public class CallbackTest extends BaseTest {
   @Test
-  @Enqueue("entries_nyancat.json")
+  @Enqueue("demo/entries_nyancat.json")
   public void fetchEntryAsync() throws Exception {
     assertCallback(
         client.fetch(CDAEntry.class).one("nyancat", new TestCallback<CDAEntry>())

@@ -8,9 +8,8 @@ import static com.google.common.truth.Truth.assertThat;
 
 public class SyncTest extends BaseTest {
   @Test @Enqueue({
-      "sync_initial_p1.json", "sync_initial_p2.json",
-      "space.json", "content_types.json",
-      "sync_update_p1.json", "sync_update_p2.json"
+      "demo/sync_initial_p1.json", "demo/sync_initial_p2.json", "demo/space.json", "demo/content_types.json",
+      "demo/sync_update_p1.json", "demo/sync_update_p2.json"
   })
   public void sync() throws Exception {
     SynchronizedSpace first = client.sync().observe().toBlocking().first();

@@ -8,7 +8,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 public class SpaceTest extends BaseTest {
   @Test
-  @Enqueue("space.json")
+  @Enqueue("demo/space.json")
   public void fetchSpace() throws Exception {
     CDASpace space = client.fetchSpace();
     assertThat(space.name()).isEqualTo("Contentful Example API");

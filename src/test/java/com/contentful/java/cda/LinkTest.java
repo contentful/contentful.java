@@ -7,7 +7,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 public class LinkTest extends BaseTest {
   @Test
-  @Enqueue("links_unresolved.json")
+  @Enqueue("demo/links_unresolved.json")
   public void testUnresolvedLinkIsNull() throws Exception {
     CDAArray array = client.fetch(CDAEntry.class).all();
     assertThat(array.items()).hasSize(1);

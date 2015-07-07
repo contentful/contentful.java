@@ -9,13 +9,13 @@ import static com.google.common.truth.Truth.assertThat;
 
 public class EntryTest extends BaseTest {
   @Test
-  @Enqueue("entries_nyancat.json")
+  @Enqueue("demo/entries_nyancat.json")
   public void fetchEntry() throws Exception {
     assertNyanCat(client.fetch(CDAEntry.class).one("nyancat"));
   }
 
   @Test
-  @Enqueue("entries_nyancat.json")
+  @Enqueue("demo/entries_nyancat.json")
   public void fetchEntryAsync() throws Exception {
     final CountDownLatch latch = new CountDownLatch(1);
     final CDAEntry[] result = { null };
@@ -37,7 +37,7 @@ public class EntryTest extends BaseTest {
   }
 
   @Test
-  @Enqueue("entries.json")
+  @Enqueue("demo/entries.json")
   public void fetchAllEntries() throws Exception {
     CDAArray array = client.fetch(CDAEntry.class).all();
     assertThat(array.items()).hasSize(15);

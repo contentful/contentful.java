@@ -7,7 +7,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 public class AssetTest extends BaseTest {
   @Test
-  @Enqueue("assets_jake.json")
+  @Enqueue("demo/assets_jake.json")
   public void fetchAsset() throws Exception {
     CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
     assertThat(asset.id()).isEqualTo("jake");
