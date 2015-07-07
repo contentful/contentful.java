@@ -1,0 +1,14 @@
+{
+  "sys": {
+    "type": "Space",
+    "id": "amjnj7ldpank"
+  },
+  "name": "Java CDA Test Space",
+  "locales": [
+    {
+      "code": "en-US",
+      "default": true,
+      "name": "U.S. English"
+    }
+  ]
+}

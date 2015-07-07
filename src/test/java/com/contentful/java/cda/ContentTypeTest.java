@@ -27,4 +27,25 @@ public class ContentTypeTest extends BaseTest {
     assertThat(client.cache.types()).hasSize(6);
     assertThat(client.cache.types().get(fake.id())).isSameAs(fake);
   }
+
+  @Test
+  @Enqueue(defaults = {
+      "cda/space.json"
+  }, value = {
+      "cda/content_types_foo.json",
+      "cda/entries.json",
+      "cda/content_types_bar.json"
+  })
+  public void missingContentTypeIsFetchedAndCached() throws Exception {
+    assertThat(client.cache.types()).isNull();
+    CDAArray array = client.fetch(CDAEntry.class).all();
+    CDAEntry foo = array.entries().get("3UpazZmO8g8iI0iWAMmGMS");
+    assertThat(foo).isNotNull();
+
+    CDAEntry bar = foo.getField("link");
+    assertThat(bar).isNotNull();
+    assertThat(bar.getField("name")).isEqualTo("bar");
+
+    assertThat(client.cache.types()).containsKey("3lYaFZKDgQCUwWy6uEoQYi");
+  }
 }
