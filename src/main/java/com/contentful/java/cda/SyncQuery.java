@@ -6,6 +6,7 @@ import rx.functions.Func1;
 
 import static com.contentful.java.cda.Util.checkNotNull;
 
+/** Represents a query to the Sync API. */
 public final class SyncQuery {
   final CDAClient client;
 
@@ -22,6 +23,10 @@ public final class SyncQuery {
     this.initial = space == null && syncToken == null;
   }
 
+  /**
+   * Returns an {@link Observable} to which one can subscribe in order to fulfill this sync query.
+   * @return {@link Observable} instance.
+   */
   public Observable<SynchronizedSpace> observe() {
     final String token;
     if (space != null) {
@@ -46,10 +51,20 @@ public final class SyncQuery {
         });
   }
 
+  /**
+   * Invokes the request to sync (blocking).
+   * @return {@link SynchronizedSpace} instance.
+   */
   public SynchronizedSpace fetch() {
     return observe().toBlocking().first();
   }
 
+  /**
+   * Invokes the request to sync (asynchronously) with the provided {@code callback}.
+   * @param callback callback.
+   * @param <C> callback type.
+   * @return the given callback instance.
+   */
   @SuppressWarnings("unchecked")
   public <C extends CDACallback<SynchronizedSpace>> C fetch(C callback) {
     return (C) Callbacks.subscribeAsync(observe(), callback, client);
@@ -66,22 +81,22 @@ public final class SyncQuery {
 
     SynchronizedSpace space;
 
-    public Builder setClient(CDAClient client) {
+    Builder setClient(CDAClient client) {
       this.client = client;
       return this;
     }
 
-    public Builder setSyncToken(String syncToken) {
+    Builder setSyncToken(String syncToken) {
       this.syncToken = syncToken;
       return this;
     }
 
-    public Builder setSpace(SynchronizedSpace space) {
+    Builder setSpace(SynchronizedSpace space) {
       this.space = space;
       return this;
     }
 
-    public SyncQuery build() {
+    SyncQuery build() {
       return new SyncQuery(this);
     }
   }

@@ -11,25 +11,25 @@ final class Cache {
 
   private final Object LOCK_TYPES = new Object();
 
-  public CDASpace space() {
+  CDASpace space() {
     synchronized (LOCK_SPACE) {
       return space;
     }
   }
 
-  public void setSpace(CDASpace space) {
+  void setSpace(CDASpace space) {
     synchronized (LOCK_SPACE) {
       this.space = space;
     }
   }
 
-  public Map<String, CDAContentType> types() {
+  Map<String, CDAContentType> types() {
     synchronized (LOCK_TYPES) {
       return types;
     }
   }
 
-  public void setTypes(Map<String, CDAContentType> types) {
+  void setTypes(Map<String, CDAContentType> types) {
     synchronized (LOCK_TYPES) {
       this.types = types;
     }

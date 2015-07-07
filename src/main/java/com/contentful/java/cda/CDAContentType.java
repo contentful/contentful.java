@@ -2,6 +2,7 @@ package com.contentful.java.cda;
 
 import java.util.List;
 
+/** Represents a single content type. */
 public final class CDAContentType extends CDAResource {
   List<CDAField> fields;
 
@@ -11,18 +12,22 @@ public final class CDAContentType extends CDAResource {
 
   String description;
 
+  /** Fields List. */
   public List<CDAField> fields() {
     return fields;
   }
 
+  /** Name */
   public String name() {
     return name;
   }
 
+  /** Display Field */
   public String displayField() {
     return displayField;
   }
 
+  /** Description */
   public String description() {
     return description;
   }
