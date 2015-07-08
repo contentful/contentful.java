@@ -6,6 +6,8 @@ import java.util.Map;
 abstract class LocalizedResource extends CDAResource {
   String locale;
 
+  String defaultLocale;
+
   Map<String, ? super Object> activeFields;
 
   Map<String, Map<String, ? super Object>> localized;
@@ -21,7 +23,12 @@ abstract class LocalizedResource extends CDAResource {
    */
   @SuppressWarnings("unchecked")
   public <T> T getField(String key) {
-    return (T) activeFields.get(key);
+    if (activeFields != null && activeFields.containsKey(key)) {
+      return (T) activeFields.get(key);
+    } else if (!locale.equals(defaultLocale)) {
+      return (T) localized.get(defaultLocale).get(key);
+    }
+    return null;
   }
 
   /** Returns the active locale code for this resource. */
@@ -33,5 +40,13 @@ abstract class LocalizedResource extends CDAResource {
   public void setLocale(String locale) {
     this.locale = locale;
     this.activeFields = localized.get(locale);
+  }
+
+  void setDefaultLocale(String defaultLocale) {
+    this.defaultLocale = defaultLocale;
+  }
+
+  String defaultLocale() {
+    return defaultLocale;
   }
 }
