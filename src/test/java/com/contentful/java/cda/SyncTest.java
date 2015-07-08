@@ -67,5 +67,14 @@ public class SyncTest extends BaseTest {
     CDAEntry happyCat = space.entries().get("happycat");
     assertThat(happyCat).isNotNull();
     assertThat(happyCat.getField("name")).isEqualTo("Happy Cat");
+
+    // Localization
+    assertThat(nyanCat.locale()).isEqualTo("en-US");
+    assertThat(nyanCat.getField("name")).isEqualTo("Nyan Cat");
+    assertThat(nyanCat.getField("color")).isEqualTo("rainbow");
+    nyanCat.setLocale("tlh");
+    assertThat(nyanCat.getField("name")).isEqualTo("Nyan vIghro'");
+    assertThat(nyanCat.getField("color")).isEqualTo("rainbow"); // fallback
+    assertThat(nyanCat.getField("non-existing-does-not-throw")).isNull();
   }
 }

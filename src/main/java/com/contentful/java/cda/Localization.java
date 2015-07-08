@@ -29,6 +29,7 @@ final class Localization {
     } else {
       localizeWithDefault(resource, localeCode);
     }
+    resource.setDefaultLocale(space.defaultLocale().code());
   }
 
   private static void localizeFromSync(LocalizedResource resource, CDASpace space) {

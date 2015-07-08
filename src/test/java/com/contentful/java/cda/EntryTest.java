@@ -66,5 +66,11 @@ public class EntryTest extends BaseTest {
     Object bestFriend = entry.getField("bestFriend");
     assertThat(bestFriend).isInstanceOf(CDAEntry.class);
     assertThat(entry).isSameAs(((CDAEntry) bestFriend).getField("bestFriend"));
+
+    // Localization
+    assertThat(entry.locale()).isEqualTo("en-US");
+    entry.setLocale("tlh");
+    assertThat(entry.getField("color")).isEqualTo("rainbow");
+    assertThat(entry.getField("non-existing-does-not-throw")).isNull();
   }
 }
