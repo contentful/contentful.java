@@ -3,7 +3,8 @@ package com.contentful.java.cda;
 import com.google.gson.annotations.SerializedName;
 import java.util.Map;
 
-abstract class LocalizedResource extends CDAResource {
+/** Represents a resource which may contain field values for multiple locales. */
+public abstract class LocalizedResource extends CDAResource {
   String locale;
 
   String defaultLocale;
