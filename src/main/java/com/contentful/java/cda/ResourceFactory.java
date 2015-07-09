@@ -13,6 +13,10 @@ import retrofit.client.Response;
 import static com.contentful.java.cda.Constants.CHARSET;
 
 final class ResourceFactory {
+  private ResourceFactory() {
+    throw new AssertionError();
+  }
+
   private static final Gson GSON = createGson();
 
   static CDASpace space(Response response) {
