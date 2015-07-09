@@ -58,7 +58,7 @@
     <android.version>4.1.1.4</android.version>
     <android.platform>16</android.platform>
     <robolectric.version>2.4</robolectric.version>
-    <truth.version>0.26</truth.version>
+    <truth.version>0.27</truth.version>
   </properties>
 
   <dependencies>
