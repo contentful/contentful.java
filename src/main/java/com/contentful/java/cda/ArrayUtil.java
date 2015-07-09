@@ -1,9 +1,14 @@
 package com.contentful.java.cda;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import retrofit.client.Response;
+import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 import static com.contentful.java.cda.CDAType.ASSET;
 import static com.contentful.java.cda.CDAType.DELETEDASSET;
@@ -134,5 +139,40 @@ final class ArrayUtil {
         entries.put(id, (CDAEntry) resource);
       }
     }
+  }
+
+  static void mapDeletedResources(SynchronizedSpace space) {
+    final Set<String> assets;
+    if (space.deletedAssets == null) {
+      assets = new HashSet<String>();
+    } else {
+      assets = new HashSet<String>(space.deletedAssets);
+    }
+
+    final Set<String> entries;
+    if (space.deletedEntries == null) {
+      entries = new HashSet<String>();
+    } else {
+      entries = new HashSet<String>(space.deletedEntries);
+    }
+
+    Observable.from(space.items())
+        .filter(new Func1<CDAResource, Boolean>() {
+          @Override public Boolean call(CDAResource resource) {
+            CDAType type = resource.type();
+            return DELETEDASSET.equals(type) || DELETEDENTRY.equals(type);
+          }
+        })
+        .subscribe(new Action1<CDAResource>() {
+          @Override public void call(CDAResource resource) {
+            if (DELETEDASSET.equals(resource.type())) {
+              assets.add(resource.id());
+            } else {
+              entries.add(resource.id());
+            }
+          }
+        });
+    space.deletedAssets = assets;
+    space.deletedEntries = entries;
   }
 }
