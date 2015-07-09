@@ -52,6 +52,10 @@ public class SyncTest extends BaseTest {
       assertThat(localized.localized.keySet()).containsExactly("en-US", "tlh");
     }
 
+    for (CDAEntry entry : space.entries().values()) {
+      assertThat(entry.contentType()).isNotNull();
+    }
+
     // Assets
     assertThat(space.assets()).hasSize(4);
     CDAAsset asset = space.assets().get("nyancat");
