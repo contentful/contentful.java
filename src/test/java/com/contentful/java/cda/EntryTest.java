@@ -1,6 +1,7 @@
 package com.contentful.java.cda;
 
 import com.contentful.java.cda.lib.Enqueue;
+import com.contentful.java.cda.lib.TestCallback;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import org.junit.Test;
@@ -35,16 +36,12 @@ public class EntryTest extends BaseTest {
   @Test
   @Enqueue("demo/array_empty.json")
   public void fetchNonExistingEntryInvokesSuccessWithNull() throws Exception {
-    final Object result[] = new Object[] { new Object() };
-    final CountDownLatch latch = new CountDownLatch(1);
-    client.fetch(CDAEntry.class).one("foo", new CDACallback<CDAEntry>() {
-      @Override protected void onSuccess(CDAEntry entry) {
-        result[0] = entry;
-        latch.countDown();
-      }
-    });
-    latch.await();
-    assertThat(result[0]).isNull();
+    TestCallback<CDAEntry> callback = client.fetch(CDAEntry.class)
+        .one("foo", new TestCallback<CDAEntry>())
+        .await();
+
+    assertThat(callback.error()).isNull();
+    assertThat(callback.result()).isNull();
   }
 
   @Test
