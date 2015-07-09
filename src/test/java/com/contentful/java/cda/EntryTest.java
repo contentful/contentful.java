@@ -10,6 +10,13 @@ import static com.google.common.truth.Truth.assertThat;
 public class EntryTest extends BaseTest {
   @Test
   @Enqueue("demo/entries_nyancat.json")
+  public void entryContentType() throws Exception {
+    CDAEntry entry = client.fetch(CDAEntry.class).one("nyancat");
+    assertThat(entry.contentType()).isNotNull();
+  }
+
+  @Test
+  @Enqueue("demo/entries_nyancat.json")
   public void fetchEntry() throws Exception {
     assertNyanCat(client.fetch(CDAEntry.class).one("nyancat"));
   }
@@ -47,6 +54,10 @@ public class EntryTest extends BaseTest {
     assertThat(array.total()).isEqualTo(11);
     assertThat(array.skip()).isEqualTo(0);
     assertThat(array.limit()).isEqualTo(100);
+
+    for (CDAEntry entry : array.entries().values()) {
+      assertThat(entry.contentType()).isNotNull();
+    }
 
     CDAEntry nyanCat = array.entries().get("nyancat");
     assertThat(nyanCat).isNotNull();

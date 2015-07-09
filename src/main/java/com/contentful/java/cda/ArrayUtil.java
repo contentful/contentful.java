@@ -50,24 +50,31 @@ final class ArrayUtil {
 
   static void resolveLinks(ArrayResource array, CDAClient client) {
     for (CDAEntry entry : array.entries().values()) {
-      String contentTypeId = extractNested(entry.attrs(), "contentType", "sys", "id");
-
-      CDAContentType contentType = client.cacheTypeWithId(contentTypeId).toBlocking().first();
-      if (contentType == null) {
-        throw new RuntimeException(
-            String.format("Resource ID: \"%s\" has non-existing content type mapping \"%s\".",
-                entry.id(), contentTypeId));
-      }
-
-      for (CDAField field : contentType.fields()) {
+      ensureContentType(entry, client);
+      for (CDAField field : entry.contentType().fields()) {
         String linkType = field.linkType();
         if (linkType == null) {
           continue;
         }
-
         resolveField(entry, field, array);
       }
     }
+  }
+
+  static void ensureContentType(CDAEntry entry, CDAClient client) {
+    CDAContentType contentType = entry.contentType();
+    if (contentType != null) {
+      return;
+    }
+
+    String id = extractNested(entry.attrs(), "contentType", "sys", "id");
+    contentType = client.cacheTypeWithId(id).toBlocking().first();
+    if (contentType == null) {
+      throw new RuntimeException(
+          String.format("Resource ID: \"%s\" has non-existing content type mapping \"%s\".",
+              entry.id(), id));
+    }
+    entry.setContentType(contentType);
   }
 
   static void mergeIncludes(CDAArray array) {
