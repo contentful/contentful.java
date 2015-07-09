@@ -3,10 +3,26 @@ package com.contentful.java.cda;
 import com.contentful.java.cda.lib.Enqueue;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
 import org.junit.Test;
+import org.mockito.Mockito;
+import retrofit.RetrofitError;
+import retrofit.client.Client;
+import retrofit.client.Request;
 
 import static com.google.common.truth.Truth.assertThat;
 
 public class ClientTest extends BaseTest {
+  @Test(expected = RetrofitError.class)
+  public void customClient() throws Exception {
+    Client mock = Mockito.mock(Client.class);
+    CDAClient cli = CDAClient.builder().setSpace("foo").setToken("bar").setClient(mock).build();
+    try {
+      cli.fetchSpace();
+    } catch (RetrofitError e) {
+      Mockito.verify(mock, Mockito.atLeast(1)).execute(Mockito.any(Request.class));
+      throw e;
+    }
+  }
+
   @Test(expected = NullPointerException.class)
   public void clientWithNoSpaceThrows() throws Exception {
     try {
