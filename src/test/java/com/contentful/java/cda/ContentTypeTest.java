@@ -48,4 +48,18 @@ public class ContentTypeTest extends BaseTest {
 
     assertThat(client.cache.types()).containsKey("3lYaFZKDgQCUwWy6uEoQYi");
   }
+
+  @Test(expected = RuntimeException.class)
+  @Enqueue({
+      "demo/entries_fake.json",
+      "demo/array_empty.json"
+  })
+  public void badTypeMappingThrows() throws Exception {
+    try {
+      client.fetch(CDAEntry.class).all();
+    } catch (RuntimeException e) {
+      assertThat(e.getMessage()).isEqualTo("Entry 'bar' has non-existing content type mapping 'foo'.");
+      throw e;
+    }
+  }
 }

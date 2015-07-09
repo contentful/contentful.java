@@ -4,10 +4,49 @@ import com.contentful.java.cda.lib.Enqueue;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import org.junit.Test;
+import rx.functions.Action1;
 
 import static com.google.common.truth.Truth.assertThat;
 
 public class EntryTest extends BaseTest {
+  @Test
+  @Enqueue("demo/array_empty.json")
+  public void fetchNonExistingReturnsNull() throws Exception {
+    assertThat(client.fetch(CDAEntry.class).one("foo")).isNull();
+  }
+
+  @Test
+  @Enqueue("demo/array_empty.json")
+  public void fetchNonExistingEntryEmitsNull() throws Exception {
+    final Object result[] = new Object[] { new Object() };
+    final CountDownLatch latch = new CountDownLatch(1);
+    assertThat(client.observe(CDAEntry.class)
+        .one("foo")
+        .subscribe(new Action1<CDAEntry>() {
+          @Override public void call(CDAEntry entry) {
+            result[0] = entry;
+            latch.countDown();
+          }
+        }));
+    latch.await();
+    assertThat(result[0]).isNull();
+  }
+
+  @Test
+  @Enqueue("demo/array_empty.json")
+  public void fetchNonExistingEntryInvokesSuccessWithNull() throws Exception {
+    final Object result[] = new Object[] { new Object() };
+    final CountDownLatch latch = new CountDownLatch(1);
+    client.fetch(CDAEntry.class).one("foo", new CDACallback<CDAEntry>() {
+      @Override protected void onSuccess(CDAEntry entry) {
+        result[0] = entry;
+        latch.countDown();
+      }
+    });
+    latch.await();
+    assertThat(result[0]).isNull();
+  }
+
   @Test
   @Enqueue("demo/entries_nyancat.json")
   public void entryContentType() throws Exception {

@@ -201,7 +201,9 @@ public final class CDAClient {
     if (contentType == null) {
       return observe(CDAContentType.class).one(id).map(new Func1<CDAContentType, CDAContentType>() {
         @Override public CDAContentType call(CDAContentType resource) {
-          cache.types().put(resource.id(), resource);
+          if (resource != null) {
+            cache.types().put(resource.id(), resource);
+          }
           return resource;
         }
       });
