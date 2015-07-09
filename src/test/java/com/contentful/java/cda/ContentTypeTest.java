@@ -52,7 +52,7 @@ public class ContentTypeTest extends BaseTest {
   @Test(expected = RuntimeException.class)
   @Enqueue({
       "demo/entries_fake.json",
-      "demo/array_empty.json"
+      "array_empty.json"
   })
   public void badTypeMappingThrows() throws Exception {
     try {

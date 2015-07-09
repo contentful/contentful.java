@@ -11,13 +11,13 @@ import static com.google.common.truth.Truth.assertThat;
 
 public class EntryTest extends BaseTest {
   @Test
-  @Enqueue("demo/array_empty.json")
+  @Enqueue("array_empty.json")
   public void fetchNonExistingReturnsNull() throws Exception {
     assertThat(client.fetch(CDAEntry.class).one("foo")).isNull();
   }
 
   @Test
-  @Enqueue("demo/array_empty.json")
+  @Enqueue("array_empty.json")
   public void fetchNonExistingEntryEmitsNull() throws Exception {
     final Object result[] = new Object[] { new Object() };
     final CountDownLatch latch = new CountDownLatch(1);
@@ -34,7 +34,7 @@ public class EntryTest extends BaseTest {
   }
 
   @Test
-  @Enqueue("demo/array_empty.json")
+  @Enqueue("array_empty.json")
   public void fetchNonExistingEntryInvokesSuccessWithNull() throws Exception {
     TestCallback<CDAEntry> callback = client.fetch(CDAEntry.class)
         .one("foo", new TestCallback<CDAEntry>())
