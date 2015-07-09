@@ -1,0 +1,36 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 1,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    {
+      "fields": {
+      },
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "foo"
+          }
+        },
+        "id": "bar",
+        "revision": 8,
+        "createdAt": "2013-06-27T22:46:20.171Z",
+        "updatedAt": "2013-11-18T15:58:02.018Z",
+        "locale": "en-US"
+      }
+    }
+  ]
+}

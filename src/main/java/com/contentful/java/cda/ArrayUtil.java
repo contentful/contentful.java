@@ -71,7 +71,7 @@ final class ArrayUtil {
     contentType = client.cacheTypeWithId(id).toBlocking().first();
     if (contentType == null) {
       throw new RuntimeException(
-          String.format("Resource ID: \"%s\" has non-existing content type mapping \"%s\".",
+          String.format("Entry '%s' has non-existing content type mapping '%s'.",
               entry.id(), id));
     }
     entry.setContentType(contentType);
