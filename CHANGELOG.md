@@ -3,7 +3,29 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Version [3.0.0][unreleased] - (in development)
-- TBD
+- New: Major performance improvements especially around array results link resolution.
+- New: `getAttribute(name)` returns a `sys` attribute while inferring the return type.
+- New: `getField(name)` returns a field value while inferring the return type.
+- New: `CDAResource.id()` returns the resource ID.
+- New: `CDAEntry.contentType()` returns the `CDAContentType` for that entry.
+- New: `CDAArray` has `items()` which returns a mixture of `CDAResource` objects, `assets()` and `entries()` which are mappings by resource IDs.
+- New: `CDAAsset.title()` returns the title of the asset.
+- New: (sync) Mapping of deleted resources via `deletedAssets()` and `deletedEntries()`.
+- Changed: Replace client "modules" with a simplified `fetch()`/`observe()` syntax.
+- Changed: Cleaner syntax for queries using `FetchQuery`/`ObserveQuery` and the `where()` method.
+- Changed: Fallback to the default locale. Calling `setLocale(code)` and `getField(name)` - returns the value form default locale if there isn't one for the active locale.
+- Changed: Better abstractions for `CDAContentType` fields via `CDAField`.
+- Changed: Resource types are represented by `CDAType` enum and available for each resource via `CDAResource.type()`.
+- Changed: `CDASyncedSpace` has been renamed to `SynchronizedSpace`.
+- Changed: `CDAClient.Builder` created via `CDAClient.builder()`.
+- Changed: `CDAClient.Builder` now use `setSpace(id)` and `setToken(token)`.
+- Changed: Package resource classes under `com.contentful.java.cda`.
+- Changed: Calling `setEndpoint()` now takes a full URL.
+- Changed: Asset URLs are no longer scheme prefixed, i.e. "//url.com/foo.jpg".
+- Changed: Removed `noSSL()` from client builder, can be achieved via `setEndpoint()`.
+- Changed: Removed `nullifyUnresolvedLinks()` and set as the default behavior.
+- Changed: Removed client custom classes mapping.
+- Changed: Removed custom client provider (custom client still supported).
 
 ## Version [2.0.4] - 2015-06-01
 - Fixed: Default to UTF-8 charset.
