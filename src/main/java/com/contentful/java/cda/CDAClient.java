@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import retrofit.RestAdapter;
 import retrofit.RestAdapter.LogLevel;
+import retrofit.client.Client;
 import retrofit.client.Response;
 import rx.Observable;
 import rx.functions.Func1;
@@ -55,7 +56,14 @@ public final class CDAClient {
         .setRequestInterceptor(new Interceptor(token));
 
     setLogLevel(restBuilder, clientBuilder);
+    setClient(restBuilder, clientBuilder);
     return restBuilder.build().create(CDAService.class);
+  }
+
+  private void setClient(RestAdapter.Builder restBuilder, Builder clientBuilder) {
+    if (clientBuilder.client != null) {
+      restBuilder.setClient(clientBuilder.client);
+    }
   }
 
   private void setLogLevel(RestAdapter.Builder restBuilder, Builder clientBuilder) {
@@ -211,12 +219,10 @@ public final class CDAClient {
     }
 
     String space;
-
     String token;
-
     String endpoint;
-
     LogLevel logLevel;
+    Client client;
 
     /** Sets the space ID. */
     public Builder setSpace(String space) {
@@ -245,6 +251,12 @@ public final class CDAClient {
     /** Sets the endpoint to point the Preview API. */
     public Builder preview() {
       return this.setEndpoint(Constants.ENDPOINT_PREVIEW);
+    }
+
+    /** Sets a custom HTTP client. */
+    public Builder setClient(Client client) {
+      this.client = client;
+      return this;
     }
 
     public CDAClient build() {
