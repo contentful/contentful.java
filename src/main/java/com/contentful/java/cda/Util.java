@@ -45,7 +45,7 @@ final class Util {
     } else if (CDAEntry.class.equals(clazz)) {
       return PATH_ENTRIES;
     }
-    throw new IllegalArgumentException("No path available for class: " + clazz.getName());
+    throw new IllegalArgumentException("Invalid type specified: " + clazz.getName());
   }
 
   static Class<? extends CDAResource> classForType(CDAType type) {

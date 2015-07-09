@@ -60,4 +60,16 @@ public class ClientTest extends BaseTest {
     RecordedRequest request = server.takeRequest();
     assertThat(request.getHeader("User-Agent")).isEqualTo("contentful.java/" + versionName);
   }
+
+  @Test(expected = IllegalArgumentException.class)
+  @Enqueue
+  public void fetchInvalidTypeThrows() throws Exception {
+    try {
+      client.fetch(CDAResource.class).all();
+    } catch (IllegalArgumentException e) {
+      assertThat(e.getMessage()).isEqualTo(
+          "Invalid type specified: com.contentful.java.cda.CDAResource");
+      throw e;
+    }
+  }
 }
