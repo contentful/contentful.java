@@ -47,6 +47,7 @@ final class ResourceFactory {
 
     SynchronizedSpace result = ArrayUtil.iterate(response, client);
     ArrayUtil.mapResources(result.items(), assets, entries);
+    ArrayUtil.mapDeletedResources(result);
 
     List<CDAResource> items = new ArrayList<CDAResource>();
     items.addAll(assets.values());

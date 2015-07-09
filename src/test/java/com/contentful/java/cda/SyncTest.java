@@ -23,6 +23,8 @@ public class SyncTest extends BaseTest {
     assertThat(space.nextPageUrl()).isNull();
     assertThat(space.nextSyncUrl()).endsWith("/sync?sync_token=bar");
     assertThat(space.items()).hasSize(5);
+    assertThat(space.deletedAssets()).containsExactly("jake", "1x0xpXu4pSGS4OukSyWGUK");
+    assertThat(space.deletedEntries()).hasSize(9);
 
     CDAEntry superCat = space.entries().get("supercat");
     assertThat(superCat).isNotNull();
@@ -44,6 +46,8 @@ public class SyncTest extends BaseTest {
     assertThat(space.nextPageUrl()).isNull();
     assertThat(space.nextSyncUrl()).endsWith("/sync?sync_token=bar");
     assertThat(space.items()).hasSize(15);
+    assertThat(space.deletedAssets()).isEmpty();
+    assertThat(space.deletedEntries()).isEmpty();
 
     for (CDAResource resource : space.items()) {
       assertThat(resource).isInstanceOf(LocalizedResource.class);
