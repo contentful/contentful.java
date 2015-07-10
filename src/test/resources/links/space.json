@@ -1,0 +1,19 @@
+{
+  "sys": {
+    "type": "Space",
+    "id": "75oea9kejr52"
+  },
+  "name": "contentful.java links",
+  "locales": [
+    {
+      "code": "en-US",
+      "default": true,
+      "name": "U.S. English"
+    },
+    {
+      "code": "he-IL",
+      "default": false,
+      "name": "Hebrew"
+    }
+  ]
+}
