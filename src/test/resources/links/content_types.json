@@ -1,0 +1,96 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 2,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    {
+      "name": "container",
+      "fields": [
+        {
+          "name": "entry",
+          "id": "entry",
+          "type": "Link",
+          "linkType": "Entry",
+          "localized": true
+        },
+        {
+          "name": "asset",
+          "id": "asset",
+          "type": "Link",
+          "linkType": "Asset",
+          "localized": true
+        },
+        {
+          "name": "entries",
+          "id": "entries",
+          "type": "Array",
+          "items": {
+            "type": "Link",
+            "linkType": "Entry"
+          },
+          "localized": true
+        },
+        {
+          "name": "assets",
+          "id": "assets",
+          "type": "Array",
+          "items": {
+            "type": "Link",
+            "linkType": "Asset"
+          },
+          "localized": true
+        },
+        {
+          "name": "symbols",
+          "id": "symbols",
+          "type": "Array",
+          "items": {
+            "type": "Symbol"
+          }
+        }
+      ],
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "75oea9kejr52"
+          }
+        },
+        "type": "ContentType",
+        "id": "2s9novBkP2G0oasUaG8kCs",
+        "revision": 1,
+        "createdAt": "2015-07-10T11:34:04.806Z",
+        "updatedAt": "2015-07-10T11:34:04.806Z"
+      }
+    },
+    {
+      "name": "child",
+      "fields": [
+        {
+          "name": "foo",
+          "id": "foo",
+          "type": "Text"
+        }
+      ],
+      "displayField": "foo",
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "75oea9kejr52"
+          }
+        },
+        "type": "ContentType",
+        "id": "3V0QxGs0ucuwuuIEyGk8E0",
+        "revision": 1,
+        "createdAt": "2015-07-10T11:49:35.887Z",
+        "updatedAt": "2015-07-10T11:49:35.887Z"
+      }
+    }
+  ]
+}
