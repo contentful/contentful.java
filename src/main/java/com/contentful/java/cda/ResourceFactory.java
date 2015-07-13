@@ -29,10 +29,10 @@ final class ResourceFactory {
     CDAArray array = fromResponse(response, CDAArray.class);
     array.assets = new HashMap<String, CDAAsset>();
     array.entries = new HashMap<String, CDAEntry>();
-    ArrayUtil.mergeIncludes(array);
-    Localization.localizeResources(array.items(), client.cache.space());
-    ArrayUtil.mapResources(array.items(), array.assets, array.entries);
-    ArrayUtil.resolveLinks(array, client);
+    ResourceUtils.mergeIncludes(array);
+    ResourceUtils.localizeResources(array.items(), client.cache.space());
+    ResourceUtils.mapResources(array.items(), array.assets, array.entries);
+    ResourceUtils.resolveLinks(array, client);
     return array;
   }
 
@@ -42,12 +42,12 @@ final class ResourceFactory {
 
     // Map resources from existing space
     if (old != null) {
-      ArrayUtil.mapResources(old.items(), assets, entries);
+      ResourceUtils.mapResources(old.items(), assets, entries);
     }
 
-    SynchronizedSpace result = ArrayUtil.iterate(response, client);
-    ArrayUtil.mapResources(result.items(), assets, entries);
-    ArrayUtil.mapDeletedResources(result);
+    SynchronizedSpace result = ResourceUtils.iterate(response, client);
+    ResourceUtils.mapResources(result.items(), assets, entries);
+    ResourceUtils.mapDeletedResources(result);
 
     List<CDAResource> items = new ArrayList<CDAResource>();
     items.addAll(assets.values());
@@ -56,7 +56,7 @@ final class ResourceFactory {
     result.assets = assets;
     result.entries = entries;
 
-    ArrayUtil.resolveLinks(result, client);
+    ResourceUtils.resolveLinks(result, client);
 
     return result;
   }
