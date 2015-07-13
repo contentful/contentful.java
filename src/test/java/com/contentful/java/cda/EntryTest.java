@@ -45,6 +45,14 @@ public class EntryTest extends BaseTest {
   }
 
   @Test
+  @Enqueue("demo/entries_nofields.json")
+  public void entryNoFields() throws Exception {
+    CDAEntry foo = client.fetch(CDAEntry.class).one("foo");
+    assertThat(foo).isNotNull();
+    assertThat(foo.fields).isEmpty();
+  }
+
+  @Test
   @Enqueue("demo/entries_nyancat.json")
   public void entryContentType() throws Exception {
     CDAEntry entry = client.fetch(CDAEntry.class).one("nyancat");

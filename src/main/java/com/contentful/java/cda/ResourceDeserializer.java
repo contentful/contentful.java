@@ -5,14 +5,25 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
+import java.util.Collections;
 
+import static com.contentful.java.cda.CDAType.ASSET;
+import static com.contentful.java.cda.CDAType.ENTRY;
 import static com.contentful.java.cda.Constants.LOCALE;
 import static com.contentful.java.cda.Util.classForType;
 
 final class ResourceDeserializer implements JsonDeserializer<CDAResource> {
   @Override public CDAResource deserialize(JsonElement json, Type classType,
       JsonDeserializationContext context) throws JsonParseException {
-    return context.deserialize(json, classForType(extractType(json)));
+    CDAType cdaType = extractType(json);
+    CDAResource result = context.deserialize(json, classForType(cdaType));
+    if (ASSET.equals(cdaType) || ENTRY.equals(cdaType)) {
+      LocalizedResource localized = (LocalizedResource) result;
+      if (localized.fields == null) {
+        localized.fields = Collections.emptyMap();
+      }
+    }
+    return result;
   }
 
   private CDAType extractType(JsonElement json) {
