@@ -2,6 +2,7 @@ package com.contentful.java.cda;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -19,8 +20,8 @@ import static com.contentful.java.cda.CDAType.ENTRY;
 import static com.contentful.java.cda.Util.extractNested;
 import static com.contentful.java.cda.Util.queryParam;
 
-final class ArrayUtil {
-  private ArrayUtil() {
+final class ResourceUtils {
+  private ResourceUtils() {
     throw new AssertionError();
   }
 
@@ -36,7 +37,7 @@ final class ArrayUtil {
       result = nextSpace;
     }
     result.items = items;
-    Localization.localizeResources(result.items(), client.cache.space());
+    localizeResources(result.items(), client.cache.space());
     return result;
   }
 
@@ -94,53 +95,65 @@ final class ArrayUtil {
     }
   }
 
-  private static void resolveArrayOfLinks(CDAEntry entry, CDAField field, ArrayResource array) {
+  @SuppressWarnings("unchecked")
+  static void resolveArrayOfLinks(CDAEntry entry, CDAField field, ArrayResource array) {
     CDAType linkType =
         CDAType.valueOf(((String) field.items().get("linkType")).toUpperCase(Constants.LOCALE));
-    for (Map<String, ? super Object> fields : entry.localized.values()) {
-      List links = (List) fields.get(field.id());
+    Map<String, ? super Object> value = (Map) entry.fields.get(field.id());
+    if (value == null) {
+      return;
+    }
+    for (String locale : value.keySet()) {
+      List links = (List) value.get(locale);
       if (links == null) {
         continue;
       }
       List resolved = new ArrayList();
       for (int i = 0; i < links.size(); i++) {
-        CDAResource resource = findLinkedResource(array, linkType, links.get(i));
+        String linkId = getLinkId(links.get(i));
+        if (linkId == null) {
+          continue;
+        }
+        CDAResource resource = findLinkedResource(array, linkType, linkId);
         if (resource != null) {
           resolved.add(resource);
         }
       }
-      fields.put(field.id(), resolved);
+      value.put(locale, resolved);
     }
   }
 
+  @SuppressWarnings("unchecked")
   static void resolveSingleLink(CDAEntry entry, CDAField field, ArrayResource array) {
     CDAType linkType = CDAType.valueOf(field.linkType().toUpperCase(Locale.US));
-    for (Map<String, ? super Object> fields : entry.localized.values()) {
-      Object link = fields.get(field.id());
-      if (link == null) {
+    Map<String, ? super Object> value = (Map) entry.fields.get(field.id());
+    if (value == null) {
+      return;
+    }
+    for (String locale : value.keySet()) {
+      String linkId = getLinkId(value.get(locale));
+      if (linkId == null) {
         continue;
       }
-      CDAResource resource = findLinkedResource(array, linkType, link);
+      CDAResource resource = findLinkedResource(array, linkType, linkId);
       if (resource == null) {
-        fields.remove(field.id());
+        value.remove(locale);
       } else {
-        fields.put(field.id(), resource);
+        value.put(locale, resource);
       }
     }
   }
 
-  private static CDAResource findLinkedResource(ArrayResource array, CDAType linkType,
-      Object link) {
-    String id;
+  static String getLinkId(Object link) {
     if (link instanceof CDAResource) {
       // already resolved
-      id = ((CDAResource) link).id();
-    } else {
-      id = extractNested((Map) link, "sys", "id");
+      return ((CDAResource) link).id();
     }
-    if (id == null) {
-      return null;
-    }
+    return extractNested((Map) link, "sys", "id");
+  }
+
+  static CDAResource findLinkedResource(ArrayResource array, CDAType linkType,
+      String id) {
     if (ASSET.equals(linkType)) {
       return array.assets().get(id);
     } else if (ENTRY.equals(linkType)) {
@@ -199,5 +212,41 @@ final class ArrayUtil {
         });
     space.deletedAssets = assets;
     space.deletedEntries = entries;
+  }
+
+  static void localizeResources(List<CDAResource> resources, CDASpace space) {
+    for (CDAResource resource : resources) {
+      CDAType type = resource.type();
+      if (ASSET.equals(type) || ENTRY.equals(type)) {
+        localize((LocalizedResource) resource, space);
+      }
+    }
+  }
+
+  static void localize(LocalizedResource resource, CDASpace space) {
+    resource.setDefaultLocale(space.defaultLocale().code());
+    String resourceLocale = resource.getAttribute("locale");
+    if (resourceLocale == null) {
+      // sync
+      resource.setLocale(resource.defaultLocale());
+    } else {
+      // normal
+      resource.setLocale(resourceLocale);
+      normalizeFields(resource);
+    }
+  }
+
+  static void normalizeFields(LocalizedResource resource) {
+    Map<String, ? super Object> fields = new HashMap<String, Object>();
+    for (String key : resource.fields.keySet()) {
+      Object value = resource.fields.get(key);
+      if (value == null) {
+        continue;
+      }
+      Map<String, ? super Object> map = new HashMap<String, Object>();
+      map.put(resource.locale(), value);
+      fields.put(key, map);
+    }
+    resource.fields = fields;
   }
 }

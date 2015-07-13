@@ -8,7 +8,8 @@ import static com.google.common.truth.Truth.assertThat;
 
 public class SyncTest extends BaseTest {
   @Test @Enqueue({
-      "demo/sync_initial_p1.json", "demo/sync_initial_p2.json", "demo/space.json", "demo/content_types.json",
+      "demo/sync_initial_p1.json", "demo/sync_initial_p2.json",
+      "demo/space.json", "demo/content_types.json",
       "demo/sync_update_p1.json", "demo/sync_update_p2.json"
   })
   public void sync() throws Exception {
@@ -53,7 +54,6 @@ public class SyncTest extends BaseTest {
       assertThat(resource).isInstanceOf(LocalizedResource.class);
       LocalizedResource localized = (LocalizedResource) resource;
       assertThat(localized.locale()).isEqualTo("en-US");
-      assertThat(localized.localized.keySet()).containsExactly("en-US", "tlh");
     }
 
     for (CDAEntry entry : space.entries().values()) {
@@ -71,6 +71,7 @@ public class SyncTest extends BaseTest {
     CDAEntry nyanCat = space.entries().get("nyancat");
     assertThat(nyanCat).isNotNull();
     assertThat(nyanCat.getField("name")).isEqualTo("Nyan Cat");
+    assertThat(nyanCat.getField("bestFriend")).isInstanceOf(CDAEntry.class);
 
     CDAEntry happyCat = space.entries().get("happycat");
     assertThat(happyCat).isNotNull();

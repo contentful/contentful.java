@@ -1,6 +1,5 @@
 package com.contentful.java.cda;
 
-import com.google.gson.annotations.SerializedName;
 import java.util.Map;
 
 /** Represents a resource which may contain field values for multiple locales. */
@@ -9,12 +8,7 @@ public abstract class LocalizedResource extends CDAResource {
 
   String defaultLocale;
 
-  Map<String, ? super Object> activeFields;
-
-  Map<String, Map<String, ? super Object>> localized;
-
-  @SerializedName("fields")
-  Map<String, ? super Object> rawFields;
+  Map<String, ? super Object> fields;
 
   /**
    * Extracts a field from the fields set of the active locale, result type is inferred.
@@ -24,12 +18,15 @@ public abstract class LocalizedResource extends CDAResource {
    */
   @SuppressWarnings("unchecked")
   public <T> T getField(String key) {
-    if (activeFields != null && activeFields.containsKey(key)) {
-      return (T) activeFields.get(key);
-    } else if (!locale.equals(defaultLocale)) {
-      return (T) localized.get(defaultLocale).get(key);
+    Map value = (Map) fields.get(key);
+    if (value == null) {
+      return null;
     }
-    return null;
+    Object localized = value.get(locale);
+    if (localized != null) {
+      return (T) localized;
+    }
+    return (T) value.get(defaultLocale);
   }
 
   /** Returns the active locale code for this resource. */
@@ -40,7 +37,6 @@ public abstract class LocalizedResource extends CDAResource {
   /** Switches the locale to the one matching the given locale code. */
   public void setLocale(String locale) {
     this.locale = locale;
-    this.activeFields = localized.get(locale);
   }
 
   void setDefaultLocale(String defaultLocale) {
