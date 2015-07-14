@@ -1,0 +1,91 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "items": [
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "tamu5dc7eas0"
+          }
+        },
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "15hKDLsTB28isKMAuaQy4A"
+          }
+        },
+        "id": "2k5aHpfw7m0waMKYksC2Ww",
+        "revision": 2,
+        "createdAt": "2015-07-14T12:58:05.066Z",
+        "updatedAt": "2015-07-14T12:58:43.661Z"
+      },
+      "fields": {
+        "name": {
+          "en-US": "foo2"
+        },
+        "image": {
+          "en-US": {
+            "sys": {
+              "type": "Link",
+              "linkType": "Asset",
+              "id": "m5pDQF5IRiIicMmg2ukmQ"
+            }
+          }
+        },
+        "array": {
+          "en-US": [
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Asset",
+                "id": "m5pDQF5IRiIicMmg2ukmQ"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "tamu5dc7eas0"
+          }
+        },
+        "type": "Asset",
+        "id": "m5pDQF5IRiIicMmg2ukmQ",
+        "revision": 1,
+        "createdAt": "2015-07-14T12:18:44.894Z",
+        "updatedAt": "2015-07-14T12:18:44.894Z"
+      },
+      "fields": {
+        "title": {
+          "en-US": "bar"
+        },
+        "file": {
+          "en-US": {
+            "fileName": "snap.jpg",
+            "contentType": "image/jpeg",
+            "details": {
+              "image": {
+                "width": 400,
+                "height": 280
+              },
+              "size": 21747
+            },
+            "url": "//images.contentful.com/tamu5dc7eas0/m5pDQF5IRiIicMmg2ukmQ/7ae98075b1709c20527bd081779d130f/snap.jpg"
+          }
+        }
+      }
+    }
+  ],
+  "nextSyncUrl": "https://cdn.contentful.com/spaces/tamu5dc7eas0/sync?sync_token=w5ZGw6JFwqZmVcKsE8Kow4grw45QdybCkwbDvVoewpt2YSMdwqJLwoPDiV3DpzQpwrbDuxQzNTFPw57Ds2t1w5bCohlXw5jCoMO1woDDrcOxLMOTw6zChMK2I8OOwq7CjDRMInIqw58xw4pBwqJ_BScaWcKM"
+}

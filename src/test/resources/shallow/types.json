@@ -1,0 +1,51 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 1,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    {
+      "name": "foo",
+      "fields": [
+        {
+          "name": "name",
+          "id": "name",
+          "type": "Symbol"
+        },
+        {
+          "name": "image",
+          "id": "image",
+          "type": "Link",
+          "linkType": "Asset"
+        },
+        {
+          "name": "array",
+          "id": "array",
+          "type": "Array",
+          "items": {
+            "type": "Link",
+            "linkType": "Asset"
+          }
+        }
+      ],
+      "description": "",
+      "displayField": "name",
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "tamu5dc7eas0"
+          }
+        },
+        "type": "ContentType",
+        "id": "15hKDLsTB28isKMAuaQy4A",
+        "revision": 2,
+        "createdAt": "2015-07-14T12:18:11.976Z",
+        "updatedAt": "2015-07-14T12:57:51.262Z"
+      }
+    }
+  ]
+}

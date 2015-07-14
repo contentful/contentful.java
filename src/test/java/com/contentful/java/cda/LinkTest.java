@@ -17,6 +17,7 @@ public class LinkTest extends BaseTest {
     assertThat(entry.getField("bestFriend")).isNull();
   }
 
+  @SuppressWarnings("unchecked")
   @Test @Enqueue(defaults = {
       "links/space.json",
       "links/content_types.json"
@@ -34,19 +35,19 @@ public class LinkTest extends BaseTest {
     assertThat(container.getField("asset")).isInstanceOf(CDAAsset.class);
     assertThat(container.getField("entry")).isInstanceOf(CDAEntry.class);
 
-    List<CDAResource> assets = container.getField("assets");
+    List<CDAAsset> assets = container.getField("assets");
     assertThat(assets).isNotNull();
     assertThat(assets).hasSize(2);
     assertThat(assets.get(0).id()).isEqualTo("3xkzMDqRTaoIeKkUYwiIUw");
     assertThat(assets.get(1).id()).isEqualTo("5WHMX35TkQg08sK0agoMw");
 
-    List<CDAResource> entries = container.getField("entries");
+    List<CDAEntry> entries = container.getField("entries");
     assertThat(entries).isNotNull();
     assertThat(entries).hasSize(3);
     assertThat(entries.get(0).id()).isEqualTo("4NvEw8RaUUkSa2uEEogAeG");
     assertThat(entries.get(1).id()).isEqualTo("3XNpMBumdOsWuYUs0wsgMS");
     assertThat(entries.get(2).id()).isEqualTo("4kDCK9U7OgQiieIqi6ScWA");
 
-    assertThat((List) container.getField("symbols")).containsExactly("a", "b", "c");
+    assertThat((List<String>) container.getField("symbols")).containsExactly("a", "b", "c");
   }
 }

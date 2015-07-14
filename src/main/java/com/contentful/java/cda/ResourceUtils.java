@@ -104,11 +104,11 @@ final class ResourceUtils {
       return;
     }
     for (String locale : value.keySet()) {
-      List links = (List) value.get(locale);
+      List<?> links = (List<?>) value.get(locale);
       if (links == null) {
         continue;
       }
-      List resolved = new ArrayList();
+      List<CDAResource> resolved = new ArrayList<CDAResource>();
       for (int i = 0; i < links.size(); i++) {
         String linkId = getLinkId(links.get(i));
         if (linkId == null) {
@@ -248,5 +248,25 @@ final class ResourceUtils {
       fields.put(key, map);
     }
     resource.fields = fields;
+  }
+
+  static void setRawFields(ArrayResource array) {
+    for (CDAAsset asset : array.assets().values()) {
+      setRawFields(asset);
+    }
+    for (CDAEntry entry : array.entries().values()) {
+      setRawFields(entry);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private static void setRawFields(LocalizedResource resource) {
+    Map<String, ? super Object> rawFields = new HashMap<String, Object>();
+    for (String key : resource.fields.keySet()) {
+      Map<String, ? super Object> map = new HashMap<String, Object>();
+      map.putAll((Map) resource.fields.get(key));
+      rawFields.put(key, map);
+    }
+    resource.rawFields = rawFields;
   }
 }

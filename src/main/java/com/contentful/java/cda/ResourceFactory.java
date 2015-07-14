@@ -32,6 +32,7 @@ final class ResourceFactory {
     ResourceUtils.mergeIncludes(array);
     ResourceUtils.localizeResources(array.items(), client.cache.space());
     ResourceUtils.mapResources(array.items(), array.assets, array.entries);
+    ResourceUtils.setRawFields(array);
     ResourceUtils.resolveLinks(array, client);
     return array;
   }
@@ -56,6 +57,7 @@ final class ResourceFactory {
     result.assets = assets;
     result.entries = entries;
 
+    ResourceUtils.setRawFields(result);
     ResourceUtils.resolveLinks(result, client);
 
     return result;
