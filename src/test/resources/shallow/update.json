@@ -1,0 +1,56 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "items": [
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "tamu5dc7eas0"
+          }
+        },
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "15hKDLsTB28isKMAuaQy4A"
+          }
+        },
+        "id": "2k5aHpfw7m0waMKYksC2Ww",
+        "revision": 3,
+        "createdAt": "2015-07-14T12:58:05.066Z",
+        "updatedAt": "2015-07-14T12:59:11.589Z"
+      },
+      "fields": {
+        "name": {
+          "en-US": "foo"
+        },
+        "image": {
+          "en-US": {
+            "sys": {
+              "type": "Link",
+              "linkType": "Asset",
+              "id": "m5pDQF5IRiIicMmg2ukmQ"
+            }
+          }
+        },
+        "array": {
+          "en-US": [
+            {
+              "sys": {
+                "type": "Link",
+                "linkType": "Asset",
+                "id": "m5pDQF5IRiIicMmg2ukmQ"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "nextSyncUrl": "https://cdn.contentful.com/spaces/tamu5dc7eas0/sync?sync_token=w5ZGw6JFwqZmVcKsE8Kow4grw45QdyYRw4xSScOWb8KVfyrDs8K7RgHCnsOLwpjDu8KMw6VsCcKnQcO9w6zDlAxqRXhJNsKZBsOsw7LCv8KQw4vCoENqw7rDtGhGMsOCw4xuEcKkw4JrAMOww7HCp8OLYy_CpsKcKQ"
+}

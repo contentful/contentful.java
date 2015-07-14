@@ -1,0 +1,14 @@
+{
+  "sys": {
+    "type": "Space",
+    "id": "tamu5dc7eas0"
+  },
+  "name": "foo",
+  "locales": [
+    {
+      "code": "en-US",
+      "default": true,
+      "name": "U.S. English"
+    }
+  ]
+}

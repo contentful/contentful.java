@@ -10,6 +10,8 @@ public abstract class LocalizedResource extends CDAResource {
 
   Map<String, ? super Object> fields;
 
+  Map<String, ? super Object> rawFields;
+
   /**
    * Extracts a field from the fields set of the active locale, result type is inferred.
    * @param key field key.
@@ -18,7 +20,7 @@ public abstract class LocalizedResource extends CDAResource {
    */
   @SuppressWarnings("unchecked")
   public <T> T getField(String key) {
-    Map value = (Map) fields.get(key);
+    Map<?, ?> value = (Map<? ,?>) fields.get(key);
     if (value == null) {
       return null;
     }
@@ -27,6 +29,11 @@ public abstract class LocalizedResource extends CDAResource {
       return (T) localized;
     }
     return (T) value.get(defaultLocale);
+  }
+
+  /** Raw unprocessed fields. */
+  public Map<String, ? super Object> rawFields() {
+    return rawFields;
   }
 
   /** Returns the active locale code for this resource. */

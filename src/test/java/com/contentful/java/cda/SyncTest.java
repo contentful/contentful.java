@@ -1,7 +1,9 @@
 package com.contentful.java.cda;
 
 import com.contentful.java.cda.lib.Enqueue;
+import com.squareup.okhttp.HttpUrl;
 import java.util.List;
+import java.util.Map;
 import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -85,5 +87,46 @@ public class SyncTest extends BaseTest {
     assertThat(nyanCat.getField("name")).isEqualTo("Nyan vIghro'");
     assertThat(nyanCat.getField("color")).isEqualTo("rainbow"); // fallback
     assertThat(nyanCat.getField("non-existing-does-not-throw")).isNull();
+  }
+
+  @SuppressWarnings("unchecked") @Test @Enqueue(defaults = {}, value = {
+      "shallow/space.json", "shallow/types.json", "shallow/initial.json",
+      "shallow/space.json", "shallow/types.json", "shallow/update.json"
+  })
+  public void testRawFields() throws Exception {
+    SynchronizedSpace space = client.sync().fetch();
+    assertThat(space.items()).hasSize(2);
+    assertThat(space.assets()).hasSize(1);
+    assertThat(space.entries()).hasSize(1);
+
+    CDAEntry foo = space.entries().get("2k5aHpfw7m0waMKYksC2Ww");
+    assertThat(foo).isNotNull();
+    assertThat(foo.getField("image")).isNotNull();
+
+    // image
+    Map<String, Map<?, ?>> rawImage = (Map<String, Map<?, ?>>) foo.rawFields().get("image");
+    assertThat(rawImage).isNotNull();
+    assertThat(rawImage.get("en-US")).containsKey("sys");
+
+    // array
+    Map<String, List<Map<?, ?>>> rawArray = (Map<String, List<Map<?, ?>>>) foo.rawFields().get("array");
+    assertThat(rawArray).isNotNull();
+    assertThat(rawArray.get("en-US").get(0)).containsKey("sys");
+
+    String syncToken = HttpUrl.parse(space.nextSyncUrl()).queryParameter("syncToken");
+    space = client.sync(syncToken).fetch();
+    foo = space.entries().get("2k5aHpfw7m0waMKYksC2Ww");
+    assertThat(foo).isNotNull();
+    assertThat(foo.getField("image")).isNull();
+
+    // image
+    rawImage = (Map<String, Map<?, ?>>) foo.rawFields().get("image");
+    assertThat(rawImage).isNotNull();
+    assertThat(rawImage.get("en-US")).containsKey("sys");
+
+    // array
+    rawArray = (Map<String, List<Map<?, ?>>>) foo.rawFields().get("array");
+    assertThat(rawArray).isNotNull();
+    assertThat(rawArray.get("en-US").get(0)).containsKey("sys");
   }
 }
