@@ -44,73 +44,42 @@ Usage
 
 The `CDAClient` manages all your interaction with the Contentful Delivery API.
 ```java
-CDAClient client = new CDAClient.Builder()
-    .setSpaceKey("space-key-goes-here")
-    .setAccessToken("access-token-goes-here")
+CDAClient client = CDAClient.builder()
+    .setSpace("space-key-goes-here")
+    .setToken("access-token-goes-here")
     .build();
 ```
 
-A client can perform various operations on different types of resources (Assets, Content Types, Entries and Spaces). Every type of resource is represented by a module in the `CDAClient` class, for example:
-
+In order to fetch resources use the `CDAClient.fetch()` method, and provide the type of resource(s) you want to fetch:
 ```java
-client.assets()       // returns the Assets module
-client.contentTypes() // returns the Content Types module
-client.entries()      // returns the Entries module
-client.spaces()       // returns the Spaces module
-client.sync()         // returns the Synchronization module
+// Fetch entries
+CDAArray array = client.fetch(CDAEntry.class).all();
+
+// Fetch an entry matching a specific id
+CDAEntry entry = client.fetch(CDAEntry.class).one("entry-id");
+
+// Fetch entries with custom query
+CDAArray result = client.fetch(CDAEntry.class)
+    .where("content_type", "cat")
+    .where("order", "sys.updatedAt")
+    .all();
 ```
 
-Each module contains a set of methods which can be used to perform various operations on the specified resource type. Every method has a corresponding asynchronous extension which can be accessed through the `async()` method of the module, for example:
-
-Retrieving all entries (synchronously):
-
+All of the above examples are synchronous. In order to invoke the request asynchronously, it is possible to provide a callback:
 ```java
-try {
-  CDAArray result = client.entries().fetchAll();
-  // success
-} catch (RetrofitError e) {
-  // failure
-}
-```
-
-or asynchronously:
-
-```java
-client.entries().async().fetchAll(new CDACallback<CDAArray>() {
+client.fetch(CDAAsset.class).all(new CDACallback<CDAArray>() {
   @Override protected void onSuccess(CDAArray result) {
-    // success
-  }
-
-  @Override protected void onFailure(RetrofitError error) {
-    // failure
+    // ...
   }
 });
 ```
 
-or with RxJava:
+Note that the return value for any asynchronous methods is the callback itself, so make sure to keep a reference to it and clear it according to its host lifecycle events. 
 
+If you want to use RxJava instead, call the `observe()` method to get an `Observable` instance:
 ```java
-client.entries().rx().fetchAll().subscribe(new Action1<CDAArray>() {
-  @Override public void call(CDAArray result) {
-    // success
-  }
-}, new Action1<Throwable>() {
-  @Override public void call(Throwable throwable) {
-    // failure
-  }
-});
-```
-
-Note that a `CDACallback` instance can be cancelled, so keep a reference to it in order to do so:
-
-```java
-CDACallback<CDAArray> cb;
-
-client.entries().async().fetchAll(cb = new CDACallback<CDAArray>() {
-    ...
-});
-
-cb.cancel(); // onSuccess and onFailure will not be invoked
+client.observe(CDAAsset.class).one("jake")
+    .subscribe(System.out::println);
 ```
 
 ### Default Ordering
@@ -118,60 +87,21 @@ cb.cancel(); // onSuccess and onFailure will not be invoked
 Bear in mind that there is no default ordering included for any method which returns a `CDAArray` instance. This means that if you plan to page through more than 100 results with multiple requests, there is no guarantee that you will cover all entries. It is however possible to specify ordering for a query using the `fetchAll()` methods that take a query parameter, for instance:
 
 ```java
-client.entries().async().fetchAll(new HashMap<String, String>() {{
-  put("order", "-sys.createdAt");
-}}, new CDACallback<CDAArray>() {
-  @Override protected void onSuccess(CDAArray result) {
-    // ...
-  }
-});
+CDAArray result = client.fetch(CDAEntry.class)
+    .where("order", "-sys.createdAt")
+    .all();
 ```
 
 The above snippet will fetch all Entries, ordered by newest-to-oldest.
-
-### Using Custom Entry Classes
-
-You might want to subclass `CDAEntry` to store additional data alongside Entries or to decouple the rest of your app from the Contentful SDK's API. For this purpose, it is possible to register your own custom classes for specific Content Types, when creating a client:
-
-```java
-HashMap<String, Class<?>> classMap = new HashMap<String, Class<?>>();
-classMap.put("content-type-id", CustomEntry.class);
-
-CDAClient client = new Builder()
-    .setSpaceKey("space-key-goes-here")
-    .setAccessToken("access-token-goes-here")
-    .setCustomClasses(classMap)
-    .build();
-```
-
-Each time, the receiver needs to create a new Entry object of the given Content Type, it will create instances of `CustomEntry`. Make sure that the class inherits from `CDAEntry`.
-
-### Offline Support
-
-Mobile devices will not always have a data connection, so it makes sense to cache data received from Contentful for offline use. 
-
-The `CDAResource` base class implements the `Serializable` interface.
-This means you can save / restore any kind of Resource, including `CDAArray`, via local files:
-
-```java
-// save Resource to local file:
-ResourceUtils.saveResourceToFile(someResource, new File("/path/to/save"));
-
-// restore Resource from local file:
-CDAResource resource = ResourceUtils.readResourceFromFile(new File("/path/to/restore"));
-```
-
-Note that in case you attempt to restore a previously saved Resource, if the original class does not exist the `readResourceFromFile()` method will throw a `ClassNotFoundException`. 
-Another important thing to note is that this method is not the most efficient in terms of performance, as it relies heavily on reflection. If you need to persist large objects consider alternate storage solutions.
 
 ### Preview Mode
 
 The Content Delivery API only returns published Entries. However, you might want to preview content in your app before making it public for your users. For this, you can use the preview mode, which will return **all** Entries, regardless of their published status:
 
 ```java
-CDAClient client = new CDAClient.Builder()
-    .setSpaceKey("space-key-goes-here")
-    .setAccessToken("access-token-goes-here")
+CDAClient client = CDAClient.builder()
+    .setSpace("space-key-goes-here")
+    .setToken("access-token-goes-here")
     .preview()
     .build();
 ```
@@ -181,7 +111,7 @@ Apart from the configuration option, you can use the SDK without modifications w
 Migration
 =========
 
-v2.0 has introduced some backward-incompatible changes, a migration guide is [available in the wiki][7].
+Migration guide from 2.x to 3.x is [available in the wiki][7].
 
 Documentation
 =============
@@ -200,7 +130,7 @@ Copyright (c) 2015 Contentful GmbH. See [LICENSE.txt][6] for further details.
  [4]: https://www.contentful.com/developers/documentation/content-delivery-api/
  [5]: https://square.github.io/okhttp/
  [6]: LICENSE.txt
- [7]: https://github.com/contentful/contentful.java/wiki/2.0-Migration
+ [7]: https://github.com/contentful/contentful.java/wiki/3.0-Migration
  [8]: pom.xml
  [proguard]: proguard-cda.cfg  
  [snap]: https://oss.sonatype.org/content/repositories/snapshots/
