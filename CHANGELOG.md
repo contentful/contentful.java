@@ -11,12 +11,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - New: `getField(name)` returns a field value while inferring the return type.
 - New: `CDAResource.id()` returns the resource ID.
 - New: `CDAEntry.contentType()` returns the `CDAContentType` for that entry.
-- New: `CDAArray` has `items()` which returns a mixture of `CDAResource` objects, `assets()` and `entries()` which are mappings by resource IDs.
+- New: `CDAArray` has `items()` which returns a mixture of `CDAResource` objects. `assets()` and `entries()` are mappings by resource IDs.
 - New: `CDAAsset.title()` returns the title of the asset.
 - New: (sync) Mapping of deleted resources via `deletedAssets()` and `deletedEntries()`.
 - Changed: Replace client "modules" with a simplified `fetch()`/`observe()` syntax.
 - Changed: Cleaner syntax for queries using `FetchQuery`/`ObserveQuery` and the `where()` method.
-- Changed: Fallback to the default locale. Calling `setLocale(code)` and `getField(name)` - returns the value form default locale if there isn't one for the active locale.
+- Changed: Fallback to the default locale. Calling `setLocale(code)` and `getField(name)` - returns the value from the default locale if there isn't one for the active locale.
 - Changed: Better abstractions for `CDAContentType` fields via `CDAField`.
 - Changed: Resource types are represented by `CDAType` enum and available for each resource via `CDAResource.type()`.
 - Changed: `CDASyncedSpace` has been renamed to `SynchronizedSpace`.
