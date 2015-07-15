@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import retrofit.client.Response;
@@ -17,6 +16,7 @@ import static com.contentful.java.cda.CDAType.ASSET;
 import static com.contentful.java.cda.CDAType.DELETEDASSET;
 import static com.contentful.java.cda.CDAType.DELETEDENTRY;
 import static com.contentful.java.cda.CDAType.ENTRY;
+import static com.contentful.java.cda.Constants.LOCALE;
 import static com.contentful.java.cda.Util.extractNested;
 import static com.contentful.java.cda.Util.queryParam;
 
@@ -98,7 +98,7 @@ final class ResourceUtils {
   @SuppressWarnings("unchecked")
   static void resolveArrayOfLinks(CDAEntry entry, CDAField field, ArrayResource array) {
     CDAType linkType =
-        CDAType.valueOf(((String) field.items().get("linkType")).toUpperCase(Constants.LOCALE));
+        CDAType.valueOf(((String) field.items().get("linkType")).toUpperCase(LOCALE));
     Map<String, ? super Object> value = (Map) entry.fields.get(field.id());
     if (value == null) {
       return;
@@ -125,7 +125,7 @@ final class ResourceUtils {
 
   @SuppressWarnings("unchecked")
   static void resolveSingleLink(CDAEntry entry, CDAField field, ArrayResource array) {
-    CDAType linkType = CDAType.valueOf(field.linkType().toUpperCase(Locale.US));
+    CDAType linkType = CDAType.valueOf(field.linkType().toUpperCase(LOCALE));
     Map<String, ? super Object> value = (Map) entry.fields.get(field.id());
     if (value == null) {
       return;
