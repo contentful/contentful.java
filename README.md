@@ -31,25 +31,13 @@ The SDK requires at minimum Java 6 or Android 2.3.
 
 The SDK uses Retrofit under the hood as a REST client, which detects [OkHttp][5] in your classpath and uses it if it's available, otherwise falls back to the default `HttpURLConnection`.
 
-The recommended approach would be to add [OkHttp][5] as a dependency to your project, but that is completely optional.
+The recommended approach would be to add [okhttp-urlconnection][5] as a dependency to your project (okhttp already included), but that is completely optional.
 
 You can also specify a custom client to be used, refer to the [official documentation][3] for instructions.
 
-### Dependencies
-
-In addition to Retrofit, the library depends on RxJava, the version number can be seen in the `properties` section of the [pom.xml][8] file.
-
 ### Proguard
-```
--keepattributes Signature
--dontwarn rx.**
--dontwarn retrofit.**
--keep class retrofit.** { *; }
--keep class com.contentful.java.cda.** { *; }
--keep class * extends com.contentful.java.cda.model.** { *; }
--keep class com.google.gson.** { *; }
--keep class sun.misc.Unsafe { *; }
-```
+
+Grab the [ProGuard configuration file][proguard] and apply to your project.
 
 Usage
 =====
@@ -214,4 +202,5 @@ Copyright (c) 2015 Contentful GmbH. See [LICENSE.txt][6] for further details.
  [6]: LICENSE.txt
  [7]: https://github.com/contentful/contentful.java/wiki/2.0-Migration
  [8]: pom.xml
+ [proguard]: proguard-cda.cfg  
  [snap]: https://oss.sonatype.org/content/repositories/snapshots/
