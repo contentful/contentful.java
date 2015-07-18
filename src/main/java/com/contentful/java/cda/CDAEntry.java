@@ -1,6 +1,6 @@
 package com.contentful.java.cda;
 
-public class CDAEntry extends LocalizedResource {
+public final class CDAEntry extends LocalizedResource {
   private CDAContentType contentType;
 
   public CDAContentType contentType() {
