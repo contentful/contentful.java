@@ -5,7 +5,7 @@ import java.util.Map;
 
 import static com.contentful.java.cda.Constants.LOCALE;
 
-public class CDAResource {
+public abstract class CDAResource {
   @SerializedName("sys")
   Map<String, ? super Object> attrs;
 
