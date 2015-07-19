@@ -83,7 +83,7 @@ final class Util {
       if (i == keys.length - 1) {
         return (T) curr.get(keys[i]);
       }
-      curr = (Map) curr.get(keys[i]);
+      curr = (Map<?, ?>) curr.get(keys[i]);
       if (curr == null) {
         break;
       }

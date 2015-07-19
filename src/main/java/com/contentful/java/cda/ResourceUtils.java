@@ -99,7 +99,7 @@ final class ResourceUtils {
   static void resolveArrayOfLinks(CDAEntry entry, CDAField field, ArrayResource array) {
     CDAType linkType =
         CDAType.valueOf(((String) field.items().get("linkType")).toUpperCase(LOCALE));
-    Map<String, Object> value = (Map) entry.fields.get(field.id());
+    Map<String, Object> value = (Map<String, Object>) entry.fields.get(field.id());
     if (value == null) {
       return;
     }
@@ -126,7 +126,7 @@ final class ResourceUtils {
   @SuppressWarnings("unchecked")
   static void resolveSingleLink(CDAEntry entry, CDAField field, ArrayResource array) {
     CDAType linkType = CDAType.valueOf(field.linkType().toUpperCase(LOCALE));
-    Map<String, Object> value = (Map) entry.fields.get(field.id());
+    Map<String, Object> value = (Map<String, Object>) entry.fields.get(field.id());
     if (value == null) {
       return;
     }
@@ -149,7 +149,7 @@ final class ResourceUtils {
       // already resolved
       return ((CDAResource) link).id();
     }
-    return extractNested((Map) link, "sys", "id");
+    return extractNested((Map<?, ?>) link, "sys", "id");
   }
 
   static CDAResource findLinkedResource(ArrayResource array, CDAType linkType,
@@ -264,7 +264,7 @@ final class ResourceUtils {
     Map<String, Object> rawFields = new HashMap<String, Object>();
     for (String key : resource.fields.keySet()) {
       Map<String, Object> map = new HashMap<String, Object>();
-      map.putAll((Map) resource.fields.get(key));
+      map.putAll((Map<String, ?>) resource.fields.get(key));
       rawFields.put(key, map);
     }
     resource.rawFields = rawFields;
