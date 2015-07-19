@@ -7,7 +7,7 @@ import static com.contentful.java.cda.Constants.LOCALE;
 
 public abstract class CDAResource {
   @SerializedName("sys")
-  Map<String, ? super Object> attrs;
+  Map<String, ?> attrs;
 
   public String id() {
     return getAttribute("id");
@@ -18,7 +18,7 @@ public abstract class CDAResource {
     return CDAType.valueOf(type.toUpperCase(LOCALE));
   }
 
-  public Map<String, ? super Object> attrs() {
+  public Map<String, ?> attrs() {
     return attrs;
   }
 

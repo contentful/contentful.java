@@ -99,7 +99,7 @@ final class ResourceUtils {
   static void resolveArrayOfLinks(CDAEntry entry, CDAField field, ArrayResource array) {
     CDAType linkType =
         CDAType.valueOf(((String) field.items().get("linkType")).toUpperCase(LOCALE));
-    Map<String, ? super Object> value = (Map) entry.fields.get(field.id());
+    Map<String, Object> value = (Map) entry.fields.get(field.id());
     if (value == null) {
       return;
     }
@@ -126,7 +126,7 @@ final class ResourceUtils {
   @SuppressWarnings("unchecked")
   static void resolveSingleLink(CDAEntry entry, CDAField field, ArrayResource array) {
     CDAType linkType = CDAType.valueOf(field.linkType().toUpperCase(LOCALE));
-    Map<String, ? super Object> value = (Map) entry.fields.get(field.id());
+    Map<String, Object> value = (Map) entry.fields.get(field.id());
     if (value == null) {
       return;
     }
@@ -237,13 +237,13 @@ final class ResourceUtils {
   }
 
   static void normalizeFields(LocalizedResource resource) {
-    Map<String, ? super Object> fields = new HashMap<String, Object>();
+    Map<String, Object> fields = new HashMap<String, Object>();
     for (String key : resource.fields.keySet()) {
       Object value = resource.fields.get(key);
       if (value == null) {
         continue;
       }
-      Map<String, ? super Object> map = new HashMap<String, Object>();
+      Map<String, Object> map = new HashMap<String, Object>();
       map.put(resource.locale(), value);
       fields.put(key, map);
     }
@@ -261,9 +261,9 @@ final class ResourceUtils {
 
   @SuppressWarnings("unchecked")
   private static void setRawFields(LocalizedResource resource) {
-    Map<String, ? super Object> rawFields = new HashMap<String, Object>();
+    Map<String, Object> rawFields = new HashMap<String, Object>();
     for (String key : resource.fields.keySet()) {
-      Map<String, ? super Object> map = new HashMap<String, Object>();
+      Map<String, Object> map = new HashMap<String, Object>();
       map.putAll((Map) resource.fields.get(key));
       rawFields.put(key, map);
     }
