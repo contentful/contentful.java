@@ -23,7 +23,7 @@ public final class CDAAsset extends LocalizedResource {
   @SuppressWarnings("unchecked")
   public <T> T fileField(String key) {
     T result = null;
-    Map<?, ?> file = getField("file");
+    Map<String, Object> file = getField("file");
     if (file != null) {
       result = (T) file.get(key);
     }
