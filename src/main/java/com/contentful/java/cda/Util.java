@@ -77,7 +77,7 @@ final class Util {
   }
 
   @SuppressWarnings("unchecked")
-  static <T> T extractNested(Map<?, ?> source, String... keys) {
+  static <T> T extractNested(Map<?, ?> source, Object... keys) {
     Map<?, ?> curr = source;
     for (int i = 0; i < keys.length; i++) {
       if (i == keys.length - 1) {

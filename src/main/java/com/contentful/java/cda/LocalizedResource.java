@@ -8,9 +8,9 @@ public abstract class LocalizedResource extends CDAResource {
 
   String defaultLocale;
 
-  Map<String, ?> fields;
+  Map<String, Object> fields;
 
-  Map<String, ?> rawFields;
+  Map<String, Object> rawFields;
 
   /**
    * Extracts a field from the fields set of the active locale, result type is inferred.
@@ -32,7 +32,7 @@ public abstract class LocalizedResource extends CDAResource {
   }
 
   /** Raw unprocessed fields. */
-  public Map<String, ?> rawFields() {
+  public Map<String, Object> rawFields() {
     return rawFields;
   }
 
