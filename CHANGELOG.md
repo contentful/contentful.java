@@ -2,8 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [3.0.1][unreleased] - (in development)
-- TBD
+## Version [4.0.1][unreleased] - (in development)
+- TBA
+
+## Version [4.0.0] - (2015-07-20)
+- Changed: `CDAResource` +`Serializable`
+- Changed: `CDAEntry` +`final`
+- Changed: Removed wildcard return types.
 
 ## Version [3.0.0] - (2015-07-15)
 - New: Major performance improvements especially around array results link resolution.
@@ -73,7 +78,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version [1.0.5] - 2014-10-01
 - Fixed: Content Types with null `displayField` are parsed correctly.
 
-
 ## Version [1.0.4] - 2014-09-17
 - New: Support custom log level.
 - New: Add `CDAResourceType` and `CDAFieldType` constants.
@@ -90,7 +94,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-3.0.0...HEAD
+[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-4.0.0...HEAD
+[4.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-3.0.0...java-sdk-4.0.0
 [3.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-2.0.4...java-sdk-3.0.0
 [2.0.4]: https://github.com/contentful/contentful.java/compare/2.0.3...java-sdk-2.0.4
 [2.0.3]: https://github.com/contentful/contentful.java/compare/2.0.2...2.0.3
