@@ -1,11 +1,12 @@
 package com.contentful.java.cda;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 import java.util.Map;
 
 import static com.contentful.java.cda.Constants.LOCALE;
 
-public abstract class CDAResource {
+public abstract class CDAResource implements Serializable {
   @SerializedName("sys")
   Map<String, Object> attrs;
 
