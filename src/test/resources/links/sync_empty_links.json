@@ -1,0 +1,47 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "items": [
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "75oea9kejr52"
+          }
+        },
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "2s9novBkP2G0oasUaG8kCs"
+          }
+        },
+        "id": "3vyEoAvlkk8yE4a8gCCkiu",
+        "revision": 1,
+        "createdAt": "2015-07-10T11:56:10.469Z",
+        "updatedAt": "2015-07-10T11:56:10.469Z"
+      },
+      "fields": {
+        "entry": {
+          "en-US": null
+        },
+        "asset": {
+          "en-US": null
+        },
+        "entries": {
+          "en-US": []
+        },
+        "assets": {
+          "en-US": []
+        },
+        "symbols": {
+          "en-US": []
+        }
+      }
+    }
+  ]
+}

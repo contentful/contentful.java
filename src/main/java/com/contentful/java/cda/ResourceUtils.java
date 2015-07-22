@@ -145,6 +145,9 @@ final class ResourceUtils {
   }
 
   static String getLinkId(Object link) {
+    if (link == null) {
+      return null;
+    }
     if (link instanceof CDAResource) {
       // already resolved
       return ((CDAResource) link).id();

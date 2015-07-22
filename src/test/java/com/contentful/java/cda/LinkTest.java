@@ -50,4 +50,13 @@ public class LinkTest extends BaseTest {
 
     assertThat((List<String>) container.getField("symbols")).containsExactly("a", "b", "c");
   }
+
+  @Test @Enqueue(defaults = {
+      "links/space.json",
+      "links/content_types.json"
+  }, value = {
+      "links/sync_empty_links.json"
+  }) public void testEmptyLinks() throws Exception {
+    client.sync().fetch();
+  }
 }
