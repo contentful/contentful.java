@@ -111,7 +111,7 @@ Apart from the configuration option, you can use the SDK without modifications w
 Migration
 =========
 
-Migration guide from 2.x to 3.x is [available in the wiki][7].
+Migration guide to 3.x is [available in the wiki][7].
 
 Documentation
 =============
@@ -131,6 +131,5 @@ Copyright (c) 2015 Contentful GmbH. See [LICENSE.txt][6] for further details.
  [5]: https://square.github.io/okhttp/
  [6]: LICENSE.txt
  [7]: https://github.com/contentful/contentful.java/wiki/3.0-Migration
- [8]: pom.xml
  [proguard]: proguard-cda.cfg  
  [snap]: https://oss.sonatype.org/content/repositories/snapshots/
