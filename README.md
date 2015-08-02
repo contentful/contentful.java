@@ -78,13 +78,14 @@ Note that the return value for any asynchronous methods is the callback itself, 
 
 If you want to use RxJava instead, call the `observe()` method to get an `Observable` instance:
 ```java
-client.observe(CDAAsset.class).one("jake")
+client.observe(CDAAsset.class)
+    .one("jake")
     .subscribe(System.out::println);
 ```
 
 ### Default Ordering
 
-Bear in mind that there is no default ordering included for any method which returns a `CDAArray` instance. This means that if you plan to page through more than 100 results with multiple requests, there is no guarantee that you will cover all entries. It is however possible to specify ordering for a query using the `fetchAll()` methods that take a query parameter, for instance:
+Bear in mind that there is no default ordering included for any method which returns a `CDAArray` instance. This means that if you plan to page through more than 100 results with multiple requests, there is no guarantee that you will cover all entries. It is however possible to specify custom ordering:
 
 ```java
 CDAArray result = client.fetch(CDAEntry.class)
