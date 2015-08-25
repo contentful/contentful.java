@@ -1,9 +1,10 @@
 package com.contentful.java.cda;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 
 /** Represents a single locale. */
-public final class CDALocale {
+public final class CDALocale implements Serializable {
   String code;
 
   String name;
