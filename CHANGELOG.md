@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Version [4.0.2][unreleased] - (in development)
+- Changed: `CDAField` +`Serializable`
 - Changed: `CDALocale` +`Serializable`
 
 ## Version [4.0.1] - (2015-07-20)
