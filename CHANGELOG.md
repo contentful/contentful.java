@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version [4.0.2][unreleased] - (in development)
 - Changed: `CDAField` +`Serializable`
 - Changed: `CDALocale` +`Serializable`
+- Changed: RxJava v1.0.14
 
 ## Version [4.0.1] - (2015-07-20)
 - Fixed: NPE when processing entries with null links.
