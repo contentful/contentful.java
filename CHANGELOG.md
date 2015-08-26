@@ -2,7 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [4.0.2][unreleased] - (in development)
+## Version [4.0.3][unreleased] - (in development)
+- TBA.
+
+## Version [4.0.2] - (2015-08-26)
 - Changed: `CDAField` +`Serializable`
 - Changed: `CDALocale` +`Serializable`
 - Changed: RxJava v1.0.14
@@ -99,7 +102,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-4.0.1...HEAD
+[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-4.0.2...HEAD
+[4.0.2]: https://github.com/contentful/contentful.java/compare/java-sdk-4.0.1...java-sdk-4.0.2
 [4.0.1]: https://github.com/contentful/contentful.java/compare/java-sdk-4.0.0...java-sdk-4.0.1
 [4.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-3.0.0...java-sdk-4.0.0
 [3.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-2.0.4...java-sdk-3.0.0

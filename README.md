@@ -15,12 +15,12 @@ Grab via Maven:
 <dependency>
   <groupId>com.contentful.java</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>4.0.1</version>
+  <version>4.0.2</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.contentful.java:java-sdk:4.0.1'
+compile 'com.contentful.java:java-sdk:4.0.2'
 ```
 
 Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
@@ -126,7 +126,7 @@ Copyright (c) 2015 Contentful GmbH. See [LICENSE.txt][6] for further details.
 
 
  [1]: https://www.contentful.com
- [2]: https://oss.sonatype.org/service/local/repositories/releases/content/com/contentful/java/java-sdk/4.0.1/java-sdk-4.0.1.jar
+ [2]: https://oss.sonatype.org/service/local/repositories/releases/content/com/contentful/java/java-sdk/4.0.2/java-sdk-4.0.2.jar
  [3]: https://contentful.github.io/contentful.java/
  [4]: https://www.contentful.com/developers/documentation/content-delivery-api/
  [5]: https://square.github.io/okhttp/
