@@ -54,7 +54,7 @@
     <!-- Test Dependencies -->
     <commonsio.version>2.4</commonsio.version>
     <junit.version>4.11</junit.version>
-    <okhttp.version>2.4.0</okhttp.version>
+    <okhttp.version>2.5.0</okhttp.version>
     <mockito.version>1.10.19</mockito.version>
     <android.version>4.1.1.4</android.version>
     <android.platform>16</android.platform>
