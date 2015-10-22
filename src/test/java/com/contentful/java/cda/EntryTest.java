@@ -91,7 +91,7 @@ public class EntryTest extends BaseTest {
   @Enqueue("demo/entries.json")
   public void fetchAllEntries() throws Exception {
     CDAArray array = client.fetch(CDAEntry.class).all();
-    assertThat(array.items()).hasSize(15);
+    assertThat(array.items()).hasSize(11);
     assertThat(array.assets()).hasSize(4);
     assertThat(array.entries()).hasSize(11);
 
@@ -127,5 +127,28 @@ public class EntryTest extends BaseTest {
     entry.setLocale("tlh");
     assertThat(entry.getField("color")).isEqualTo("rainbow");
     assertThat(entry.getField("non-existing-does-not-throw")).isNull();
+  }
+
+  @Test
+  @Enqueue(
+      defaults = { "arrays/space.json", "arrays/content_types.json" },
+      value = "arrays/entries.json"
+  )
+  public void arrayItemsContainOnlyTopLevelEntries() throws Exception {
+    CDAArray array =
+        client.fetch(CDAEntry.class).where("content_type", "Jm9AuzgH8OyocaMQSMwKC").all();
+
+    assertThat(array.items()).hasSize(1);
+    assertThat(array.entries()).hasSize(2);
+    assertThat(array.entries().values()).containsAllIn(array.items());
+
+    CDAEntry parent = array.entries().get("7Avw18DWveMI60a0WWwyCi");
+    assertThat(parent).isNotNull();
+
+    CDAEntry child = parent.getField("child");
+    assertThat(child).isNotNull();
+
+    assertThat(array.items()).containsExactly(parent);
+    assertThat(array.entries().values()).containsExactly(parent, child);
   }
 }

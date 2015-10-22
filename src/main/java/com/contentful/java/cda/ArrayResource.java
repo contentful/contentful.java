@@ -15,12 +15,12 @@ abstract class ArrayResource extends CDAResource {
     return items;
   }
 
-  /** Assets mapped by asset id. */
+  /** Assets mapped by asset id (includes linked resources). */
   public Map<String, CDAAsset> assets() {
     return assets;
   }
 
-  /** Entries mapped by entry id. */
+  /** Entries mapped by entry id (includes linked resources). */
   public Map<String, CDAEntry> entries() {
     return entries;
   }

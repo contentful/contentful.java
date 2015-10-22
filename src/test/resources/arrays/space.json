@@ -1,0 +1,14 @@
+{
+  "sys": {
+    "type": "Space",
+    "id": "dc9j5zkjikxm"
+  },
+  "name": "sp",
+  "locales": [
+    {
+      "code": "en-US",
+      "default": true,
+      "name": "U.S. English"
+    }
+  ]
+}
