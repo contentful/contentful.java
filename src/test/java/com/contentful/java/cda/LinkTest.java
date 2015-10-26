@@ -26,7 +26,7 @@ public class LinkTest extends BaseTest {
   }) public void arrays() throws Exception {
     CDAArray array = client.fetch(CDAEntry.class).all();
     assertThat(array.total()).isEqualTo(4);
-    assertThat(array.items()).hasSize(6);
+    assertThat(array.items()).hasSize(4);
     assertThat(array.assets()).hasSize(2);
     assertThat(array.entries()).hasSize(4);
 

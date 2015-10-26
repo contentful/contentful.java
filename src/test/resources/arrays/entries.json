@@ -1,0 +1,74 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 1,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "dc9j5zkjikxm"
+          }
+        },
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "Jm9AuzgH8OyocaMQSMwKC"
+          }
+        },
+        "id": "7Avw18DWveMI60a0WWwyCi",
+        "revision": 1,
+        "createdAt": "2015-10-22T20:54:34.968Z",
+        "updatedAt": "2015-10-22T20:54:34.968Z",
+        "locale": "en-US"
+      },
+      "fields": {
+        "child": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Entry",
+            "id": "phJLkn1SHmUimqUWuEOeG"
+          }
+        }
+      }
+    }
+  ],
+  "includes": {
+    "Entry": [
+      {
+        "sys": {
+          "space": {
+            "sys": {
+              "type": "Link",
+              "linkType": "Space",
+              "id": "dc9j5zkjikxm"
+            }
+          },
+          "type": "Entry",
+          "contentType": {
+            "sys": {
+              "type": "Link",
+              "linkType": "ContentType",
+              "id": "71tYS0GavSkUMsokUWmAW4"
+            }
+          },
+          "id": "phJLkn1SHmUimqUWuEOeG",
+          "revision": 1,
+          "createdAt": "2015-10-22T20:54:26.244Z",
+          "updatedAt": "2015-10-22T20:54:26.244Z",
+          "locale": "en-US"
+        },
+        "fields": {
+          "name": "child"
+        }
+      }
+    ]
+  }
+}

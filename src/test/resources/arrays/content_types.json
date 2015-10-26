@@ -1,0 +1,64 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 2,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    {
+      "name": "parent",
+      "fields": [
+        {
+          "name": "child",
+          "id": "child",
+          "type": "Link",
+          "linkType": "Entry",
+          "localized": false
+        }
+      ],
+      "description": "",
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "dc9j5zkjikxm"
+          }
+        },
+        "type": "ContentType",
+        "id": "Jm9AuzgH8OyocaMQSMwKC",
+        "revision": 1,
+        "createdAt": "2015-10-22T20:52:53.122Z",
+        "updatedAt": "2015-10-22T20:52:53.122Z"
+      }
+    },
+    {
+      "name": "child",
+      "fields": [
+        {
+          "name": "name",
+          "id": "name",
+          "type": "Symbol",
+          "localized": false
+        }
+      ],
+      "description": "",
+      "displayField": "name",
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "dc9j5zkjikxm"
+          }
+        },
+        "type": "ContentType",
+        "id": "71tYS0GavSkUMsokUWmAW4",
+        "revision": 1,
+        "createdAt": "2015-10-22T20:53:20.595Z",
+        "updatedAt": "2015-10-22T20:53:20.595Z"
+      }
+    }
+  ]
+}

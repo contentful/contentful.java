@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import retrofit.client.Response;
 
 import static com.contentful.java.cda.Constants.CHARSET;
@@ -29,12 +31,26 @@ final class ResourceFactory {
     CDAArray array = fromResponse(response, CDAArray.class);
     array.assets = new HashMap<String, CDAAsset>();
     array.entries = new HashMap<String, CDAEntry>();
-    ResourceUtils.mergeIncludes(array);
-    ResourceUtils.localizeResources(array.items(), client.cache.space());
-    ResourceUtils.mapResources(array.items(), array.assets, array.entries);
+
+    Set<CDAResource> resources = collectResources(array);
+    ResourceUtils.localizeResources(resources, client.cache.space());
+    ResourceUtils.mapResources(resources, array.assets, array.entries);
     ResourceUtils.setRawFields(array);
     ResourceUtils.resolveLinks(array, client);
     return array;
+  }
+
+  private static Set<CDAResource> collectResources(CDAArray array) {
+    Set<CDAResource> resources = new HashSet<CDAResource>(array.items());
+    if (array.includes != null) {
+      if (array.includes.assets != null) {
+        resources.addAll(array.includes.assets);
+      }
+      if (array.includes.entries != null) {
+        resources.addAll(array.includes.entries);
+      }
+    }
+    return resources;
   }
 
   static SynchronizedSpace sync(Response response, SynchronizedSpace old, CDAClient client) {

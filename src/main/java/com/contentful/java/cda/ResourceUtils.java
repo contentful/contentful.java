@@ -84,17 +84,6 @@ final class ResourceUtils {
     entry.setContentType(contentType);
   }
 
-  static void mergeIncludes(CDAArray array) {
-    if (array.includes != null) {
-      if (array.includes.assets != null) {
-        array.items().addAll(array.includes.assets);
-      }
-      if (array.includes.entries != null) {
-        array.items().addAll(array.includes.entries);
-      }
-    }
-  }
-
   @SuppressWarnings("unchecked")
   static void resolveArrayOfLinks(CDAEntry entry, CDAField field, ArrayResource array) {
     CDAType linkType =
@@ -217,7 +206,7 @@ final class ResourceUtils {
     space.deletedEntries = entries;
   }
 
-  static void localizeResources(List<CDAResource> resources, CDASpace space) {
+  static void localizeResources(Collection<? extends CDAResource> resources, CDASpace space) {
     for (CDAResource resource : resources) {
       CDAType type = resource.type();
       if (ASSET.equals(type) || ENTRY.equals(type)) {
