@@ -1,0 +1,77 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "items": [
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "dc9j5zkjikxm"
+          }
+        },
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "59TAIUBW5OaOSS4WgE8M4s"
+          }
+        },
+        "id": "2PovwSgHUce0AsokOswsqA",
+        "revision": 1,
+        "createdAt": "2015-10-28T17:48:13.629Z",
+        "updatedAt": "2015-10-28T17:48:13.629Z"
+      },
+      "fields": {
+        "child": {
+          "en-US": {
+            "sys": {
+              "type": "Link",
+              "linkType": "Entry",
+              "id": "INVALID"
+            }
+          },
+          "es": {
+            "sys": {
+              "type": "Link",
+              "linkType": "Entry",
+              "id": "51oWCPywfKyAs62gk66GUk"
+            }
+          }
+        }
+      }
+    },
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "dc9j5zkjikxm"
+          }
+        },
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "71tYS0GavSkUMsokUWmAW4"
+          }
+        },
+        "id": "51oWCPywfKyAs62gk66GUk",
+        "revision": 1,
+        "createdAt": "2015-10-28T17:47:56.133Z",
+        "updatedAt": "2015-10-28T17:47:56.133Z"
+      },
+      "fields": {
+        "name": {
+          "en-US": "foo"
+        }
+      }
+    }
+  ],
+  "nextSyncUrl": "https://cdn.contentful.com/spaces/dc9j5zkjikxm/sync?sync_token=w5ZGw6JFwqZmVcKsE8Kow4grw45QdyYXJj7CgcO3PzMvSsO7MHrCgQNTwo0mNcKzwqRmMMKWfcKdwrzCug9iLSZwwptrw4fDjUrDicKJwqkywr_DlRYwchTDscOSw4spXTLCpX5twpvCmMKewqEZwo7Cm8Oz"
+}

@@ -129,4 +129,17 @@ public class SyncTest extends BaseTest {
     assertThat(rawArray).isNotNull();
     assertThat(rawArray.get("en-US").get(0)).containsKey("sys");
   }
+
+  @Test
+  @Enqueue(
+      defaults = { },
+      value = {
+          "links_invalid/space.json",
+          "links_invalid/content_types.json",
+          "links_invalid/sync_initial.json"
+      }
+  )
+  public void invalidLinkDoesNotThrow() throws Exception {
+    client.sync().fetch();
+  }
 }

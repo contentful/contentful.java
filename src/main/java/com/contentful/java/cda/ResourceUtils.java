@@ -119,6 +119,7 @@ final class ResourceUtils {
     if (value == null) {
       return;
     }
+    Set<String> toRemove = new HashSet<String>();
     for (String locale : value.keySet()) {
       String linkId = getLinkId(value.get(locale));
       if (linkId == null) {
@@ -126,10 +127,13 @@ final class ResourceUtils {
       }
       CDAResource resource = findLinkedResource(array, linkType, linkId);
       if (resource == null) {
-        value.remove(locale);
+        toRemove.add(locale);
       } else {
         value.put(locale, resource);
       }
+    }
+    for (String locale : toRemove) {
+      value.remove(locale);
     }
   }
 
