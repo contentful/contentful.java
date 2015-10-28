@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Version [5.0.1][unreleased] - (in development)
-- TBA.
+- Fixed: ConcurrentModificationException when localized link field points to invalid entry.
 
 ## Version [5.0.0] - (2015-10-27)
 - Changed: `CDAArray.items()` now contains ONLY top level resources (no linked resources). All resources are available via `CDAArray.assets()` and `CDAArray.entries()` by ID.
