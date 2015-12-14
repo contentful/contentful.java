@@ -20,7 +20,7 @@ import static com.contentful.java.cda.Util.checkNotNull;
  * any one time. Avoid creating multiple clients for the same Space. Use {@link #builder()}
  * to create a new client instance.
  */
-public final class CDAClient {
+public class CDAClient {
   final String spaceId;
 
   final String token;

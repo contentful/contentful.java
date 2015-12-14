@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /** Collection of CDA resources. */
-public final class CDAArray extends ArrayResource {
+public class CDAArray extends ArrayResource {
   int total;
 
   int skip;

@@ -3,7 +3,7 @@ package com.contentful.java.cda;
 import java.util.Set;
 
 /** Represents results for synchronization via the Sync API. */
-public final class SynchronizedSpace extends ArrayResource {
+public class SynchronizedSpace extends ArrayResource {
   String nextPageUrl;
 
   String nextSyncUrl;

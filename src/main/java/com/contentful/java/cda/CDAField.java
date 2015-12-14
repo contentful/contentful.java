@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 /** Represents a single content type field. */
-public final class CDAField implements Serializable {
+public class CDAField implements Serializable {
   String name;
 
   String id;
