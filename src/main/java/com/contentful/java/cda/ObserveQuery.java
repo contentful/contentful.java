@@ -18,7 +18,7 @@ import static com.contentful.java.cda.Util.typeForClass;
  * the request. Call {@link Observable#subscribeOn(Scheduler)} and {@link Observable#observeOn(Scheduler)}
  * to control that.
  */
-public final class ObserveQuery<T extends CDAResource> extends AbsQuery<T, ObserveQuery<T>> {
+public class ObserveQuery<T extends CDAResource> extends AbsQuery<T, ObserveQuery<T>> {
   ObserveQuery(Class<T> type, CDAClient client) {
     super(type, client);
   }

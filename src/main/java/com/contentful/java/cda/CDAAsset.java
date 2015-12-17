@@ -3,7 +3,7 @@ package com.contentful.java.cda;
 import java.util.Map;
 
 /** Represents a single asset. */
-public final class CDAAsset extends LocalizedResource {
+public class CDAAsset extends LocalizedResource {
   /** Title */
   public String title() {
     return getField("title");

@@ -3,7 +3,7 @@ package com.contentful.java.cda;
 import java.util.List;
 
 /** Represents a single space. */
-public final class CDASpace extends CDAResource {
+public class CDASpace extends CDAResource {
   String name;
 
   List<CDALocale> locales;

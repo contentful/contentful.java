@@ -7,7 +7,7 @@ import rx.functions.Func1;
 import static com.contentful.java.cda.Util.checkNotNull;
 
 /** Represents a query to the Sync API. */
-public final class SyncQuery {
+public class SyncQuery {
   final CDAClient client;
 
   final String syncToken;

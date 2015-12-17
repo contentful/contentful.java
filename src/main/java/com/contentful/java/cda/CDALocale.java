@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 /** Represents a single locale. */
-public final class CDALocale implements Serializable {
+public class CDALocale implements Serializable {
   String code;
 
   String name;

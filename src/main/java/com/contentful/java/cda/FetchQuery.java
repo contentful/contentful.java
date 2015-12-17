@@ -4,7 +4,7 @@ package com.contentful.java.cda;
  * Represents a query to the Delivery API which may be invoked synchronously or asynchronously
  * with a callback.
  */
-public final class FetchQuery<T extends CDAResource> extends AbsQuery<T, FetchQuery<T>> {
+public class FetchQuery<T extends CDAResource> extends AbsQuery<T, FetchQuery<T>> {
   public FetchQuery(Class<T> type, CDAClient client) {
     super(type, client);
   }
