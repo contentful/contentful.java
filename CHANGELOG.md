@@ -2,8 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [5.0.2][unreleased] - (in development)
+## Version [6.0.1][unreleased] - (in development)
 - TBA.
+
+## Version [6.0.0] - (2015-12-18)
+- New: Support custom retrofit logger
+- Changed: Removed final modifier from public classes
 
 ## Version [5.0.1] - (2015-10-28)
 - Fixed: ConcurrentModificationException when localized link field points to invalid entry.
@@ -108,7 +112,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-5.0.1...HEAD
+[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-6.0.0...HEAD
+[6.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-5.0.1...java-sdk-6.0.0
 [5.0.1]: https://github.com/contentful/contentful.java/compare/java-sdk-5.0.0...java-sdk-5.0.1
 [5.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-4.0.2...java-sdk-5.0.0
 [4.0.2]: https://github.com/contentful/contentful.java/compare/java-sdk-4.0.1...java-sdk-4.0.2
