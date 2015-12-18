@@ -4,6 +4,7 @@ import com.contentful.java.cda.lib.Enqueue;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
 import org.junit.Test;
 import org.mockito.Mockito;
+import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Client;
 import retrofit.client.Request;
@@ -19,6 +20,22 @@ public class ClientTest extends BaseTest {
       cli.fetchSpace();
     } catch (RetrofitError e) {
       Mockito.verify(mock, Mockito.atLeast(1)).execute(Mockito.any(Request.class));
+      throw e;
+    }
+  }
+
+  @Test(expected = RetrofitError.class)
+  public void customLogging() throws Exception {
+    Client client = Mockito.mock(Client.class);
+    RestAdapter.Log mock = Mockito.mock(RestAdapter.Log.class);
+
+    CDAClient cli = CDAClient.builder().setSpace("foo").setToken("bar").setClient(client)
+            .setLogLevel(RestAdapter.LogLevel.BASIC)
+            .setLog(mock).build();
+    try {
+      cli.fetchSpace();
+    } catch (RetrofitError e) {
+      Mockito.verify(mock, Mockito.atLeast(1)).log(Mockito.any(String.class));
       throw e;
     }
   }

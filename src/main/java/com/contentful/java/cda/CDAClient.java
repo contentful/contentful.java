@@ -56,6 +56,7 @@ public class CDAClient {
         .setRequestInterceptor(new Interceptor(token));
 
     setLogLevel(restBuilder, clientBuilder);
+    setLog(restBuilder, clientBuilder);
     setClient(restBuilder, clientBuilder);
     return restBuilder.build().create(CDAService.class);
   }
@@ -69,6 +70,12 @@ public class CDAClient {
   private void setLogLevel(RestAdapter.Builder restBuilder, Builder clientBuilder) {
     if (clientBuilder.logLevel != null) {
       restBuilder.setLogLevel(clientBuilder.logLevel);
+    }
+  }
+
+  private void setLog(RestAdapter.Builder restBuilder, Builder clientBuilder) {
+    if (clientBuilder.log != null) {
+      restBuilder.setLog(clientBuilder.log);
     }
   }
 
@@ -224,6 +231,7 @@ public class CDAClient {
     String token;
     String endpoint;
     LogLevel logLevel;
+    RestAdapter.Log log;
     Client client;
 
     /** Sets the space ID. */
@@ -247,6 +255,12 @@ public class CDAClient {
     /** Sets a custom log level. */
     public Builder setLogLevel(LogLevel logLevel) {
       this.logLevel = logLevel;
+      return this;
+    }
+
+    /** Sets a custom logger. */
+    public Builder setLog(RestAdapter.Log log) {
+      this.log = log;
       return this;
     }
 
