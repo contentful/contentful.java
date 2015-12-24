@@ -2,7 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [6.1.0][unreleased] - (in development)
+## Version [6.1.1][unreleased] - (in development)
+- TBA
+
+## Version [6.1.0] - (2015-12-24)
 - Changed: calling sync in preview is now disabled, throwing an UnsupportedOperationException.
 
 ## Version [6.0.0] - (2015-12-18)
