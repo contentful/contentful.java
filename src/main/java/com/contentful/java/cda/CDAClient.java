@@ -31,10 +31,13 @@ public class CDAClient {
 
   final Executor callbackExecutor;
 
+  final boolean preview;
+
   private CDAClient(Builder builder) {
     validate(builder);
     this.spaceId = builder.space;
     this.token = builder.token;
+    this.preview = builder.preview;
     this.service = createService(builder);
     this.cache = new Cache();
     this.callbackExecutor = Platform.get().callbackExecutor();
@@ -104,6 +107,7 @@ public class CDAClient {
   /**
    * Returns a {@link SyncQuery} for initial synchronization via the Sync API.
    * @return query instance.
+   * @throws UnsupportedOperationException if tried to sync with a preview token
    */
   public SyncQuery sync() {
     return sync(null, null);
@@ -114,6 +118,7 @@ public class CDAClient {
    * the Sync API.
    * @param syncToken sync token.
    * @return query instance.
+   * @throws UnsupportedOperationException if tried to sync with a preview token
    */
   public SyncQuery sync(String syncToken) {
     return sync(syncToken, null);
@@ -123,12 +128,17 @@ public class CDAClient {
    * Returns a {@link SyncQuery} for synchronization with an existing space.
    * @param synchronizedSpace space to sync.
    * @return query instance.
+   * @throws UnsupportedOperationException if tried to sync with a preview token
    */
   public SyncQuery sync(SynchronizedSpace synchronizedSpace) {
     return sync(null, synchronizedSpace);
   }
 
   private SyncQuery sync(String syncToken, SynchronizedSpace synchronizedSpace) {
+    if (preview) {
+      throw new UnsupportedOperationException("Syncing using a preview token is not supported. Please use a production token.");
+    }
+
     SyncQuery.Builder builder = SyncQuery.builder().setClient(this);
     if (synchronizedSpace != null) {
       builder.setSpace(synchronizedSpace);
@@ -233,6 +243,7 @@ public class CDAClient {
     LogLevel logLevel;
     RestAdapter.Log log;
     Client client;
+    boolean preview;
 
     /** Sets the space ID. */
     public Builder setSpace(String space) {
@@ -266,6 +277,7 @@ public class CDAClient {
 
     /** Sets the endpoint to point the Preview API. */
     public Builder preview() {
+      preview = true;
       return this.setEndpoint(Constants.ENDPOINT_PREVIEW);
     }
 

@@ -2,9 +2,11 @@ package com.contentful.java.cda;
 
 import com.contentful.java.cda.lib.Enqueue;
 import com.squareup.okhttp.HttpUrl;
+
+import org.junit.Test;
+
 import java.util.List;
 import java.util.Map;
-import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -140,6 +142,13 @@ public class SyncTest extends BaseTest {
       }
   )
   public void invalidLinkDoesNotThrow() throws Exception {
+    client.sync().fetch();
+  }
+
+  @Test(expected = UnsupportedOperationException.class)
+  @Enqueue({"links_invalid/preview_space.json"})
+  public void syncingWithPreviewTokenThrows() throws Exception {
+    client = createPreviewClient();
     client.sync().fetch();
   }
 }

@@ -4,14 +4,16 @@ import com.contentful.java.cda.lib.EnqueueResponseRule;
 import com.contentful.java.cda.lib.TestCallback;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.List;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
 
 import static com.contentful.java.cda.Util.checkNotNull;
 import static com.google.common.truth.Truth.assertThat;
@@ -43,11 +45,21 @@ public class BaseTest {
   }
 
   protected CDAClient createClient() {
-    return CDAClient.builder()
-        .setSpace("space")
-        .setToken("token")
+    return createBuilder()
         .setEndpoint(serverUrl())
         .build();
+  }
+
+  protected CDAClient createPreviewClient() {
+    return createBuilder()
+        .preview()
+        .build();
+  }
+
+  private CDAClient.Builder createBuilder() {
+    return CDAClient.builder()
+        .setSpace("space")
+        .setToken("token");
   }
 
   protected String serverUrl() {

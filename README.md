@@ -15,7 +15,7 @@ Grab via Maven:
 <dependency>
   <groupId>com.contentful.java</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>6.0.0</version>
+  <version>6.1.0</version>
 </dependency>
 ```
 or Gradle:
