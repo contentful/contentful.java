@@ -115,7 +115,7 @@ public class SyncTest extends BaseTest {
     assertThat(rawArray).isNotNull();
     assertThat(rawArray.get("en-US").get(0)).containsKey("sys");
 
-    String syncToken = HttpUrl.parse(space.nextSyncUrl()).queryParameter("syncToken");
+    String syncToken = HttpUrl.parse(space.nextSyncUrl()).queryParameter("sync_token");
     space = client.sync(syncToken).fetch();
     foo = space.entries().get("2k5aHpfw7m0waMKYksC2Ww");
     assertThat(foo).isNotNull();

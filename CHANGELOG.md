@@ -2,8 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [6.1.1][unreleased] - (in development)
-- TBA
+## Version [6.1.2][unreleased] - (in development)
+
+## Version [6.1.1] - (2016-01-11)
+- Fixed: Wrong name of syncurl in tests
 
 ## Version [6.1.0] - (2015-12-24)
 - Changed: calling sync in preview is now disabled, throwing an UnsupportedOperationException.
