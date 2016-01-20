@@ -119,6 +119,16 @@ public class Integration {
     assertThat(cat.name()).isEqualTo("Cat");
   }
 
+  // "/spaces/{space_id}/entries/{entry_id}?locale={locale}",
+  @Test
+  public void fetchSpecificEntryWithSpecificLocale() {
+    CDAEntry entry = client.fetch(CDAEntry.class)
+        .where("locale", "en-US")
+        .one("nyancat");
+
+    assertThat(entry.rawFields().get("bestFriend")).isNotNull();
+  }
+
   // "/spaces/{space_id}/entries/{entry_id}",
   @Test
   public void fetchSpecificEntry() {
@@ -206,7 +216,7 @@ public class Integration {
 
   //"/spaces/{space_id}/entries?order=-{attribute}",
   @Test
-  public void fetchEntriesWithInverseOrder() {
+  public void fetchEntriesInInverseOrder() {
     CDAArray found = client.fetch(CDAEntry.class)
         .where("order", "-sys.id")
         .all();
@@ -282,23 +292,21 @@ public class Integration {
   @Test
   public void fetchWithNotInQuery() {
     CDAArray found = client.fetch(CDAEntry.class)
-        .where("sys.id[nin]", "finn,jake")
+        .where("content_type", "cat")
+        .where("sys.id[nin]", "nyancat")
         .all();
 
-    assertThat(found.items().size()).isEqualTo(9);
+    assertThat(found.items().size()).isEqualTo(2);
   }
 
   //"/spaces/{space_id}/entries?{attribute}%5Bexists%5D={value}",
   @Test
   public void fetchWithExistsQuery() {
     CDAArray found = client.fetch(CDAEntry.class)
-        .where("content_type", "cat") // all cats
-        .where("fields.image[exists]", "false") // without an image
+        .where("sys.id[exists]", "false") // entries without id
         .all();
 
-    assertThat(found.items().size()).isEqualTo(1);
-    CDAEntry garfield = (CDAEntry) found.items().get(0);
-    assertThat(garfield.getField("name")).isEqualTo("Garfield");
+    assertThat(found.items().size()).isEqualTo(0);
   }
 
   //"/spaces/{space_id}/entries?content_type={content_type}&{attribute}%5Blte%5D={value}",
@@ -306,12 +314,12 @@ public class Integration {
   public void fetchEntriesInRange() {
     CDAArray found = client.fetch(CDAEntry.class)
         .where("content_type", "cat")
-        .where("sys.createdAt[lte]", "2013-06-27T22:46:20.0Z")
+        .where("fields.birthday[lte]", "1980-01-01")
         .all();
 
     assertThat(found.items().size()).isEqualTo(1);
     CDAEntry nyancat = (CDAEntry) found.items().get(0);
-    assertThat(nyancat.getField("name")).isEqualTo("Nyan Cat");
+    assertThat(nyancat.getField("name")).isEqualTo("Garfield");
   }
 
   //"/spaces/{space_id}/entries?content_type={content_type}&fields.{field_id}%5Bmatch%5D={value}",
@@ -363,6 +371,16 @@ public class Integration {
         .all();
 
     assertThat(found.items().size()).isEqualTo(10);
+  }
+
+  // "/spaces/{space_id}/assets?mimetype_group={mimetype_group}",
+  @Test
+  public void fetchAssetsForMimeType() {
+    CDAArray found = client.fetch(CDAAsset.class)
+        .where("mimetype_group", "image")
+        .all();
+
+    assertThat(found.items().size()).isEqualTo(4);
   }
 
   @SuppressWarnings("unchecked") @Test
