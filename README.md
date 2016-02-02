@@ -133,4 +133,4 @@ Copyright (c) 2015 Contentful GmbH. See [LICENSE.txt][6] for further details.
  [6]: LICENSE.txt
  [7]: https://github.com/contentful/contentful.java/wiki/3.0-Migration
  [proguard]: proguard-cda.cfg  
- [snap]: https://oss.sonatype.org/content/repositories/snapshots/
+ [snap]: https://oss.sonatype.org/content/repositories/snapshots/com/contentful/java/java-sdk/
