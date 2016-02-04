@@ -32,6 +32,10 @@ public class CDAContentType extends CDAResource {
     return description;
   }
 
+  /**
+   * Convert this object into a human readable string.
+   * @return a string, containing id, name and description of this type.
+   */
   @Override public String toString() {
     return "CDAContentType{" +
         "id='" + id() + '\'' +

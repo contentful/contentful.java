@@ -17,6 +17,7 @@ public class SynchronizedSpace extends ArrayResource {
     return nextSyncUrl;
   }
 
+  /** Url of next page, containing more data. */
   String nextPageUrl() {
     return nextPageUrl;
   }

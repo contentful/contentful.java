@@ -2,7 +2,16 @@ package com.contentful.java.cda;
 
 import java.util.Locale;
 
+/**
+ * This class holds specific constants, used throughout the sdk, not accessible by mere mortals.
+ */
 public class Constants {
+  /**
+   * DO NOT CALL THIS CONSTRUCTOR
+   *
+   * Calling this constructor will result in an {@link AssertionError},
+   * since no instances of this class shall exist.
+   */
   private Constants() {
     throw new AssertionError();
   }

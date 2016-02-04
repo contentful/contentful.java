@@ -25,6 +25,10 @@ public class CDASpace extends CDAResource {
     return defaultLocale;
   }
 
+  /**
+   * Create a String from this object.
+   * @return a String containing the id and name of this space
+   */
   @Override public String toString() {
     return "CDASpace{" +
         "id='" + id() + '\'' +

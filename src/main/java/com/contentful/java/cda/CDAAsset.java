@@ -30,6 +30,10 @@ public class CDAAsset extends LocalizedResource {
     return result;
   }
 
+  /**
+   * Return a string, showing the id and title.
+   * @return a human readable string
+   */
   @Override public String toString() {
     return "CDAAsset{" +
         "id='" + id() + '\'' +

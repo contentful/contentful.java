@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Version [6.1.2][unreleased] - (in development)
 - New: Add Integration Tests
+- Fixed: Add missing javadoc
 - Fixed: Distribute jar with dependencies
 - Fixed: Sonatype snapshots repository link
 

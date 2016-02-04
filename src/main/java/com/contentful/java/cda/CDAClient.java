@@ -233,6 +233,9 @@ public class CDAClient {
     return new Builder();
   }
 
+  /**
+   * This builder will be used to configure and then create a {@link CDAClient}.
+   */
   public static class Builder {
     private Builder() {
     }
@@ -287,6 +290,10 @@ public class CDAClient {
       return this;
     }
 
+    /**
+     * Create CDAClient, using the specified configuration options.
+     * @return a build CDAClient.
+     */
     public CDAClient build() {
       return new CDAClient(this);
     }

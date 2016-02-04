@@ -5,6 +5,11 @@ package com.contentful.java.cda;
  * with a callback.
  */
 public class FetchQuery<T extends CDAResource> extends AbsQuery<T, FetchQuery<T>> {
+  /**
+   * Create a FetchQuery for the given type, using the client.
+   * @param type is the ContentType class to be queried for.
+   * @param client a valid client to be used for the actual data retrieval.
+   */
   public FetchQuery(Class<T> type, CDAClient client) {
     super(type, client);
   }
