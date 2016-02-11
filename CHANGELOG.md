@@ -2,7 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [6.1.2][unreleased] - (in development)
+## Version [6.1.3][unreleased] - (in development)
+- TBA
+
+## Version [6.1.2] - (2016-02-11)
 - New: Add Integration Tests
 - Fixed: Add missing javadoc
 - Fixed: Distribute jar with dependencies
@@ -121,7 +124,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-6.0.0...HEAD
+[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-6.1.2...HEAD
+[6.1.2]: https://github.com/contentful/contentful.java/compare/java-sdk-6.1.1...java-sdk-6.1.2
+[6.1.1]: https://github.com/contentful/contentful.java/compare/java-sdk-6.1.0...java-sdk-6.1.1
+[6.1.0]: https://github.com/contentful/contentful.java/compare/java-sdk-6.0.0...java-sdk-6.1.0
 [6.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-5.0.1...java-sdk-6.0.0
 [5.0.1]: https://github.com/contentful/contentful.java/compare/java-sdk-5.0.0...java-sdk-5.0.1
 [5.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-4.0.2...java-sdk-5.0.0
