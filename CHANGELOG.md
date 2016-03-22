@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Version [6.1.3][unreleased] - (in development)
-- TBA
+- Fixed: Integration tests don't expect wrong entries
 
 ## Version [6.1.2] - (2016-02-11)
 - New: Add Integration Tests

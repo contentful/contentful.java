@@ -29,7 +29,6 @@ public class Integration {
     client = CDAClient.builder()
         .setSpace("cfexampleapi")
         .setToken("b4c0n73n7fu1")
-        .setEndpoint("http://127.0.0.1:5000/")
         .build();
   }
 
@@ -66,11 +65,11 @@ public class Integration {
   @Test
   public void fetchAllEntries() throws Exception {
     CDAArray array = client.fetch(CDAEntry.class).all();
-    assertThat(array.items()).hasSize(11);
+    assertThat(array.items()).hasSize(10);
     assertThat(array.assets()).hasSize(4);
-    assertThat(array.entries()).hasSize(11);
+    assertThat(array.entries()).hasSize(10);
 
-    assertThat(array.total()).isEqualTo(11);
+    assertThat(array.total()).isEqualTo(10);
     assertThat(array.skip()).isEqualTo(0);
     assertThat(array.limit()).isEqualTo(100);
 
@@ -101,7 +100,7 @@ public class Integration {
     space = client.sync(space).observe().toBlocking().first();
 
     assertThat(space.nextSyncUrl()).isNotEmpty();
-    assertThat(space.items()).hasSize(15);
+    assertThat(space.items()).hasSize(14);
     assertThat(space.deletedEntries()).hasSize(0);
 
     CDAEntry nyanCat = space.entries().get("nyancat");
@@ -190,7 +189,7 @@ public class Integration {
         .where("locale", "en-US")
         .all();
 
-    assertThat(found.total()).isEqualTo(11);
+    assertThat(found.total()).isEqualTo(10);
   }
 
   //"/spaces/{space_id}/entries?query={value}",
@@ -200,7 +199,7 @@ public class Integration {
         .where("query", "nyan")
         .all();
 
-    assertThat(found.total()).isEqualTo(2);
+    assertThat(found.total()).isEqualTo(1);
   }
 
   //"/spaces/{space_id}/entries?order={attribute}",
@@ -210,7 +209,7 @@ public class Integration {
         .where("order", "sys.id")
         .all();
 
-    assertThat(found.total()).isEqualTo(11);
+    assertThat(found.total()).isEqualTo(10);
     assertThat(found.items().get(0).id()).isEqualTo("4MU1s3potiUEM2G4okYOqw");
   }
 
@@ -221,7 +220,7 @@ public class Integration {
         .where("order", "-sys.id")
         .all();
 
-    assertThat(found.total()).isEqualTo(11);
+    assertThat(found.total()).isEqualTo(10);
     List<CDAResource> items = found.items();
     assertThat(items.get(items.size() - 1).id()).isEqualTo("4MU1s3potiUEM2G4okYOqw");
   }
@@ -233,7 +232,7 @@ public class Integration {
         .where("order", "sys.contentType.sys.id,sys.id")
         .all();
 
-    assertThat(found.total()).isEqualTo(11);
+    assertThat(found.total()).isEqualTo(10);
     List<CDAResource> items = found.items();
     assertThat(items.get(items.size() - 1).id()).isEqualTo("finn");
   }
@@ -247,7 +246,7 @@ public class Integration {
 
     assertThat(found.items().size()).isEqualTo(1);
     CDAEntry entry = (CDAEntry) found.items().get(0);
-    assertThat(entry.getField("name")).isEqualTo("Doge");
+    assertThat(entry.getField("name")).isEqualTo("Berlin");
   }
 
   //"/spaces/{space_id}/entries?skip={value}",
@@ -257,9 +256,9 @@ public class Integration {
         .where("skip", "1")
         .all();
 
-    assertThat(found.items().size()).isEqualTo(10);
+    assertThat(found.items().size()).isEqualTo(9);
     CDAEntry entry = (CDAEntry) found.items().get(0);
-    assertThat(entry.getField("name")).isEqualTo("Berlin");
+    assertThat(entry.getField("name")).isEqualTo("Nyan Cat");
   }
 
   //"/spaces/{space_id}/entries?include={value}",
@@ -269,7 +268,7 @@ public class Integration {
         .where("include", "0")
         .all();
 
-    assertThat(found.items().size()).isEqualTo(11);
+    assertThat(found.items().size()).isEqualTo(10);
     assertThat(found.assets().size()).isEqualTo(0);
   }
 
@@ -370,7 +369,7 @@ public class Integration {
         .where("sys.id[ne]", "nyancat")
         .all();
 
-    assertThat(found.items().size()).isEqualTo(10);
+    assertThat(found.items().size()).isEqualTo(9);
   }
 
   // "/spaces/{space_id}/assets?mimetype_group={mimetype_group}",
@@ -386,9 +385,9 @@ public class Integration {
   @SuppressWarnings("unchecked") @Test
   public void testRawFields() throws Exception {
     SynchronizedSpace space = client.sync().fetch();
-    assertThat(space.items()).hasSize(15);
+    assertThat(space.items()).hasSize(14);
     assertThat(space.assets()).hasSize(4);
-    assertThat(space.entries()).hasSize(11);
+    assertThat(space.entries()).hasSize(10);
 
     CDAEntry happycat = space.entries().get("happycat");
     assertThat(happycat).isNotNull();
@@ -408,7 +407,7 @@ public class Integration {
 
   private void assertInitial(SynchronizedSpace space) {
     assertThat(space.nextSyncUrl()).isNotEmpty();
-    assertThat(space.items()).hasSize(15);
+    assertThat(space.items()).hasSize(14);
     assertThat(space.deletedAssets()).isEmpty();
     assertThat(space.deletedEntries()).isEmpty();
 
@@ -429,7 +428,7 @@ public class Integration {
     assertThat(asset.title()).isEqualTo("Nyan Cat");
 
     // Entries
-    assertThat(space.entries()).hasSize(11);
+    assertThat(space.entries()).hasSize(10);
     CDAEntry nyanCat = space.entries().get("nyancat");
     assertThat(nyanCat).isNotNull();
     assertThat(nyanCat.getField("name")).isEqualTo("Nyan Cat");
