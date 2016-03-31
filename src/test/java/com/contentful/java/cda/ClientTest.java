@@ -1,41 +1,45 @@
 package com.contentful.java.cda;
 
 import com.contentful.java.cda.lib.Enqueue;
-import com.squareup.okhttp.mockwebserver.RecordedRequest;
+
 import org.junit.Test;
-import org.mockito.Mockito;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Client;
-import retrofit.client.Request;
+
+import java.io.IOException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.mockwebserver.RecordedRequest;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class ClientTest extends BaseTest {
-  @Test(expected = RetrofitError.class)
+  @Test(expected = RuntimeException.class)
   public void customClient() throws Exception {
-    Client mock = Mockito.mock(Client.class);
+    OkHttpClient mock = mock(OkHttpClient.class);
     CDAClient cli = CDAClient.builder().setSpace("foo").setToken("bar").setClient(mock).build();
+
     try {
       cli.fetchSpace();
-    } catch (RetrofitError e) {
-      Mockito.verify(mock, Mockito.atLeast(1)).execute(Mockito.any(Request.class));
-      throw e;
-    }
-  }
-
-  @Test(expected = RetrofitError.class)
-  public void customLogging() throws Exception {
-    Client client = Mockito.mock(Client.class);
-    RestAdapter.Log mock = Mockito.mock(RestAdapter.Log.class);
-
-    CDAClient cli = CDAClient.builder().setSpace("foo").setToken("bar").setClient(client)
-            .setLogLevel(RestAdapter.LogLevel.BASIC)
-            .setLog(mock).build();
-    try {
-      cli.fetchSpace();
-    } catch (RetrofitError e) {
-      Mockito.verify(mock, Mockito.atLeast(1)).log(Mockito.any(String.class));
+    } catch (RuntimeException e) {
+      assertThat(e.getCause()).isInstanceOf(IOException.class);
+      assertThat(e.getMessage()).isEqualTo("java.io.IOException: FAILED REQUEST: " +
+          "Request{" +
+          "method=GET, " +
+          "url=https://cdn.contentful.com/spaces/foo, " +
+          "tag=Request{method=GET, " +
+          "url=https://cdn.contentful.com/spaces/foo, " +
+          "tag=null}" +
+          "}\n\t… " +
+          "Response{" +
+          "protocol=http/1.1, " +
+          "code=401, " +
+          "message=Unauthorized, " +
+          "url=https://cdn.contentful.com/spaces/foo" +
+          "}");
       throw e;
     }
   }
@@ -86,6 +90,63 @@ public class ClientTest extends BaseTest {
     } catch (IllegalArgumentException e) {
       assertThat(e.getMessage()).isEqualTo(
           "Invalid type specified: com.contentful.java.cda.CDAResource");
+      throw e;
+    }
+  }
+
+  @Test
+  @Enqueue("demo/content_types_cat.json")
+  public void settingACustomLoggerAndNoneForLogLevelResultsInNoLogging() {
+    final Logger logMock = mock(Logger.class);
+    final CDAClient client = createBuilder()
+        .setLogLevel(Logger.Level.NONE)
+        .setLogger(logMock)
+        .build();
+
+    client.fetch(CDAContentType.class).all();
+
+    verifyNoMoreInteractions(logMock);
+  }
+
+  @Test
+  @Enqueue("demo/content_types_cat.json")
+  public void settingACustomLoggerAndBasicForLogLevelResultsInLogging() {
+    final Logger logMock = mock(Logger.class);
+    final CDAClient client = createBuilder()
+        .setLogLevel(Logger.Level.BASIC)
+        .setLogger(logMock)
+        .build();
+
+    client.fetch(CDAContentType.class).all();
+
+    verify(logMock, times(6)).log(anyString());
+  }
+
+  @Test
+  @Enqueue("demo/content_types_cat.json")
+  public void settingACustomLoggerAndFullForLogLevelResultsInLogging() {
+    final Logger logMock = mock(Logger.class);
+    final CDAClient client = createBuilder()
+        .setLogLevel(Logger.Level.FULL)
+        .setLogger(logMock)
+        .build();
+
+    client.fetch(CDAContentType.class).all();
+
+    verify(logMock, times(6)).log(anyString());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  @Enqueue("demo/content_types_cat.json")
+  public void settingNoLoggerAndAnyLogLevelResultsException() {
+    try {
+      createBuilder()
+          .setLogLevel(Logger.Level.BASIC)
+          .setLogger(null)
+          .build();
+
+    } catch (IllegalArgumentException e) {
+      assertThat(e.getMessage()).isEqualTo("Cannot log to a null logger. Please set either logLevel to None, or do set a Logger");
       throw e;
     }
   }

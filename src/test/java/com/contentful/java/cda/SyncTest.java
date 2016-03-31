@@ -1,7 +1,7 @@
 package com.contentful.java.cda;
 
 import com.contentful.java.cda.lib.Enqueue;
-import com.squareup.okhttp.HttpUrl;
+import okhttp3.HttpUrl;
 
 import org.junit.Test;
 

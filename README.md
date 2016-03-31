@@ -15,7 +15,7 @@ Grab via Maven:
 <dependency>
   <groupId>com.contentful.java</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>6.1.2</version>
+  <version>7.0.0</version>
 </dependency>
 ```
 or Gradle:
@@ -126,7 +126,7 @@ Copyright (c) 2015 Contentful GmbH. See [LICENSE.txt][6] for further details.
 
 
  [1]: https://www.contentful.com
- [2]: https://oss.sonatype.org/service/local/repositories/releases/content/com/contentful/java/java-sdk/6.1.2/java-sdk-6.1.2.jar
+ [2]: https://oss.sonatype.org/service/local/repositories/releases/content/com/contentful/java/java-sdk/7.0.0/java-sdk-7.0.0.jar
  [3]: https://contentful.github.io/contentful.java/
  [4]: https://www.contentful.com/developers/documentation/content-delivery-api/
  [5]: https://square.github.io/okhttp/
