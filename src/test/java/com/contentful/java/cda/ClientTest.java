@@ -79,7 +79,9 @@ public class ClientTest extends BaseTest {
     assertThat(versionName).isNotEmpty();
     client.fetchSpace();
     RecordedRequest request = server.takeRequest();
-    assertThat(request.getHeader("User-Agent")).isEqualTo("contentful.java/" + versionName);
+
+    // only check the platform independent user agent string
+    assertThat(request.getHeader("User-Agent")).startsWith("contentful.java/" + versionName);
   }
 
   @Test(expected = IllegalArgumentException.class)

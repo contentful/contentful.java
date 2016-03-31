@@ -28,7 +28,7 @@ public final class HeaderInterceptor implements Interceptor {
    * Method called by framework, to enrich current request chain with the header information requested.
    *
    * @param chain the execution chain for the request.
-   * @return the response recieved
+   * @return the response received
    * @throws IOException
    */
   @Override public Response intercept(Chain chain) throws IOException {

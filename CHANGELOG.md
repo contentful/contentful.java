@@ -4,12 +4,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Version [7.0.0][unreleased] - (in development)
 - Fixed: Integration tests don't expect wrong entries
-- Changed: updated okhttp from `2.5.0` to `3.2.0`[OkHTTP3 Changelog for 3.2.0](https://github.com/square/okhttp/blob/master/CHANGELOG.md#version-320)
-- Changed: updated retrofit from `1.9.0` to `2.0.1`[Retrofit Changelog for 2.0.0](https://github.com/square/retrofit/blob/master/CHANGELOG.md#version-201-2016-03-30)
-- Changed: updated rxjava from `1.0.14` to `1.1.2`[rxjava Changelog for 1.1.2](https://github.com/ReactiveX/RxJava/releases/tag/v1.1.2)
-- New: added gson `2.6.2` (was bundled with retrofit before)
-- New: added converter-gson `2.0.1` (was bundled with retrofit before)
-- New: added adapter-rxjava `2.0.1` (was bundled with retrofit before)
+- Changed: Add java and os version to user agent
+- Changed: Update okhttp from `2.5.0` to `3.2.0`[OkHTTP3 Changelog for 3.2.0](https://github.com/square/okhttp/blob/master/CHANGELOG.md#version-320)
+- Changed: Update retrofit from `1.9.0` to `2.0.1`[Retrofit Changelog for 2.0.0](https://github.com/square/retrofit/blob/master/CHANGELOG.md#version-201-2016-03-30)
+- Changed: Update rxjava from `1.0.14` to `1.1.2`[rxjava Changelog for 1.1.2](https://github.com/ReactiveX/RxJava/releases/tag/v1.1.2)
+- New: Add gson `2.6.2` (was bundled with retrofit before)
+- New: Add converter-gson `2.0.1` (was bundled with retrofit before)
+- New: Add adapter-rxjava `2.0.1` (was bundled with retrofit before)
 
 ## Version [6.1.2] - (2016-02-11)
 - New: Add Integration Tests

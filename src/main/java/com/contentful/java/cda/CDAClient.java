@@ -6,11 +6,11 @@ import com.contentful.java.cda.interceptor.LogInterceptor;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 
 import okhttp3.OkHttpClient;
-import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -21,7 +21,6 @@ import rx.functions.Func1;
 import static com.contentful.java.cda.Constants.ENDPOINT_PROD;
 import static com.contentful.java.cda.Constants.PATH_CONTENT_TYPES;
 import static com.contentful.java.cda.Util.checkNotNull;
-import static com.contentful.java.cda.Util.resourcePath;
 
 /**
  * Client to be used when requesting information from the Delivery API. Every client is associated
@@ -267,7 +266,14 @@ public class CDAClient {
   }
 
   String createUserAgent() {
-    return String.format("contentful.java/%s", Util.getProperty("version.name"));
+    final Properties properties = System.getProperties();
+    return String.format("contentful.java/%s(%s %s) %s/%s",
+        Util.getProperty("version.name"),
+        properties.getProperty("java.runtime.name"),
+        properties.getProperty("java.runtime.version"),
+        properties.getProperty("os.name"),
+        properties.getProperty("os.version")
+    );
   }
 
   /**
