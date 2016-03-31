@@ -1,6 +1,6 @@
 package com.contentful.java.cda;
 
-import retrofit.client.Response;
+import retrofit2.Response;
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -40,13 +40,13 @@ public class SyncQuery {
       token = syncToken;
     }
     return client.cacheAll(true)
-        .flatMap(new Func1<Cache, Observable<Response>>() {
-          @Override public Observable<Response> call(Cache cache) {
+        .flatMap(new Func1<Cache, Observable<Response<SynchronizedSpace>>>() {
+          @Override public Observable<Response<SynchronizedSpace>> call(Cache cache) {
             return client.service.sync(client.spaceId, initial ? initial : null, token);
           }
-        }).map(new Func1<Response, SynchronizedSpace>() {
-          @Override public SynchronizedSpace call(Response response) {
-            return ResourceFactory.sync(response, space, client);
+        }).map(new Func1<Response<SynchronizedSpace>, SynchronizedSpace>() {
+          @Override public SynchronizedSpace call(Response<SynchronizedSpace> synchronizedSpace) {
+            return ResourceFactory.sync(synchronizedSpace, space, client);
           }
         });
   }

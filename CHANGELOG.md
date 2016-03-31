@@ -2,8 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [6.1.3][unreleased] - (in development)
-- TBA
+## Version [7.0.0][unreleased] - (in development)
+- Fixed: Integration tests don't expect wrong entries
+- Changed: Add java and os version to user agent
+- Changed: Update okhttp from `2.5.0` to `3.2.0`[OkHTTP3 Changelog for 3.2.0](https://github.com/square/okhttp/blob/master/CHANGELOG.md#version-320)
+- Changed: Update retrofit from `1.9.0` to `2.0.1`[Retrofit Changelog for 2.0.0](https://github.com/square/retrofit/blob/master/CHANGELOG.md#version-201-2016-03-30)
+- Changed: Update rxjava from `1.0.14` to `1.1.2`[rxjava Changelog for 1.1.2](https://github.com/ReactiveX/RxJava/releases/tag/v1.1.2)
+- New: Add gson `2.6.2` (was bundled with retrofit before)
+- New: Add converter-gson `2.0.1` (was bundled with retrofit before)
+- New: Add adapter-rxjava `2.0.1` (was bundled with retrofit before)
 
 ## Version [6.1.2] - (2016-02-11)
 - New: Add Integration Tests
@@ -124,7 +131,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-6.1.2...HEAD
+[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-7.0.0...HEAD
+[7.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-6.1.2...java-sdk-7.0.0
 [6.1.2]: https://github.com/contentful/contentful.java/compare/java-sdk-6.1.1...java-sdk-6.1.2
 [6.1.1]: https://github.com/contentful/contentful.java/compare/java-sdk-6.1.0...java-sdk-6.1.1
 [6.1.0]: https://github.com/contentful/contentful.java/compare/java-sdk-6.0.0...java-sdk-6.1.0

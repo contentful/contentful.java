@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import retrofit.client.Response;
+import retrofit2.Response;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -25,20 +25,20 @@ final class ResourceUtils {
     throw new AssertionError();
   }
 
-  static SynchronizedSpace iterate(Response response, CDAClient client) {
-    SynchronizedSpace result = ResourceFactory.fromResponse(response, SynchronizedSpace.class);
-    List<CDAResource> items = result.items;
+  static SynchronizedSpace iterate(Response<SynchronizedSpace> spaceResponse, CDAClient client) {
+    SynchronizedSpace space = ResourceFactory.fromResponse(spaceResponse);
+    List<CDAResource> items = space.items;
     while (true) {
-      SynchronizedSpace nextSpace = nextSpace(result, client);
+      SynchronizedSpace nextSpace = nextSpace(space, client);
       if (nextSpace == null) {
         break;
       }
       items.addAll(nextSpace.items());
-      result = nextSpace;
+      space = nextSpace;
     }
-    result.items = items;
-    localizeResources(result.items(), client.cache.space());
-    return result;
+    space.items = items;
+    localizeResources(space.items(), client.cache.space());
+    return space;
   }
 
   static SynchronizedSpace nextSpace(SynchronizedSpace space, CDAClient client) {
@@ -47,12 +47,12 @@ final class ResourceUtils {
       return null;
     }
 
-    Response response =
+    Response<SynchronizedSpace> synchronizedSpace =
         client.service.sync(client.spaceId, null, queryParam(nextPageUrl, "sync_token"))
             .toBlocking()
             .first();
 
-    return ResourceFactory.fromResponse(response, SynchronizedSpace.class);
+    return synchronizedSpace.body();
   }
 
   static void resolveLinks(ArrayResource array, CDAClient client) {

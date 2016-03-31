@@ -22,9 +22,9 @@ public class Constants {
 
   static final String SCHEME = "https";
 
-  static final String ENDPOINT_PREVIEW = SCHEME + "://preview.contentful.com";
+  static final String ENDPOINT_PREVIEW = SCHEME + "://preview.contentful.com/";
 
-  static final String ENDPOINT_PROD = SCHEME + "://cdn.contentful.com";
+  static final String ENDPOINT_PROD = SCHEME + "://cdn.contentful.com/";
 
   static final String PATH_ASSETS = "assets";
 

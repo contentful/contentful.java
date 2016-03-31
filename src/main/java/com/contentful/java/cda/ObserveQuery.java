@@ -1,6 +1,6 @@
 package com.contentful.java.cda;
 
-import retrofit.client.Response;
+import retrofit2.Response;
 import rx.Observable;
 import rx.Scheduler;
 import rx.functions.Func1;
@@ -66,12 +66,12 @@ public class ObserveQuery<T extends CDAResource> extends AbsQuery<T, ObserveQuer
    */
   public Observable<CDAArray> all() {
     return client.cacheAll(false)
-        .flatMap(new Func1<Cache, Observable<Response>>() {
-          @Override public Observable<Response> call(Cache cache) {
+        .flatMap(new Func1<Cache, Observable<Response<CDAArray>>>() {
+          @Override public Observable<Response<CDAArray>> call(Cache cache) {
             return client.service.array(client.spaceId, path(), params);
           }
-        }).map(new Func1<Response, CDAArray>() {
-          @Override public CDAArray call(Response response) {
+        }).map(new Func1<Response<CDAArray>, CDAArray>() {
+          @Override public CDAArray call(Response<CDAArray> response) {
             return ResourceFactory.array(response, client);
           }
         });

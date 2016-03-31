@@ -1,6 +1,6 @@
 package com.contentful.java.cda;
 
-import com.squareup.okhttp.HttpUrl;
+import okhttp3.HttpUrl;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
