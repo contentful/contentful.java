@@ -10,7 +10,7 @@ abstract class AbsQuery<T extends CDAResource, E extends AbsQuery<T, E>> {
 
   final CDAClient client;
 
-  Map<String, String> params;
+  final Map<String, String> params = new HashMap<String, String>();
 
   AbsQuery(Class<T> type, CDAClient client) {
     this.type = type;
@@ -23,16 +23,14 @@ abstract class AbsQuery<T extends CDAResource, E extends AbsQuery<T, E>> {
 
   @SuppressWarnings("unchecked")
   public E where(String key, String value) {
-    if (params == null) {
-      params = new HashMap<String, String>();
-    }
     params.put(key, value);
     return (E) this;
   }
 
   @SuppressWarnings("unchecked")
   protected E where(Map<String, String> params) {
-    this.params = params;
+    this.params.clear();
+    this.params.putAll(params);
     return (E) this;
   }
 }

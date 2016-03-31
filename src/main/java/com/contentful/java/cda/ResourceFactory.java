@@ -2,33 +2,31 @@ package com.contentful.java.cda;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.io.IOException;
-import java.io.InputStreamReader;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import retrofit.client.Response;
 
-import static com.contentful.java.cda.Constants.CHARSET;
+import retrofit2.Response;
 
 final class ResourceFactory {
   private ResourceFactory() {
     throw new AssertionError();
   }
 
-  private static final Gson GSON = createGson();
+  static final Gson GSON = createGson();
 
-  static CDASpace space(Response response) {
-    CDASpace space = fromResponse(response);
+  static CDASpace space(Response<CDASpace> response) {
+    CDASpace space = response.body();
     setDefaultLocale(space);
     return space;
   }
 
-  static CDAArray array(Response response, CDAClient client) {
-    CDAArray array = fromResponse(response, CDAArray.class);
+  static CDAArray array(Response<CDAArray> arrayResponse, CDAClient client) {
+    CDAArray array = arrayResponse.body();
     array.assets = new HashMap<String, CDAAsset>();
     array.entries = new HashMap<String, CDAEntry>();
 
@@ -53,16 +51,16 @@ final class ResourceFactory {
     return resources;
   }
 
-  static SynchronizedSpace sync(Response response, SynchronizedSpace old, CDAClient client) {
+  static SynchronizedSpace sync(Response<SynchronizedSpace> newSpace, SynchronizedSpace oldSpace, CDAClient client) {
     Map<String, CDAAsset> assets = new HashMap<String, CDAAsset>();
     Map<String, CDAEntry> entries = new HashMap<String, CDAEntry>();
 
     // Map resources from existing space
-    if (old != null) {
-      ResourceUtils.mapResources(old.items(), assets, entries);
+    if (oldSpace != null) {
+      ResourceUtils.mapResources(oldSpace.items(), assets, entries);
     }
 
-    SynchronizedSpace result = ResourceUtils.iterate(response, client);
+    SynchronizedSpace result = ResourceUtils.iterate(newSpace, client);
     ResourceUtils.mapResources(result.items(), assets, entries);
     ResourceUtils.mapDeletedResources(result);
 
@@ -79,17 +77,8 @@ final class ResourceFactory {
     return result;
   }
 
-  @SuppressWarnings("unchecked")
-  static <T extends CDAResource> T fromResponse(Response response) {
-    return (T) fromResponse(response, CDAResource.class);
-  }
-
-  static <T extends CDAResource> T fromResponse(Response response, Class<T> clazz) {
-    try {
-      return GSON.fromJson(new InputStreamReader(response.getBody().in(), CHARSET), clazz);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+  static <T extends CDAResource> T fromResponse(Response<T> response) {
+    return response.body();
   }
 
   private static void setDefaultLocale(CDASpace space) {
