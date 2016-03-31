@@ -20,7 +20,7 @@ Grab via Maven:
 ```
 or Gradle:
 ```groovy
-compile 'com.contentful.java:java-sdk:6.1.2'
+compile 'com.contentful.java:java-sdk:7.0.0'
 ```
 
 Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
@@ -122,7 +122,7 @@ For further information, check out our official [JavaDoc][3] site or browse the 
 License
 =======
 
-Copyright (c) 2015 Contentful GmbH. See [LICENSE.txt][6] for further details.
+Copyright (c) 2016 Contentful GmbH. See [LICENSE.txt][6] for further details.
 
 
  [1]: https://www.contentful.com
