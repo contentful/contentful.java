@@ -10,6 +10,7 @@ import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 
+import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -62,28 +63,30 @@ public class CDAClient {
       endpoint = ENDPOINT_PROD;
     }
 
-    OkHttpClient.Builder okBuilder = new OkHttpClient.Builder()
-        .addInterceptor(new HeaderInterceptor(createUserAgent(), token))
-        .addInterceptor(new ErrorInterceptor());
-    okBuilder = setLogger(okBuilder, clientBuilder);
-
     Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create(ResourceFactory.GSON))
         .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+        .callFactory(createHttpClient(clientBuilder))
         .baseUrl(endpoint);
-
-    clientBuilder.setClient(okBuilder.build());
-
-    retrofitBuilder = setClient(retrofitBuilder, clientBuilder);
 
     return retrofitBuilder.build().create(CDAService.class);
   }
 
-  private Retrofit.Builder setClient(Retrofit.Builder retrofitBuilder, Builder clientBuilder) {
-    if (clientBuilder.client != null) {
-      return retrofitBuilder.client(clientBuilder.client);
+  private Call.Factory createHttpClient(Builder clientBuilder) {
+    if (clientBuilder.client instanceof OkHttpClient) {
+      return addDefaultInterceptors(((OkHttpClient) clientBuilder.client).newBuilder(), clientBuilder);
+    } else if (clientBuilder.client == null) {
+      return addDefaultInterceptors(new OkHttpClient.Builder(), clientBuilder);
     }
-    return retrofitBuilder;
+    return clientBuilder.client;
+  }
+
+  private Call.Factory addDefaultInterceptors(OkHttpClient.Builder okBuilder, Builder clientBuilder) {
+    OkHttpClient.Builder builder = okBuilder
+            .addInterceptor(new ErrorInterceptor())
+            .addInterceptor(new HeaderInterceptor(createUserAgent(), token));
+    builder = setLogger(builder, clientBuilder);
+    return builder.build();
   }
 
   private OkHttpClient.Builder setLogger(OkHttpClient.Builder okBuilder, Builder clientBuilder) {
@@ -297,7 +300,7 @@ public class CDAClient {
     Logger logger;
     Logger.Level logLevel = Logger.Level.NONE;
 
-    OkHttpClient client;
+    Call.Factory client;
     boolean preview;
 
     /**
@@ -353,7 +356,7 @@ public class CDAClient {
     /**
      * Sets a custom HTTP client.
      */
-    public Builder setClient(OkHttpClient client) {
+    public Builder setClient(Call.Factory client) {
       this.client = client;
       return this;
     }
