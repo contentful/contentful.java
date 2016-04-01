@@ -10,10 +10,13 @@ import com.contentful.java.cda.CDAResource;
 import com.contentful.java.cda.CDASpace;
 import com.contentful.java.cda.LocalizedResource;
 import com.contentful.java.cda.SynchronizedSpace;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -30,6 +33,42 @@ public class Integration {
         .setSpace("cfexampleapi")
         .setToken("b4c0n73n7fu1")
         .build();
+  }
+
+  @Test
+  public void customOkHttpClient() throws Exception {
+    Call.Factory customClient = new OkHttpClient();
+    CDAClient client = CDAClient.builder()
+      .setSpace("cfexampleapi")
+      .setToken("b4c0n73n7fu1")
+      .setClient(customClient)
+      .build();
+    CDAContentType cat = client.fetch(CDAContentType.class).one("cat");
+    assertThat(cat.name()).isEqualTo("Cat");
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void unauthorized() throws Exception {
+    CDAClient cli = CDAClient.builder().setSpace("foo").setToken("bar").build();
+
+    try {
+      cli.fetchSpace();
+    } catch (RuntimeException e) {
+      assertThat(e.getCause()).isInstanceOf(IOException.class);
+      assertThat(e.getMessage()).isEqualTo("java.io.IOException: FAILED REQUEST: " +
+          "Request{" +
+          "method=GET, " +
+          "url=https://cdn.contentful.com/spaces/foo, " +
+          "tag=null" +
+          "}\n\t… " +
+          "Response{" +
+          "protocol=http/1.1, " +
+          "code=401, " +
+          "message=Unauthorized, " +
+          "url=https://cdn.contentful.com/spaces/foo" +
+          "}");
+      throw e;
+    }
   }
 
   @Test
