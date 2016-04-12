@@ -1,51 +1,82 @@
 package com.contentful.java.cda;
 
+import com.contentful.java.cda.interceptor.AuthorizationHeaderInterceptor;
+import com.contentful.java.cda.interceptor.UserAgentHeaderInterceptor;
 import com.contentful.java.cda.lib.Enqueue;
 
 import org.junit.Test;
 
-import java.io.IOException;
-
+import okhttp3.Call;
+import okhttp3.Headers;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.RecordedRequest;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class ClientTest extends BaseTest {
-  @Test(expected = RuntimeException.class)
-  public void customClient() throws Exception {
-    OkHttpClient mock = mock(OkHttpClient.class);
-    CDAClient cli = CDAClient.builder().setSpace("foo").setToken("bar").setClient(mock).build();
 
-    try {
-      cli.fetchSpace();
-    } catch (RuntimeException e) {
-      assertThat(e.getCause()).isInstanceOf(IOException.class);
-      assertThat(e.getMessage()).isEqualTo("java.io.IOException: FAILED REQUEST: " +
-          "Request{" +
-          "method=GET, " +
-          "url=https://cdn.contentful.com/spaces/foo, " +
-          "tag=Request{method=GET, " +
-          "url=https://cdn.contentful.com/spaces/foo, " +
-          "tag=null}" +
-          "}\n\t… " +
-          "Response{" +
-          "protocol=http/1.1, " +
-          "code=401, " +
-          "message=Unauthorized, " +
-          "url=https://cdn.contentful.com/spaces/foo" +
-          "}");
-      throw e;
-    }
+  @Test @Enqueue
+  public void notUsingCustomCallFactoryDoesCreateCallFactoryWithAuthAndUserAgentInterceptors() throws Exception {
+
+    createClient().fetchSpace();
+
+    final RecordedRequest recordedRequest = server.takeRequest();
+    final Headers headers = recordedRequest.getHeaders();
+
+    assertThat(headers.size()).isEqualTo(5);
+
+    assertThat(headers.get(AuthorizationHeaderInterceptor.HEADER_NAME)).endsWith(DEFAULT_TOKEN);
+    assertThat(headers.get(UserAgentHeaderInterceptor.HEADER_NAME)).startsWith("contentful.java");
+  }
+
+  @Test @Enqueue
+  public void usingCustomCallFactoryDoesNotAddDefaultHeaders() throws Exception {
+    final Call.Factory callFactory = new OkHttpClient.Builder().build();
+
+    createBuilder()
+        .setSpace(DEFAULT_SPACE)
+        .setCallFactory(callFactory)
+        .build()
+        .fetchSpace();
+
+    assertThat(server.getRequestCount()).isEqualTo(1);
+
+    final RecordedRequest recordedRequest = server.takeRequest();
+    final Headers headers = recordedRequest.getHeaders();
+
+    assertThat(headers.size()).isEqualTo(4);
+
+    assertThat(headers.get(AuthorizationHeaderInterceptor.HEADER_NAME)).isNull();
+    assertThat(headers.get(UserAgentHeaderInterceptor.HEADER_NAME)).startsWith("okhttp");
+  }
+
+  @Test @Enqueue
+  public void customCallFactoryCanAddInterceptors() throws Exception {
+    final Interceptor interceptor = spy(new AuthorizationHeaderInterceptor(DEFAULT_TOKEN));
+
+    Call.Factory callFactory = new OkHttpClient.Builder()
+        .addNetworkInterceptor(interceptor)
+        .build();
+
+    createBuilder()
+        .setSpace(DEFAULT_SPACE)
+        .setCallFactory(callFactory)
+        .build()
+        .fetchSpace();
+
+    verify(interceptor).intercept(any(Interceptor.Chain.class));
   }
 
   @Test(expected = NullPointerException.class)
-  public void clientWithNoSpaceThrows() throws Exception {
+  public void clientWithNoSpaceAndNoCallFactoryThrows() throws Exception {
     try {
       CDAClient.builder().setToken("token").build();
     } catch (NullPointerException e) {
@@ -54,22 +85,30 @@ public class ClientTest extends BaseTest {
     }
   }
 
+  @Test
+  public void clientWithNoSpaceButCallFactoryBuilds() throws Exception {
+    CDAClient.builder()
+        .setCallFactory(mock(Call.Factory.class))
+        .setSpace(DEFAULT_SPACE)
+        .build();
+  }
+
   @Test(expected = NullPointerException.class)
   public void clientWithNoTokenThrows() throws Exception {
     try {
       CDAClient.builder().setSpace("space").build();
     } catch (NullPointerException e) {
-      assertThat(e.getMessage()).isEqualTo("Access token must be provided.");
+      assertThat(e.getMessage()).isEqualTo("A token must be provided, if no call factory is specified.");
       throw e;
     }
   }
 
   @Test
   @Enqueue
-  public void oauthHeader() throws Exception {
+  public void authHeader() throws Exception {
     client.fetchSpace();
     RecordedRequest request = server.takeRequest();
-    assertThat(request.getHeader("authorization")).isEqualTo("Bearer token");
+    assertThat(request.getHeader("authorization")).isEqualTo("Bearer " + DEFAULT_TOKEN);
   }
 
   @Test

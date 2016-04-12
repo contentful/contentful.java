@@ -7,21 +7,19 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Interceptor to add authorization and user agent headers to requests
+ * Interceptor to add user agent header to requests
  */
-public final class HeaderInterceptor implements Interceptor {
+public class UserAgentHeaderInterceptor implements Interceptor {
+  public static final String HEADER_NAME = "User-Agent";
   private final String userAgent;
-  private final String token;
 
   /**
    * Create Header interceptor, saving parameters.
    *
    * @param userAgent user agent header to be send with _every_ request.
-   * @param token the access token to be used with *every* request.
    */
-  public HeaderInterceptor(String userAgent, String token) {
+  public UserAgentHeaderInterceptor(String userAgent) {
     this.userAgent = userAgent;
-    this.token = token;
   }
 
   /**
@@ -34,10 +32,8 @@ public final class HeaderInterceptor implements Interceptor {
   @Override public Response intercept(Chain chain) throws IOException {
     final Request request = chain.request();
 
-    final Request.Builder builder = request.newBuilder();
-    builder.addHeader("Authorization", "Bearer " + token)
-        .addHeader("User-Agent", userAgent);
-
-    return chain.proceed(builder.build());
+    return chain.proceed(request.newBuilder()
+        .addHeader(HEADER_NAME, userAgent)
+        .build());
   }
 }

@@ -1,8 +1,9 @@
 package com.contentful.java.cda;
 
+import com.contentful.java.cda.interceptor.AuthorizationHeaderInterceptor;
 import com.contentful.java.cda.interceptor.ErrorInterceptor;
-import com.contentful.java.cda.interceptor.HeaderInterceptor;
 import com.contentful.java.cda.interceptor.LogInterceptor;
+import com.contentful.java.cda.interceptor.UserAgentHeaderInterceptor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +11,8 @@ import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 
+import okhttp3.Call;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -53,7 +56,9 @@ public class CDAClient {
 
   private void validate(Builder builder) {
     checkNotNull(builder.space, "Space ID must be provided.");
-    checkNotNull(builder.token, "Access token must be provided.");
+    if (builder.callFactory == null) {
+      checkNotNull(builder.token, "A token must be provided, if no call factory is specified.");
+    }
   }
 
   private CDAService createService(Builder clientBuilder) {
@@ -62,28 +67,32 @@ public class CDAClient {
       endpoint = ENDPOINT_PROD;
     }
 
-    OkHttpClient.Builder okBuilder = new OkHttpClient.Builder()
-        .addInterceptor(new HeaderInterceptor(createUserAgent(), token))
-        .addInterceptor(new ErrorInterceptor());
-    okBuilder = setLogger(okBuilder, clientBuilder);
-
     Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create(ResourceFactory.GSON))
         .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+        .callFactory(createOrGetCallFactory(clientBuilder))
         .baseUrl(endpoint);
-
-    clientBuilder.setClient(okBuilder.build());
-
-    retrofitBuilder = setClient(retrofitBuilder, clientBuilder);
 
     return retrofitBuilder.build().create(CDAService.class);
   }
 
-  private Retrofit.Builder setClient(Retrofit.Builder retrofitBuilder, Builder clientBuilder) {
-    if (clientBuilder.client != null) {
-      return retrofitBuilder.client(clientBuilder.client);
+  private Call.Factory createOrGetCallFactory(Builder clientBuilder) {
+    final Call.Factory callFactory;
+
+    if (clientBuilder.callFactory == null) {
+      OkHttpClient.Builder okBuilder = new OkHttpClient.Builder()
+          .addInterceptor(new AuthorizationHeaderInterceptor(clientBuilder.token))
+          .addInterceptor(new UserAgentHeaderInterceptor(createUserAgent()))
+          .addInterceptor(new ErrorInterceptor());
+
+      okBuilder = setLogger(okBuilder, clientBuilder);
+
+      callFactory = okBuilder.build();
+    } else {
+      callFactory = clientBuilder.callFactory;
     }
-    return retrofitBuilder;
+
+    return callFactory;
   }
 
   private OkHttpClient.Builder setLogger(OkHttpClient.Builder okBuilder, Builder clientBuilder) {
@@ -92,11 +101,9 @@ public class CDAClient {
         case NONE:
           break;
         case BASIC:
-          okBuilder.addInterceptor(new LogInterceptor(clientBuilder.logger));
-          break;
+          return okBuilder.addInterceptor(new LogInterceptor(clientBuilder.logger));
         case FULL:
-          okBuilder.addNetworkInterceptor(new LogInterceptor(clientBuilder.logger));
-          break;
+          return okBuilder.addNetworkInterceptor(new LogInterceptor(clientBuilder.logger));
       }
     } else {
       if (clientBuilder.logLevel != Logger.Level.NONE) {
@@ -297,7 +304,7 @@ public class CDAClient {
     Logger logger;
     Logger.Level logLevel = Logger.Level.NONE;
 
-    OkHttpClient client;
+    Call.Factory callFactory;
     boolean preview;
 
     /**
@@ -351,10 +358,10 @@ public class CDAClient {
     }
 
     /**
-     * Sets a custom HTTP client.
+     * Sets a custom HTTP call factory.
      */
-    public Builder setClient(OkHttpClient client) {
-      this.client = client;
+    public Builder setCallFactory(Call.Factory callFactory) {
+      this.callFactory = callFactory;
       return this;
     }
 
