@@ -6,13 +6,18 @@ import com.contentful.java.cda.lib.Enqueue;
 
 import org.junit.Test;
 
+import java.io.IOException;
+
 import okhttp3.Call;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Response;
 import okhttp3.mockwebserver.RecordedRequest;
+import rx.Subscriber;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -22,6 +27,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class ClientTest extends BaseTest {
+
+  public static final String ERROR_MESSAGE = "This is an expected error!";
 
   @Test @Enqueue
   public void notUsingCustomCallFactoryDoesCreateCallFactoryWithAuthAndUserAgentInterceptors() throws Exception {
@@ -73,6 +80,33 @@ public class ClientTest extends BaseTest {
         .fetchSpace();
 
     verify(interceptor).intercept(any(Interceptor.Chain.class));
+  }
+
+  @Test(expected = RuntimeException.class) @Enqueue
+  public void throwingAnExceptionInAnInterceptorResultsInRuntimeException() throws Exception {
+    final Interceptor interceptor = new Interceptor() {
+      @Override public Response intercept(Chain chain) throws IOException {
+        throw new IOException(ERROR_MESSAGE);
+      }
+    };
+
+    Call.Factory callFactory = new OkHttpClient.Builder()
+        .addInterceptor(new AuthorizationHeaderInterceptor(DEFAULT_TOKEN))
+        .addInterceptor(new UserAgentHeaderInterceptor("SOME_USER_AGENT"))
+        .addInterceptor(interceptor)
+        .build();
+
+    try {
+      createBuilder()
+          .setSpace(DEFAULT_SPACE)
+          .setCallFactory(callFactory)
+          .build()
+          .fetchSpace();
+    } catch (RuntimeException e) {
+      assertThat(e.getCause()).isInstanceOf(IOException.class);
+      assertThat(e.getCause()).hasMessage(ERROR_MESSAGE);
+      throw(e);
+    }
   }
 
   @Test(expected = NullPointerException.class)
