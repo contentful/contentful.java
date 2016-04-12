@@ -1,6 +1,7 @@
 package com.contentful.java.cda;
 
 import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /** Collection of CDA resources. */

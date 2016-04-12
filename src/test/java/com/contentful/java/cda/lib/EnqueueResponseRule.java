@@ -1,12 +1,14 @@
 package com.contentful.java.cda.lib;
 
 import com.contentful.java.cda.BaseTest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
 import org.junit.rules.MethodRule;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class EnqueueResponseRule implements MethodRule {
   @Override public Statement apply(Statement statement, FrameworkMethod method, Object o) {
