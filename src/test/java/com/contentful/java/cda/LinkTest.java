@@ -1,8 +1,10 @@
 package com.contentful.java.cda;
 
 import com.contentful.java.cda.lib.Enqueue;
-import java.util.List;
+
 import org.junit.Test;
+
+import java.util.List;
 
 import static com.google.common.truth.Truth.assertThat;
 

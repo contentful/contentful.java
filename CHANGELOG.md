@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - New: Add gson `2.6.2` (was bundled with retrofit before)
 - New: Add converter-gson `2.0.1` (was bundled with retrofit before)
 - New: Add adapter-rxjava `2.0.1` (was bundled with retrofit before)
+- New: Use Call.Factory for http client customization
 
 ## Version [6.1.2] - (2016-02-11)
 - New: Add Integration Tests

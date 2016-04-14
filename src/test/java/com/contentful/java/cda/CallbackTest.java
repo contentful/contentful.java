@@ -2,12 +2,13 @@ package com.contentful.java.cda;
 
 import com.contentful.java.cda.lib.Enqueue;
 import com.contentful.java.cda.lib.TestCallback;
-import okhttp3.mockwebserver.MockResponse;
 
-import java.io.IOException;
+import org.junit.Test;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import org.junit.Test;
+
+import okhttp3.mockwebserver.MockResponse;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.fail;

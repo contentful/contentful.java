@@ -20,6 +20,9 @@ import static com.contentful.java.cda.Util.checkNotNull;
 import static com.google.common.truth.Truth.assertThat;
 
 public class BaseTest {
+  public static final String DEFAULT_TOKEN = "test_token";
+  public static final String DEFAULT_SPACE = "test_space";
+
   CDAClient client;
 
   MockWebServer server;
@@ -58,8 +61,8 @@ public class BaseTest {
 
   protected CDAClient.Builder createBuilder() {
     return CDAClient.builder()
-        .setSpace("space")
-        .setToken("token")
+        .setSpace(DEFAULT_SPACE)
+        .setToken(DEFAULT_TOKEN)
         .setEndpoint(serverUrl());
   }
 

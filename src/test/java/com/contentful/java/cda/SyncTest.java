@@ -1,12 +1,13 @@
 package com.contentful.java.cda;
 
 import com.contentful.java.cda.lib.Enqueue;
-import okhttp3.HttpUrl;
 
 import org.junit.Test;
 
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.HttpUrl;
 
 import static com.google.common.truth.Truth.assertThat;
 

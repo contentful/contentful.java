@@ -2,9 +2,12 @@ package com.contentful.java.cda;
 
 import com.contentful.java.cda.lib.Enqueue;
 import com.contentful.java.cda.lib.TestCallback;
+
+import org.junit.Test;
+
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import org.junit.Test;
+
 import rx.functions.Action1;
 
 import static com.google.common.truth.Truth.assertThat;

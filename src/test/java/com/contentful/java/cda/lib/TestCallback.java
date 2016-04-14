@@ -2,6 +2,7 @@ package com.contentful.java.cda.lib;
 
 import com.contentful.java.cda.CDACallback;
 import com.contentful.java.cda.CDAResource;
+
 import java.util.concurrent.CountDownLatch;
 
 public class TestCallback<T extends CDAResource> extends CDACallback<T> {

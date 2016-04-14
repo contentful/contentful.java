@@ -1,9 +1,10 @@
 package com.contentful.java.cda;
 
-import okhttp3.HttpUrl;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
+
+import okhttp3.HttpUrl;
 
 import static com.contentful.java.cda.CDAType.ASSET;
 import static com.contentful.java.cda.CDAType.CONTENTTYPE;
