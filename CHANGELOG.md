@@ -2,7 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [7.0.0][unreleased] - (in development)
+## Version [7.0.1][unreleased] - (in development)
+- stay tuned
+
+## Version [7.0.0] - (2016-04-15)
 - Fixed: Integration tests don't expect wrong entries
 - Changed: Add java and os version to user agent
 - Changed: Update okhttp from `2.5.0` to `3.2.0`[OkHTTP3 Changelog for 3.2.0](https://github.com/square/okhttp/blob/master/CHANGELOG.md#version-320)
