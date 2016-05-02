@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version [7.0.2][unreleased] - (in development)
 - stay tuned
 
-## Version [7.0.1] - (2016-04-29)
+## Version [7.0.1] - (2016-05-02)
 - Changed: Updating proguard rules sample file to reflect dependency changes
 
 ## Version [7.0.0] - (2016-04-15)
