@@ -5,7 +5,8 @@ import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,8 +28,8 @@ final class ResourceFactory {
 
   static CDAArray array(Response<CDAArray> arrayResponse, CDAClient client) {
     CDAArray array = arrayResponse.body();
-    array.assets = new HashMap<String, CDAAsset>();
-    array.entries = new HashMap<String, CDAEntry>();
+    array.assets = new LinkedHashMap<String, CDAAsset>();
+    array.entries = new LinkedHashMap<String, CDAEntry>();
 
     Set<CDAResource> resources = collectResources(array);
     ResourceUtils.localizeResources(resources, client.cache.space());
@@ -39,7 +40,7 @@ final class ResourceFactory {
   }
 
   private static Set<CDAResource> collectResources(CDAArray array) {
-    Set<CDAResource> resources = new HashSet<CDAResource>(array.items());
+    Set<CDAResource> resources = new LinkedHashSet<CDAResource>(array.items());
     if (array.includes != null) {
       if (array.includes.assets != null) {
         resources.addAll(array.includes.assets);
