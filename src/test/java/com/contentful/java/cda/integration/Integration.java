@@ -242,6 +242,7 @@ public class Integration {
   public void fetchWithLimit() {
     CDAArray found = client.fetch(CDAEntry.class)
         .where("limit", "1")
+        .where("order", "sys.id")
         .all();
 
     assertThat(found.items().size()).isEqualTo(1);
@@ -254,11 +255,12 @@ public class Integration {
   public void fetchWithSkip() {
     CDAArray found = client.fetch(CDAEntry.class)
         .where("skip", "1")
+        .where("order", "sys.id")
         .all();
 
     assertThat(found.items().size()).isEqualTo(9);
     CDAEntry entry = (CDAEntry) found.items().get(0);
-    assertThat(entry.getField("name")).isEqualTo("Nyan Cat");
+    assertThat(entry.getField("name")).isEqualTo("London");
   }
 
   //"/spaces/{space_id}/entries?include={value}",

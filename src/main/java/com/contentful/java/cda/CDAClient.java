@@ -44,13 +44,20 @@ public class CDAClient {
   final boolean preview;
 
   private CDAClient(Builder builder) {
+    this(new Cache(),
+        Platform.get().callbackExecutor(),
+        createService(builder),
+        builder);
     validate(builder);
+  }
+
+  CDAClient(Cache cache, Executor executor, CDAService service, Builder builder) {
+    this.cache = cache;
+    this.callbackExecutor = executor;
+    this.service = service;
     this.spaceId = builder.space;
     this.token = builder.token;
     this.preview = builder.preview;
-    this.service = createService(builder);
-    this.cache = new Cache();
-    this.callbackExecutor = Platform.get().callbackExecutor();
   }
 
   private void validate(Builder builder) {
@@ -60,7 +67,7 @@ public class CDAClient {
     }
   }
 
-  private CDAService createService(Builder clientBuilder) {
+  private static CDAService createService(Builder clientBuilder) {
     String endpoint = clientBuilder.endpoint;
     if (endpoint == null) {
       endpoint = ENDPOINT_PROD;
@@ -75,7 +82,7 @@ public class CDAClient {
     return retrofitBuilder.build().create(CDAService.class);
   }
 
-  private Call.Factory createOrGetCallFactory(Builder clientBuilder) {
+  private static Call.Factory createOrGetCallFactory(Builder clientBuilder) {
     final Call.Factory callFactory;
 
     if (clientBuilder.callFactory == null) {
@@ -94,7 +101,7 @@ public class CDAClient {
     return callFactory;
   }
 
-  private OkHttpClient.Builder setLogger(OkHttpClient.Builder okBuilder, Builder clientBuilder) {
+  private static OkHttpClient.Builder setLogger(OkHttpClient.Builder okBuilder, Builder clientBuilder) {
     if (clientBuilder.logger != null) {
       switch (clientBuilder.logLevel) {
         case NONE:
@@ -271,7 +278,7 @@ public class CDAClient {
     return Observable.just(contentType);
   }
 
-  String createUserAgent() {
+  static String createUserAgent() {
     final Properties properties = System.getProperties();
     return String.format("contentful.java/%s(%s %s) %s/%s",
         Util.getProperty("version.name"),

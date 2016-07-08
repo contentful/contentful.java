@@ -2,8 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [7.0.2][unreleased] - (in development)
+## Version [7.0.3][unreleased] - (in development)
 - stay tuned
+
+## Version [7.0.2][unreleased] - (in development)
+- Fixed: requesting a sort order now gets respected by transformations
 
 ## Version [7.0.1] - (2016-05-02)
 - Changed: Updating proguard rules sample file to reflect dependency changes
@@ -138,7 +141,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-7.0.1...HEAD
+[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-7.0.2...HEAD
+[7.0.2]: https://github.com/contentful/contentful.java/compare/java-sdk-7.0.1...java-sdk-7.0.2
 [7.0.1]: https://github.com/contentful/contentful.java/compare/java-sdk-7.0.0...java-sdk-7.0.1
 [7.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-7.1.2...java-sdk-7.0.0
 [6.1.2]: https://github.com/contentful/contentful.java/compare/java-sdk-6.1.1...java-sdk-6.1.2
