@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version [7.0.3][unreleased] - (in development)
 - stay tuned
 
-## Version [7.0.2][unreleased] - (in development)
+## Version [7.0.2] - (2016-07-08)
 - Fixed: requesting a sort order now gets respected by transformations
 
 ## Version [7.0.1] - (2016-05-02)
