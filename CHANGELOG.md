@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Version [7.2.1][unreleased] - (in development)
-- stay tuned ...
+- New: Fallback locales.
 
 ## Version [7.2.0] - (2016-11-10)
 - Added: Limited sync support for Preview endpoint (Only `inital=true!`)

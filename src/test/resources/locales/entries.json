@@ -1,0 +1,129 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 5,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "7dh3w86is8ls"
+          }
+        },
+        "id": "no-null",
+        "type": "Entry",
+        "createdAt": "2016-07-04T15:58:21.612Z",
+        "updatedAt": "2016-07-04T15:58:21.612Z",
+        "revision": 1,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "sampleType"
+          }
+        }
+      },
+      "fields": {
+        "title": {
+          "first": "first",
+          "default": "no-null",
+          "inbetween": "inbetween"
+        }
+      }
+    },
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "7dh3w86is8ls"
+          }
+        },
+        "id": "no-inbetween",
+        "type": "Entry",
+        "createdAt": "2016-07-04T15:58:22.577Z",
+        "updatedAt": "2016-07-04T15:58:22.577Z",
+        "revision": 1,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "sampleType"
+          }
+        }
+      },
+      "fields": {
+        "title": {
+          "first": "first",
+          "default": "no-inbetween",
+          "null": "null"
+        }
+      }
+    },
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "7dh3w86is8ls"
+          }
+        },
+        "id": "no-first-and-no-inbetween",
+        "type": "Entry",
+        "createdAt": "2016-07-04T16:10:28.180Z",
+        "updatedAt": "2016-07-05T13:22:00.251Z",
+        "revision": 2,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "sampleType"
+          }
+        }
+      },
+      "fields": {
+        "title": {
+          "default": "no-first-and-no-inbetween",
+          "null": "null"
+        }
+      }
+    },
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "7dh3w86is8ls"
+          }
+        },
+        "id": "no-first",
+        "type": "Entry",
+        "createdAt": "2016-07-04T15:58:19.645Z",
+        "updatedAt": "2016-07-04T15:58:19.645Z",
+        "revision": 1,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "sampleType"
+          }
+        }
+      },
+      "fields": {
+        "title": {
+          "default": "no-first",
+          "null": "null",
+          "inbetween": "inbetween"
+        }
+      }
+    }
+  ]
+}

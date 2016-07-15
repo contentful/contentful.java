@@ -1,0 +1,40 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 1,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "7dh3w86is8ls"
+          }
+        },
+        "id": "sampleType",
+        "type": "ContentType",
+        "createdAt": "2016-06-21T08:53:55.767Z",
+        "updatedAt": "2016-06-21T13:16:34.507Z",
+        "revision": 5
+      },
+      "displayField": "title",
+      "name": "Sample Type",
+      "description": "af → zu-ZA →en-US*\nne-NP  → NULL\nbs_BA⁰ → en-US*\n\n(→if not found, look at the following locale)\n(* = default locale)\n(⁰ = can include empty elements)\n(NULL = No default)",
+      "fields": [
+        {
+          "id": "title",
+          "name": "title",
+          "type": "Symbol",
+          "localized": true,
+          "required": true,
+          "disabled": false,
+          "omitted": false
+        }
+      ]
+    }
+  ]
+}

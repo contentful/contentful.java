@@ -8,6 +8,8 @@ public abstract class LocalizedResource extends CDAResource {
 
   String defaultLocale;
 
+  Map<String, String> fallbackLocaleMap;
+
   Map<String, Object> fields;
 
   Map<String, Object> rawFields;
@@ -20,15 +22,25 @@ public abstract class LocalizedResource extends CDAResource {
    */
   @SuppressWarnings("unchecked")
   public <T> T getField(String key) {
-    Map<?, ?> value = (Map<? ,?>) fields.get(key);
+    final Map<String, T> value = (Map<String ,T>) fields.get(key);
     if (value == null) {
       return null;
     }
-    Object localized = value.get(locale);
-    if (localized != null) {
-      return (T) localized;
+
+    return getFieldForFallbackLocale(value, locale);
+  }
+
+  private <T> T getFieldForFallbackLocale(Map<String, T> value, String locale) {
+    if (locale == null) {
+      return null;
     }
-    return (T) value.get(defaultLocale);
+
+    final T localized = value.get(locale);
+    if (localized != null) {
+      return localized;
+    } else {
+      return getFieldForFallbackLocale(value, fallbackLocaleMap.get(locale));
+    }
   }
 
   /** Raw unprocessed fields. */
@@ -44,6 +56,14 @@ public abstract class LocalizedResource extends CDAResource {
   /** Switches the locale to the one matching the given locale code. */
   public void setLocale(String locale) {
     this.locale = locale;
+  }
+
+  void setFallbackLocaleMap(Map<String, String> fallbackLocaleMap) {
+    this.fallbackLocaleMap = fallbackLocaleMap;
+  }
+
+  Map<String, String> fallbackLocaleMap() {
+    return fallbackLocaleMap;
   }
 
   void setDefaultLocale(String defaultLocale) {
