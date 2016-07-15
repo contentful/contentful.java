@@ -222,6 +222,7 @@ final class ResourceUtils {
 
   static void localize(LocalizedResource resource, CDASpace space) {
     resource.setDefaultLocale(space.defaultLocale().code());
+    resource.setFallbackLocaleMap(getFallbackLocaleMap(space));
     String resourceLocale = resource.getAttribute("locale");
     if (resourceLocale == null) {
       // sync
@@ -231,6 +232,19 @@ final class ResourceUtils {
       resource.setLocale(resourceLocale);
       normalizeFields(resource);
     }
+  }
+
+  private static Map<String, String> getFallbackLocaleMap(CDASpace space) {
+    final Map<String, String> fallbackLocales = new HashMap<String, String>(space.locales().size());
+
+    for (final CDALocale locale : space.locales()) {
+      final String fallback = locale.fallbackLocaleCode();
+      if (fallback != null && !"".equals(fallback)) {
+        fallbackLocales.put(locale.code, fallback);
+      }
+    }
+
+    return fallbackLocales;
   }
 
   static void normalizeFields(LocalizedResource resource) {

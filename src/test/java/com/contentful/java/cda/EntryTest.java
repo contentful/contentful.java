@@ -22,7 +22,7 @@ public class EntryTest extends BaseTest {
   @Test
   @Enqueue("array_empty.json")
   public void fetchNonExistingEntryEmitsNull() throws Exception {
-    final Object result[] = new Object[] { new Object() };
+    final Object result[] = new Object[]{new Object()};
     final CountDownLatch latch = new CountDownLatch(1);
     assertThat(client.observe(CDAEntry.class)
         .one("foo")
@@ -72,7 +72,7 @@ public class EntryTest extends BaseTest {
   @Enqueue("demo/entries_nyancat.json")
   public void fetchEntryAsync() throws Exception {
     final CountDownLatch latch = new CountDownLatch(1);
-    final CDAEntry[] result = { null };
+    final CDAEntry[] result = {null};
 
     client.fetch(CDAEntry.class).one("nyancat", new CDACallback<CDAEntry>() {
       @Override protected void onSuccess(CDAEntry entry) {
@@ -127,14 +127,13 @@ public class EntryTest extends BaseTest {
 
     // Localization
     assertThat(entry.locale()).isEqualTo("en-US");
-    entry.setLocale("tlh");
     assertThat(entry.getField("color")).isEqualTo("rainbow");
     assertThat(entry.getField("non-existing-does-not-throw")).isNull();
   }
 
   @Test
   @Enqueue(
-      defaults = { "arrays/space.json", "arrays/content_types.json" },
+      defaults = {"arrays/space.json", "arrays/content_types.json"},
       value = "arrays/entries.json"
   )
   public void arrayItemsContainOnlyTopLevelEntries() throws Exception {

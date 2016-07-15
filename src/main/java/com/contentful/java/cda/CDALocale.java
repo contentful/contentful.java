@@ -10,6 +10,9 @@ public class CDALocale implements Serializable {
 
   String name;
 
+  @SerializedName("fallbackCode")
+  String fallbackLocaleCode;
+
   @SerializedName("default")
   boolean defaultLocale;
 
@@ -21,6 +24,11 @@ public class CDALocale implements Serializable {
   /** Name */
   public String name() {
     return name;
+  }
+
+  /** Fallback code */
+  public String fallbackLocaleCode() {
+    return fallbackLocaleCode;
   }
 
   /** Default */
