@@ -126,7 +126,7 @@ Copyright (c) 2016 Contentful GmbH. See [LICENSE.txt][6] for further details.
 
 
  [1]: https://www.contentful.com
- [2]: https://oss.sonatype.org/service/local/repositories/releases/content/com/contentful/java/java-sdk/7.0.2/java-sdk-7.0.2.jar
+ [2]: https://oss.sonatype.org/service/local/repositories/releases/content/com/contentful/java/java-sdk/7.1.0/java-sdk-7.1.0.jar
  [3]: https://contentful.github.io/contentful.java/
  [4]: https://www.contentful.com/developers/documentation/content-delivery-api/
  [5]: https://square.github.io/okhttp/
