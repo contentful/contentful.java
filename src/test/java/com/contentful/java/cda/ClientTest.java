@@ -223,4 +223,16 @@ public class ClientTest extends BaseTest {
       throw e;
     }
   }
+
+  @Test
+  @Enqueue("demo/content_types_cat.json")
+  public void clearingTheCacheClearsTheCache() {
+    client.fetch(CDAContentType.class).all();
+    assertThat(client.cache.types()).isNotNull();
+    assertThat(client.cache.space()).isNotNull();
+
+    client.clearCache();
+    assertThat(client.cache.types()).isNull();
+    assertThat(client.cache.space()).isNull();
+  }
 }

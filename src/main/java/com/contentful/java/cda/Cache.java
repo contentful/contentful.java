@@ -34,4 +34,14 @@ final class Cache {
       this.types = types;
     }
   }
+
+  void clear() {
+    synchronized (LOCK_SPACE) {
+      space = null;
+    }
+
+    synchronized (LOCK_TYPES) {
+      types = null;
+    }
+  }
 }

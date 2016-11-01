@@ -278,6 +278,16 @@ public class CDAClient {
     return Observable.just(contentType);
   }
 
+  /**
+   * Clear the java internal cache.
+   *
+   * @return
+   */
+  public CDAClient clearCache() {
+    cache.clear();
+    return this;
+  }
+
   static String createUserAgent() {
     final Properties properties = System.getProperties();
     return String.format("contentful.java/%s(%s %s) %s/%s",
