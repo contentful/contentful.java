@@ -2,8 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [7.0.3][unreleased] - (in development)
-- stay tuned
+## Version [7.1.1][unreleased] - (in development)
+- stay tuned ...
+
+## Version [7.1.0][unreleased] - (in development)
+- Added: Clear java cache through `CMAClient`
 
 ## Version [7.0.2] - (2016-07-08)
 - Fixed: requesting a sort order now gets respected by transformations
