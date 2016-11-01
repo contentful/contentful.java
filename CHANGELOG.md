@@ -144,7 +144,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-7.0.2...HEAD
+[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-7.1.1...HEAD
+[7.1.0]: https://github.com/contentful/contentful.java/compare/java-sdk-7.0.2...java-sdk-7.1.0
 [7.0.2]: https://github.com/contentful/contentful.java/compare/java-sdk-7.0.1...java-sdk-7.0.2
 [7.0.1]: https://github.com/contentful/contentful.java/compare/java-sdk-7.0.0...java-sdk-7.0.1
 [7.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-7.1.2...java-sdk-7.0.0
