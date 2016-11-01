@@ -150,7 +150,7 @@ final class ResourceUtils {
   }
 
   static CDAResource findLinkedResource(ArrayResource array, CDAType linkType,
-      String id) {
+                                        String id) {
     if (ASSET.equals(linkType)) {
       return array.assets().get(id);
     } else if (ENTRY.equals(linkType)) {
@@ -160,7 +160,7 @@ final class ResourceUtils {
   }
 
   static void mapResources(Collection<? extends CDAResource> resources,
-      Map<String, CDAAsset> assets, Map<String, CDAEntry> entries) {
+                           Map<String, CDAAsset> assets, Map<String, CDAEntry> entries) {
     for (CDAResource resource : resources) {
       CDAType type = resource.type();
       String id = resource.id();
@@ -239,12 +239,20 @@ final class ResourceUtils {
       Object value = resource.fields.get(key);
       if (value == null) {
         continue;
+      } else if (resourceContainsLocaleMap(resource, value)) {
+        fields.put(key, value);
+      } else {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put(resource.locale(), value);
+        fields.put(key, map);
       }
-      Map<String, Object> map = new HashMap<String, Object>();
-      map.put(resource.locale(), value);
-      fields.put(key, map);
     }
     resource.fields = fields;
+  }
+
+  private static boolean resourceContainsLocaleMap(LocalizedResource resource, Object value) {
+    return value instanceof Map
+        && ((Map) value).containsKey(resource.locale);
   }
 
   static void setRawFields(ArrayResource array) {
