@@ -147,7 +147,6 @@ public class CDAClient {
    * Returns a {@link SyncQuery} for initial synchronization via the Sync API.
    *
    * @return query instance.
-   * @throws UnsupportedOperationException if tried to sync with a preview token
    */
   public SyncQuery sync() {
     return sync(null, null);
@@ -157,9 +156,10 @@ public class CDAClient {
    * Returns a {@link SyncQuery} for synchronization with the provided {@code syncToken} via
    * the Sync API.
    *
+   * If called from a {@link #preview} client, this will always do an initial sync.
+   *
    * @param syncToken sync token.
    * @return query instance.
-   * @throws UnsupportedOperationException if tried to sync with a preview token
    */
   public SyncQuery sync(String syncToken) {
     return sync(syncToken, null);
@@ -168,9 +168,10 @@ public class CDAClient {
   /**
    * Returns a {@link SyncQuery} for synchronization with an existing space.
    *
+   * If called from a {@link #preview} client, this will always do an initial sync.
+   *
    * @param synchronizedSpace space to sync.
    * @return query instance.
-   * @throws UnsupportedOperationException if tried to sync with a preview token
    */
   public SyncQuery sync(SynchronizedSpace synchronizedSpace) {
     return sync(null, synchronizedSpace);
@@ -178,7 +179,8 @@ public class CDAClient {
 
   private SyncQuery sync(String syncToken, SynchronizedSpace synchronizedSpace) {
     if (preview) {
-      throw new UnsupportedOperationException("Syncing using a preview token is not supported. Please use a production token.");
+      syncToken = null;
+      synchronizedSpace = null;
     }
 
     SyncQuery.Builder builder = SyncQuery.builder().setClient(this);

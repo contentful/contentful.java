@@ -1,0 +1,43 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "items": [
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "cfexampleapi"
+          }
+        },
+        "type": "Entry",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "1t9IbcfdCk6m04uISSsaIK"
+          }
+        },
+        "id": "5ETMRzkl9KM4omyMwKAOki",
+        "revision": 3,
+        "createdAt": "2014-02-21T13:42:57.752Z",
+        "updatedAt": "2014-08-23T14:42:35.207Z",
+        "locale": "en-US"
+      },
+      "fields": {
+        "name": {
+          "en-US": "London"
+        },
+        "center": {
+          "en-US": {
+            "lat": 51.508515,
+            "lon": -0.12548719999995228
+          }
+        }
+      }
+    }
+  ],
+  "nextPageUrl": "http://cdn.contentful.com/spaces/cfexampleapi/sync?sync_token=foo"
+}

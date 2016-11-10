@@ -56,6 +56,7 @@ public class BaseTest {
   protected CDAClient createPreviewClient() {
     return createBuilder()
         .preview()
+        .setEndpoint(serverUrl())
         .build();
   }
 

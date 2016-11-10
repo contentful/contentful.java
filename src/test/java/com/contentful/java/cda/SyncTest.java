@@ -135,7 +135,7 @@ public class SyncTest extends BaseTest {
 
   @Test
   @Enqueue(
-      defaults = { },
+      defaults = {},
       value = {
           "links_invalid/space.json",
           "links_invalid/content_types.json",
@@ -146,10 +146,43 @@ public class SyncTest extends BaseTest {
     client.sync().fetch();
   }
 
-  @Test(expected = UnsupportedOperationException.class)
-  @Enqueue({"links_invalid/preview_space.json"})
-  public void syncingWithPreviewTokenThrows() throws Exception {
+  @Test @Enqueue({
+      "demo/sync_initial_preview_p1.json", "demo/sync_initial_preview_p2.json",
+      "demo/space.json", "demo/content_types.json"
+  })
+  public void syncingInPreviewWithTokenSyncsInitial() throws Exception {
     client = createPreviewClient();
-    client.sync().fetch();
+
+    final SynchronizedSpace space = client.sync("sometoken").fetch();
+    assertInitial(space);
+  }
+
+  @Test
+  @Enqueue({
+      "demo/sync_initial_preview_p1.json", "demo/sync_initial_preview_p2.json",
+      "demo/space.json", "demo/content_types.json",
+      "demo/sync_initial_preview_p1.json", "demo/sync_initial_preview_p2.json",
+      "demo/space.json", "demo/content_types.json"
+  })
+  public void syncingInPreviewWithPreviousSpaceSyncsInitial() throws Exception {
+    client = createPreviewClient();
+
+    SynchronizedSpace space = client.sync().fetch();
+    assertInitial(space);
+
+    space = client.sync(space).fetch();
+    assertInitial(space);
+  }
+
+  @Test
+  @Enqueue({
+      "demo/sync_initial_preview_p1.json",
+      "demo/sync_initial_preview_p2.json",
+      "demo/space.json"})
+  public void syncingWithPreviewWorks() throws Exception {
+    client = createPreviewClient();
+    final SynchronizedSpace space = client.sync().fetch();
+
+    assertInitial(space);
   }
 }
