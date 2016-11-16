@@ -38,7 +38,7 @@ public class Integration {
     assertThat(cat.name()).isEqualTo("Cat");
     assertThat(cat.displayField()).isEqualTo("name");
     assertThat(cat.description()).isEqualTo("Meow.");
-    assertThat(cat.fields()).hasSize(8);
+    assertThat(cat.fields()).hasSize(7);
   }
 
   @Test

@@ -1,6 +1,7 @@
 package com.contentful.java.cda;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 /** Represents a single content type field. */
@@ -21,7 +22,7 @@ public class CDAField implements Serializable {
 
   Map<String, Object> items;
 
-  Map<String, Object> validations;
+  List<Map<String, Object>> validations;
 
   /** @return name of this content type. */
   public String name() {
@@ -64,7 +65,7 @@ public class CDAField implements Serializable {
   }
 
   /** @return a map of validations, defined on this object. */
-  public Map<String, Object> validations() {
+  public List<Map<String, Object>> validations() {
     return validations;
   }
 }
