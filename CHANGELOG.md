@@ -2,8 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [7.2.1][unreleased] - (in development)
-- New: Fallback locales.
+## Version [7.3.1][unreleased] - (in development)
+- W.I.P. stay tuned...
+
+## Version [7.3.0] - (2017-01-03)
+- Added: Fallback locales.
+- Added: Support for validations.
 
 ## Version [7.2.0] - (2016-11-10)
 - Added: Limited sync support for Preview endpoint (Only `inital=true!`)
@@ -147,7 +151,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-7.2.1...HEAD
+[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-7.3.1...HEAD
+[7.3.0]: https://github.com/contentful/contentful.java/compare/java-sdk-7.2.0...java-sdk-7.3.0
 [7.2.0]: https://github.com/contentful/contentful.java/compare/java-sdk-7.1.0...java-sdk-7.2.0
 [7.1.0]: https://github.com/contentful/contentful.java/compare/java-sdk-7.0.2...java-sdk-7.1.0
 [7.0.2]: https://github.com/contentful/contentful.java/compare/java-sdk-7.0.1...java-sdk-7.0.2
