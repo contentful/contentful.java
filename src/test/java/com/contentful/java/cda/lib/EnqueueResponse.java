@@ -7,10 +7,10 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Enqueue {
-  String[] defaults() default { "demo/space.json", "demo/content_types.json" };
+public @interface EnqueueResponse {
+  String fileName();
 
-  String[] value() default {};
+  int code() default 200;
 
-  EnqueueResponse[] complex() default {};
+  String[] headers() default {};
 }

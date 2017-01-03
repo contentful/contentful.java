@@ -7,7 +7,7 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class EnqueueResponseRule implements MethodRule {
@@ -20,11 +20,31 @@ public class EnqueueResponseRule implements MethodRule {
             + "when using @"
             + Enqueue.class.getSimpleName());
       }
-      List<String> responses = new ArrayList<String>();
-      responses.addAll(Arrays.asList(enqueue.defaults()));
-      responses.addAll(Arrays.asList(enqueue.value()));
+      List<TestResponse> responses = new ArrayList<TestResponse>();
+      responses.addAll(enqueueToTestResponse(enqueue));
       ((BaseTest) o).setResponseQueue(responses);
     }
     return statement;
+  }
+
+  private Collection<? extends TestResponse> enqueueToTestResponse(Enqueue enqueue) {
+    final List<TestResponse> responses
+        = new ArrayList<TestResponse>(
+        enqueue.complex().length
+            + enqueue.value().length);
+
+    for (final EnqueueResponse response : enqueue.complex()) {
+      responses.add(new TestResponse(response.code(), response.fileName(), response.headers()));
+    }
+
+    for (final String response : enqueue.defaults()) {
+      responses.add(new TestResponse(200, response, new String[]{}));
+    }
+
+    for (final String response : enqueue.value()) {
+      responses.add(new TestResponse(200, response, new String[]{}));
+    }
+
+    return responses;
   }
 }
