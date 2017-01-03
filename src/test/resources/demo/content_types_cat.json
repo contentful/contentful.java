@@ -30,7 +30,15 @@
           "name": "Color",
           "type": "Symbol",
           "required": false,
-          "localized": false
+          "localized": false,
+          "validations": [
+            {
+              "in": [
+                "rainbow",
+                "pink"
+              ]
+            }
+          ]
         },
         {
           "id": "bestFriend",

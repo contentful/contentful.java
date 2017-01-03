@@ -6,6 +6,10 @@ import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 public class ContentTypeTest extends BaseTest {
   @Test
   @Enqueue("demo/content_types_cat.json")
@@ -62,5 +66,30 @@ public class ContentTypeTest extends BaseTest {
       assertThat(e.getMessage()).isEqualTo("Entry 'bar' has non-existing content type mapping 'foo'.");
       throw e;
     }
+  }
+
+  @Test
+  @Enqueue("demo/content_types_cat.json")
+  public void fetchFieldValidations() throws Exception {
+    CDAContentType catContentType = client.fetch(CDAContentType.class).one("cat");
+    assertThat(catContentType).isNotNull();
+    CDAField colorField = findFieldById(catContentType.fields(), "color");
+    assertThat(colorField).isNotNull();
+    assertThat(colorField.validations()).hasSize(1);
+    Map<String, Object> colorValidation = colorField.validations().get(0);
+    assertThat(colorValidation).containsKey("in");
+    List<String> allowedColorValues = (List<String>) colorValidation.get("in");
+    assertThat(allowedColorValues).isNotNull();
+    assertThat(allowedColorValues).hasSize(2);
+    assertThat(allowedColorValues).containsExactlyElementsIn(Arrays.asList("rainbow", "pink"));
+  }
+
+  private CDAField findFieldById(List<CDAField> fields, String id) {
+    for (CDAField field : fields) {
+      if (id.equals(field.id())) {
+        return field;
+      }
+    }
+    return null;
   }
 }
