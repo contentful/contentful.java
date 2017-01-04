@@ -2,6 +2,7 @@ package com.contentful.java.cda;
 
 import com.contentful.java.cda.lib.EnqueueResponseRule;
 import com.contentful.java.cda.lib.TestCallback;
+import com.contentful.java.cda.lib.TestResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -27,7 +28,7 @@ public class BaseTest {
 
   MockWebServer server;
 
-  List<String> responseQueue;
+  List<TestResponse> responseQueue;
 
   @Rule public EnqueueResponseRule enqueueResponse = new EnqueueResponseRule();
 
@@ -38,8 +39,8 @@ public class BaseTest {
     client = createClient();
 
     if (responseQueue != null) {
-      for (String name : responseQueue) {
-        enqueue(name);
+      for (TestResponse response : responseQueue) {
+        enqueue(response);
       }
     }
   }
@@ -75,14 +76,15 @@ public class BaseTest {
     return new MockWebServer();
   }
 
-  protected void enqueue(String fileName) throws IOException {
-    URL resource = getClass().getClassLoader().getResource(fileName);
-    checkNotNull(resource, "File not found: " + fileName);
-    server.enqueue(new MockResponse().setResponseCode(200)
-        .setBody(FileUtils.readFileToString(new File(resource.getFile()))));
+  protected void enqueue(TestResponse response) throws IOException {
+    URL resource = getClass().getClassLoader().getResource(response.getFileName());
+    checkNotNull(resource, "File not found: " + response.getFileName());
+    server.enqueue(new MockResponse().setResponseCode(response.getCode())
+        .setBody(FileUtils.readFileToString(new File(resource.getFile())))
+        .setHeaders(response.headers()));
   }
 
-  public BaseTest setResponseQueue(List<String> responseQueue) {
+  public BaseTest setResponseQueue(List<TestResponse> responseQueue) {
     this.responseQueue = responseQueue;
     return this;
   }
