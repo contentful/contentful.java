@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version [7.3.1][unreleased] - (in development)
 - W.I.P. stay tuned...
 
-## Version [7.3.0][unreleased] - (in development)
+## Version [7.3.0] - (2016-01-04)
 - Added: Fallback locales.
 - Added: Support for validations.
 - Added: Add rate limit headers to http exceptions.
