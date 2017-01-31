@@ -92,6 +92,7 @@ public class CDAClient {
           .addInterceptor(new ErrorInterceptor());
 
       okBuilder = setLogger(okBuilder, clientBuilder);
+      okBuilder = useTLS12IfWanted(okBuilder, clientBuilder);
 
       callFactory = okBuilder.build();
     } else {
@@ -116,6 +117,19 @@ public class CDAClient {
         throw new IllegalArgumentException("Cannot log to a null logger. Please set either logLevel to None, or do set a Logger");
       }
     }
+    return okBuilder;
+  }
+
+  private static OkHttpClient.Builder useTLS12IfWanted(OkHttpClient.Builder okBuilder, Builder clientBuilder) {
+
+    if (clientBuilder.useTLS12) {
+      try {
+        okBuilder.sslSocketFactory(new TLSSocketFactory());
+      } catch (Exception e) {
+        throw new IllegalArgumentException("Cannot create TLSSocketFactory for TLS 1.2", e);
+      }
+    }
+
     return okBuilder;
   }
 
@@ -324,6 +338,7 @@ public class CDAClient {
 
     Call.Factory callFactory;
     boolean preview;
+    boolean useTLS12;
 
     /**
      * Sets the space ID.
@@ -380,6 +395,17 @@ public class CDAClient {
      */
     public Builder setCallFactory(Call.Factory callFactory) {
       this.callFactory = callFactory;
+      return this;
+    }
+
+    /**
+     * Sets the flag of enforcing TLS 1.2.
+     * <p>
+     * If this is not used, TLS 1.2 may not be used per default on all
+     * configurations. {@see https://developer.android.com/reference/javax/net/ssl/SSLSocket.html}
+     */
+    public Builder useTLS12() {
+      this.useTLS12 = true;
       return this;
     }
 

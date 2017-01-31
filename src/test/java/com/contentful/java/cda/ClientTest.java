@@ -104,7 +104,7 @@ public class ClientTest extends BaseTest {
     } catch (RuntimeException e) {
       assertThat(e.getCause()).isInstanceOf(IOException.class);
       assertThat(e.getCause()).hasMessage(ERROR_MESSAGE);
-      throw(e);
+      throw (e);
     }
   }
 
@@ -208,6 +208,18 @@ public class ClientTest extends BaseTest {
     client.fetch(CDAContentType.class).all();
 
     verify(logMock, times(6)).log(anyString());
+  }
+
+  @Test
+  @Enqueue("demo/content_types_cat.json")
+  public void usingTLS12DoesNotThrow() {
+    final CDAClient client = createBuilder()
+        .useTLS12()
+        .build();
+
+    assertThat(client).isNotNull();
+
+    client.fetch(CDAEntry.class).all();
   }
 
   @Test(expected = CDAHttpException.class)
