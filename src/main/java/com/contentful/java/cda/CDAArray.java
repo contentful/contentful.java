@@ -4,7 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-/** Collection of CDA resources. */
+/**
+ * Collection of CDA resources.
+ */
 public class CDAArray extends ArrayResource {
   int total;
 
@@ -14,17 +16,23 @@ public class CDAArray extends ArrayResource {
 
   Includes includes;
 
-  /** Total number of resources (linked excluded). */
+  /**
+   * @return total number of resources (linked excluded).
+   */
   public int total() {
     return total;
   }
 
-  /** Skip attribute. */
+  /**
+   * @return number of resources to be skipped.
+   */
   public int skip() {
     return skip;
   }
 
-  /** Limit attribute. */
+  /**
+   * @return limit attribute. How many max resources got requested?
+   */
   public int limit() {
     return limit;
   }

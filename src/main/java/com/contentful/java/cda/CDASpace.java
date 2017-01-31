@@ -2,7 +2,9 @@ package com.contentful.java.cda;
 
 import java.util.List;
 
-/** Represents a single space. */
+/**
+ * Represents a single space.
+ */
 public class CDASpace extends CDAResource {
   String name;
 
@@ -10,17 +12,23 @@ public class CDASpace extends CDAResource {
 
   CDALocale defaultLocale;
 
-  /** Name */
+  /**
+   * @return name of this space.
+   */
   public String name() {
     return name;
   }
 
-  /** Locales List */
+  /**
+   * @return a list of locales of this space.
+   */
   public List<CDALocale> locales() {
     return locales;
   }
 
-  /** Default Locale */
+  /**
+   * @return default locale.
+   */
   public CDALocale defaultLocale() {
     return defaultLocale;
   }

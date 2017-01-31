@@ -26,8 +26,8 @@ public class UserAgentHeaderInterceptor implements Interceptor {
    * Method called by framework, to enrich current request chain with the header information requested.
    *
    * @param chain the execution chain for the request.
-   * @return the response received
-   * @throws IOException
+   * @return the response received.
+   * @throws IOException in case of failure down the line.
    */
   @Override public Response intercept(Chain chain) throws IOException {
     final Request request = chain.request();

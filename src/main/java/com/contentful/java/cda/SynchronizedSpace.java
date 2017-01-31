@@ -2,7 +2,9 @@ package com.contentful.java.cda;
 
 import java.util.Set;
 
-/** Represents results for synchronization via the Sync API. */
+/**
+ * Represents results for synchronization via the Sync API.
+ */
 public class SynchronizedSpace extends ArrayResource {
   String nextPageUrl;
 
@@ -12,22 +14,30 @@ public class SynchronizedSpace extends ArrayResource {
 
   Set<String> deletedEntries;
 
-  /** Next Sync URL */
+  /**
+   * @return url to the next sync.
+   */
   public String nextSyncUrl() {
     return nextSyncUrl;
   }
 
-  /** Url of next page, containing more data. */
+  /**
+   * @return url of next page, containing more data.
+   */
   String nextPageUrl() {
     return nextPageUrl;
   }
 
-  /** Deleted asset ids. */
+  /**
+   * @return deleted asset ids.
+   */
   public Set<String> deletedAssets() {
     return deletedAssets;
   }
 
-  /** Deleted entry ids. */
+  /**
+   * @return deleted entry ids.
+   */
   public Set<String> deletedEntries() {
     return deletedEntries;
   }

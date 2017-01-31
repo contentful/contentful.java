@@ -208,14 +208,18 @@ public class CDAClient {
   }
 
   /**
-   * Fetches the space for this client (synchronously).
+   * @return the space for this client (synchronously).
    */
   public CDASpace fetchSpace() {
     return observeSpace().toBlocking().first();
   }
 
   /**
-   * Fetches the space for this client (asynchronously).
+   * Asynchronously fetch the space.
+   *
+   * @param <C> the type of the callback to be used.
+   * @param callback the value of the callback to be called back.
+   * @return the space for this client (asynchronously).
    */
   @SuppressWarnings("unchecked")
   public <C extends CDACallback<CDASpace>> C fetchSpace(C callback) {
@@ -223,7 +227,7 @@ public class CDAClient {
   }
 
   /**
-   * Returns an {@link Observable} that fetches the space for this client.
+   * @return an {@link Observable} that fetches the space for this client.
    */
   public Observable<CDASpace> observeSpace() {
     return cacheSpace(true);
@@ -297,7 +301,7 @@ public class CDAClient {
   /**
    * Clear the java internal cache.
    *
-   * @return
+   * @return this client for chaining.
    */
   public CDAClient clearCache() {
     cache.clear();
@@ -316,7 +320,7 @@ public class CDAClient {
   }
 
   /**
-   * Returns a {@link CDAClient} builder.
+   * @return a {@link CDAClient} builder.
    */
   public static Builder builder() {
     return new Builder();
@@ -342,6 +346,9 @@ public class CDAClient {
 
     /**
      * Sets the space ID.
+     *
+     * @param space the space id to be set.
+     * @return this builder for chaining.
      */
     public Builder setSpace(String space) {
       this.space = space;
@@ -350,6 +357,9 @@ public class CDAClient {
 
     /**
      * Sets the space access token.
+     *
+     * @param token the access token, sometimes called authorization token.
+     * @return this builder for chaining.
      */
     public Builder setToken(String token) {
       this.token = token;
@@ -358,6 +368,9 @@ public class CDAClient {
 
     /**
      * Sets a custom endpoint.
+     *
+     * @param endpoint the url to be calling to (i.e. https://cdn.contentful.com).
+     * @return this builder for chaining.
      */
     public Builder setEndpoint(String endpoint) {
       this.endpoint = endpoint;
@@ -366,8 +379,11 @@ public class CDAClient {
 
     /**
      * Sets a custom logger level.
-     * <p>
+     *
      * If set to {@link Logger.Level}.NONE any custom logger will get ignored.
+     *
+     * @param logLevel the amount/level of logging to be used.
+     * @return this builder for chaining.
      */
     public Builder setLogLevel(Logger.Level logLevel) {
       this.logLevel = logLevel;
@@ -376,6 +392,9 @@ public class CDAClient {
 
     /**
      * Sets a custom logger.
+     *
+     * @param logger the logger to be set.
+     * @return this builder for chaining.
      */
     public Builder setLogger(Logger logger) {
       this.logger = logger;
@@ -384,6 +403,8 @@ public class CDAClient {
 
     /**
      * Sets the endpoint to point the Preview API.
+     *
+     * @return this builder for chaining.
      */
     public Builder preview() {
       preview = true;
@@ -392,6 +413,8 @@ public class CDAClient {
 
     /**
      * Sets a custom HTTP call factory.
+     * @param callFactory the factory to be used to create a call.
+     * @return this builder for chaining.
      */
     public Builder setCallFactory(Call.Factory callFactory) {
       this.callFactory = callFactory;
@@ -400,9 +423,13 @@ public class CDAClient {
 
     /**
      * Sets the flag of enforcing TLS 1.2.
-     * <p>
+     * 
      * If this is not used, TLS 1.2 may not be used per default on all
-     * configurations. {@see https://developer.android.com/reference/javax/net/ssl/SSLSocket.html}
+     * configurations. 
+     *
+     * @return this builder for chaining.
+     *
+     * @see <a href="https://developer.android.com/reference/javax/net/ssl/SSLSocket.html">reference</a>
      */
     public Builder useTLS12() {
       this.useTLS12 = true;

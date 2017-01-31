@@ -4,7 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-/** Represents a single locale. */
+/**
+ * Represents a single locale.
+ */
 public class CDALocale implements Serializable {
   String code;
 
@@ -16,22 +18,30 @@ public class CDALocale implements Serializable {
   @SerializedName("default")
   boolean defaultLocale;
 
-  /** Code */
+  /**
+   * @return code of this locale. ('en-US' or similar).
+   */
   public String code() {
     return code;
   }
 
-  /** Name */
+  /**
+   * @return human readable name of this locale.
+   */
   public String name() {
     return name;
   }
 
-  /** Fallback code */
+  /**
+   * @return the code of a locale to be used for falling back.
+   */
   public String fallbackLocaleCode() {
     return fallbackLocaleCode;
   }
 
-  /** Default */
+  /**
+   * @return true if this is the default locale.
+   */
   public boolean isDefaultLocale() {
     return defaultLocale;
   }

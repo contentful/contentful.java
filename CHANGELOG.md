@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Version [7.4.0] - (in development)
 - Added: `useTLS12()` for creating a client enforcing usage of TLS 1.2
+- Changed: Remove all warnings from JavaDoc
 
 ## Version [7.3.0] - (2016-01-04)
 - Added: Fallback locales.

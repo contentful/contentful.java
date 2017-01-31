@@ -4,22 +4,33 @@ import java.util.Map;
 
 /** Represents a single asset. */
 public class CDAAsset extends LocalizedResource {
-  /** Title */
+  /**
+   * @return title of this asset.
+   */
   public String title() {
     return getField("title");
   }
 
-  /** Url */
+  /**
+   * @return url to the file of this asset.
+   */
   public String url() {
     return fileField("url");
   }
 
-  /** Mime-type */
+  /**
+   * @return mime-type of this asset.
+   */
   public String mimeType() {
     return fileField("contentType");
   }
 
-  /** Helper method to extract a field from the {@code file} map. */
+  /**
+   * Helper method to extract a field from the {@code file} map.
+   * @param key the key who's value to be returned.
+   * @param <T> the type of this field.
+   * @return field of this file.
+   */
   @SuppressWarnings("unchecked")
   public <T> T fileField(String key) {
     T result = null;

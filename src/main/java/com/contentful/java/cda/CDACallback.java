@@ -14,14 +14,24 @@ public abstract class CDACallback<T extends CDAResource> {
 
   private Subscription subscription;
 
-  /** Successful response. */
+  /**
+   * Successful response.
+   *
+   * @param result the result of this operation.
+   */
   protected abstract void onSuccess(T result);
 
-  /** Invoked when a network or unexpected exception occurred during the HTTP request. */
+  /**
+   * Invoked when a network or unexpected exception occurred during the HTTP request.
+   *
+   * @param error the error occurred.
+   */
   protected void onFailure(Throwable error) {
   }
 
-  /** Returns true in case {@link #cancel()} was called. */
+  /**
+   * @return true in case {@link #cancel()} was called.
+   */
   public boolean isCancelled() {
     synchronized (LOCK) {
       return cancelled;
