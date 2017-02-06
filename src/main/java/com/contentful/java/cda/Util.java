@@ -28,6 +28,16 @@ final class Util {
     return reference;
   }
 
+  static CharSequence checkNotEmpty(CharSequence string, String format, Object... args) {
+    if (string == null) {
+      throw new IllegalArgumentException(String.format(format, args));
+    }
+    if (string.length() == 0) {
+      throw new IllegalArgumentException(String.format(format, args));
+    }
+    return string;
+  }
+
   static void checkState(boolean condition, String format, Object... args) {
     if (!condition) {
       throw new IllegalStateException(String.format(format, args));
