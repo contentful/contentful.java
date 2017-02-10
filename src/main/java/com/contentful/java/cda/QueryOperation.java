@@ -14,11 +14,14 @@ public class QueryOperation<T> {
   public static final QueryOperation<String> HasAllOf = new QueryOperation<String>("[all]");
 
   public static final QueryOperation<Integer> IsLessThan = new QueryOperation<Integer>("[lt]");
-  public static final QueryOperation<Integer> IsLessThanOrEqualTo = new QueryOperation<Integer>("[lte]");
+  public static final QueryOperation<Integer> IsLessThanOrEqualTo
+      = new QueryOperation<Integer>("[lte]");
   public static final QueryOperation<Integer> IsGreaterThan = new QueryOperation<Integer>("[gt]");
-  public static final QueryOperation<Integer> IsGreaterThanOrEqualTo = new QueryOperation<Integer>("[gte]");
+  public static final QueryOperation<Integer> IsGreaterThanOrEqualTo
+      = new QueryOperation<Integer>("[gte]");
 
-  public static final QueryOperation<Boolean> Exists = new QueryOperation<Boolean>("[exists]", true);
+  public static final QueryOperation<Boolean> Exists = new QueryOperation<Boolean>("[exists]"
+      , true);
 
   public static final QueryOperation<String> IsEarlierThan = new QueryOperation<String>("[lt]");
   public static final QueryOperation<String> IsEarlierOrAt = new QueryOperation<String>("[lte]");
@@ -28,8 +31,10 @@ public class QueryOperation<T> {
   public static final QueryOperation<String> Matches = new QueryOperation<String>("[match]");
 
   public static final QueryOperation<Location> IsCloseTo = new QueryOperation<Location>("[near]");
-  public static final QueryOperation<BoundingBox> IsWithinBoundingBoxOf = new QueryOperation<BoundingBox>("[within]");
-  public static final QueryOperation<BoundingCircle> IsWithinCircleOf = new QueryOperation<BoundingCircle>("[within]");
+  public static final QueryOperation<BoundingBox> IsWithinBoundingBoxOf
+      = new QueryOperation<BoundingBox>("[within]");
+  public static final QueryOperation<BoundingCircle> IsWithinCircleOf
+      = new QueryOperation<BoundingCircle>("[within]");
 
   final String operator;
   final T defaultValue;

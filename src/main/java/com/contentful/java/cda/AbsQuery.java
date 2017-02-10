@@ -14,7 +14,7 @@ import static java.lang.String.format;
  * This class includes options to query for entries, limit the amount of
  * responses and more.
  *
- * @param <Resource> The type of the resource to be returned by this query
+ * @param <Resource> The type of the resource to be returned by this query.
  * @param <Query>    The query type to be returned on chaining to avoid casting on client side.
  */
 abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQuery<Resource, Query>> {
@@ -37,22 +37,23 @@ abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQuery<Res
   }
 
   /**
-   * Enforce this query to be using the parameter contentType.
+   * Requesting a specific content type.
    * <p>
-   * The contentType is especially usefull if you want to limit the result of this query to only
-   * one type of contents. Also if you request that some fields should be respected by a filter
-   * operation, you have to make sure to set the content type with this methode, <b>before</b>
-   * applying the filter.
+   * The content type is especially useful if you want to limit the result of this query to only one
+   * content model type.
+   * <p>
+   * You must specify a content type <b>before</b> querying a specific <b>field</b> on a query, an
+   * exception will be thrown otherwise.
    *
    * @param contentType the content type to be used.
    * @return the calling query for chaining.
    * @throws IllegalArgumentException if contentType is null.
-   * @throws IllegalArgumentException if contentType is null.
+   * @throws IllegalArgumentException if contentType is empty.
    * @throws IllegalStateException    if contentType was set before.
    */
   @SuppressWarnings("unchecked")
   public Query withContentType(String contentType) {
-    checkNotEmpty(contentType, "contentType may not be empty.");
+    checkNotEmpty(contentType, "ContentType must not be empty.");
 
     if (hasContentTypeSet()) {
       throw new IllegalStateException(
@@ -68,23 +69,21 @@ abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQuery<Res
   /**
    * Limit response to only selected properties.
    * <p>
-   * This will return an object, whose fields not specified with a select parameter will be set
-   * to null, resulting in potentially way smaller api response from the server.
+   * Returns an object in which fields not specified will be <b>null</b>, resulting in potentially
+   * smaller response from Contentful.
    * <p>
-   * As this SDK requires some introspection of the requested entries, it will always request the
-   * sys property. This also means, requesting a select with either 'sys' or 'sys.{someting}' will
-   * be already covered internally.
+   * The complete <b>sys</b> object will always be returned.
    *
-   * @param selection to be used. Should be 'name' if 'fields.name' should be selected.
+   * @param selection to be used. Should be 'fields.name' or similar.
    * @return the calling query for chaining.
-   * @throws NullPointerException     if selection is null
-   * @throws IllegalArgumentException if selection is of zero length, aka empty.
-   * @throws IllegalStateException    if no contentType was queried for before.
+   * @throws NullPointerException     if selection is null.
+   * @throws IllegalArgumentException if selection is empty.
+   * @throws IllegalStateException    if no content type was queried for before.
    * @throws IllegalArgumentException if tried to request deeper then the name of a selection.
    */
   @SuppressWarnings("unchecked")
   public Query select(String selection) {
-    checkNotEmpty(selection, "While selecting the selection may not be empty.");
+    checkNotEmpty(selection, "Selection must not be empty.");
 
     if (countDots(selection) >= 2) {
       throw new IllegalArgumentException("Cannot request children of fields. " +
@@ -93,13 +92,12 @@ abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQuery<Res
 
     if (selection.startsWith("fields.") && !hasContentTypeSet()) {
       throw new IllegalStateException("Cannot use field selection without " +
-          "specifying a content type first. Use '.withContentType(\"{typeid}\") first.");
+          "specifying a content type first. Use '.withContentType(\"{typeid}\")' first.");
     }
 
     if (selection.startsWith("sys.") || selection.equals("sys")) {
       if (params.containsKey(PARAMETER_SELECT)) {
-        // nothing to be done here, a select is already present, so do not
-        // add sys again
+        // nothing to be done here, a select is already present
       } else {
         params.put(PARAMETER_SELECT, "sys");
       }
@@ -118,22 +116,21 @@ abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQuery<Res
    * This method makes it easier to select multiple properties from one method call. It calls
    * select for all of its arguments.
    *
-   * @param selections field names to be requested
+   * @param selections field names to be requested.
    * @return the calling query for chaining.
-   * @throws NullPointerException     if a field is null
+   * @throws NullPointerException     if a field is null.
    * @throws IllegalArgumentException if a field is of zero length, aka empty.
    * @throws IllegalStateException    if no contentType was queried for before.
-   * @throws IllegalArgumentException if tried to request deeper then the name of a field .
-   * @throws IllegalArgumentException if no selections were requested
+   * @throws IllegalArgumentException if tried to request deeper then the name of a field.
+   * @throws IllegalArgumentException if no selections were requested.
    * @see #select(String)
    */
   @SuppressWarnings("unchecked")
   public Query select(String... selections) {
-    checkNotNull(selections, "Fields to be selected cannot be null. Please specify at least one.");
+    checkNotNull(selections, "Selections cannot be null. Please specify at least one.");
 
     if (selections.length == 0) {
-      throw new IllegalArgumentException("Empty array of selections to be selected. Please provide" +
-          " selections to be selected.");
+      throw new IllegalArgumentException("Please provide a selection to be selected.");
     }
 
     for (int i = 0; i < selections.length; i++) {
@@ -165,7 +162,7 @@ abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQuery<Res
    * @throws IllegalArgumentException if values is not set.
    * @throws IllegalArgumentException if values does not contain valid values.
    * @throws IllegalArgumentException if one value was null or empty.
-   * @throws IllegalStateException    if no content type was set first, but a field was requested
+   * @throws IllegalStateException    if no content type was set first, but a field was requested.
    * @throws IllegalArgumentException if name does not start with either sys or field.
    * @see QueryOperation
    */
@@ -174,17 +171,17 @@ abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQuery<Res
 
     checkNotEmpty(name, "Name cannot be empty/null, please specify a name to apply operations on.");
     checkNotNull(queryOperation, "QueryOperation cannot be null.");
-    checkNotNull(values, "Values to be compared with needs to be set to something != null.");
+    checkNotNull(values, "Values to be compared with need to be set to something.");
     if (values.length == 0 && !queryOperation.hasDefaultValue()) {
-      throw new IllegalArgumentException("Please specify at least one value to be checked.");
+      throw new IllegalArgumentException("Please specify at least one value to be searched for.");
     }
 
     for (int i = 0; i < values.length; ++i) {
       final T value = values[i];
-      checkNotNull(value, "Value at position %d may not be null.", i);
+      checkNotNull(value, "Value at position %d must not be null.", i);
 
       if (value instanceof CharSequence) {
-        checkNotEmpty(value.toString(), "Value at position %d may not be empty.", i);
+        checkNotEmpty(value.toString(), "Value at position %d must not be empty.", i);
       }
     }
 
@@ -239,7 +236,7 @@ abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQuery<Res
    */
   @SuppressWarnings("unchecked")
   public Query orderBy(String key) {
-    checkNotEmpty(key, "Key to order by may not be empty.");
+    checkNotEmpty(key, "Key to order by must not be empty.");
 
     if (key.startsWith("fields.") && !hasContentTypeSet()) {
       throw new IllegalStateException("\"fields.\" cannot be used without setting a content type " +
@@ -275,7 +272,7 @@ abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQuery<Res
 
     for (int i = 0; i < keys.length; ++i) {
       final String key = keys[i];
-      checkNotEmpty(key, "Key at %d to order by may not be empty.", i);
+      checkNotEmpty(key, "Key at %d to order by must not be empty.", i);
 
       if (key.startsWith("fields.") && !hasContentTypeSet()) {
         throw new IllegalStateException(format("Key at %d uses \"fields.\" but cannot be used" +
@@ -302,7 +299,7 @@ abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQuery<Res
    */
   @SuppressWarnings("unchecked")
   public Query reverseOrderBy(String key) {
-    checkNotEmpty(key, "Key to order by may not be empty");
+    checkNotEmpty(key, "Key to order by must not be empty");
 
     if (key.startsWith("fields.") && !hasContentTypeSet()) {
       throw new IllegalStateException("\"fields.\" cannot be used without setting a content type " +
