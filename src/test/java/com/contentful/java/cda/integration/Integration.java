@@ -9,6 +9,9 @@ import com.contentful.java.cda.CDAEntry;
 import com.contentful.java.cda.CDAResource;
 import com.contentful.java.cda.CDASpace;
 import com.contentful.java.cda.LocalizedResource;
+import com.contentful.java.cda.QueryOperation.BoundingBox;
+import com.contentful.java.cda.QueryOperation.BoundingCircle;
+import com.contentful.java.cda.QueryOperation.Location;
 import com.contentful.java.cda.SynchronizedSpace;
 
 import org.junit.Before;
@@ -20,10 +23,23 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static com.contentful.java.cda.CDAType.SPACE;
+import static com.contentful.java.cda.QueryOperation.Exists;
+import static com.contentful.java.cda.QueryOperation.HasAllOf;
+import static com.contentful.java.cda.QueryOperation.HasNoneOf;
+import static com.contentful.java.cda.QueryOperation.HasOneOf;
+import static com.contentful.java.cda.QueryOperation.IsCloseTo;
+import static com.contentful.java.cda.QueryOperation.IsEarlierOrAt;
+import static com.contentful.java.cda.QueryOperation.IsEarlierThan;
+import static com.contentful.java.cda.QueryOperation.IsEqualTo;
+import static com.contentful.java.cda.QueryOperation.IsLaterOrAt;
+import static com.contentful.java.cda.QueryOperation.IsNotEqualTo;
+import static com.contentful.java.cda.QueryOperation.IsWithinBoundingBoxOf;
+import static com.contentful.java.cda.QueryOperation.IsWithinCircleOf;
+import static com.contentful.java.cda.QueryOperation.Matches;
 import static com.google.common.truth.Truth.assertThat;
 
 public class Integration {
-  CDAClient client;
+  private CDAClient client;
 
   @Before public void setUp() throws Exception {
     client = CDAClient.builder()
@@ -149,13 +165,17 @@ public class Integration {
   public void fetchSpecificAsset() {
     CDAAsset entry = client.fetch(CDAAsset.class).one("nyancat");
 
-    assertThat(entry.url()).isEqualTo("//images.contentful.com/cfexampleapi/4gp6taAwW4CmSgumq2ekUm/9da0cd1936871b8d72343e895a00d611/Nyan_cat_250px_frame.png");
+    assertThat(entry.url()).isEqualTo("//images.contentful.com/cfexampleapi/" +
+        "4gp6taAwW4CmSgumq2ekUm/9da0cd1936871b8d72343e895a00d611/Nyan_cat_250px_frame.png");
   }
 
   //"/spaces/{space_id}/entries?content_type={content_type}",
   @Test
   public void fetchAllEntriesOfType() {
-    CDAArray all = client.fetch(CDAEntry.class).where("content_type", "cat").all();
+    CDAArray all = client
+        .fetch(CDAEntry.class)
+        .withContentType("cat")
+        .all();
 
     assertThat(all.total()).isEqualTo(3);
   }
@@ -164,8 +184,8 @@ public class Integration {
   @Test
   public void fetchEntryWithTwoCriteria() {
     CDAArray found = client.fetch(CDAEntry.class)
-        .where("content_type", "cat")
-        .where("fields.likes", "fish")
+        .withContentType("cat")
+        .where("fields.likes", IsEqualTo, "fish")
         .all();
 
     assertThat(found.total()).isEqualTo(1);
@@ -175,8 +195,8 @@ public class Integration {
   @Test
   public void fetchEntryWithLink() {
     CDAArray found = client.fetch(CDAEntry.class)
-        .where("content_type", "cat")
-        .where("fields.bestFriend.sys.id", "happycat")
+        .withContentType("cat")
+        .where("fields.bestFriend.sys.id", IsEqualTo, "happycat")
         .all();
 
     assertThat(found.total()).isEqualTo(1);
@@ -206,7 +226,7 @@ public class Integration {
   @Test
   public void fetchEntriesWithOrder() {
     CDAArray found = client.fetch(CDAEntry.class)
-        .where("order", "sys.id")
+        .orderBy("sys.id")
         .all();
 
     assertThat(found.total()).isEqualTo(10);
@@ -217,7 +237,7 @@ public class Integration {
   @Test
   public void fetchEntriesInInverseOrder() {
     CDAArray found = client.fetch(CDAEntry.class)
-        .where("order", "-sys.id")
+        .reverseOrderBy("sys.id")
         .all();
 
     assertThat(found.total()).isEqualTo(10);
@@ -229,7 +249,7 @@ public class Integration {
   @Test
   public void fetchEntriesWithSecondaryOrder() {
     CDAArray found = client.fetch(CDAEntry.class)
-        .where("order", "sys.contentType.sys.id,sys.id")
+        .orderBy("sys.contentType.sys.id", "sys.id")
         .all();
 
     assertThat(found.total()).isEqualTo(10);
@@ -241,8 +261,8 @@ public class Integration {
   @Test
   public void fetchWithLimit() {
     CDAArray found = client.fetch(CDAEntry.class)
-        .where("limit", "1")
-        .where("order", "sys.id")
+        .limit(1)
+        .orderBy("sys.id")
         .all();
 
     assertThat(found.items().size()).isEqualTo(1);
@@ -254,8 +274,8 @@ public class Integration {
   @Test
   public void fetchWithSkip() {
     CDAArray found = client.fetch(CDAEntry.class)
-        .where("skip", "1")
-        .where("order", "sys.id")
+        .skip(1)
+        .orderBy("sys.id")
         .all();
 
     assertThat(found.items().size()).isEqualTo(9);
@@ -267,7 +287,7 @@ public class Integration {
   @Test
   public void fetchWithoutIncluding() {
     CDAArray found = client.fetch(CDAEntry.class)
-        .where("include", "0")
+        .include(0)
         .all();
 
     assertThat(found.items().size()).isEqualTo(10);
@@ -278,7 +298,7 @@ public class Integration {
   @Test
   public void fetchWithInQuery() {
     CDAArray found = client.fetch(CDAEntry.class)
-        .where("sys.id[in]", "finn,jake")
+        .where("sys.id", HasOneOf, "finn", "jake")
         .all();
 
     assertThat(found.items().size()).isEqualTo(2);
@@ -289,12 +309,25 @@ public class Integration {
     assertThat(jake.getField("name")).isEqualTo("Jake");
   }
 
+  //"/spaces/{space_id}/entries?{attribute}%5Ball%5D={value}",
+  @Test
+  public void fetchWithAllQuery() {
+    CDAArray found = client.fetch(CDAEntry.class)
+        .withContentType("cat")
+        .where("fields.likes", HasAllOf, "rainbows", "fish")
+        .all();
+
+    assertThat(found.items().size()).isEqualTo(1);
+    CDAEntry finn = (CDAEntry) found.items().get(0);
+    assertThat(finn.getField("name")).isEqualTo("Nyan Cat");
+  }
+
   //"/spaces/{space_id}/entries?content_type={content_type}&{attribute}%5Bnin%5D={value}",
   @Test
   public void fetchWithNotInQuery() {
     CDAArray found = client.fetch(CDAEntry.class)
-        .where("content_type", "cat")
-        .where("sys.id[nin]", "nyancat")
+        .withContentType("cat")
+        .where("sys.id", HasNoneOf, "nyancat")
         .all();
 
     assertThat(found.items().size()).isEqualTo(2);
@@ -304,7 +337,7 @@ public class Integration {
   @Test
   public void fetchWithExistsQuery() {
     CDAArray found = client.fetch(CDAEntry.class)
-        .where("sys.id[exists]", "false") // entries without id
+        .where("sys.id", Exists, false) // entries without id
         .all();
 
     assertThat(found.items().size()).isEqualTo(0);
@@ -314,8 +347,8 @@ public class Integration {
   @Test
   public void fetchEntriesInRange() {
     CDAArray found = client.fetch(CDAEntry.class)
-        .where("content_type", "cat")
-        .where("fields.birthday[lte]", "1980-01-01")
+        .withContentType("cat")
+        .where("fields.birthday", IsEarlierThan, "1980-01-01")
         .all();
 
     assertThat(found.items().size()).isEqualTo(1);
@@ -323,12 +356,38 @@ public class Integration {
     assertThat(nyancat.getField("name")).isEqualTo("Garfield");
   }
 
+  //"/spaces/{space_id}/entries?content_type={content_type}&{attribute}%5Blte%5D={value}",
+  @Test
+  public void fetchEntriesEarlierOrAt() {
+    CDAArray found = client.fetch(CDAEntry.class)
+        .withContentType("cat")
+        .where("fields.birthday", IsEarlierOrAt, "1979-06-18T23:00:00+00:00")
+        .all();
+
+    assertThat(found.items().size()).isEqualTo(1);
+    CDAEntry cat = (CDAEntry) found.items().get(0);
+    assertThat(cat.getField("name")).isEqualTo("Garfield");
+  }
+
+  //"/spaces/{space_id}/entries?content_type={content_type}&{attribute}%5Blte%5D={value}",
+  @Test
+  public void fetchEntriesLaterOrAt() {
+    CDAArray found = client.fetch(CDAEntry.class)
+        .withContentType("cat")
+        .where("fields.birthday", IsLaterOrAt, "2011-04-04T22:00:00+00:00")
+        .all();
+
+    assertThat(found.items().size()).isEqualTo(1);
+    CDAEntry cat = (CDAEntry) found.items().get(0);
+    assertThat(cat.getField("name")).isEqualTo("Nyan Cat");
+  }
+
   //"/spaces/{space_id}/entries?content_type={content_type}&fields.{field_id}%5Bmatch%5D={value}",
   @Test
   public void fetchEntriesWithFieldMatching() {
     CDAArray found = client.fetch(CDAEntry.class)
-        .where("content_type", "cat")
-        .where("fields.name[match]", "happy")
+        .withContentType("cat")
+        .where("fields.name", Matches, "happy")
         .all();
 
     assertThat(found.items().size()).isEqualTo(1);
@@ -340,8 +399,23 @@ public class Integration {
   @Test
   public void fetchEntriesNearby() {
     CDAArray found = client.fetch(CDAEntry.class)
-        .where("content_type", "1t9IbcfdCk6m04uISSsaIK")
-        .where("fields.center[near]", "38,-122")
+        .withContentType("1t9IbcfdCk6m04uISSsaIK")
+        .where("fields.center", IsCloseTo, new Location(38, -122))
+        .all();
+
+    assertThat(found.items().size()).isEqualTo(4);
+    CDAEntry sf = (CDAEntry) found.items().get(0);
+    assertThat(sf.getField("name")).isEqualTo("San Francisco");
+    CDAEntry london = (CDAEntry) found.items().get(1);
+    assertThat(london.getField("name")).isEqualTo("London");
+  }
+
+  //"/spaces/{space_id}/entries?fields.center%5Bnear%5D={coordinate}&content_type={content_type}",
+  @Test
+  public void fetchEntriesNearbyCircle() {
+    CDAArray found = client.fetch(CDAEntry.class)
+        .withContentType("1t9IbcfdCk6m04uISSsaIK")
+        .where("fields.center", IsWithinCircleOf, new BoundingCircle(new Location(38, -122), 100))
         .all();
 
     assertThat(found.items().size()).isEqualTo(4);
@@ -355,8 +429,8 @@ public class Integration {
   @Test
   public void fetchEntriesWithinBoundingBox() {
     CDAArray found = client.fetch(CDAEntry.class)
-        .where("content_type", "1t9IbcfdCk6m04uISSsaIK")
-        .where("fields.center[within]", "40,-124,36,-120")
+        .withContentType("1t9IbcfdCk6m04uISSsaIK")
+        .where("fields.center", IsWithinBoundingBoxOf, new BoundingBox(40, -124, 36, -120))
         .all();
 
     assertThat(found.items().size()).isEqualTo(1);
@@ -368,7 +442,7 @@ public class Integration {
   @Test
   public void fetchEntriesWithAttributeNotEqual() {
     CDAArray found = client.fetch(CDAEntry.class)
-        .where("sys.id[ne]", "nyancat")
+        .where("sys.id", IsNotEqualTo, "nyancat")
         .all();
 
     assertThat(found.items().size()).isEqualTo(9);
