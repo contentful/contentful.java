@@ -6,7 +6,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - W.I.P. stay tuned...
 
 ## Version [7.4.0] - (in development)
-- Added: `useTLS12()` for creating a client enforcing usage of TLS 1.2
+- Added: `useTLS12()` for creating a client, enforcing usage of TLS 1.2
+- Added: more convenient way of querying: `withContentType`, `select`, `orderBy`,
+    `reverseOrderBy`, `limit`, `skip`, `include` and `where` with `IsEqualTo`, `IsNotEqualTo`,
+    `HasOneOf`, `HasNoneOf`, `HasAllOf`, `IsLessThan`, `IsLessThanOrEqualTo`, `IsGreaterThan`,
+    `IsGreaterThanOrEqualTo`, `Exists`, `IsEarlierThan`, `IsEarlierOrAt`, `IsLaterThan`,
+    `IsLaterOrAt`, `Matches`, `IsCloseTo`, `IsWithinBoundingBoxOf`, `IsWithinCircleOf`
 - Changed: Remove all warnings from JavaDoc
 
 ## Version [7.3.0] - (2016-01-04)
