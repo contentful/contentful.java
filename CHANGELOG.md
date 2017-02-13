@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version [7.4.1][unreleased] - (in development)
 - W.I.P. stay tuned...
 
-## Version [7.4.0] - (in development)
+## Version [7.4.0] - (2016-02-13)
 - Added: `useTLS12()` for creating a client, enforcing usage of TLS 1.2
 - Added: more convenient way of querying: `withContentType`, `select`, `orderBy`,
     `reverseOrderBy`, `limit`, `skip`, `include` and `where` with `IsEqualTo`, `IsNotEqualTo`,
