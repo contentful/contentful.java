@@ -17,7 +17,7 @@ import static java.lang.String.format;
  * @param <Resource> The type of the resource to be returned by this query.
  * @param <Query>    The query type to be returned on chaining to avoid casting on client side.
  */
-abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQuery<Resource, Query>> {
+public abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQuery<Resource, Query>> {
   private static final String PARAMETER_CONTENT_TYPE = "content_type";
   private static final String PARAMETER_SELECT = "select";
   private static final String PARAMETER_ORDER = "order";
@@ -153,6 +153,7 @@ abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQuery<Res
    * <p>
    * Use this for a more controlled and versatile way of doing specialized search requests.
    *
+   * @param <T>            value type the operation uses.
    * @param name           which attribute should be checked?
    * @param queryOperation specify the queryOperation here.
    * @param values         a list of values to be checked.

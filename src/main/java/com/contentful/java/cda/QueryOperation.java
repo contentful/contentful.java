@@ -3,7 +3,7 @@ package com.contentful.java.cda;
 /**
  * This enumeration will be used to formulate more complex search queries.
  *
- * @see FetchQuery<T>.#where(String, QueryOperation, T...)
+ * @see AbsQuery#where(String, QueryOperation, Object...)
  */
 public class QueryOperation<T> {
 
