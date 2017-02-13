@@ -88,6 +88,9 @@ public class QueryOperation<T> {
       this.longitude = longitude;
     }
 
+    /**
+     * @return returns a url friendly representation.
+     */
     @Override
     public String toString() {
       return String.format("%f,%f", latitude, longitude);
@@ -125,6 +128,9 @@ public class QueryOperation<T> {
       this.topRight = new Location(top, right);
     }
 
+    /**
+     * @return returns a url friendly representation.
+     */
     @Override public String toString() {
       return String.format("%s,%s", bottomLeft.toString(), topRight.toString());
     }
@@ -160,6 +166,9 @@ public class QueryOperation<T> {
       this.radius = radius;
     }
 
+    /**
+     * @return returns a url friendly representation.
+     */
     @Override public String toString() {
       return String.format("%s,%f", center.toString(), radius);
     }
