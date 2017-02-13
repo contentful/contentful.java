@@ -361,7 +361,7 @@ public class Integration {
   public void fetchEntriesEarlierOrAt() {
     CDAArray found = client.fetch(CDAEntry.class)
         .withContentType("cat")
-        .where("fields.birthday", IsEarlierOrAt, "1979-06-18T23:00:00+00:00")
+        .where("fields.birthday", IsEarlierOrAt, "1979-06-18T23:00:00")
         .all();
 
     assertThat(found.items().size()).isEqualTo(1);
@@ -374,7 +374,7 @@ public class Integration {
   public void fetchEntriesLaterOrAt() {
     CDAArray found = client.fetch(CDAEntry.class)
         .withContentType("cat")
-        .where("fields.birthday", IsLaterOrAt, "2011-04-04T22:00:00+00:00")
+        .where("fields.birthday", IsLaterOrAt, "2011-04-04T22:00:00")
         .all();
 
     assertThat(found.items().size()).isEqualTo(1);
