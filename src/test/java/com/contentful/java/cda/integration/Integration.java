@@ -418,11 +418,9 @@ public class Integration {
         .where("fields.center", IsWithinCircleOf, new BoundingCircle(new Location(38, -122), 100))
         .all();
 
-    assertThat(found.items().size()).isEqualTo(4);
+    assertThat(found.items().size()).isEqualTo(1);
     CDAEntry sf = (CDAEntry) found.items().get(0);
     assertThat(sf.getField("name")).isEqualTo("San Francisco");
-    CDAEntry london = (CDAEntry) found.items().get(1);
-    assertThat(london.getField("name")).isEqualTo("London");
   }
 
   //"/spaces/{space_id}/entries?fields.center%5Bwithin%5D={rectangle}&content_type={content_type}",
