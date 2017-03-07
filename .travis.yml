@@ -5,6 +5,7 @@ jdk:
   - oraclejdk8
 
 after_success:
+  - .buildscript/codecov.sh
   - .buildscript/deploy_snapshot.sh
   - .buildscript/integration_tests.sh
 
