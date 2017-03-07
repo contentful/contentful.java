@@ -299,4 +299,30 @@ public class ClientTest extends BaseTest {
     assertThat(client.cache.types()).isNull();
     assertThat(client.cache.space()).isNull();
   }
+
+  static class InterceptingInterceptor implements Interceptor {
+    public boolean hit = false;
+
+    @Override public Response intercept(Chain chain) throws IOException {
+      hit = true;
+      return chain.proceed(chain.request());
+    }
+  }
+
+  @Test @Enqueue
+  public void customCallFactoryCanUseDefault() throws Exception {
+
+    final CDAClient.Builder builder = createBuilder();
+
+    final OkHttpClient.Builder callFactoryBuilder = builder.defaultCallFactoryBuilder();
+    final InterceptingInterceptor interceptor = new InterceptingInterceptor();
+    callFactoryBuilder.addInterceptor(interceptor);
+
+    builder
+        .setCallFactory(callFactoryBuilder.build())
+        .build()
+        .fetchSpace();
+
+    assertThat(interceptor.hit).isTrue();
+  }
 }

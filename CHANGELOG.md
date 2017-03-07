@@ -2,8 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [7.4.1][unreleased] - (in development)
+## Version [7.5.1][unreleased] - (in development)
 - W.I.P. stay tuned...
+
+## Version [7.5.0][unreleased] - (in development)
+- Added: retrieve default call.factory from client builder.
 
 ## Version [7.4.0] - (2016-02-13)
 - Added: `useTLS12()` for creating a client, enforcing usage of TLS 1.2
