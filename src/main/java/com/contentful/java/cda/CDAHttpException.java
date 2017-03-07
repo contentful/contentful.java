@@ -1,5 +1,6 @@
 package com.contentful.java.cda;
 
+import java.io.IOException;
 import java.util.Locale;
 
 import okhttp3.Headers;
@@ -14,6 +15,8 @@ import static java.lang.String.format;
 public class CDAHttpException extends RuntimeException {
   private final Request request;
   private final Response response;
+  private final String responseBody;
+  private final String stringRepresentation;
 
   /**
    * Construct an error response.
@@ -28,6 +31,27 @@ public class CDAHttpException extends RuntimeException {
   public CDAHttpException(Request request, Response response) {
     this.request = request;
     this.response = response;
+    this.responseBody = readResponseBody(response);
+    this.stringRepresentation = createString();
+  }
+
+  private String readResponseBody(Response response) {
+    try {
+      return response.body().string();
+    } catch (IOException ioException) {
+      return "<io exception while parsing body: " + ioException.toString() + ">";
+    }
+  }
+
+  private String createString() {
+    return format(
+        Locale.getDefault(),
+        "FAILED REQUEST:\n\t%s\n\t╰→ Header{%s}\n\t%s\n\t├→ Body{%s}\n\t╰→ Header{%s}",
+        request.toString(),
+        headersToString(request.headers()),
+        response.toString(),
+        responseBody,
+        headersToString(response.headers()));
   }
 
   /**
@@ -37,13 +61,7 @@ public class CDAHttpException extends RuntimeException {
    */
   @Override
   public String toString() {
-    return format(
-        Locale.getDefault(),
-        "FAILED REQUEST:\n\t%s\n\t↳ Header{%s}\n\t%s\n\t↳ Header{%s}",
-        request.toString(),
-        headersToString(request.headers()),
-        response.toString(),
-        headersToString(response.headers()));
+    return stringRepresentation;
   }
 
   /**
@@ -58,6 +76,13 @@ public class CDAHttpException extends RuntimeException {
    */
   public String responseMessage() {
     return response.message();
+  }
+
+  /**
+   * @return the errors body, potentially containing more information.
+   */
+  public String responseBody() {
+    return responseBody;
   }
 
   /**

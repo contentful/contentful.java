@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Version [7.5.0][unreleased] - (in development)
 - Added: retrieve default call.factory from client builder.
+- Fixed: close body in error response interceptor.
 
 ## Version [7.4.0] - (2016-02-13)
 - Added: `useTLS12()` for creating a client, enforcing usage of TLS 1.2
