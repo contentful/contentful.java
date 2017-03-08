@@ -4,8 +4,12 @@ jdk:
   - oraclejdk7
   - oraclejdk8
 
+script:
+  - mvn jacoco:prepare-agent
+  - mvn test
+
 after_success:
-  - mvn cobertura:cobertura
+  - mvn jacoco:report
   - .buildscript/codecov.sh
   - .buildscript/deploy_snapshot.sh
   - .buildscript/integration_tests.sh
