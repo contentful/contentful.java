@@ -1,10 +1,15 @@
 language: java
+sudo: false
 
 jdk:
   - oraclejdk7
   - oraclejdk8
 
+script:
+  - mvn jacoco:prepare-agent test jacoco:report
+
 after_success:
+  - .buildscript/codecov.sh
   - .buildscript/deploy_snapshot.sh
   - .buildscript/integration_tests.sh
 
@@ -14,7 +19,6 @@ env:
     - secure: jKXD1hYVgJypaQHRSm4gshxMhB+T+UibaLDLCSfGWSaGzogDsWnPXf9qqG3jtozKHyH0BkANaaO6rRgNQNfbaklm4jopL1bdRkd47JO/nibNwuVcG07TQyCPQR6jv/WoRAkxXOGdMSwwS2+puM7FJqLarbzY7uBEJtNsZn5JT48=
     - secure: k2FkpJUg0FxfTeTadPc4xDA7xPmheZg6+u4DLn7kRP3bfHNG8lP57pYq/b1iDN+3VBXOkQtGttUyS1EExUubmeoQk4JwOUuePv6Ru24Mi5YoEdlkBzu2KZXV0o7aZZookYdsQTOQ/Jd576sn3oiXbAtW6n93h7h6SRCFIAG/nmc=
 
-sudo: false
 
 branches:
   except:

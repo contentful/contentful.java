@@ -76,61 +76,10 @@ public class CDAClient {
     Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create(ResourceFactory.GSON))
         .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-        .callFactory(createOrGetCallFactory(clientBuilder))
+        .callFactory(clientBuilder.createOrGetCallFactory(clientBuilder))
         .baseUrl(endpoint);
 
     return retrofitBuilder.build().create(CDAService.class);
-  }
-
-  private static Call.Factory createOrGetCallFactory(Builder clientBuilder) {
-    final Call.Factory callFactory;
-
-    if (clientBuilder.callFactory == null) {
-      OkHttpClient.Builder okBuilder = new OkHttpClient.Builder()
-          .addInterceptor(new AuthorizationHeaderInterceptor(clientBuilder.token))
-          .addInterceptor(new UserAgentHeaderInterceptor(createUserAgent()))
-          .addInterceptor(new ErrorInterceptor());
-
-      okBuilder = setLogger(okBuilder, clientBuilder);
-      okBuilder = useTLS12IfWanted(okBuilder, clientBuilder);
-
-      callFactory = okBuilder.build();
-    } else {
-      callFactory = clientBuilder.callFactory;
-    }
-
-    return callFactory;
-  }
-
-  private static OkHttpClient.Builder setLogger(OkHttpClient.Builder okBuilder, Builder clientBuilder) {
-    if (clientBuilder.logger != null) {
-      switch (clientBuilder.logLevel) {
-        case NONE:
-          break;
-        case BASIC:
-          return okBuilder.addInterceptor(new LogInterceptor(clientBuilder.logger));
-        case FULL:
-          return okBuilder.addNetworkInterceptor(new LogInterceptor(clientBuilder.logger));
-      }
-    } else {
-      if (clientBuilder.logLevel != Logger.Level.NONE) {
-        throw new IllegalArgumentException("Cannot log to a null logger. Please set either logLevel to None, or do set a Logger");
-      }
-    }
-    return okBuilder;
-  }
-
-  private static OkHttpClient.Builder useTLS12IfWanted(OkHttpClient.Builder okBuilder, Builder clientBuilder) {
-
-    if (clientBuilder.useTLS12) {
-      try {
-        okBuilder.sslSocketFactory(new TLSSocketFactory());
-      } catch (Exception e) {
-        throw new IllegalArgumentException("Cannot create TLSSocketFactory for TLS 1.2", e);
-      }
-    }
-
-    return okBuilder;
   }
 
   /**
@@ -419,6 +368,71 @@ public class CDAClient {
     public Builder setCallFactory(Call.Factory callFactory) {
       this.callFactory = callFactory;
       return this;
+    }
+
+    private Call.Factory createOrGetCallFactory(Builder clientBuilder) {
+      final Call.Factory callFactory;
+
+      if (clientBuilder.callFactory == null) {
+        callFactory = defaultCallFactoryBuilder().build();
+      } else {
+        callFactory = clientBuilder.callFactory;
+      }
+
+      return callFactory;
+    }
+
+    private OkHttpClient.Builder setLogger(OkHttpClient.Builder okBuilder) {
+      if (logger != null) {
+        switch (logLevel) {
+          case NONE:
+            break;
+          case BASIC:
+            return okBuilder.addInterceptor(new LogInterceptor(logger));
+          case FULL:
+            return okBuilder.addNetworkInterceptor(new LogInterceptor(logger));
+        }
+      } else {
+        if (logLevel != Logger.Level.NONE) {
+          throw new IllegalArgumentException("Cannot log to a null logger. Please set either logLevel to None, or do set a Logger");
+        }
+      }
+      return okBuilder;
+    }
+
+    private OkHttpClient.Builder useTLS12IfWanted(OkHttpClient.Builder okBuilder) {
+      if (useTLS12) {
+        try {
+          okBuilder.sslSocketFactory(new TLSSocketFactory());
+        } catch (Exception e) {
+          throw new IllegalArgumentException("Cannot create TLSSocketFactory for TLS 1.2", e);
+        }
+      }
+
+      return okBuilder;
+    }
+
+    /**
+     * Returns the default Call.Factory.Builder used throughout this SDK.
+     * <p>
+     * Please use this method last in the building step, since changing settings as in the
+     * {@link #token} or others afterwards will not be reflected by this factory.
+     * <p>
+     * This might be useful if you want to augment the default client, without needing to rely on
+     * replicating the current sdk behaviour.
+     *
+     * @return A {@link Call.Factory} used through out SDK, as if no custom call factory was used.
+     */
+    public OkHttpClient.Builder defaultCallFactoryBuilder() {
+      OkHttpClient.Builder okBuilder = new OkHttpClient.Builder()
+          .addInterceptor(new AuthorizationHeaderInterceptor(token))
+          .addInterceptor(new UserAgentHeaderInterceptor(createUserAgent()))
+          .addInterceptor(new ErrorInterceptor());
+
+      setLogger(okBuilder);
+      useTLS12IfWanted(okBuilder);
+
+      return okBuilder;
     }
 
     /**

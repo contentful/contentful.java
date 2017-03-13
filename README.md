@@ -1,7 +1,8 @@
-contentful.java
+Contentful Java
 ===============
 
 [![Build Status](https://travis-ci.org/contentful/contentful.java.svg)](https://travis-ci.org/contentful/contentful.java/builds#)
+[![codecov](https://codecov.io/gh/contentful/contentful.java/branch/master/graph/badge.svg)](https://codecov.io/gh/contentful/contentful.java)
 
 Java SDK for [Contentful's][1] Content Delivery API.
 
@@ -15,7 +16,7 @@ Grab via Maven:
 <dependency>
   <groupId>com.contentful.java</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>7.4.0</version>
+  <version>7.5.0</version>
 </dependency>
 ```
 or Gradle:

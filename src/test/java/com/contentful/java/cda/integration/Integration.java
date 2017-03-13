@@ -6,6 +6,7 @@ import com.contentful.java.cda.CDACallback;
 import com.contentful.java.cda.CDAClient;
 import com.contentful.java.cda.CDAContentType;
 import com.contentful.java.cda.CDAEntry;
+import com.contentful.java.cda.CDAHttpException;
 import com.contentful.java.cda.CDAResource;
 import com.contentful.java.cda.CDASpace;
 import com.contentful.java.cda.LocalizedResource;
@@ -477,6 +478,16 @@ public class Integration {
     Map<String, List<String>> rawArray = (Map<String, List<String>>) happycat.rawFields().get("likes");
     assertThat(rawArray).isNotNull();
     assertThat(rawArray.get("en-US").get(0)).isEqualTo("cheezburger");
+  }
+
+  @Test(expected = CDAHttpException.class)
+  public void testErrorResponse() throws Exception {
+    try {
+      client.fetch(CDAEntry.class).where("sys.asdf", "fas").one("nope");
+    } catch (CDAHttpException cdaException) {
+      assertThat(cdaException.responseBody()).isNotEmpty();
+      throw cdaException;
+    }
   }
 
   private void assertInitial(SynchronizedSpace space) {
