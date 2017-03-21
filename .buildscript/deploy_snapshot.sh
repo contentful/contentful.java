@@ -20,7 +20,11 @@ elif [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
 elif [ "$TRAVIS_BRANCH" != "$BRANCH" ]; then
   echo "Skipping snapshot deployment: wrong branch. Expected '$BRANCH' but was '$TRAVIS_BRANCH'."
 else
-  echo "Deploying snapshot..."
+  echo "Deploying snapshot to maven ..."
   mvn clean source:jar javadoc:jar deploy --settings=".buildscript/settings.xml" -Dmaven.test.skip=true
-  echo "Snapshot deployed!"
+  echo "Snapshot deployed to maven!"
+
+  echo "Deploying snapshot to jitpack ..."
+  curl https://jitpack.io/com/github/contentful/contentful.java/master-SNAPSHOT/build.log
+  echo "Snapshot deployed to jitpack!"
 fi
