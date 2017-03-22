@@ -23,8 +23,9 @@ else
   echo "Deploying snapshot to maven ..."
   mvn clean source:jar javadoc:jar deploy --settings=".buildscript/settings.xml" -Dmaven.test.skip=true
   echo "Snapshot deployed to maven!"
-
-  echo "Deploying snapshot to jitpack ..."
-  curl https://jitpack.io/com/github/contentful/contentful.java/master-SNAPSHOT/build.log
-  echo "Snapshot deployed to jitpack!"
 fi
+
+echo "Deploying snapshot to jitpack ..."
+curl https://jitpack.io/com/github/contentful/contentful.java/${TRAVIS_BRANCH}-SNAPSHOT
+echo "Snapshot deployed to jitpack!"
+
