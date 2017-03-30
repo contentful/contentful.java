@@ -190,7 +190,7 @@ public abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQu
         && !CDAContentType.class.isAssignableFrom(type)) {
       throw new IllegalArgumentException("Please specify either a \"sys.\" or a \"fields.\" " +
           "attribute to be searched for. (Remember to specify a ContentType for \"fields.\" " +
-          "searches on Entries only.)");
+          "searches when querying entries.)");
     }
 
     if (name.startsWith("fields.") && !hasContentTypeSet()) {
