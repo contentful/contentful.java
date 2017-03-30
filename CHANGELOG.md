@@ -5,12 +5,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version [7.5.1][unreleased] - (in development)
 - W.I.P. stay tuned...
 
-## Version [7.5.0][unreleased] - (in development)
+## Version [7.5.0] - (2017-03-30)
 - Added: Retrieve default call.factory from client builder.
 - Fixed: Close body in error response interceptor.
 - Fixed: ContentTypes are not required to query for Assets ant ContentTypes.
 
-## Version [7.4.0] - (2016-02-13)
+## Version [7.4.0] - (2017-02-13)
 - Added: `useTLS12()` for creating a client, enforcing usage of TLS 1.2
 - Added: More convenient way of querying: `withContentType`, `select`, `orderBy`,
     `reverseOrderBy`, `limit`, `skip`, `include` and `where` with `IsEqualTo`, `IsNotEqualTo`,
@@ -19,7 +19,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
     `IsLaterOrAt`, `Matches`, `IsCloseTo`, `IsWithinBoundingBoxOf`, `IsWithinCircleOf`
 - Changed: Remove all warnings from JavaDoc
 
-## Version [7.3.0] - (2016-01-04)
+## Version [7.3.0] - (2017-01-04)
 - Added: Fallback locales.
 - Added: Support for validations.
 - Added: Add rate limit headers to http exceptions.
