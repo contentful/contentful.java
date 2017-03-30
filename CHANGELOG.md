@@ -6,12 +6,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - W.I.P. stay tuned...
 
 ## Version [7.5.0][unreleased] - (in development)
-- Added: retrieve default call.factory from client builder.
-- Fixed: close body in error response interceptor.
+- Added: Retrieve default call.factory from client builder.
+- Fixed: Close body in error response interceptor.
+- Fixed: ContentTypes are not required to query for Assets ant ContentTypes.
 
 ## Version [7.4.0] - (2016-02-13)
 - Added: `useTLS12()` for creating a client, enforcing usage of TLS 1.2
-- Added: more convenient way of querying: `withContentType`, `select`, `orderBy`,
+- Added: More convenient way of querying: `withContentType`, `select`, `orderBy`,
     `reverseOrderBy`, `limit`, `skip`, `include` and `where` with `IsEqualTo`, `IsNotEqualTo`,
     `HasOneOf`, `HasNoneOf`, `HasAllOf`, `IsLessThan`, `IsLessThanOrEqualTo`, `IsGreaterThan`,
     `IsGreaterThanOrEqualTo`, `Exists`, `IsEarlierThan`, `IsEarlierOrAt`, `IsLaterThan`,
