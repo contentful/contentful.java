@@ -10,10 +10,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static com.contentful.java.cda.QueryOperation.Exists;
 import static com.contentful.java.cda.QueryOperation.HasAllOf;
 import static com.contentful.java.cda.QueryOperation.HasNoneOf;
 import static com.contentful.java.cda.QueryOperation.HasOneOf;
-import static com.contentful.java.cda.QueryOperation.Exists;
 import static com.contentful.java.cda.QueryOperation.IsCloseTo;
 import static com.contentful.java.cda.QueryOperation.IsEarlierOrAt;
 import static com.contentful.java.cda.QueryOperation.IsEarlierThan;
@@ -573,5 +573,17 @@ public class AbsQueryTest {
   @Test(expected = IllegalArgumentException.class)
   public void includeNegative() throws Exception {
     query.include(-1);
+  }
+
+  @Test
+  public void queryingAssetTitlesDoesNotThrowWithoutTypeSet() {
+    final FetchQuery<CDAAsset> assetQuery = new FetchQuery<CDAAsset>(CDAAsset.class, client);
+    assetQuery.where("fields.title", IsEqualTo, "bar");
+  }
+
+  @Test
+  public void queryForAContentTypesNameDoesNotThrow() {
+    final FetchQuery<CDAContentType> typeQuery = new FetchQuery<CDAContentType>(CDAContentType.class, client);
+    typeQuery.where("name", Matches, "Auth");
   }
 }

@@ -186,10 +186,11 @@ public abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQu
       }
     }
 
-    if (!name.startsWith("sys.") && !name.startsWith("fields.")) {
+    if ((!name.startsWith("sys.") && !name.startsWith("fields."))
+        && !CDAContentType.class.isAssignableFrom(type)) {
       throw new IllegalArgumentException("Please specify either a \"sys.\" or a \"fields.\" " +
           "attribute to be searched for. (Remember to specify a ContentType for \"fields.\" " +
-          "searches.)");
+          "searches on Entries only.)");
     }
 
     if (name.startsWith("fields.") && !hasContentTypeSet()) {
@@ -391,7 +392,11 @@ public abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQu
   }
 
   private boolean hasContentTypeSet() {
-    return params.containsKey(PARAMETER_CONTENT_TYPE);
+    if (CDAAsset.class.isAssignableFrom(type)) {
+      return true;
+    } else {
+      return params.containsKey(PARAMETER_CONTENT_TYPE);
+    }
   }
 
   private <T> String join(T[] values) {
