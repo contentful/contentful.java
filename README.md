@@ -24,7 +24,7 @@ or Gradle:
 compile 'com.contentful.java:java-sdk:7.5.0'
 ```
 
-Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap] and through [jitpack.io](jitpack).
+Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap] and through [jitpack.io][jitpack].
 
 The SDK requires at minimum Java 6 or Android 2.3.
 
