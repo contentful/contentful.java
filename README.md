@@ -21,10 +21,10 @@ Grab via Maven:
 ```
 or Gradle:
 ```groovy
-compile 'com.contentful.java:java-sdk:7.4.0'
+compile 'com.contentful.java:java-sdk:7.5.0'
 ```
 
-Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
+Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap] and through [jitpack.io](jitpack).
 
 The SDK requires at minimum Java 6 or Android 2.3.
 
@@ -54,21 +54,31 @@ CDAClient client = CDAClient.builder()
 In order to fetch resources use the `CDAClient.fetch()` method, and provide the type of resource(s) you want to fetch:
 ```java
 // Fetch entries
-CDAArray array = client.fetch(CDAEntry.class).all();
+CDAArray array = 
+    client
+        .fetch(CDAEntry.class)
+        .all();
 
 // Fetch an entry matching a specific id
-CDAEntry entry = client.fetch(CDAEntry.class).one("entry-id");
+CDAEntry entry =
+    client
+        .fetch(CDAEntry.class)
+        .one("entry-id");
 
 // Fetch entries with custom query
-CDAArray result = client.fetch(CDAEntry.class)
-    .where("content_type", "cat")
-    .where("order", "sys.updatedAt")
-    .all();
+CDAArray result = 
+    client
+        .fetch(CDAEntry.class)
+        .withContentType("cat")
+        .orderBy("name")
+        .all();
 ```
 
 All of the above examples are synchronous. In order to invoke the request asynchronously, it is possible to provide a callback:
 ```java
-client.fetch(CDAAsset.class).all(new CDACallback<CDAArray>() {
+client
+    .fetch(CDAAsset.class)
+    .all(new CDACallback<CDAArray>() {
   @Override protected void onSuccess(CDAArray result) {
     // ...
   }
@@ -79,7 +89,8 @@ Note that the return value for any asynchronous methods is the callback itself, 
 
 If you want to use RxJava instead, call the `observe()` method to get an `Observable` instance:
 ```java
-client.observe(CDAAsset.class)
+client
+    .observe(CDAAsset.class)
     .one("jake")
     .subscribe(System.out::println);
 ```
@@ -89,9 +100,11 @@ client.observe(CDAAsset.class)
 Bear in mind that there is no default ordering included for any method which returns a `CDAArray` instance. This means that if you plan to page through more than 100 results with multiple requests, there is no guarantee that you will cover all entries. It is however possible to specify custom ordering:
 
 ```java
-CDAArray result = client.fetch(CDAEntry.class)
-    .where("order", "-sys.createdAt")
-    .all();
+CDAArray result = 
+    client
+        .fetch(CDAEntry.class)
+        .reverseOrderBy("sys.createdAt")
+        .all();
 ```
 
 The above snippet will fetch all Entries, ordered by newest-to-oldest.
@@ -101,11 +114,12 @@ The above snippet will fetch all Entries, ordered by newest-to-oldest.
 The Content Delivery API only returns published Entries. However, you might want to preview content in your app before making it public for your users. For this, you can use the preview mode, which will return **all** Entries, regardless of their published status:
 
 ```java
-CDAClient client = CDAClient.builder()
-    .setSpace("space-key-goes-here")
-    .setToken("access-token-goes-here")
-    .preview()
-    .build();
+CDAClient client = 
+    CDAClient.builder()
+        .setSpace("space-key-goes-here")
+        .setToken("access-token-goes-here")
+        .preview()
+        .build();
 ```
 
 Apart from the configuration option, you can use the SDK without modifications with one exception: you need to obtain a preview access token, which you can get in the "API" tab of the Contentful app. In preview mode, data can be invalid, because no validation is performed on unpublished entries. Your app needs to deal with that. Be aware that the access token is read-write and should in no case be shipped with a production app.
@@ -130,3 +144,4 @@ Copyright (c) 2017 Contentful GmbH. See [LICENSE.txt][6] for further details.
  [7]: https://github.com/contentful/contentful.java/wiki/3.0-Migration
  [proguard]: proguard-cda.cfg  
  [snap]: https://oss.sonatype.org/content/repositories/snapshots/com/contentful/java/java-sdk/
+ [jitpack]: https://jitpack.io/#contentful/contentful.java/master-SNAPSHOT
