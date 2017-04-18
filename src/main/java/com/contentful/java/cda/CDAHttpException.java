@@ -89,35 +89,35 @@ public class CDAHttpException extends RuntimeException {
    * @return the hourly rate limit or -1 if header not send
    */
   public int rateLimitHourLimit() {
-    return parseRateLimitHeader(("X-Contentful-RateLimit-Hour-Limit"));
+    return parseRateLimitHeader("X-Contentful-RateLimit-Hour-Limit");
   }
 
   /**
    * @return the number of remaining requests that can be made for the current hour or -1 if header not send
    */
   public int rateLimitHourRemaining() {
-    return parseRateLimitHeader(("X-Contentful-RateLimit-Hour-Remaining"));
+    return parseRateLimitHeader("X-Contentful-RateLimit-Hour-Remaining");
   }
 
   /**
    * @return the per second rate limit or -1 if header not send
    */
   public int rateLimitSecondLimit() {
-    return parseRateLimitHeader(("X-Contentful-RateLimit-Second-Limit"));
+    return parseRateLimitHeader("X-Contentful-RateLimit-Second-Limit");
   }
 
   /**
    * @return the number of remaining requests that can be made per second or -1 if header not send
    */
   public int rateLimitSecondRemaining() {
-    return parseRateLimitHeader(("X-Contentful-RateLimit-Second-Remaining"));
+    return parseRateLimitHeader("X-Contentful-RateLimit-Second-Remaining");
   }
 
   /**
    * @return the number of seconds until the user can make their next request or -1 if header not send
    */
   public int rateLimitReset() {
-    return parseRateLimitHeader(("X-Contentful-RateLimit-Reset"));
+    return parseRateLimitHeader("X-Contentful-RateLimit-Reset");
   }
 
   private String headersToString(Headers headers) {
