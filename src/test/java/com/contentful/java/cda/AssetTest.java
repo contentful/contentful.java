@@ -24,7 +24,8 @@ public class AssetTest extends BaseTest {
   @Test
   @Enqueue("demo/assets_jake.json")
   public void fetchAsset() throws Exception {
-    CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
+    final CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
+
     assertThat(asset.id()).isEqualTo("jake");
     assertThat(asset.title()).isEqualTo("Jake");
     assertThat(asset.mimeType()).isEqualTo("image/png");

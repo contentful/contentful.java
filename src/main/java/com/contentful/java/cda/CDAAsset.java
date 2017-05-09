@@ -5,8 +5,11 @@ import com.contentful.java.cda.image.ImageOption;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/** Represents a single asset. */
+/**
+ * Represents a single asset.
+ */
 public class CDAAsset extends LocalizedResource {
+
   /**
    * @return title of this asset.
    */
@@ -70,6 +73,7 @@ public class CDAAsset extends LocalizedResource {
 
   /**
    * Helper method to extract a field from the {@code file} map.
+   *
    * @param key the key who's value to be returned.
    * @param <T> the type of this field.
    * @return field of this file.
@@ -86,6 +90,7 @@ public class CDAAsset extends LocalizedResource {
 
   /**
    * Return a string, showing the id and title.
+   *
    * @return a human readable string
    */
   @Override public String toString() {
