@@ -2,8 +2,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [7.5.1][unreleased] - (in development)
-- W.I.P. stay tuned...
+## Version [7.6.0][unreleased] - (in development)
+- Added: [Image API](https://www.contentful.com/developers/docs/references/images-api/#/introduction)
 
 ## Version [7.5.0] - (2017-03-30)
 - Added: Retrieve default call.factory from client builder.
