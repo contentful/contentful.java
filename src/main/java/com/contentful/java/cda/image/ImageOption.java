@@ -52,7 +52,7 @@ public class ImageOption {
     fill,
 
     /**
-     * Creates a thumbnail from the image based on a focus area, if {@link #focusOn(Focus}.
+     * Creates a thumbnail from the image based on a focus area, if {@link #focusOn(Focus)}.
      */
     thumb,
 
