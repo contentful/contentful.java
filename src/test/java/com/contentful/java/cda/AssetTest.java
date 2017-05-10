@@ -91,7 +91,7 @@ public class AssetTest extends BaseTest {
             + "/4hlteQAXS8iS0YCMU6QMWg"
             + "/2a4d826144f014109364ccf5c891d2dd"
             + "/jake.png"
-            + "?fmt=jpg"
+            + "?fm=jpg"
             + "&q=89"
             + "&w=100"
             + "&h=100"

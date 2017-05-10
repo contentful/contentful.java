@@ -120,7 +120,7 @@ public class ImageOption {
    * @see Format
    */
   public static ImageOption formatOf(Format format) {
-    return new ImageOption("fmt", format.name());
+    return new ImageOption("fm", format.name());
   }
 
   /**
