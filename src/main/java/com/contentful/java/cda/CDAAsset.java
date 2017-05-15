@@ -35,6 +35,9 @@ public class CDAAsset extends LocalizedResource {
    *
    * @param options to manipulate the image the returned url will be pointing to.
    * @return an url reflecting all the options given.
+   * @throws IllegalArgumentException if no options are given.
+   * @throws IllegalArgumentException if no mimetype was set on asset.
+   * @throws IllegalArgumentException if mimetype was not an image.
    * @see ImageOption
    * @see #url()
    */
@@ -44,7 +47,8 @@ public class CDAAsset extends LocalizedResource {
           "If you want to manipulate the url by hand, please use `CDAAsset.url()` instead.");
     }
 
-    if (!mimeType().startsWith("image")) {
+    final String mimeType = mimeType();
+    if (mimeType == null || !mimeType.startsWith("image")) {
       throw new IllegalStateException("Asset has not image mime type. Please make sure it is " +
           "of jpg, png, or webp format.");
     }
