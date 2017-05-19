@@ -1,6 +1,7 @@
 package com.contentful.java.cda;
 
 import com.contentful.java.cda.interceptor.AuthorizationHeaderInterceptor;
+import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor;
 import com.contentful.java.cda.interceptor.UserAgentHeaderInterceptor;
 import com.contentful.java.cda.lib.Enqueue;
 import com.contentful.java.cda.lib.EnqueueResponse;
@@ -37,7 +38,7 @@ public class ClientTest extends BaseTest {
     final RecordedRequest recordedRequest = server.takeRequest();
     final Headers headers = recordedRequest.getHeaders();
 
-    assertThat(headers.size()).isEqualTo(5);
+    assertThat(headers.size()).isEqualTo(6);
 
     assertThat(headers.get(AuthorizationHeaderInterceptor.HEADER_NAME)).endsWith(DEFAULT_TOKEN);
     assertThat(headers.get(UserAgentHeaderInterceptor.HEADER_NAME)).startsWith("contentful.java");
@@ -325,4 +326,50 @@ public class ClientTest extends BaseTest {
 
     assertThat(interceptor.hit).isTrue();
   }
+
+  @Test
+  @Enqueue
+  public void contentfulCustomHeaderUsed() throws Exception {
+    final CDAClient client = createBuilder().build();
+
+    client.fetchSpace();
+
+    final RecordedRequest request = server.takeRequest();
+    final String headerValue = request.getHeader(ContentfulUserAgentHeaderInterceptor.HEADER_NAME);
+
+    assertThat(headerValue).matches("((sdk|platform|os) [.a-zA-Z0-9]+/[.a-zA-Z0-9]+(-[A-Z]+[0-9]*)?; ?){3}");
+  }
+
+
+  @Test
+  @Enqueue
+  public void addingApplicationToCustomHeaderWorks() throws Exception {
+    final CDAClient client = createBuilder()
+        .setApplication("Contentful Java Unit Test", "0.0.1-beta4")
+        .build();
+
+    client.fetchSpace();
+
+    final RecordedRequest request = server.takeRequest();
+    final String headerValue = request.getHeader(ContentfulUserAgentHeaderInterceptor.HEADER_NAME);
+
+    assertThat(headerValue).contains("app ContentfulJavaUnitTest/0.0.1-BETA4;");
+  }
+
+  @Test
+  @Enqueue
+  public void addingIntegrationToCustomHeaderWorks() throws Exception {
+    // use this features if you are using creating a library on top of the sdk.
+    final CDAClient client = createBuilder()
+        .setIntegration("contentful.awesomelib.java", "0.0.1-beta9")
+        .build();
+
+    client.fetchSpace();
+
+    final RecordedRequest request = server.takeRequest();
+    final String headerValue = request.getHeader(ContentfulUserAgentHeaderInterceptor.HEADER_NAME);
+
+    assertThat(headerValue).contains("integration contentful.awesomelib.java/0.0.1-BETA9;");
+  }
+
 }
