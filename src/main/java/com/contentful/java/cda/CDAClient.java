@@ -3,6 +3,8 @@ package com.contentful.java.cda;
 import com.contentful.java.cda.interceptor.AuthorizationHeaderInterceptor;
 import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor;
 import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section;
+import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.OperatingSystem;
+import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.Version;
 import com.contentful.java.cda.interceptor.ErrorInterceptor;
 import com.contentful.java.cda.interceptor.LogInterceptor;
 import com.contentful.java.cda.interceptor.UserAgentHeaderInterceptor;
@@ -26,7 +28,6 @@ import static com.contentful.java.cda.Constants.ENDPOINT_PROD;
 import static com.contentful.java.cda.Constants.PATH_CONTENT_TYPES;
 import static com.contentful.java.cda.Util.checkNotNull;
 import static com.contentful.java.cda.Util.getProperty;
-import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.Version.parse;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.os;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.platform;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.sdk;
@@ -279,14 +280,14 @@ public class CDAClient {
     final Properties properties = System.getProperties();
 
     return new Section[]{
-        sdk("contentful.java", parse(getProperty("version.name"))),
+        sdk("contentful.java", Version.parse(getProperty("version.name"))),
         platform(
             "java",
-            parse(properties.getProperty("java.runtime.version"))
+            Version.parse(properties.getProperty("java.runtime.version"))
         ),
         os(
-            properties.getProperty("os.name"),
-            parse(properties.getProperty("os.version"))
+            OperatingSystem.parse(properties.getProperty("os.name")),
+            Version.parse(properties.getProperty("os.version"))
         ),
         application,
         integration
@@ -492,7 +493,7 @@ public class CDAClient {
      * @return this builder for chaining.
      */
     public Builder setApplication(String name, String version) {
-      this.application = Section.app(name, parse(version));
+      this.application = Section.app(name, Version.parse(version));
       return this;
     }
 
@@ -506,7 +507,7 @@ public class CDAClient {
      * @return this builder for chaining.
      */
     public Builder setIntegration(String name, String version) {
-      this.integration = Section.integration(name, parse(version));
+      this.integration = Section.integration(name, Version.parse(version));
       return this;
     }
 

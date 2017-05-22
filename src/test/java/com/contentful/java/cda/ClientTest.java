@@ -353,7 +353,7 @@ public class ClientTest extends BaseTest {
     final RecordedRequest request = server.takeRequest();
     final String headerValue = request.getHeader(ContentfulUserAgentHeaderInterceptor.HEADER_NAME);
 
-    assertThat(headerValue).contains("app ContentfulJavaUnitTest/0.0.1-beta4;");
+    assertThat(headerValue).contains("app contentful-java-unit-test/0.0.1-beta4;");
   }
 
   @Test

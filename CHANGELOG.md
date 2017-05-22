@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Version [7.6.1] - (2017-05-22)
+- Fix: Custom Contentful HTTP Header are gracefully ignoring errors.
+
 ## Version [7.6.0] - (2017-05-22)
 - Added: [Image API](https://www.contentful.com/developers/docs/references/images-api/#/introduction)
 - Added: Custom Contentful HTTP Header.
@@ -167,7 +170,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-7.6.1...HEAD
+[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-7.6.2...HEAD
+[7.6.1]: https://github.com/contentful/contentful.java/compare/java-sdk-7.6.1...java-sdk-7.6.2
 [7.6.0]: https://github.com/contentful/contentful.java/compare/java-sdk-7.5.0...java-sdk-7.6.0
 [7.5.0]: https://github.com/contentful/contentful.java/compare/java-sdk-7.4.0...java-sdk-7.5.0
 [7.4.0]: https://github.com/contentful/contentful.java/compare/java-sdk-7.3.0...java-sdk-7.4.0

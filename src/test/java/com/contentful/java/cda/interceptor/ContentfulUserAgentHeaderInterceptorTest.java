@@ -1,9 +1,13 @@
 package com.contentful.java.cda.interceptor;
 
+import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.OperatingSystem;
 import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.Version;
 
 import org.junit.Test;
 
+import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.OperatingSystem.Linux;
+import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.OperatingSystem.Windows;
+import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.OperatingSystem.macOS;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.Version.parse;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.app;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.integration;
@@ -21,7 +25,7 @@ public class ContentfulUserAgentHeaderInterceptorTest {
             integration("int", parse("2.1.0")),
             sdk("sdk", parse("3.0.1")),
             platform("plat", parse("4.0.0-dev234")),
-            os("os", parse("5.1.2-ASDF"))
+            os(OperatingSystem.Linux, parse("5.1.2-ASDF"))
         );
 
     final String value = header.getValue();
@@ -33,7 +37,7 @@ public class ContentfulUserAgentHeaderInterceptorTest {
             "integration int/2.1.0; " +
             "sdk sdk/3.0.1; " +
             "platform plat/4.0.0-dev234; " +
-            "os os/5.1.2-ASDF; ");
+            "os Linux/5.1.2-ASDF; ");
   }
 
   @Test
@@ -70,11 +74,9 @@ public class ContentfulUserAgentHeaderInterceptorTest {
     assertThat(value).isEqualTo("app bar/2.0.0; ");
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testNoNameInPairThrows() {
-    new ContentfulUserAgentHeaderInterceptor(
-        app(null, parse("1.0.0"))
-    );
+  @Test
+  public void testNoNameInPairIgnoresApp() {
+    assertThat(app(null, parse("1.0.0"))).isNull();
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -82,14 +84,14 @@ public class ContentfulUserAgentHeaderInterceptorTest {
     new ContentfulUserAgentHeaderInterceptor();
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void parsingNegativeVersionThrows() {
-    parse("-1.0.0");
+  @Test
+  public void parsingNegativeVersionIgnoresVersion() {
+    assertThat(parse("-1.0.0")).isNull();
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void parsingGarbageThrows() {
-    parse("garbage");
+  @Test
+  public void parsingGarbageIgnoresVersion() {
+    assertThat(parse("♻")).isNull();
   }
 
   @Test
@@ -117,5 +119,37 @@ public class ContentfulUserAgentHeaderInterceptorTest {
   @Test
   public void parsingVersionWithWrongStabilityIgnoresStability() {
     assertThat(parse("1.0.0-🤖").toString()).isEqualTo("1.0.0");
+  }
+
+  @Test
+  public void missingPatchVersionNumberDoesNotThrow() {
+    assertThat(parse("1.0").toString()).isEqualTo("1.0.0");
+  }
+
+  @Test
+  public void nullVersionIsIgnored() {
+    assertThat(parse(null)).isNull();
+  }
+
+  @Test
+  public void allZeroVersionGetsIgnored() {
+    assertThat(parse("0.0")).isNull();
+  }
+
+  @Test
+  public void parsingOS() {
+    assertThat(OperatingSystem.parse("Linux   i386   1.5.0_07")).isEqualTo(Linux);
+    assertThat(OperatingSystem.parse("Linux   amd64   1.5.0_05")).isEqualTo(Linux);
+    assertThat(OperatingSystem.parse("SunOS   x86   1.5.0_04")).isEqualTo(Linux);
+    assertThat(OperatingSystem.parse("SunOS   sparc   1.5.0_02")).isEqualTo(Linux);
+    assertThat(OperatingSystem.parse("FreeBSD   i386   1.4.2-p7")).isEqualTo(Linux);
+    assertThat(OperatingSystem.parse("SomeOs   x86   1.5.0_02")).isEqualTo(Linux);
+    assertThat(OperatingSystem.parse("Mac OS X   ppc   1.5.0_06")).isEqualTo(macOS);
+    assertThat(OperatingSystem.parse("Mac OS X   i386   1.5.0_06")).isEqualTo(macOS);
+    assertThat(OperatingSystem.parse("Windows XP   x86   1.5.0_07")).isEqualTo(Windows);
+    assertThat(OperatingSystem.parse("Windows 2003   x86   1.5.0_07")).isEqualTo(Windows);
+    assertThat(OperatingSystem.parse("Windows 2000   x86   1.5.0_02")).isEqualTo(Windows);
+    assertThat(OperatingSystem.parse("Windows 98   x86   1.5.0_03")).isEqualTo(Windows);
+    assertThat(OperatingSystem.parse("Windows NT   x86   1.5.0_02")).isEqualTo(Windows);
   }
 }

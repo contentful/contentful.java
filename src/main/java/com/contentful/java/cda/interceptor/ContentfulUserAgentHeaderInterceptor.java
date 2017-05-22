@@ -18,6 +18,33 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
    * A section of values used to fill out the Contentful custom HTTP header.
    */
   public static class Section {
+
+    /**
+     * Fixed enumeration of what operating systems we support.
+     */
+    public enum OperatingSystem {
+      iOS, tvOS, watchOS, macOS, Windows, Linux, Android;
+
+      /**
+       * Parses a string to the closes match of a given OperatingSystemConstant.
+       *
+       * @param string a string representing the OS. {@link System#getProperties()}.
+       * @return one of the {@link OperatingSystem} fields closely matching.
+       */
+      public static OperatingSystem parse(String string) {
+        if (string.startsWith("Windows")) {
+          return Windows;
+        }
+        if (string.startsWith("Mac OS")) {
+          return macOS;
+        }
+        if (string.startsWith("Android")) {
+          return Android;
+        }
+        return Linux;
+      }
+    }
+
     /**
      * Defines a version of this section.
      */
@@ -42,25 +69,44 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
        * </ul>
        *
        * @param version with 3 numbers for major, minor, patch and stability (dev, BETA3, etc)
-       * @return a version of (1, 2, 3, dev)
-       * @throws NumberFormatException    if major, minor or patch are no numbers
-       * @throws IllegalArgumentException if numbers are negative.
-       * @throws IllegalArgumentException if stability cannot be read.
+       * @return a version of (1, 2, 3, dev), or null if a parsing error occurred.
        * @see <a href="http://semver.org/">Semver.org</a>
        */
       public static Version parse(String version) {
+        if (version == null || version.length() <= 0) {
+          return null;
+        }
+
+        if (!version.contains(".")) {
+          return null;
+        } else if (version.indexOf(".") == version.lastIndexOf(".")) {
+          version = version + ".0";
+        }
+
         final Matcher matcher = VERSION_PATTERN.matcher(version);
 
         if (matcher.find() && matcher.groupCount() == 4) {
           // ignore first full matching result
-          final int major = Integer.parseInt(matcher.group(1));
-          final int minor = Integer.parseInt(matcher.group(2));
-          final int patch = Integer.parseInt(matcher.group(3));
+          int major = extractNumberFromGroup(matcher, 1);
+          int minor = extractNumberFromGroup(matcher, 2);
+          int patch = extractNumberFromGroup(matcher, 3);
+
+          if (major == minor && minor == patch && patch == 0) {
+            return null;
+          }
 
           final String stability = parseStability(matcher.group(4));
           return new Version(major, minor, patch, stability);
         } else {
-          throw new IllegalArgumentException("Could not parse version: " + version);
+          return null;
+        }
+      }
+
+      private static int extractNumberFromGroup(Matcher matcher, int group) {
+        try {
+          return Integer.parseInt(matcher.group(group));
+        } catch (IllegalArgumentException e) {
+          return 0;
         }
       }
 
@@ -195,12 +241,12 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
     /**
      * Create an os section.
      *
-     * @param name    of the os.
+     * @param os      of the os.
      * @param version of the os.
      * @return a new Section.
      */
-    public static Section os(String name, Version version) {
-      return new Section(OS, name, version);
+    public static Section os(OperatingSystem os, Version version) {
+      return new Section(OS, os.name(), version);
     }
 
     /**
@@ -208,18 +254,22 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
      *
      * @param name    of the app.
      * @param version of the app.
-     * @return a new Section.
-     * @throws IllegalArgumentException if name is null or empty.
+     * @return a new Section or null, if app name is invalid.
      */
     public static Section app(String name, Version version) {
-      return new Section(APP, check(name).replace(" ", ""), version);
+      name = check(name);
+      if (name == null) {
+        return null;
+      } else {
+        return new Section(APP, name, version);
+      }
     }
 
     private static String check(String name) {
       if (name == null || name.length() <= 0) {
-        throw new IllegalArgumentException("Cannot have an empty name for a section.");
+        return null;
       }
-      return name;
+      return name.replace(" ", "-").toLowerCase();
     }
 
     private final String identifier;
