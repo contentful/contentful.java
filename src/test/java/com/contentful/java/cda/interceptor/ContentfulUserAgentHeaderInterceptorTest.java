@@ -1,5 +1,7 @@
 package com.contentful.java.cda.interceptor;
 
+import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.Version;
+
 import org.junit.Test;
 
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.Version.parse;
@@ -88,6 +90,28 @@ public class ContentfulUserAgentHeaderInterceptorTest {
   @Test(expected = IllegalArgumentException.class)
   public void parsingGarbageThrows() {
     parse("garbage");
+  }
+
+  @Test
+  public void createVersionDirectly() {
+    final Version version = new Version(1, 2, 3);
+
+    assertThat(version.toString()).isEqualTo("1.2.3");
+    assertThat(version.getMajor()).isEqualTo(1);
+    assertThat(version.getMinor()).isEqualTo(2);
+    assertThat(version.getPatch()).isEqualTo(3);
+    assertThat(version.getStability()).isNull();
+  }
+
+  @Test
+  public void createVersionWithStabilityDirectly() {
+    final Version version = new Version(1, 2, 3, "stable");
+
+    assertThat(version.toString()).isEqualTo("1.2.3-stable");
+    assertThat(version.getMajor()).isEqualTo(1);
+    assertThat(version.getMinor()).isEqualTo(2);
+    assertThat(version.getPatch()).isEqualTo(3);
+    assertThat(version.getStability()).isEqualTo("stable");
   }
 
   @Test

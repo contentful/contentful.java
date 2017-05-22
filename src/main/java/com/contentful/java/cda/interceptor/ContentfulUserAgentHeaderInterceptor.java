@@ -46,16 +46,6 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
           final int minor = Integer.parseInt(matcher.group(2));
           final int patch = Integer.parseInt(matcher.group(3));
 
-          if (major < 0) {
-            throw new IllegalArgumentException("Major version number cannot be negative!");
-          }
-          if (minor < 0) {
-            throw new IllegalArgumentException("Minor version number cannot be negative!");
-          }
-          if (patch < 0) {
-            throw new IllegalArgumentException("Patch version number cannot be negative!");
-          }
-
           final String stability = parseStability(matcher.group(4));
           return new Version(major, minor, patch, stability);
         } else {
@@ -104,13 +94,41 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
        * @param major     How many breaking changes did this version release?
        * @param minor     How many additional backwards compatible changes were added?
        * @param patch     How many bugs were fixed in the release?
-       * @param stability Is this a stable version(null) or is this not on production?
+       * @param stability Is this a stable version(null) or is this not?
        */
       public Version(int major, int minor, int patch, String stability) {
         this.major = major;
         this.minor = minor;
         this.patch = patch;
         this.stability = stability;
+      }
+
+      /**
+       * @return major version part.
+       */
+      public int getMajor() {
+        return major;
+      }
+
+      /**
+       * @return minor version part.
+       */
+      public int getMinor() {
+        return minor;
+      }
+
+      /**
+       * @return patch part.
+       */
+      public int getPatch() {
+        return patch;
+      }
+
+      /**
+       * @return stability or null.
+       */
+      public String getStability() {
+        return stability;
       }
 
       /**
@@ -207,13 +225,6 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
      * @param version What is the version of this fields' value?
      */
     private Section(String identifier, String name, Version version) {
-      if (identifier == null || identifier.length() <= 0) {
-        throw new IllegalArgumentException("Please specify an identifier.");
-      }
-      if (name == null || name.length() <= 0) {
-        throw new IllegalArgumentException("Please specify a name.");
-      }
-
       this.identifier = identifier;
       this.name = name;
       this.version = version;
