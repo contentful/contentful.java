@@ -21,7 +21,7 @@ public class ContentfulUserAgentHeaderInterceptorTest {
             integration("int", parse("2.1.0")),
             sdk("sdk", parse("3.0.1")),
             platform("plat", parse("4.0.0-dev234")),
-            os("os", parse("5.1.2-asdf"))
+            os("os", parse("5.1.2-ASDF"))
         );
 
     final String value = header.getValue();
@@ -32,7 +32,7 @@ public class ContentfulUserAgentHeaderInterceptorTest {
         .isEqualTo("app app/1.0.0; " +
             "integration int/2.1.0; " +
             "sdk sdk/3.0.1; " +
-            "platform plat/4.0.0-DEV234; " +
+            "platform plat/4.0.0-dev234; " +
             "os os/5.1.2-ASDF; ");
   }
 

@@ -25,17 +25,28 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
 
       private static final String VERSION_REGEX = "^([0-9]+).([0-9]+).([0-9]+)(.*)?$";
       private static final Pattern VERSION_PATTERN = compile(VERSION_REGEX);
-      private static final String STABILITY_REGEX = "^([A-Z]+[0-9]*).*";
+      private static final String STABILITY_REGEX = "^([a-zA-Z]+[0-9]*).*";
       private static final Pattern STABILITY_PATTERN = compile(STABILITY_REGEX);
 
       /**
        * Convert a version into a Semver and Contentful conform version number.
+       * <p>
+       * A valid version string would be one similar to
+       * <ul>
+       * <li>0.9.7</li>
+       * <li>1.0.0</li>
+       * <li>1.3.4</li>
+       * <li>0.2.6-beta</li>
+       * <li>0.2.6-beta1</li>
+       * <li>1.0.3-RC43</li>
+       * </ul>
        *
-       * @param version a String like '1.2.3-dev' to parse.
+       * @param version with 3 numbers for major, minor, patch and stability (dev, BETA3, etc)
        * @return a version of (1, 2, 3, dev)
        * @throws NumberFormatException    if major, minor or patch are no numbers
        * @throws IllegalArgumentException if numbers are negative.
        * @throws IllegalArgumentException if stability cannot be read.
+       * @see <a href="http://semver.org/">Semver.org</a>
        */
       public static Version parse(String version) {
         final Matcher matcher = VERSION_PATTERN.matcher(version);
@@ -54,9 +65,6 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
       }
 
       private static String parseStability(String stability) {
-        // enforce uppercase
-        stability = stability.toUpperCase();
-
         // check for hyphen
         if (!stability.startsWith("-")) {
           return null;
@@ -83,6 +91,7 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
        * @param major How many breaking changes did this version release?
        * @param minor How many additional backwards compatible changes were added?
        * @param patch How many bugs were fixed in the release?
+       * @see #parse(String)
        */
       public Version(int major, int minor, int patch) {
         this(major, minor, patch, null);
@@ -94,7 +103,8 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
        * @param major     How many breaking changes did this version release?
        * @param minor     How many additional backwards compatible changes were added?
        * @param patch     How many bugs were fixed in the release?
-       * @param stability Is this a stable version(null) or is this not?
+       * @param stability Is this a stable version(null) or is this not (dev, BETA, …)?
+       * @see #parse(String)
        */
       public Version(int major, int minor, int patch, String stability) {
         this.major = major;
@@ -132,9 +142,7 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
       }
 
       /**
-       * Create version into a human and machine readable String.
-       *
-       * @return
+       * @return version into a human and machine readable String.
        */
       @Override public String toString() {
         if (stability == null) {
@@ -165,8 +173,8 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
     /**
      * Create an sdk section.
      *
-     * @param name    of the app.
-     * @param version of the app.
+     * @param name    of the sdk.
+     * @param version of the sdk.
      * @return a new Section.
      */
     public static Section sdk(String name, Version version) {
@@ -176,8 +184,8 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
     /**
      * Create an platform section.
      *
-     * @param name    of the app.
-     * @param version of the app.
+     * @param name    of the platform.
+     * @param version of the platform.
      * @return a new Section.
      */
     public static Section platform(String name, Version version) {
@@ -187,8 +195,8 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
     /**
      * Create an os section.
      *
-     * @param name    of the app.
-     * @param version of the app.
+     * @param name    of the os.
+     * @param version of the os.
      * @return a new Section.
      */
     public static Section os(String name, Version version) {
