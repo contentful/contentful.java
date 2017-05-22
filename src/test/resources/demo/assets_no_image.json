@@ -1,0 +1,38 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 6,
+  "skip": 0,
+  "limit": 1,
+  "items": [
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "arqlnkt58eul"
+          }
+        },
+        "id": "6OpsQmtnl6uYyeUmkOiYYq",
+        "type": "Asset",
+        "createdAt": "2016-07-29T14:04:28.343Z",
+        "updatedAt": "2016-07-29T14:04:28.343Z",
+        "revision": 1,
+        "locale": "en-US"
+      },
+      "fields": {
+        "title": "budah",
+        "file": {
+          "url": "//assets.contentful.com/arqlnkt58eul/6OpsQmtnl6uYyeUmkOiYYq/e4156f9d089bd539fd482554945517e4/budah.obj",
+          "details": {
+            "size": 932240
+          },
+          "fileName": "budah-small.obj",
+          "contentType": "application/x-tgif"
+        }
+      }
+    }
+  ]
+}

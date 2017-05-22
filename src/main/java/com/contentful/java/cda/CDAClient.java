@@ -1,6 +1,8 @@
 package com.contentful.java.cda;
 
 import com.contentful.java.cda.interceptor.AuthorizationHeaderInterceptor;
+import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor;
+import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section;
 import com.contentful.java.cda.interceptor.ErrorInterceptor;
 import com.contentful.java.cda.interceptor.LogInterceptor;
 import com.contentful.java.cda.interceptor.UserAgentHeaderInterceptor;
@@ -23,6 +25,11 @@ import rx.functions.Func1;
 import static com.contentful.java.cda.Constants.ENDPOINT_PROD;
 import static com.contentful.java.cda.Constants.PATH_CONTENT_TYPES;
 import static com.contentful.java.cda.Util.checkNotNull;
+import static com.contentful.java.cda.Util.getProperty;
+import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.Version.parse;
+import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.os;
+import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.platform;
+import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.sdk;
 
 /**
  * Client to be used when requesting information from the Delivery API. Every client is associated
@@ -118,7 +125,7 @@ public class CDAClient {
   /**
    * Returns a {@link SyncQuery} for synchronization with the provided {@code syncToken} via
    * the Sync API.
-   *
+   * <p>
    * If called from a {@link #preview} client, this will always do an initial sync.
    *
    * @param syncToken sync token.
@@ -130,7 +137,7 @@ public class CDAClient {
 
   /**
    * Returns a {@link SyncQuery} for synchronization with an existing space.
-   *
+   * <p>
    * If called from a {@link #preview} client, this will always do an initial sync.
    *
    * @param synchronizedSpace space to sync.
@@ -166,7 +173,7 @@ public class CDAClient {
   /**
    * Asynchronously fetch the space.
    *
-   * @param <C> the type of the callback to be used.
+   * @param <C>      the type of the callback to be used.
    * @param callback the value of the callback to be called back.
    * @return the space for this client (asynchronously).
    */
@@ -260,7 +267,7 @@ public class CDAClient {
   static String createUserAgent() {
     final Properties properties = System.getProperties();
     return String.format("contentful.java/%s(%s %s) %s/%s",
-        Util.getProperty("version.name"),
+        getProperty("version.name"),
         properties.getProperty("java.runtime.name"),
         properties.getProperty("java.runtime.version"),
         properties.getProperty("os.name"),
@@ -268,9 +275,28 @@ public class CDAClient {
     );
   }
 
+  static Section[] createCustomHeaderSections(Section application, Section integration) {
+    final Properties properties = System.getProperties();
+
+    return new Section[]{
+        sdk("contentful.java", parse(getProperty("version.name"))),
+        platform(
+            "java",
+            parse(properties.getProperty("java.runtime.version"))
+        ),
+        os(
+            properties.getProperty("os.name"),
+            parse(properties.getProperty("os.version"))
+        ),
+        application,
+        integration
+    };
+  }
+
   /**
    * @return a {@link CDAClient} builder.
    */
+
   public static Builder builder() {
     return new Builder();
   }
@@ -279,9 +305,6 @@ public class CDAClient {
    * This builder will be used to configure and then create a {@link CDAClient}.
    */
   public static class Builder {
-    private Builder() {
-    }
-
     String space;
     String token;
     String endpoint;
@@ -290,8 +313,15 @@ public class CDAClient {
     Logger.Level logLevel = Logger.Level.NONE;
 
     Call.Factory callFactory;
+
     boolean preview;
     boolean useTLS12;
+
+    Section application;
+    Section integration;
+
+    private Builder() {
+    }
 
     /**
      * Sets the space ID.
@@ -328,7 +358,7 @@ public class CDAClient {
 
     /**
      * Sets a custom logger level.
-     *
+     * <p>
      * If set to {@link Logger.Level}.NONE any custom logger will get ignored.
      *
      * @param logLevel the amount/level of logging to be used.
@@ -362,6 +392,7 @@ public class CDAClient {
 
     /**
      * Sets a custom HTTP call factory.
+     *
      * @param callFactory the factory to be used to create a call.
      * @return this builder for chaining.
      */
@@ -424,9 +455,11 @@ public class CDAClient {
      * @return A {@link Call.Factory} used through out SDK, as if no custom call factory was used.
      */
     public OkHttpClient.Builder defaultCallFactoryBuilder() {
+      final Section[] sections = createCustomHeaderSections(application, integration);
       OkHttpClient.Builder okBuilder = new OkHttpClient.Builder()
           .addInterceptor(new AuthorizationHeaderInterceptor(token))
           .addInterceptor(new UserAgentHeaderInterceptor(createUserAgent()))
+          .addInterceptor(new ContentfulUserAgentHeaderInterceptor(sections))
           .addInterceptor(new ErrorInterceptor());
 
       setLogger(okBuilder);
@@ -437,16 +470,43 @@ public class CDAClient {
 
     /**
      * Sets the flag of enforcing TLS 1.2.
-     * 
+     * <p>
      * If this is not used, TLS 1.2 may not be used per default on all
-     * configurations. 
+     * configurations.
      *
      * @return this builder for chaining.
-     *
      * @see <a href="https://developer.android.com/reference/javax/net/ssl/SSLSocket.html">reference</a>
      */
     public Builder useTLS12() {
       this.useTLS12 = true;
+      return this;
+    }
+
+    /**
+     * Tell the client which application this is.
+     * <p>
+     * It might be used for internal tracking of Contentfuls tools.
+     *
+     * @param name    the name of the app.
+     * @param version the version in semver of the app.
+     * @return this builder for chaining.
+     */
+    public Builder setApplication(String name, String version) {
+      this.application = Section.app(name, parse(version));
+      return this;
+    }
+
+    /**
+     * Set the name of the integration.
+     * <p>
+     * This custom user agent header will be used for libraries build on top of this library.
+     *
+     * @param name    of the integration.
+     * @param version version of the integration.
+     * @return this builder for chaining.
+     */
+    public Builder setIntegration(String name, String version) {
+      this.integration = Section.integration(name, parse(version));
       return this;
     }
 

@@ -16,12 +16,12 @@ Grab via Maven:
 <dependency>
   <groupId>com.contentful.java</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>7.5.0</version>
+  <version>7.6.0</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.contentful.java:java-sdk:7.5.0'
+compile 'com.contentful.java:java-sdk:7.6.0'
 ```
 
 Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap] and through [jitpack.io][jitpack].
