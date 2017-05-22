@@ -49,8 +49,7 @@ public class CDAAsset extends LocalizedResource {
 
     final String mimeType = mimeType();
     if (mimeType == null || !mimeType.startsWith("image")) {
-      throw new IllegalStateException("Asset has not image mime type. Please make sure it is " +
-          "of jpg, png, or webp format.");
+      throw new IllegalStateException("Asset does not have an image mime type.");
     }
 
     final Map<String, ImageOption> mappedOptions
