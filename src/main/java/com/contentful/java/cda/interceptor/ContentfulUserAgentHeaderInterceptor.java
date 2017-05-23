@@ -31,7 +31,7 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
        *
        * @param properties the System properties to extract os information from
        * @return one of the {@link OperatingSystem} fields closely matching.
-       * @see System#getProperties().
+       * @see System#getProperties()
        */
       public static OperatingSystem parse(Properties properties) {
         final String osName = properties.getProperty("os.name", "");
