@@ -279,6 +279,7 @@ public class CDAClient {
   static Section[] createCustomHeaderSections(Section application, Section integration) {
     final Properties properties = System.getProperties();
 
+    final Platform platform = Platform.get();
     return new Section[]{
         sdk("contentful.java", Version.parse(getProperty("version.name"))),
         platform(
@@ -286,8 +287,8 @@ public class CDAClient {
             Version.parse(properties.getProperty("java.runtime.version"))
         ),
         os(
-            OperatingSystem.parse(properties),
-            Version.parse(properties.getProperty("os.version"))
+            OperatingSystem.parse(platform.name()),
+            Version.parse(platform.version())
         ),
         application,
         integration

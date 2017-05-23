@@ -1,7 +1,8 @@
 package com.contentful.java.cda.interceptor;
 
+import com.contentful.java.cda.Platform;
+
 import java.util.LinkedHashMap;
-import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,12 +30,11 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
       /**
        * Parses a string to the closes match of a given OperatingSystemConstant.
        *
-       * @param properties the System properties to extract os information from
-       * @return one of the {@link OperatingSystem} fields closely matching.
-       * @see System#getProperties()
+       * @param osName the name of the os, as returned from the platform.
+       * @return one of the {@link OperatingSystem} fields closely matching, or null if unknown.
+       * @see Platform
        */
-      public static OperatingSystem parse(Properties properties) {
-        final String osName = properties.getProperty("os.name", "");
+      public static OperatingSystem parse(String osName) {
         if (osName.startsWith("Windows")) {
           return Windows;
         }
@@ -42,11 +42,6 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
           return macOS;
         }
         if (osName.startsWith("Android")) {
-          return Android;
-        }
-
-        final String vendorName = properties.getProperty("vendor.name", "").toLowerCase();
-        if (vendorName.contains("android")) {
           return Android;
         }
         return Linux;
@@ -249,8 +244,8 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
     /**
      * Create an os section.
      *
-     * @param os      of the os.
-     * @param version of the os.
+     * @param os      one of the supported and understood operation systems.
+     * @param version the version of the os.
      * @return a new Section.
      */
     public static Section os(OperatingSystem os, Version version) {
