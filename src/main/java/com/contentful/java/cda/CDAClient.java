@@ -286,7 +286,7 @@ public class CDAClient {
             Version.parse(properties.getProperty("java.runtime.version"))
         ),
         os(
-            OperatingSystem.parse(properties.getProperty("os.name")),
+            OperatingSystem.parse(properties),
             Version.parse(properties.getProperty("os.version"))
         ),
         application,

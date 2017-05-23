@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Version [7.6.2] - (unreleased)
+- Fix: Custom Header specifying Android if os is Linux.
+
 ## Version [7.6.1] - (2017-05-22)
 - Fix: Custom Contentful HTTP Header are gracefully ignoring errors.
 
@@ -170,7 +173,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-7.6.2...HEAD
+[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-7.6.3...HEAD
+[7.6.2]: https://github.com/contentful/contentful.java/compare/java-sdk-7.6.2...java-sdk-7.6.3
 [7.6.1]: https://github.com/contentful/contentful.java/compare/java-sdk-7.6.1...java-sdk-7.6.2
 [7.6.0]: https://github.com/contentful/contentful.java/compare/java-sdk-7.5.0...java-sdk-7.6.0
 [7.5.0]: https://github.com/contentful/contentful.java/compare/java-sdk-7.4.0...java-sdk-7.5.0

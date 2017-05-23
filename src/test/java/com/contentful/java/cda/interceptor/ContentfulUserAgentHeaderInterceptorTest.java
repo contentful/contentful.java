@@ -5,6 +5,9 @@ import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.
 
 import org.junit.Test;
 
+import java.util.Properties;
+
+import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.OperatingSystem.Android;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.OperatingSystem.Linux;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.OperatingSystem.Windows;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.OperatingSystem.macOS;
@@ -15,6 +18,10 @@ import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInter
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.platform;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.sdk;
 import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ContentfulUserAgentHeaderInterceptorTest {
   @Test
@@ -138,18 +145,40 @@ public class ContentfulUserAgentHeaderInterceptorTest {
 
   @Test
   public void parsingOS() {
-    assertThat(OperatingSystem.parse("Linux   i386   1.5.0_07")).isEqualTo(Linux);
-    assertThat(OperatingSystem.parse("Linux   amd64   1.5.0_05")).isEqualTo(Linux);
-    assertThat(OperatingSystem.parse("SunOS   x86   1.5.0_04")).isEqualTo(Linux);
-    assertThat(OperatingSystem.parse("SunOS   sparc   1.5.0_02")).isEqualTo(Linux);
-    assertThat(OperatingSystem.parse("FreeBSD   i386   1.4.2-p7")).isEqualTo(Linux);
-    assertThat(OperatingSystem.parse("SomeOs   x86   1.5.0_02")).isEqualTo(Linux);
-    assertThat(OperatingSystem.parse("Mac OS X   ppc   1.5.0_06")).isEqualTo(macOS);
-    assertThat(OperatingSystem.parse("Mac OS X   i386   1.5.0_06")).isEqualTo(macOS);
-    assertThat(OperatingSystem.parse("Windows XP   x86   1.5.0_07")).isEqualTo(Windows);
-    assertThat(OperatingSystem.parse("Windows 2003   x86   1.5.0_07")).isEqualTo(Windows);
-    assertThat(OperatingSystem.parse("Windows 2000   x86   1.5.0_02")).isEqualTo(Windows);
-    assertThat(OperatingSystem.parse("Windows 98   x86   1.5.0_03")).isEqualTo(Windows);
-    assertThat(OperatingSystem.parse("Windows NT   x86   1.5.0_02")).isEqualTo(Windows);
+    final Properties properties = mock(Properties.class);
+
+    when(properties.getProperty(anyString(), eq(""))).thenReturn("");
+    when(properties.getProperty(eq("os.name"), anyString())).thenReturn(
+        "Linux   amd64   1.5.0_05",
+        "SunOS   x86   1.5.0_04",
+        "SunOS   sparc   1.5.0_02",
+        "FreeBSD   i386   1.4.2-p7",
+        "SomeOs   x86   1.5.0_02",
+        "Mac OS X   ppc   1.5.0_06",
+        "Mac OS X   i386   1.5.0_06",
+        "Windows XP   x86   1.5.0_07",
+        "Windows 2003   x86   1.5.0_07",
+        "Windows 2000   x86   1.5.0_02",
+        "Windows 98   x86   1.5.0_03",
+        "Windows NT   x86   1.5.0_02",
+        "Linux 3.5.0_02"
+    );
+
+    assertThat(OperatingSystem.parse(properties)).isEqualTo(Linux);
+    assertThat(OperatingSystem.parse(properties)).isEqualTo(Linux);
+    assertThat(OperatingSystem.parse(properties)).isEqualTo(Linux);
+    assertThat(OperatingSystem.parse(properties)).isEqualTo(Linux);
+    assertThat(OperatingSystem.parse(properties)).isEqualTo(Linux);
+    assertThat(OperatingSystem.parse(properties)).isEqualTo(macOS);
+    assertThat(OperatingSystem.parse(properties)).isEqualTo(macOS);
+    assertThat(OperatingSystem.parse(properties)).isEqualTo(Windows);
+    assertThat(OperatingSystem.parse(properties)).isEqualTo(Windows);
+    assertThat(OperatingSystem.parse(properties)).isEqualTo(Windows);
+    assertThat(OperatingSystem.parse(properties)).isEqualTo(Windows);
+    assertThat(OperatingSystem.parse(properties)).isEqualTo(Windows);
+
+    when(properties.getProperty(eq("vendor.name"), anyString())).thenReturn("The Android Project");
+    assertThat(OperatingSystem.parse(properties)).isEqualTo(Android);
+
   }
 }

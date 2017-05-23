@@ -1,6 +1,7 @@
 package com.contentful.java.cda.interceptor;
 
 import java.util.LinkedHashMap;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,17 +29,24 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
       /**
        * Parses a string to the closes match of a given OperatingSystemConstant.
        *
-       * @param string a string representing the OS. {@link System#getProperties()}.
+       * @param properties the System properties to extract os information from
        * @return one of the {@link OperatingSystem} fields closely matching.
+       * @see System#getProperties().
        */
-      public static OperatingSystem parse(String string) {
-        if (string.startsWith("Windows")) {
+      public static OperatingSystem parse(Properties properties) {
+        final String osName = properties.getProperty("os.name", "");
+        if (osName.startsWith("Windows")) {
           return Windows;
         }
-        if (string.startsWith("Mac OS")) {
+        if (osName.startsWith("Mac OS")) {
           return macOS;
         }
-        if (string.startsWith("Android")) {
+        if (osName.startsWith("Android")) {
+          return Android;
+        }
+
+        final String vendorName = properties.getProperty("vendor.name", "").toLowerCase();
+        if (vendorName.contains("android")) {
           return Android;
         }
         return Linux;
