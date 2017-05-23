@@ -24,9 +24,24 @@ or Gradle:
 compile 'com.contentful.java:java-sdk:7.6.1'
 ```
 
-Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap] and through [jitpack.io][jitpack].
-
 The SDK requires at minimum Java 6 or Android 2.3.
+
+#### Snapshots
+
+Snapshots of the development version are available through [Sonatype's `snapshots` repository][snap]
+
+```groovy
+maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+compile 'com.contentful.java:java-sdk:7.6.1-SNAPSHOT'
+```
+
+and through [jitpack.io][jitpack]:
+
+```groovy
+maven { url 'https://jitpack.io' }
+compile 'com.github.contentful:contentful.java:java-sdk-7.6.1-SNAPSHOT'
+```
+
 
 ### Default Client
 
