@@ -1,11 +1,13 @@
 package com.contentful.java.cda.interceptor;
 
+import com.contentful.java.cda.Platform;
 import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.OperatingSystem;
 import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.Version;
 
 import org.junit.Test;
 
-import java.util.Properties;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.OperatingSystem.Android;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.OperatingSystem.Linux;
@@ -18,10 +20,6 @@ import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInter
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.platform;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.sdk;
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class ContentfulUserAgentHeaderInterceptorTest {
   @Test
@@ -32,7 +30,7 @@ public class ContentfulUserAgentHeaderInterceptorTest {
             integration("int", parse("2.1.0")),
             sdk("sdk", parse("3.0.1")),
             platform("plat", parse("4.0.0-dev234")),
-            os(OperatingSystem.Linux, parse("5.1.2-ASDF"))
+            os(OperatingSystem.parse("Linux"), Version.parse("5.1.2-ASDF"))
         );
 
     final String value = header.getValue();
@@ -144,41 +142,76 @@ public class ContentfulUserAgentHeaderInterceptorTest {
   }
 
   @Test
+  public void simulateAndroidResultsInRightHeader() throws Exception {
+    mockAndroidOsBuildStatic();
+
+    try {
+      final Platform platform = Platform.get();
+
+      final ContentfulUserAgentHeaderInterceptor.Section os = os(
+          OperatingSystem.parse(platform.name()),
+          Version.parse(platform.version())
+      );
+
+      assertThat(os.getName()).isEqualTo("Android");
+      assertThat(os.getVersion().toString()).isEqualTo("0.0.1-TESTING123");
+    } finally {
+      unMockAndroidOsBuildStatic();
+    }
+  }
+
+  private void mockAndroidOsBuildStatic() throws Exception {
+    final Class<?> platformClass = Class.forName("com.contentful.java.cda.Platform");
+    setFinalStatic(platformClass.getDeclaredField("PLATFORM"), null);
+
+    final Class<?> versionClass = Class.forName("android.os.Build$VERSION");
+    final Field releaseVersionField = versionClass.getField("RELEASE");
+    setFinalStatic(releaseVersionField, "0.0.1-TESTING123");
+
+    final Field sdkIntVersionField = versionClass.getField("SDK_INT");
+    setFinalStatic(sdkIntVersionField, 666);
+  }
+
+  private void unMockAndroidOsBuildStatic() throws Exception {
+    final Class<?> versionClass = Class.forName("android.os.Build$VERSION");
+    final Field releaseVersionField = versionClass.getField("RELEASE");
+    setFinalStatic(releaseVersionField, null);
+
+    final Field sdkIntVersionField = versionClass.getField("SDK_INT");
+    setFinalStatic(sdkIntVersionField, 0);
+
+    final Class<?> platformClass = Class.forName("com.contentful.java.cda.Platform");
+    setFinalStatic(platformClass.getDeclaredField("PLATFORM"), null);
+  }
+
+  private void setFinalStatic(Field field, Object newValue) throws Exception {
+    field.setAccessible(true);
+
+    Field modifiersField = Field.class.getDeclaredField("modifiers");
+    modifiersField.setAccessible(true);
+    modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+
+    field.set(null, newValue);
+  }
+
+  @Test
   public void parsingOS() {
-    final Properties properties = mock(Properties.class);
+    assertThat(OperatingSystem.parse("Linux   amd64   1.5.0_05")).isEqualTo(Linux);
+    assertThat(OperatingSystem.parse("SunOS   x86   1.5.0_04")).isEqualTo(Linux);
+    assertThat(OperatingSystem.parse("SunOS   sparc   1.5.0_02")).isEqualTo(Linux);
+    assertThat(OperatingSystem.parse("FreeBSD   i386   1.4.2-p7")).isEqualTo(Linux);
+    assertThat(OperatingSystem.parse("SomeOs   x86   1.5.0_02")).isEqualTo(Linux);
 
-    when(properties.getProperty(anyString(), eq(""))).thenReturn("");
-    when(properties.getProperty(eq("os.name"), anyString())).thenReturn(
-        "Linux   amd64   1.5.0_05",
-        "SunOS   x86   1.5.0_04",
-        "SunOS   sparc   1.5.0_02",
-        "FreeBSD   i386   1.4.2-p7",
-        "SomeOs   x86   1.5.0_02",
-        "Mac OS X   ppc   1.5.0_06",
-        "Mac OS X   i386   1.5.0_06",
-        "Windows XP   x86   1.5.0_07",
-        "Windows 2003   x86   1.5.0_07",
-        "Windows 2000   x86   1.5.0_02",
-        "Windows 98   x86   1.5.0_03",
-        "Windows NT   x86   1.5.0_02",
-        "Linux 3.5.0_02"
-    );
+    assertThat(OperatingSystem.parse("Mac OS X   ppc   1.5.0_06")).isEqualTo(macOS);
+    assertThat(OperatingSystem.parse("Mac OS X   i386   1.5.0_06")).isEqualTo(macOS);
 
-    assertThat(OperatingSystem.parse(properties)).isEqualTo(Linux);
-    assertThat(OperatingSystem.parse(properties)).isEqualTo(Linux);
-    assertThat(OperatingSystem.parse(properties)).isEqualTo(Linux);
-    assertThat(OperatingSystem.parse(properties)).isEqualTo(Linux);
-    assertThat(OperatingSystem.parse(properties)).isEqualTo(Linux);
-    assertThat(OperatingSystem.parse(properties)).isEqualTo(macOS);
-    assertThat(OperatingSystem.parse(properties)).isEqualTo(macOS);
-    assertThat(OperatingSystem.parse(properties)).isEqualTo(Windows);
-    assertThat(OperatingSystem.parse(properties)).isEqualTo(Windows);
-    assertThat(OperatingSystem.parse(properties)).isEqualTo(Windows);
-    assertThat(OperatingSystem.parse(properties)).isEqualTo(Windows);
-    assertThat(OperatingSystem.parse(properties)).isEqualTo(Windows);
+    assertThat(OperatingSystem.parse("Windows XP   x86   1.5.0_07")).isEqualTo(Windows);
+    assertThat(OperatingSystem.parse("Windows 2003   x86   1.5.0_07")).isEqualTo(Windows);
+    assertThat(OperatingSystem.parse("Windows 2000   x86   1.5.0_02")).isEqualTo(Windows);
+    assertThat(OperatingSystem.parse("Windows 98   x86   1.5.0_03")).isEqualTo(Windows);
+    assertThat(OperatingSystem.parse("Windows NT   x86   1.5.0_02")).isEqualTo(Windows);
 
-    when(properties.getProperty(eq("vendor.name"), anyString())).thenReturn("The Android Project");
-    assertThat(OperatingSystem.parse(properties)).isEqualTo(Android);
-
+    // mock static field to include android os version
+    assertThat(OperatingSystem.parse("Android")).isEqualTo(Android);
   }
 }
