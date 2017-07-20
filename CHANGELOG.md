@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Version [8.0.0] - [unreleased]
 - Change: Requesting a non existing resource will throw an exception! ⚡⚡
+- Change: Set timeout to parsing an error body to one second.
 - Polish: Update dependencies:
     - rxjava 2.1.1 (was 1.2.0)
     - retrofit 2.3.0 (was 2.2.0)

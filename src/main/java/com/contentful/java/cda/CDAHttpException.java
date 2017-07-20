@@ -2,10 +2,13 @@ package com.contentful.java.cda;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Headers;
 import okhttp3.Request;
 import okhttp3.Response;
+import okio.BufferedSource;
+import okio.Timeout;
 
 import static java.lang.String.format;
 
@@ -37,6 +40,9 @@ public class CDAHttpException extends RuntimeException {
 
   private String readResponseBody(Response response) {
     try {
+      BufferedSource bufferedSource = response.body().source();
+      Timeout timeout = bufferedSource.timeout();
+      timeout.deadline(1, TimeUnit.SECONDS);
       return response.body().string();
     } catch (IOException ioException) {
       return "<io exception while parsing body: " + ioException.toString() + ">";
