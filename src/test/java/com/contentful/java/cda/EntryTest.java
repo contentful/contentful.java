@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.functions.Consumer;
 
@@ -113,7 +114,7 @@ public class EntryTest extends BaseTest {
       }
     });
 
-    latch.await();
+    latch.await(1, TimeUnit.SECONDS);
     assertThat(result[0]).isNotNull();
     assertNyanCat(result[0]);
   }

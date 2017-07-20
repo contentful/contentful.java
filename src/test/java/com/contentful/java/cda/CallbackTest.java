@@ -50,6 +50,6 @@ public class CallbackTest extends BaseTest {
     callback.cancel();
     client.fetch(CDAEntry.class).all(callback);
     assertThat(callback.isCancelled()).isTrue();
-    latch.await(4, TimeUnit.SECONDS);
+    latch.await(1, TimeUnit.SECONDS);
   }
 }
