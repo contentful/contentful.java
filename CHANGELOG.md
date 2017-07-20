@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Version [8.0.0] - [unreleased]
+- Change: Requesting a non existing resource will throw an exception! ⚡⚡
+- Polish: Update dependencies:
+    - rxjava 2.1.1 (was 1.2.0)
+    - retrofit 2.3.0 (was 2.2.0)
+    - okhttp 3.8.1 (was 3.6.0)
+    - commonsio 2.5 (was 2.4)
+    - junit 4.12 (was 4.11)
+    - mockito 2.8.47 (was 1.10.19)
+    - truth 0.34 (was 0.27)
+
 ## Version [7.6.2] - (2017-05-24)
 - Fix: Custom Header specifying Android if os is Linux.
 

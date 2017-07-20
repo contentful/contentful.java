@@ -7,7 +7,8 @@ package com.contentful.java.cda;
 public class FetchQuery<T extends CDAResource> extends AbsQuery<T, FetchQuery<T>> {
   /**
    * Create a FetchQuery for the given type, using the client.
-   * @param type is the ContentType class to be queried for.
+   *
+   * @param type   is the ContentType class to be queried for.
    * @param client a valid client to be used for the actual data retrieval.
    */
   public FetchQuery(Class<T> type, CDAClient client) {
@@ -16,18 +17,24 @@ public class FetchQuery<T extends CDAResource> extends AbsQuery<T, FetchQuery<T>
 
   /**
    * Fetch and return a resource matching the given {@code id}.
+   *
    * @param id resource id.
    * @return result resource, null if it does not exist.
    */
   public T one(String id) {
-    return baseQuery().one(id).toBlocking().first();
+    try {
+      return baseQuery().one(id).blockingFirst();
+    } catch (NullPointerException e) {
+      throw new CDAResourceNotFoundException(type, id);
+    }
   }
 
   /**
    * Async fetch resource matching the given {@code id}.
-   * @param id resource id.
+   *
+   * @param id       resource id.
    * @param callback callback.
-   * @param <C> callback type.
+   * @param <C>      callback type.
    * @return the given {@code callback} instance.
    */
   @SuppressWarnings("unchecked")
@@ -37,16 +44,18 @@ public class FetchQuery<T extends CDAResource> extends AbsQuery<T, FetchQuery<T>
 
   /**
    * Fetch and return all resources matching the type of this query.
+   *
    * @return {@link CDAArray} result.
    */
   public CDAArray all() {
-    return baseQuery().all().toBlocking().first();
+    return baseQuery().all().blockingFirst();
   }
 
   /**
    * Async fetch all resources matching the type of this query.
+   *
    * @param callback callback.
-   * @param <C> callback type.
+   * @param <C>      callback type.
    * @return the given {@code callback} instance.
    */
   @SuppressWarnings("unchecked")

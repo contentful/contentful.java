@@ -8,32 +8,57 @@ import org.junit.Test;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import rx.functions.Action1;
+import io.reactivex.functions.Consumer;
 
 import static com.google.common.truth.Truth.assertThat;
 
 public class EntryTest extends BaseTest {
-  @Test
+  @Test(expected = CDAResourceNotFoundException.class)
   @Enqueue("array_empty.json")
   public void fetchNonExistingReturnsNull() throws Exception {
-    assertThat(client.fetch(CDAEntry.class).one("foo")).isNull();
+    try {
+      client.fetch(CDAEntry.class).one("foo");
+    } catch (NullPointerException e) {
+      assertThat(e.getMessage()).isEqualTo("Could not find id 'foo' of type 'CDAEntry'.");
+      throw e;
+    }
   }
 
   @Test
   @Enqueue("array_empty.json")
-  public void fetchNonExistingEntryEmitsNull() throws Exception {
+  public void fetchNonExistingEntryThrowsError() throws Exception {
     final Object result[] = new Object[]{new Object()};
+    final Object error[] = new Object[]{new Object()};
     final CountDownLatch latch = new CountDownLatch(1);
-    assertThat(client.observe(CDAEntry.class)
+
+    client.observe(CDAEntry.class)
         .one("foo")
-        .subscribe(new Action1<CDAEntry>() {
-          @Override public void call(CDAEntry entry) {
-            result[0] = entry;
-            latch.countDown();
-          }
-        }));
-    latch.await();
+        .subscribe(
+            new Consumer<CDAEntry>() {
+              @Override public void accept(CDAEntry entry) {
+                result[0] = entry;
+                error[0] = null;
+
+                latch.countDown();
+              }
+            }, new Consumer<Throwable>() {
+              @Override public void accept(Throwable throwable) {
+                result[0] = null;
+                error[0] = throwable;
+
+                latch.countDown();
+              }
+            }
+        );
+
+    latch.await(1, TimeUnit.SECONDS);
+
     assertThat(result[0]).isNull();
+    assertThat(error[0]).isNotNull();
+    assertThat(error[0]).isInstanceOf(CDAResourceNotFoundException.class);
+    final CDAResourceNotFoundException notFoundException = (CDAResourceNotFoundException) error[0];
+    final String message = notFoundException.getMessage();
+    assertThat(message).isEqualTo("Could not find id 'foo' of type 'CDAEntry'.");
   }
 
   @Test
@@ -43,7 +68,10 @@ public class EntryTest extends BaseTest {
         .one("foo", new TestCallback<CDAEntry>())
         .await();
 
-    assertThat(callback.error()).isNull();
+    assertThat(callback.error()).isNotNull();
+    final String message = callback.error().getMessage();
+    assertThat(message).isEqualTo("Could not find id 'foo' of type 'CDAEntry'.");
+
     assertThat(callback.result()).isNull();
   }
 

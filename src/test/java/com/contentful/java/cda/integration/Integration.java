@@ -8,6 +8,7 @@ import com.contentful.java.cda.CDAContentType;
 import com.contentful.java.cda.CDAEntry;
 import com.contentful.java.cda.CDAHttpException;
 import com.contentful.java.cda.CDAResource;
+import com.contentful.java.cda.CDAResourceNotFoundException;
 import com.contentful.java.cda.CDASpace;
 import com.contentful.java.cda.LocalizedResource;
 import com.contentful.java.cda.QueryOperation.BoundingBox;
@@ -99,6 +100,21 @@ public class Integration {
     assertNyanCat(nyanCat);
   }
 
+  @Test(expected = CDAResourceNotFoundException.class)
+  public void fetchOneNonExistingEntry() throws Exception {
+    client.fetch(CDAEntry.class).one("fooooo");
+  }
+
+  @Test(expected = CDAResourceNotFoundException.class)
+  public void fetchOneNonExistingAsset() throws Exception {
+    client.fetch(CDAAsset.class).one("fooooo");
+  }
+
+  @Test(expected = CDAResourceNotFoundException.class)
+  public void fetchOneNonExistingContentType() throws Exception {
+    client.fetch(CDAContentType.class).one("fooooo");
+  }
+
   @Test
   public void fetchSpace() throws Exception {
     CDASpace space = client.fetchSpace();
@@ -111,10 +127,10 @@ public class Integration {
 
   @Test
   public void sync() throws Exception {
-    SynchronizedSpace space = client.sync().observe().toBlocking().first();
+    SynchronizedSpace space = client.sync().observe().blockingFirst();
     assertInitial(space);
 
-    space = client.sync(space).observe().toBlocking().first();
+    space = client.sync(space).observe().blockingFirst();
 
     assertThat(space.nextSyncUrl()).isNotEmpty();
     assertThat(space.items()).hasSize(14);

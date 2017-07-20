@@ -18,10 +18,10 @@ public class SyncTest extends BaseTest {
       "demo/sync_update_p1.json", "demo/sync_update_p2.json"
   })
   public void sync() throws Exception {
-    SynchronizedSpace first = client.sync().observe().toBlocking().first();
+    SynchronizedSpace first = client.sync().observe().blockingFirst();
     assertInitial(first);
 
-    SynchronizedSpace second = client.sync(first).observe().toBlocking().first();
+    SynchronizedSpace second = client.sync(first).observe().blockingFirst();
     assertUpdate(second);
   }
 

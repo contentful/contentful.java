@@ -1,10 +1,11 @@
 package com.contentful.java.cda;
 
-import rx.Subscription;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Communicates responses from a server or offline requests. One and only one method will be
  * invoked in response to a given request.
+ *
  * @param <T> expected response type.
  */
 public abstract class CDACallback<T extends CDAResource> {
@@ -12,7 +13,7 @@ public abstract class CDACallback<T extends CDAResource> {
 
   private boolean cancelled;
 
-  private Subscription subscription;
+  private Disposable disposable;
 
   /**
    * Successful response.
@@ -27,6 +28,7 @@ public abstract class CDACallback<T extends CDAResource> {
    * @param error the error occurred.
    */
   protected void onFailure(Throwable error) {
+    throw new IllegalStateException(error);
   }
 
   /**
@@ -49,17 +51,17 @@ public abstract class CDACallback<T extends CDAResource> {
     }
   }
 
-  void setSubscription(Subscription subscription) {
+  void setSubscription(Disposable disposable) {
     synchronized (LOCK) {
-      this.subscription = subscription;
+      this.disposable = disposable;
     }
   }
 
   void unsubscribe() {
     synchronized (LOCK) {
-      if (subscription != null) {
-        subscription.unsubscribe();
-        subscription = null;
+      if (disposable != null) {
+        disposable.dispose();
+        disposable = null;
       }
     }
   }
