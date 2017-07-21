@@ -28,7 +28,7 @@ public class ObserveQuery<T extends CDAResource> extends AbsQuery<T, ObserveQuer
    *
    * @param id resource id.
    * @return {@link Flowable} instance.
-   * @throws CDAResourceNotFoundException if resources was not found.
+   * @throws CDAResourceNotFoundException if resource was not found.
    */
   public Flowable<T> one(final String id) {
     Flowable<T> flowable = where("sys.id", id).all().map(new Function<CDAArray, T>() {

@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Change: Set timeout to parsing an error body to one second.
 - Polish: Update dependencies:
     - rxjava 2.1.1 (was 1.2.0)
+        - `rx.schedulers.Schedulers.io()` to `io.reactivex.schedulers.Schedulers.io()`
+        - `Subscriber<CDAArray>` to `DisposableSubscriber<CDAArray>`
+        - and `onCompleted()` to `onComplete()`
     - retrofit 2.3.0 (was 2.2.0)
     - okhttp 3.8.1 (was 3.6.0)
     - commonsio 2.5 (was 2.4)
