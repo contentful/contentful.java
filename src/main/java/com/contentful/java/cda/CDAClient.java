@@ -9,9 +9,7 @@ import com.contentful.java.cda.interceptor.ErrorInterceptor;
 import com.contentful.java.cda.interceptor.LogInterceptor;
 import com.contentful.java.cda.interceptor.UserAgentHeaderInterceptor;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 
@@ -224,20 +222,65 @@ public class CDAClient {
   Observable<Map<String, CDAContentType>> cacheTypes(boolean invalidate) {
     Map<String, CDAContentType> types = invalidate ? null : cache.types();
     if (types == null) {
-      return service.array(spaceId, PATH_CONTENT_TYPES, new HashMap<String, String>()).map(
-          new Func1<Response<CDAArray>, Map<String, CDAContentType>>() {
-            @Override public Map<String, CDAContentType> call(Response<CDAArray> arrayResponse) {
-              CDAArray array = ResourceFactory.array(arrayResponse, CDAClient.this);
-              Map<String, CDAContentType> tmp = new ConcurrentHashMap<String, CDAContentType>();
-              for (CDAResource resource : array.items()) {
-                tmp.put(resource.id(), (CDAContentType) resource);
-              }
-              cache.setTypes(tmp);
-              return tmp;
-            }
-          });
+      return getContentTypes();
     }
     return Observable.just(types);
+  }
+
+  private Observable<Map<String, CDAContentType>> getContentTypes() {
+
+    Map<String, CDAContentType> first = getContentTypes(0, 1000)
+      .flatMapIterable(new Func1<CDAArray, Iterable<CDAResource>>() {
+        @Override
+        public Iterable<CDAResource> call(CDAArray cdaArray) {
+          return cdaArray.items;
+        }
+      })
+      .map(
+        new Func1<CDAResource, Map.Entry<String, CDAContentType>>() {
+          @Override
+          public Map.Entry<String, CDAContentType> call(CDAResource resource) {
+            return new AbstractMap.SimpleEntry<String, CDAContentType>(resource.id(), (CDAContentType) resource);
+          }
+        })
+      .toMap(new Func1<Map.Entry<String, CDAContentType>, String>() {
+        @Override
+        public String call(Map.Entry<String, CDAContentType> entry) {
+          return entry.getKey();
+        }
+      }, new Func1<Map.Entry<String, CDAContentType>, CDAContentType>() {
+        @Override
+        public CDAContentType call(Map.Entry<String, CDAContentType> entry) {
+          return entry.getValue();
+        }
+      }).toBlocking().single();
+    cache.setTypes(first);
+    return Observable.just(first);
+  }
+
+  private Observable<CDAArray> getContentTypes(Integer skip, Integer limit) {
+    Map<String, String> params = new HashMap<String, String>();
+    params.put("skip", String.valueOf(skip));
+    params.put("limit", String.valueOf(limit));
+
+    return service.array(spaceId, PATH_CONTENT_TYPES, params).map(new Func1<Response<CDAArray>, CDAArray>() {
+      @Override
+      public CDAArray call(Response<CDAArray> cdaArrayResponse) {
+        return ResourceFactory.array(cdaArrayResponse, CDAClient.this);
+      }
+    }).concatMap(new Func1<CDAArray, Observable<CDAArray>>() {
+      @Override
+      public Observable<CDAArray> call(CDAArray array) {
+
+        // Terminal case.
+        if (array.total <= array.limit + array.skip) {
+          return Observable.just(array);
+        }
+        return Observable.just(array)
+                .concatWith(getContentTypes(array.skip + array.limit, array.limit));
+      }
+    });
+
   }
 
   Observable<CDAContentType> cacheTypeWithId(String id) {
