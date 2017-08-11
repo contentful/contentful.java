@@ -1,0 +1,69 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 1,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "6kcg7gal4146"
+          }
+        },
+        "id": "151",
+        "type": "Entry",
+        "createdAt": "2017-08-09T09:43:01.771Z",
+        "updatedAt": "2017-08-09T09:43:22.844Z",
+        "createdBy": {
+          "sys": {
+            "type": "Link",
+            "linkType": "User",
+            "id": "7uJNojWP0gbuP7Pplz7Syo"
+          }
+        },
+        "updatedBy": {
+          "sys": {
+            "type": "Link",
+            "linkType": "User",
+            "id": "7uJNojWP0gbuP7Pplz7Syo"
+          }
+        },
+        "publishedCounter": 1,
+        "version": 18,
+        "publishedBy": {
+          "sys": {
+            "type": "Link",
+            "linkType": "User",
+            "id": "7uJNojWP0gbuP7Pplz7Syo"
+          }
+        },
+        "publishedVersion": 17,
+        "firstPublishedAt": "2017-08-09T09:43:22.808Z",
+        "publishedAt": "2017-08-09T09:43:22.808Z",
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "151"
+          }
+        }
+      },
+      "fields": {
+        "first": {
+          "en-US": "this is the end!"
+        },
+        "second": {
+          "en-US": "Some more text"
+        },
+        "third": {
+          "en-US": "last"
+        }
+      }
+    }
+  ]
+}

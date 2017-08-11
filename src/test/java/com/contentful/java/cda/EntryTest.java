@@ -6,6 +6,7 @@ import com.contentful.java.cda.lib.TestCallback;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -117,6 +118,104 @@ public class EntryTest extends BaseTest {
     latch.await(1, TimeUnit.SECONDS);
     assertThat(result[0]).isNotNull();
     assertNyanCat(result[0]);
+  }
+
+  @Test
+  @Enqueue(
+      defaults = {
+          "demo/space.json",
+          "content_types/populate_cache_simple.json"
+      },
+      value = {
+          "content_types/populate_cache_simple.json"
+      }
+  )
+  public void populateAllContentTypesSinglePage() throws Exception {
+    final int contentTypesCached = client.populateContentTypeCache();
+
+    assertThat(contentTypesCached).isEqualTo(3);
+
+    final Map<String, CDAContentType> types = client.cache.types();
+    assertThat(types.size()).isEqualTo(3);
+
+    final CDAContentType first = types.get("001");
+    assertThat(first.fields.size()).isEqualTo(3);
+    assertThat(first.fields.get(0).id).isEqualTo("first");
+    assertThat(first.fields.get(0).type).isEqualTo("Symbol");
+
+    final CDAContentType second = types.get("002");
+    assertThat(second.fields.size()).isEqualTo(3);
+    assertThat(second.fields.get(0).id).isEqualTo("first");
+    assertThat(second.fields.get(0).type).isEqualTo("Symbol");
+
+    final CDAContentType third = types.get("003");
+    assertThat(third.fields.size()).isEqualTo(3);
+    assertThat(third.fields.get(0).id).isEqualTo("first");
+    assertThat(third.fields.get(0).type).isEqualTo("Symbol");
+  }
+
+  @Test
+  @Enqueue(
+      defaults = {
+          "demo/space.json",
+          "content_types/populate_cache_simple.json"
+      },
+      value = {
+          "content_types/populate_cache_complex_p1.json",
+          "content_types/populate_cache_complex_p2.json",
+          "content_types/populate_cache_complex_p3.json"
+      }
+  )
+  public void populateAllContentTypesMultiplePages() throws Exception {
+    int numberOfContentTypes = client.populateContentTypeCache(60);
+
+    assertThat(numberOfContentTypes).isEqualTo(151);
+    assertThat(client.cache.types().size()).isEqualTo(151);
+
+    final Map<String, CDAContentType> types = client.cache.types();
+    final CDAContentType first = types.get("001");
+    assertThat(first.fields.size()).isEqualTo(3);
+    assertThat(first.fields.get(0).id).isEqualTo("first");
+    assertThat(first.fields.get(0).type).isEqualTo("Symbol");
+
+    final CDAContentType second = types.get("079");
+    assertThat(second.fields.size()).isEqualTo(3);
+    assertThat(second.fields.get(0).id).isEqualTo("first");
+    assertThat(second.fields.get(0).type).isEqualTo("Symbol");
+
+    final CDAContentType third = types.get("151");
+    assertThat(third.fields.size()).isEqualTo(3);
+    assertThat(third.fields.get(0).id).isEqualTo("first");
+    assertThat(third.fields.get(0).type).isEqualTo("Symbol");
+  }
+
+  @Test
+  @Enqueue(
+      defaults = {
+          "demo/space.json",
+          "content_types/populate_cache_simple.json"
+      },
+      value = {
+          "content_types/populate_cache_complex_p1.json",
+          "content_types/populate_cache_complex_p2.json",
+          "content_types/populate_cache_complex_p3.json",
+          "content_types/populate_cache_last_entry.json"
+      }
+  )
+  public void aPopulatedContentTypeCacheDoesNotToFetchContentTypes() throws Exception {
+    client.populateContentTypeCache(60);
+
+    assertThat(client.cache.types().size()).isEqualTo(151);
+
+    final CDAContentType lastContentType = client.cache.types().get("151");
+    assertThat(lastContentType.fields.size()).isEqualTo(3);
+    assertThat(lastContentType.fields.get(0).id).isEqualTo("first");
+    assertThat(lastContentType.fields.get(0).type).isEqualTo("Symbol");
+
+    final CDAEntry lastEntry = client.fetch(CDAEntry.class).one("151");
+
+    assertThat(lastEntry).isNotNull();
+    assertThat(lastEntry.contentType().id()).isEqualTo(lastContentType.id());
   }
 
   @Test

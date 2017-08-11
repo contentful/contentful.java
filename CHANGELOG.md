@@ -3,10 +3,12 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Version [8.0.0] - [unreleased]
+- New: `populateContentTypeCache`-family to pre populate the cache of ContentTypes.
 - Change: Requesting a non existing resource will throw an exception! ⚡⚡
 - Change: Set timeout to parsing an error body to one second.
 - Polish: Update dependencies:
     - rxjava 2.1.1 (was 1.2.0)
+        - Please update your code to use the following new additions:
         - `rx.schedulers.Schedulers.io()` to `io.reactivex.schedulers.Schedulers.io()`
         - `Subscriber<CDAArray>` to `DisposableSubscriber<CDAArray>`
         - and `onCompleted()` to `onComplete()`

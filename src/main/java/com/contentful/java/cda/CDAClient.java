@@ -114,11 +114,77 @@ public class CDAClient {
     return new ObserveQuery<T>(type, this);
   }
 
+  public int populateContentTypeCache() {
+    return observeContentTypeCachePopulation().blockingFirst();
+  }
+
+  public int populateContentTypeCache(int limit) {
+    return observeContentTypeCachePopulation(limit).blockingFirst();
+  }
+
+  public Flowable<Integer> observeContentTypeCachePopulation() {
+    return observeContentTypeCachePopulation(1000);
+  }
+
+  public Flowable<Integer> observeContentTypeCachePopulation(final int limit) {
+    return
+        observe(CDAContentType.class)
+            .orderBy("sys.id")
+            .limit(limit)
+            .all()
+            .map(
+                new Function<CDAArray, CDAArray>() {
+                  @Override public CDAArray apply(CDAArray array) throws Exception {
+                    if (array.skip() + array.limit() < array.total()) {
+                      return nextPage(array);
+                    } else {
+                      return array;
+                    }
+                  }
+
+                  private CDAArray nextPage(CDAArray array) {
+                    final CDAArray nextArray = observe(CDAContentType.class)
+                        .orderBy("sys.id")
+                        .limit(limit)
+                        .skip(array.skip + limit)
+                        .all()
+                        .map(this)
+                        .blockingFirst();
+
+                    array.skip = nextArray.skip;
+                    array.items.addAll(nextArray.items);
+                    array.assets.putAll(nextArray.assets);
+                    array.entries.putAll(nextArray.entries);
+
+                    return array;
+                  }
+                }
+            )
+            .map(
+                new Function<CDAArray, Integer>() {
+                  @Override public Integer apply(CDAArray array) throws Exception {
+                    for (CDAResource resource : array.items) {
+                      if (resource instanceof CDAContentType) {
+                        cache.types().put(resource.id(), (CDAContentType) resource);
+                      } else {
+                        throw new IllegalStateException(
+                            "Requesting a list of content types should not return " +
+                                "any other type.");
+                      }
+                    }
+
+                    return array.total;
+                  }
+                }
+            );
+  }
+
   /**
    * Returns a {@link SyncQuery} for initial synchronization via the Sync API.
    *
    * @return query instance.
    */
+
   public SyncQuery sync() {
     return sync(null, null);
   }
