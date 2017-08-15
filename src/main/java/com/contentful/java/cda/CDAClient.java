@@ -114,19 +114,74 @@ public class CDAClient {
     return new ObserveQuery<T>(type, this);
   }
 
+  /**
+   * Populate the content type cache with _all_ available content types.
+   * <p>
+   * This method will run through all the content types, saving them in the process and also takes
+   * care of paging.
+   * <p>
+   * This method is synchronous.
+   *
+   * @return the number of content types cached.
+   */
   public int populateContentTypeCache() {
     return observeContentTypeCachePopulation().blockingFirst();
   }
 
+  /**
+   * Populate the content type cache with _all_ available content types.
+   *
+   * @param limit the number of content types per page.
+   * @return the number of content types cached.
+   * @throws IllegalArgumentException if limit is less or equal to 0.
+   * @throws IllegalArgumentException if limit is more then 1_000.
+   * @see #populateContentTypeCache()
+   */
   public int populateContentTypeCache(int limit) {
+    if (limit > 1000) {
+      throw new IllegalArgumentException("Page limit cannot be more then 1000.");
+    }
+    if (limit <= 0) {
+      throw new IllegalArgumentException("Page limit cannot be less or equal to 0.");
+    }
+
     return observeContentTypeCachePopulation(limit).blockingFirst();
   }
 
+  /**
+   * Populate the content type cache with _all_ available content types.
+   * <p>
+   * This method will run through all the content types, saving them in the process and also takes
+   * care of paging.
+   * <p>
+   * This method is asynchronous and needs to be subscribed to.
+   *
+   * @return the flowable representing the asynchronous call.
+   */
   public Flowable<Integer> observeContentTypeCachePopulation() {
     return observeContentTypeCachePopulation(1000);
   }
 
+  /**
+   * Populate the content type cache with _all_ available content types.
+   * <p>
+   * This method will run through all the content types, saving them in the process and also takes
+   * care of paging.
+   * <p>
+   * This method is asynchronous and needs to be subscribed to.
+   *
+   * @return the flowable representing the asynchronous call.
+   * @throws IllegalArgumentException if limit is less or equal to 0.
+   * @throws IllegalArgumentException if limit is more then 1_000.
+   */
   public Flowable<Integer> observeContentTypeCachePopulation(final int limit) {
+    if (limit > 1000) {
+      throw new IllegalArgumentException("Page limit cannot be more then 1000.");
+    }
+    if (limit <= 0) {
+      throw new IllegalArgumentException("Page limit cannot be less or equal to 0.");
+    }
+
     return
         observe(CDAContentType.class)
             .orderBy("sys.id")

@@ -120,6 +120,26 @@ public class EntryTest extends BaseTest {
     assertNyanCat(result[0]);
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void populationThrowsOnZeroLimit() throws Exception {
+    client.populateContentTypeCache(0);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void populationThrowsOnThought() throws Exception {
+    client.populateContentTypeCache(1001);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void observePopulationThrowsOnZeroLimit() throws Exception {
+    client.observeContentTypeCachePopulation(0);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void observePopulationThrowsOnThought() throws Exception {
+    client.observeContentTypeCachePopulation(1001);
+  }
+
   @Test
   @Enqueue(
       defaults = {
