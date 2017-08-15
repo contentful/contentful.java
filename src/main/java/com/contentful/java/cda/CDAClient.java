@@ -130,6 +130,8 @@ public class CDAClient {
 
   /**
    * Populate the content type cache with _all_ available content types.
+   * <p>
+   * This method is synchronous.
    *
    * @param limit the number of content types per page.
    * @return the number of content types cached.
@@ -139,10 +141,11 @@ public class CDAClient {
    */
   public int populateContentTypeCache(int limit) {
     if (limit > 1000) {
-      throw new IllegalArgumentException("Page limit cannot be more then 1000.");
+      throw new IllegalArgumentException("Content types per page limit cannot be more then 1000.");
     }
     if (limit <= 0) {
-      throw new IllegalArgumentException("Page limit cannot be less or equal to 0.");
+      throw new IllegalArgumentException("Content types per page limit cannot be "
+          + "less or equal to 0.");
     }
 
     return observeContentTypeCachePopulation(limit).blockingFirst();
@@ -176,10 +179,11 @@ public class CDAClient {
    */
   public Flowable<Integer> observeContentTypeCachePopulation(final int limit) {
     if (limit > 1000) {
-      throw new IllegalArgumentException("Page limit cannot be more then 1000.");
+      throw new IllegalArgumentException("Content types per page limit cannot be more then 1000.");
     }
     if (limit <= 0) {
-      throw new IllegalArgumentException("Page limit cannot be less or equal to 0.");
+      throw new IllegalArgumentException("Content types per page limit cannot be "
+          + "less or equal to 0.");
     }
 
     return
