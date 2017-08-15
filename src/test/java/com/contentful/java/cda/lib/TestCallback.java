@@ -4,6 +4,7 @@ import com.contentful.java.cda.CDACallback;
 import com.contentful.java.cda.CDAResource;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class TestCallback<T extends CDAResource> extends CDACallback<T> {
   private T result;
@@ -23,7 +24,7 @@ public class TestCallback<T extends CDAResource> extends CDACallback<T> {
   }
 
   public TestCallback<T> await() throws InterruptedException {
-    latch.await();
+    latch.await(1, TimeUnit.SECONDS);
     return this;
   }
 

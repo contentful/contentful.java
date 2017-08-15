@@ -1,12 +1,14 @@
 package com.contentful.java.cda;
 
+import io.reactivex.Flowable;
+import io.reactivex.functions.Function;
 import retrofit2.Response;
-import rx.Observable;
-import rx.functions.Func1;
 
 import static com.contentful.java.cda.Util.checkNotNull;
 
-/** Represents a query to the Sync API. */
+/**
+ * Represents a query to the Sync API.
+ */
 public class SyncQuery {
   final CDAClient client;
 
@@ -24,10 +26,11 @@ public class SyncQuery {
   }
 
   /**
-   * Returns an {@link Observable} to which one can subscribe in order to fulfill this sync query.
-   * @return {@link Observable} instance.
+   * Returns an {@link Flowable} to which one can subscribe in order to fulfill this sync query.
+   *
+   * @return {@link Flowable} instance.
    */
-  public Observable<SynchronizedSpace> observe() {
+  public Flowable<SynchronizedSpace> observe() {
     final String token;
     if (space != null) {
       String nextSyncUrl = space.nextSyncUrl();
@@ -40,12 +43,12 @@ public class SyncQuery {
       token = syncToken;
     }
     return client.cacheAll(true)
-        .flatMap(new Func1<Cache, Observable<Response<SynchronizedSpace>>>() {
-          @Override public Observable<Response<SynchronizedSpace>> call(Cache cache) {
+        .flatMap(new Function<Cache, Flowable<Response<SynchronizedSpace>>>() {
+          @Override public Flowable<Response<SynchronizedSpace>> apply(Cache cache) {
             return client.service.sync(client.spaceId, initial ? initial : null, token);
           }
-        }).map(new Func1<Response<SynchronizedSpace>, SynchronizedSpace>() {
-          @Override public SynchronizedSpace call(Response<SynchronizedSpace> synchronizedSpace) {
+        }).map(new Function<Response<SynchronizedSpace>, SynchronizedSpace>() {
+          @Override public SynchronizedSpace apply(Response<SynchronizedSpace> synchronizedSpace) {
             return ResourceFactory.sync(synchronizedSpace, space, client);
           }
         });
@@ -53,16 +56,18 @@ public class SyncQuery {
 
   /**
    * Invokes the request to sync (blocking).
+   *
    * @return {@link SynchronizedSpace} instance.
    */
   public SynchronizedSpace fetch() {
-    return observe().toBlocking().first();
+    return observe().blockingFirst();
   }
 
   /**
    * Invokes the request to sync (asynchronously) with the provided {@code callback}.
+   *
    * @param callback callback.
-   * @param <C> callback type.
+   * @param <C>      callback type.
    * @return the given callback instance.
    */
   @SuppressWarnings("unchecked")

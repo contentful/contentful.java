@@ -4,11 +4,11 @@ import com.contentful.java.cda.lib.Enqueue;
 
 import org.junit.Test;
 
-import static com.google.common.truth.Truth.assertThat;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import static com.google.common.truth.Truth.assertThat;
 
 public class ContentTypeTest extends BaseTest {
   @Test
@@ -22,7 +22,7 @@ public class ContentTypeTest extends BaseTest {
   }
 
   @Test
-  @Enqueue({ "demo/content_types_cat.json", "demo/content_types_fake.json" })
+  @Enqueue({"demo/content_types_cat.json", "demo/content_types_fake.json"})
   public void manuallyFetchedContentTypeIsCached() throws Exception {
     client.fetch(CDAContentType.class).one("cat");
     assertThat(client.cache.types()).hasSize(5);
@@ -54,7 +54,7 @@ public class ContentTypeTest extends BaseTest {
     assertThat(client.cache.types()).containsKey("3lYaFZKDgQCUwWy6uEoQYi");
   }
 
-  @Test(expected = RuntimeException.class)
+  @Test(expected = CDAContentTypeNotFoundException.class)
   @Enqueue({
       "demo/entries_fake.json",
       "array_empty.json"
@@ -62,8 +62,10 @@ public class ContentTypeTest extends BaseTest {
   public void badTypeMappingThrows() throws Exception {
     try {
       client.fetch(CDAEntry.class).all();
-    } catch (RuntimeException e) {
-      assertThat(e.getMessage()).isEqualTo("Entry 'bar' has non-existing content type mapping 'foo'.");
+    } catch (CDAContentTypeNotFoundException e) {
+      final String message = "Could not find content type 'foo' " +
+          "for resource with id 'bar' of type 'CDAEntry'.";
+      assertThat(e.getMessage()).isEqualTo(message);
       throw e;
     }
   }
