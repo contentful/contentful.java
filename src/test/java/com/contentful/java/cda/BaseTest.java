@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.logging.LogManager;
 
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -34,6 +34,7 @@ public class BaseTest {
   @Rule public EnqueueResponseRule enqueueResponse = new EnqueueResponseRule();
 
   @Before public void setUp() throws Exception {
+    LogManager.getLogManager().reset();
     server = createServer();
     server.start();
 
