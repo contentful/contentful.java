@@ -16,6 +16,7 @@ public class CDAContentTypeNotFoundException extends RuntimeException {
    * @param resourceId     the actual id of the resource requested.
    * @param resourceType   the type of the resource not found.
    * @param resourceTypeId the id of the content type not found.
+   * @param throwable      the cause of this exception.
    */
   public CDAContentTypeNotFoundException(
       String resourceId,
