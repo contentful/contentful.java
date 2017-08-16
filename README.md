@@ -16,12 +16,12 @@ Grab via Maven:
 <dependency>
   <groupId>com.contentful.java</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>7.6.2</version>
+  <version>8.0.0</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.contentful.java:java-sdk:7.6.2'
+compile 'com.contentful.java:java-sdk:8.0.0'
 ```
 
 The SDK requires at minimum Java 6 or Android 2.3.
@@ -32,14 +32,14 @@ Snapshots of the development version are available through [Sonatype's `snapshot
 
 ```groovy
 maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-compile 'com.contentful.java:java-sdk:7.6.2-SNAPSHOT'
+compile 'com.contentful.java:java-sdk:8.0.0-SNAPSHOT'
 ```
 
 and through [jitpack.io][jitpack]:
 
 ```groovy
 maven { url 'https://jitpack.io' }
-compile 'com.github.contentful:contentful.java:java-sdk-7.6.2-SNAPSHOT'
+compile 'com.github.contentful:contentful.java:java-sdk-8.0.0-SNAPSHOT'
 ```
 
 

@@ -2,7 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [8.0.0] - [unreleased]
+## Version [8.0.1] - [unreleased]
+- TBA
+
+## Version [8.0.0] - (2017-08-16)
 - New: `populateContentTypeCache`-family to pre populate the cache of ContentTypes.
 - Change: Requesting a non existing resource will throw an exception! ⚡⚡
 - Change: Set timeout to parsing an error body to one second.
@@ -190,7 +193,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-7.6.3...HEAD
+[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-8.0.0...HEAD
+[8.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-7.6.3...java-sdk-8.0.0
 [7.6.2]: https://github.com/contentful/contentful.java/compare/java-sdk-7.6.2...java-sdk-7.6.3
 [7.6.1]: https://github.com/contentful/contentful.java/compare/java-sdk-7.6.1...java-sdk-7.6.2
 [7.6.0]: https://github.com/contentful/contentful.java/compare/java-sdk-7.5.0...java-sdk-7.6.0
