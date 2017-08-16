@@ -173,6 +173,7 @@ public class CDAClient {
    * <p>
    * This method is asynchronous and needs to be subscribed to.
    *
+   * @param limit the number of content types per page.
    * @return the flowable representing the asynchronous call.
    * @throws IllegalArgumentException if limit is less or equal to 0.
    * @throws IllegalArgumentException if limit is more then 1_000.
