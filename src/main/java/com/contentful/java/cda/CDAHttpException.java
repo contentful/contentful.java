@@ -98,9 +98,11 @@ public class CDAHttpException extends RuntimeException {
     return parseRateLimitHeader("X-Contentful-RateLimit-Hour-Limit");
   }
 
+//BEGIN TO LONG CODE LINES
   /**
    * @return the number of remaining requests that can be made for the current hour or -1 if header not send
    */
+//END TO LONG CODE LINES
   public int rateLimitHourRemaining() {
     return parseRateLimitHeader("X-Contentful-RateLimit-Hour-Remaining");
   }
@@ -119,9 +121,11 @@ public class CDAHttpException extends RuntimeException {
     return parseRateLimitHeader("X-Contentful-RateLimit-Second-Remaining");
   }
 
+//BEGIN TO LONG CODE LINES
   /**
    * @return the number of seconds until the user can make their next request or -1 if header not send
    */
+//END TO LONG CODE LINES
   public int rateLimitReset() {
     return parseRateLimitHeader("X-Contentful-RateLimit-Reset");
   }

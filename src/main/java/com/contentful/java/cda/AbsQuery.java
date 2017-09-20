@@ -17,13 +17,17 @@ import static java.lang.String.format;
  * @param <Resource> The type of the resource to be returned by this query.
  * @param <Query>    The query type to be returned on chaining to avoid casting on client side.
  */
-public abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQuery<Resource, Query>> {
+public abstract class AbsQuery<
+    Resource extends CDAResource,
+    Query extends AbsQuery<Resource, Query>
+    > {
   private static final String PARAMETER_CONTENT_TYPE = "content_type";
   private static final String PARAMETER_SELECT = "select";
   private static final String PARAMETER_ORDER = "order";
   private static final String PARAMETER_LIMIT = "limit";
   private static final String PARAMETER_SKIP = "skip";
   private static final String PARAMETER_INCLUDE = "include";
+  private static final int MAX_LIMIT = 1000;
 
   final Class<Resource> type;
 
@@ -86,16 +90,16 @@ public abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQu
     checkNotEmpty(selection, "Selection must not be empty.");
 
     if (countDots(selection) >= 2) {
-      throw new IllegalArgumentException("Cannot request children of fields. " +
-          "('fields.author'(✔) vs. 'fields.author.name'(✖))");
+      throw new IllegalArgumentException("Cannot request children of fields. "
+          + "('fields.author'(✔) vs. 'fields.author.name'(✖))");
     }
 
     if (selection.startsWith("fields.") && !hasContentTypeSet()) {
-      throw new IllegalStateException("Cannot use field selection without " +
-          "specifying a content type first. Use '.withContentType(\"{typeid}\")' first.");
+      throw new IllegalStateException("Cannot use field selection without "
+          + "specifying a content type first. Use '.withContentType(\"{typeid}\")' first.");
     }
 
-    if (selection.startsWith("sys.") || selection.equals("sys")) {
+    if (selection.startsWith("sys.") || "sys".equals(selection)) {
       if (params.containsKey(PARAMETER_SELECT)) {
         // nothing to be done here, a select is already present
       } else {
@@ -188,14 +192,14 @@ public abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQu
 
     if ((!name.startsWith("sys.") && !name.startsWith("fields."))
         && !CDAContentType.class.isAssignableFrom(type)) {
-      throw new IllegalArgumentException("Please specify either a \"sys.\" or a \"fields.\" " +
-          "attribute to be searched for. (Remember to specify a ContentType for \"fields.\" " +
-          "searches when querying entries.)");
+      throw new IllegalArgumentException("Please specify either a \"sys.\" or a \"fields.\" "
+          + "attribute to be searched for. (Remember to specify a ContentType for \"fields.\" "
+          + "searches when querying entries.)");
     }
 
     if (name.startsWith("fields.") && !hasContentTypeSet()) {
-      throw new IllegalStateException("Cannot request fields of an entry without having a " +
-          "content type set first.");
+      throw new IllegalStateException("Cannot request fields of an entry without having a "
+          + "content type set first.");
     }
 
     if (values.length == 0) {
@@ -241,8 +245,8 @@ public abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQu
     checkNotEmpty(key, "Key to order by must not be empty.");
 
     if (key.startsWith("fields.") && !hasContentTypeSet()) {
-      throw new IllegalStateException("\"fields.\" cannot be used without setting a content type " +
-          "first.");
+      throw new IllegalStateException("\"fields.\" cannot be used without setting a content type "
+          + "first.");
     }
 
     this.params.put(PARAMETER_ORDER, key);
@@ -277,8 +281,8 @@ public abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQu
       checkNotEmpty(key, "Key at %d to order by must not be empty.", i);
 
       if (key.startsWith("fields.") && !hasContentTypeSet()) {
-        throw new IllegalStateException(format("Key at %d uses \"fields.\" but cannot be used" +
-            " without setting a content type first.", i));
+        throw new IllegalStateException(format("Key at %d uses \"fields.\" but cannot be "
+            + "used without setting a content type first.", i));
       }
     }
 
@@ -304,8 +308,8 @@ public abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQu
     checkNotEmpty(key, "Key to order by must not be empty");
 
     if (key.startsWith("fields.") && !hasContentTypeSet()) {
-      throw new IllegalStateException("\"fields.\" cannot be used without setting a content type " +
-          "first.");
+      throw new IllegalStateException("\"fields.\" cannot be used without setting a content type "
+          + "first.");
     }
 
     this.params.put(PARAMETER_ORDER, "-" + key);
@@ -315,8 +319,8 @@ public abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQu
   /**
    * Limits the amount of elements to a given number.
    * <p>
-   * If more then the number given elements are present, you can use skip(int) and limit(int) to
-   * simulate pagination.
+   * If more then the number given elements are present, you can use {@link #skip(int)} and
+   * {@link #limit(int)} for pagination.
    *
    * @param limit a non negative number less than 1001 to include elements.
    * @return the calling query for chaining.
@@ -328,8 +332,10 @@ public abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQu
       throw new IllegalArgumentException(format("Limit of %d is negative.", limit));
     }
 
-    if (limit > 1000) {
-      throw new IllegalArgumentException(format("Limit of %d is greater than 1000.", limit));
+    if (limit > MAX_LIMIT) {
+      throw new IllegalArgumentException(
+          format("Limit of %d is greater than %d.", limit, MAX_LIMIT)
+      );
     }
 
     params.put(PARAMETER_LIMIT, Integer.toString(limit));
@@ -420,5 +426,4 @@ public abstract class AbsQuery<Resource extends CDAResource, Query extends AbsQu
     }
     return count;
   }
-
 }

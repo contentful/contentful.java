@@ -43,8 +43,8 @@ public class CDAAsset extends LocalizedResource {
    */
   public String urlForImageWith(ImageOption... options) {
     if (options == null || options.length == 0) {
-      throw new IllegalArgumentException("Do not use empty options argument. " +
-          "If you want to manipulate the url by hand, please use `CDAAsset.url()` instead.");
+      throw new IllegalArgumentException("Do not use empty options argument. "
+          + "If you want to manipulate the url by hand, please use `CDAAsset.url()` instead.");
     }
 
     final String mimeType = mimeType();
@@ -97,9 +97,9 @@ public class CDAAsset extends LocalizedResource {
    * @return a human readable string
    */
   @Override public String toString() {
-    return "CDAAsset{" +
-        "id='" + id() + '\'' +
-        ", title='" + title() + '\'' +
-        '}';
+    return "CDAAsset{"
+        + "id='" + id() + '\''
+        + ", title='" + title() + '\''
+        + '}';
   }
 }
