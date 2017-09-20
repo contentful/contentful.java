@@ -12,6 +12,7 @@ import org.junit.Rule;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.logging.LogManager;
 
@@ -82,7 +83,7 @@ public class BaseTest {
     URL resource = getClass().getClassLoader().getResource(response.getFileName());
     checkNotNull(resource, "File not found: " + response.getFileName());
     server.enqueue(new MockResponse().setResponseCode(response.getCode())
-        .setBody(FileUtils.readFileToString(new File(resource.getFile())))
+        .setBody(FileUtils.readFileToString(new File(resource.getFile()), Charset.defaultCharset()))
         .setHeaders(response.headers()));
   }
 

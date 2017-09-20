@@ -173,7 +173,7 @@ public class AbsQueryTest {
   @Test(expected = NullPointerException.class)
   public void equalsWithNullValueThrows() {
     query.withContentType("foo");
-    query.where("fields.bar", IsEqualTo, null);
+    query.where("fields.bar", IsEqualTo, (String)null);
   }
 
   @Test(expected = IllegalArgumentException.class)

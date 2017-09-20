@@ -80,6 +80,7 @@ public class ContentTypeTest extends BaseTest {
     assertThat(colorField.validations()).hasSize(1);
     Map<String, Object> colorValidation = colorField.validations().get(0);
     assertThat(colorValidation).containsKey("in");
+    @SuppressWarnings("unchecked")
     List<String> allowedColorValues = (List<String>) colorValidation.get("in");
     assertThat(allowedColorValues).isNotNull();
     assertThat(allowedColorValues).hasSize(2);
