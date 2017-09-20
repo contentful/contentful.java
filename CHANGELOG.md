@@ -2,8 +2,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [8.0.1] - [unreleased]
-- TBA
+## Version [8.1.0] - [unreleased]
+- Change: Use `filtered` java file to create version number
 
 ## Version [8.0.0] - (2017-08-16)
 - New: `populateContentTypeCache`-family to pre populate the cache of ContentTypes.
@@ -193,7 +193,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-8.0.0...HEAD
+[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-8.1.0...HEAD
+[8.1.0]: https://github.com/contentful/contentful.java/compare/java-sdk-8.0.0...java-sdk-8.1.0
 [8.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-7.6.3...java-sdk-8.0.0
 [7.6.2]: https://github.com/contentful/contentful.java/compare/java-sdk-7.6.2...java-sdk-7.6.3
 [7.6.1]: https://github.com/contentful/contentful.java/compare/java-sdk-7.6.1...java-sdk-7.6.2

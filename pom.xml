@@ -3,7 +3,7 @@
 
   <groupId>com.contentful.java</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>8.0.1-SNAPSHOT</version>
+  <version>8.1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>${project.groupId}:${project.artifactId}</name>
@@ -60,6 +60,9 @@
     <android.version>4.1.1.4</android.version>
     <android.platform>16</android.platform>
     <truth.version>0.34</truth.version>
+
+    <!-- Build Dependencies -->
+    <build-helper.version>3.0.0</build-helper.version>
   </properties>
 
   <dependencies>
@@ -146,10 +149,31 @@
       <resource>
         <directory>src/main/resources</directory>
         <filtering>true</filtering>
+        <targetPath>
+          ${project.build.directory}/generated-sources/
+        </targetPath>
       </resource>
     </resources>
 
     <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>${build-helper.version}</version>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.build.directory}/generated-sources/</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>

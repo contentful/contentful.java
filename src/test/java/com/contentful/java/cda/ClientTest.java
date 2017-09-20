@@ -1,5 +1,6 @@
 package com.contentful.java.cda;
 
+import com.contentful.java.cda.build.GeneratedBuildParameters;
 import com.contentful.java.cda.interceptor.AuthorizationHeaderInterceptor;
 import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor;
 import com.contentful.java.cda.interceptor.UserAgentHeaderInterceptor;
@@ -148,8 +149,10 @@ public class ClientTest extends BaseTest {
   @Test
   @Enqueue
   public void userAgentHeader() throws Exception {
-    String versionName = Util.getProperty("version.name");
+    String versionName = GeneratedBuildParameters.PROJECT_VERSION;
     assertThat(versionName).isNotEmpty();
+    assertThat(versionName).doesNotContain("${");
+
     client.fetchSpace();
     RecordedRequest request = server.takeRequest();
 
