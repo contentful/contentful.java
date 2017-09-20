@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Version [8.1.0] - [unreleased]
 - Change: Use `filtered` java file to create version number
+- Cleanup: Fix warnings
 
 ## Version [8.0.0] - (2017-08-16)
 - New: `populateContentTypeCache`-family to pre populate the cache of ContentTypes.
