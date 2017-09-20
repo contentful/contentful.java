@@ -52,7 +52,10 @@ final class ResourceFactory {
     return resources;
   }
 
-  static SynchronizedSpace sync(Response<SynchronizedSpace> newSpace, SynchronizedSpace oldSpace, CDAClient client) {
+  static SynchronizedSpace sync(
+      Response<SynchronizedSpace> newSpace,
+      SynchronizedSpace oldSpace,
+      CDAClient client) {
     Map<String, CDAAsset> assets = new HashMap<String, CDAAsset>();
     Map<String, CDAEntry> entries = new HashMap<String, CDAEntry>();
 

@@ -55,6 +55,10 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
 
       private static final String VERSION_REGEX = "^([0-9]+).([0-9]+).([0-9]+)(.*)?$";
       private static final Pattern VERSION_PATTERN = compile(VERSION_REGEX);
+      private static final int VERSION_PATTERN_GROUP_COUNT = 4;
+      private static final int VERSION_PATTERN_GROUP_MAJOR = 1;
+      private static final int VERSION_PATTERN_GROUP_MINOR = 2;
+      private static final int VERSION_PATTERN_GROUP_PATCH = 3;
       private static final String STABILITY_REGEX = "^([a-zA-Z]+[0-9]*).*";
       private static final Pattern STABILITY_PATTERN = compile(STABILITY_REGEX);
 
@@ -88,11 +92,11 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
 
         final Matcher matcher = VERSION_PATTERN.matcher(version);
 
-        if (matcher.find() && matcher.groupCount() == 4) {
+        if (matcher.find() && matcher.groupCount() == VERSION_PATTERN_GROUP_COUNT) {
           // ignore first full matching result
-          int major = extractNumberFromGroup(matcher, 1);
-          int minor = extractNumberFromGroup(matcher, 2);
-          int patch = extractNumberFromGroup(matcher, 3);
+          int major = extractNumberFromGroup(matcher, VERSION_PATTERN_GROUP_MAJOR);
+          int minor = extractNumberFromGroup(matcher, VERSION_PATTERN_GROUP_MINOR);
+          int patch = extractNumberFromGroup(matcher, VERSION_PATTERN_GROUP_PATCH);
 
           if (major == minor && minor == patch && patch == 0) {
             return null;
@@ -202,11 +206,11 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
       }
     }
 
-    private final static String APP = "app";
-    private final static String INTEGRATION = "integration";
-    private final static String SDK = "sdk";
-    private final static String PLATFORM = "platform";
-    private final static String OS = "os";
+    private static final String APP = "app";
+    private static final String INTEGRATION = "integration";
+    private static final String SDK = "sdk";
+    private static final String PLATFORM = "platform";
+    private static final String OS = "os";
 
     /**
      * Create an app section.

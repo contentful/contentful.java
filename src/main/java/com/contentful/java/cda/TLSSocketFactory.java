@@ -38,7 +38,8 @@ final class TLSSocketFactory extends SSLSocketFactory {
   }
 
   @Override
-  public Socket createSocket(Socket s, String host, int port, boolean autoClose) throws IOException {
+  public Socket createSocket(Socket s, String host, int port, boolean autoClose)
+      throws IOException {
     return enableTlsOnSocket(delegate.createSocket(s, host, port, autoClose));
   }
 
@@ -48,7 +49,8 @@ final class TLSSocketFactory extends SSLSocketFactory {
   }
 
   @Override
-  public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException {
+  public Socket createSocket(String host, int port, InetAddress localHost, int localPort)
+      throws IOException {
     return enableTlsOnSocket(delegate.createSocket(host, port, localHost, localPort));
   }
 
@@ -58,7 +60,8 @@ final class TLSSocketFactory extends SSLSocketFactory {
   }
 
   @Override
-  public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort) throws IOException {
+  public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort)
+      throws IOException {
     return enableTlsOnSocket(delegate.createSocket(address, port, localAddress, localPort));
   }
 

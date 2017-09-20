@@ -25,7 +25,8 @@ public class HeaderInterceptor implements Interceptor {
   }
 
   /**
-   * Method called by framework, to enrich current request chain with the header information requested.
+   * Method called by framework, to enrich current request chain with the header information
+   * requested.
    *
    * @param chain the execution chain for the request.
    * @return the response received.

@@ -26,8 +26,8 @@ public class CDAEntry extends LocalizedResource {
    * @return a string, containing the id of this content type.
    */
   @Override public String toString() {
-    return "CDAEntry{" +
-        "id='" + id() + '\'' +
-        '}';
+    return "CDAEntry{"
+        + "id='" + id() + '\''
+        + '}';
   }
 }

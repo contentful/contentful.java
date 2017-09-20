@@ -1,7 +1,6 @@
 package com.contentful.java.cda;
 
 import io.reactivex.Flowable;
-import io.reactivex.Scheduler;
 import io.reactivex.functions.Function;
 import retrofit2.Response;
 
@@ -15,8 +14,8 @@ import static com.contentful.java.cda.Util.typeForClass;
  * subscription.
  * <p>
  * Observable requests are subscribed and observed on the same thread that executed
- * the request. Call {@link Flowable#subscribeOn(Scheduler)} and {@link Flowable#observeOn(Scheduler)}
- * to control that.
+ * the request. Call {@link Flowable#subscribeOn(io.reactivex.Scheduler)} and
+ * {@link Flowable#observeOn(io.reactivex.Scheduler)} to control that.
  */
 public class ObserveQuery<T extends CDAResource> extends AbsQuery<T, ObserveQuery<T>> {
   ObserveQuery(Class<T> type, CDAClient client) {
