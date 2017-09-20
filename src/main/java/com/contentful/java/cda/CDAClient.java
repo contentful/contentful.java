@@ -27,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static com.contentful.java.cda.Constants.ENDPOINT_PROD;
 import static com.contentful.java.cda.Constants.PATH_CONTENT_TYPES;
 import static com.contentful.java.cda.Util.checkNotNull;
-import static com.contentful.java.cda.Util.getProperty;
+import static com.contentful.java.cda.build.GeneratedBuildParameters.PROJECT_VERSION;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.os;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.platform;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.sdk;
@@ -394,7 +394,7 @@ public class CDAClient {
   static String createUserAgent() {
     final Properties properties = System.getProperties();
     return String.format("contentful.java/%s(%s %s) %s/%s",
-        getProperty("version.name"),
+        PROJECT_VERSION,
         properties.getProperty("java.runtime.name"),
         properties.getProperty("java.runtime.version"),
         properties.getProperty("os.name"),
@@ -407,7 +407,9 @@ public class CDAClient {
 
     final Platform platform = Platform.get();
     return new Section[]{
-        sdk("contentful.java", Version.parse(getProperty("version.name"))),
+        sdk(
+            "contentful.java",
+            Version.parse(PROJECT_VERSION)),
         platform(
             "java",
             Version.parse(properties.getProperty("java.runtime.version"))

@@ -1,8 +1,6 @@
 package com.contentful.java.cda;
 
-import java.io.IOException;
 import java.util.Map;
-import java.util.Properties;
 
 import okhttp3.HttpUrl;
 
@@ -100,18 +98,6 @@ final class Util {
       }
     }
     return null;
-  }
-
-  static String getProperty(String name) {
-    Properties properties = new Properties();
-    try {
-      properties.load(Util.class.getClassLoader().getResourceAsStream(Constants.PROPERTIES));
-      String value = properties.getProperty(name);
-      checkNotNull(properties, "Properties file contains no version number.");
-      return value;
-    } catch (IOException e) {
-      throw new RuntimeException("Unable to read from properties file.", e);
-    }
   }
 
   static String queryParam(String url, String name) {

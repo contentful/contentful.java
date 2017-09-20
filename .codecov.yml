@@ -1,3 +1,6 @@
+ignore:
+  - "src/main/resources/com/contentful/java/cda/build/GeneratedBuildParameters.java"  # ignore build resource folders
+
 coverage:
         precision: 1
         range: 70...100
