@@ -9,7 +9,7 @@ import io.reactivex.disposables.Disposable;
  * @param <T> expected response type.
  */
 public abstract class CDACallback<T extends CDAResource> {
-  private final Object LOCK = new Object();
+  private final Object lock = new Object();
 
   private boolean cancelled;
 
@@ -35,7 +35,7 @@ public abstract class CDACallback<T extends CDAResource> {
    * @return true in case {@link #cancel()} was called.
    */
   public boolean isCancelled() {
-    synchronized (LOCK) {
+    synchronized (lock) {
       return cancelled;
     }
   }
@@ -45,20 +45,20 @@ public abstract class CDACallback<T extends CDAResource> {
    * called.
    */
   public void cancel() {
-    synchronized (LOCK) {
+    synchronized (lock) {
       cancelled = true;
       unsubscribe();
     }
   }
 
   void setSubscription(Disposable disposable) {
-    synchronized (LOCK) {
+    synchronized (lock) {
       this.disposable = disposable;
     }
   }
 
   void unsubscribe() {
-    synchronized (LOCK) {
+    synchronized (lock) {
       if (disposable != null) {
         disposable.dispose();
         disposable = null;

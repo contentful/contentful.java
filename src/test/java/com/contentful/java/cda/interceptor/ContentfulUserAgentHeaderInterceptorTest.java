@@ -162,7 +162,7 @@ public class ContentfulUserAgentHeaderInterceptorTest {
 
   private void mockAndroidOsBuildStatic() throws Exception {
     final Class<?> platformClass = Class.forName("com.contentful.java.cda.Platform");
-    setFinalStatic(platformClass.getDeclaredField("PLATFORM"), null);
+    setFinalStatic(platformClass.getDeclaredField("platform"), null);
 
     final Class<?> versionClass = Class.forName("android.os.Build$VERSION");
     final Field releaseVersionField = versionClass.getField("RELEASE");
@@ -181,7 +181,7 @@ public class ContentfulUserAgentHeaderInterceptorTest {
     setFinalStatic(sdkIntVersionField, 0);
 
     final Class<?> platformClass = Class.forName("com.contentful.java.cda.Platform");
-    setFinalStatic(platformClass.getDeclaredField("PLATFORM"), null);
+    setFinalStatic(platformClass.getDeclaredField("platform"), null);
   }
 
   private void setFinalStatic(Field field, Object newValue) throws Exception {

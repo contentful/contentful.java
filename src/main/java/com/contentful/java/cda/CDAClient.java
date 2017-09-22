@@ -1,5 +1,7 @@
 package com.contentful.java.cda;
 
+//BEGIN TO LONG CODE LINES
+
 import com.contentful.java.cda.interceptor.AuthorizationHeaderInterceptor;
 import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor;
 import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section;
@@ -27,10 +29,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static com.contentful.java.cda.Constants.ENDPOINT_PROD;
 import static com.contentful.java.cda.Constants.PATH_CONTENT_TYPES;
 import static com.contentful.java.cda.Util.checkNotNull;
-import static com.contentful.java.cda.Util.getProperty;
+import static com.contentful.java.cda.build.GeneratedBuildParameters.PROJECT_VERSION;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.os;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.platform;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.sdk;
+//END TO LONG CODE LINES
 
 /**
  * Client to be used when requesting information from the Delivery API. Every client is associated
@@ -39,6 +42,8 @@ import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInter
  * to create a new client instance.
  */
 public class CDAClient {
+  private static final int CONTENT_TYPE_LIMIT_MAX = 1000;
+
   final String spaceId;
 
   final String token;
@@ -140,7 +145,7 @@ public class CDAClient {
    * @see #populateContentTypeCache()
    */
   public int populateContentTypeCache(int limit) {
-    if (limit > 1000) {
+    if (limit > CONTENT_TYPE_LIMIT_MAX) {
       throw new IllegalArgumentException("Content types per page limit cannot be more then 1000.");
     }
     if (limit <= 0) {
@@ -162,7 +167,7 @@ public class CDAClient {
    * @return the flowable representing the asynchronous call.
    */
   public Flowable<Integer> observeContentTypeCachePopulation() {
-    return observeContentTypeCachePopulation(1000);
+    return observeContentTypeCachePopulation(CONTENT_TYPE_LIMIT_MAX);
   }
 
   /**
@@ -179,7 +184,7 @@ public class CDAClient {
    * @throws IllegalArgumentException if limit is more then 1_000.
    */
   public Flowable<Integer> observeContentTypeCachePopulation(final int limit) {
-    if (limit > 1000) {
+    if (limit > CONTENT_TYPE_LIMIT_MAX) {
       throw new IllegalArgumentException("Content types per page limit cannot be more then 1000.");
     }
     if (limit <= 0) {
@@ -228,8 +233,8 @@ public class CDAClient {
                         cache.types().put(resource.id(), (CDAContentType) resource);
                       } else {
                         throw new IllegalStateException(
-                            "Requesting a list of content types should not return " +
-                                "any other type.");
+                            "Requesting a list of content types should not return "
+                                + "any other type.");
                       }
                     }
 
@@ -369,14 +374,18 @@ public class CDAClient {
   Flowable<CDAContentType> cacheTypeWithId(String id) {
     CDAContentType contentType = cache.types().get(id);
     if (contentType == null) {
-      return observe(CDAContentType.class).one(id).map(new Function<CDAContentType, CDAContentType>() {
-        @Override public CDAContentType apply(CDAContentType resource) {
-          if (resource != null) {
-            cache.types().put(resource.id(), resource);
-          }
-          return resource;
-        }
-      });
+      return observe(CDAContentType.class)
+          .one(id)
+          .map(
+              new Function<CDAContentType, CDAContentType>() {
+                @Override public CDAContentType apply(CDAContentType resource) {
+                  if (resource != null) {
+                    cache.types().put(resource.id(), resource);
+                  }
+                  return resource;
+                }
+              }
+          );
     }
     return Flowable.just(contentType);
   }
@@ -394,7 +403,7 @@ public class CDAClient {
   static String createUserAgent() {
     final Properties properties = System.getProperties();
     return String.format("contentful.java/%s(%s %s) %s/%s",
-        getProperty("version.name"),
+        PROJECT_VERSION,
         properties.getProperty("java.runtime.name"),
         properties.getProperty("java.runtime.version"),
         properties.getProperty("os.name"),
@@ -407,7 +416,9 @@ public class CDAClient {
 
     final Platform platform = Platform.get();
     return new Section[]{
-        sdk("contentful.java", Version.parse(getProperty("version.name"))),
+        sdk(
+            "contentful.java",
+            Version.parse(PROJECT_VERSION)),
         platform(
             "java",
             Version.parse(properties.getProperty("java.runtime.version"))
@@ -544,16 +555,20 @@ public class CDAClient {
     private OkHttpClient.Builder setLogger(OkHttpClient.Builder okBuilder) {
       if (logger != null) {
         switch (logLevel) {
-          case NONE:
-            break;
           case BASIC:
             return okBuilder.addInterceptor(new LogInterceptor(logger));
           case FULL:
             return okBuilder.addNetworkInterceptor(new LogInterceptor(logger));
+          case NONE:
+            break;
+          default:
+            break;
         }
       } else {
         if (logLevel != Logger.Level.NONE) {
-          throw new IllegalArgumentException("Cannot log to a null logger. Please set either logLevel to None, or do set a Logger");
+          throw new IllegalArgumentException(
+              "Cannot log to a null logger. Please set either logLevel to None, or do set a Logger"
+          );
         }
       }
       return okBuilder;
@@ -596,6 +611,7 @@ public class CDAClient {
       return okBuilder;
     }
 
+    //BEGIN TO LONG CODE LINES
     /**
      * Sets the flag of enforcing TLS 1.2.
      * <p>
@@ -605,6 +621,7 @@ public class CDAClient {
      * @return this builder for chaining.
      * @see <a href="https://developer.android.com/reference/javax/net/ssl/SSLSocket.html">reference</a>
      */
+    //END TO LONG CODE LINES
     public Builder useTLS12() {
       this.useTLS12 = true;
       return this;

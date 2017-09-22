@@ -23,7 +23,7 @@ final class Callbacks {
     return callback;
   }
 
-  static abstract class BaseAction<E> implements Consumer<E> {
+  abstract static class BaseAction<E> implements Consumer<E> {
     protected final CDACallback<? extends CDAResource> callback;
 
     protected final CDAClient client;

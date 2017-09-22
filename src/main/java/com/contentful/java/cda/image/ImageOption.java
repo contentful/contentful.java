@@ -17,7 +17,7 @@ public class ImageOption {
    */
   public enum Format {
     /**
-     * Image should be a jpg, can be used with {@link #jpegQualityOf(int)}, but might produce artifacts.
+     * Image should be a jpg, useful for {@link #jpegQualityOf(int)}, but might produce artifacts.
      */
     jpg,
 

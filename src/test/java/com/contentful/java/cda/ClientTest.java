@@ -1,5 +1,6 @@
 package com.contentful.java.cda;
 
+import com.contentful.java.cda.build.GeneratedBuildParameters;
 import com.contentful.java.cda.interceptor.AuthorizationHeaderInterceptor;
 import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor;
 import com.contentful.java.cda.interceptor.UserAgentHeaderInterceptor;
@@ -18,8 +19,8 @@ import okhttp3.Response;
 import okhttp3.mockwebserver.RecordedRequest;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -104,7 +105,7 @@ public class ClientTest extends BaseTest {
           .fetchSpace();
     } catch (RuntimeException e) {
       assertThat(e.getCause()).isInstanceOf(IOException.class);
-      assertThat(e.getCause()).hasMessage(ERROR_MESSAGE);
+      assertThat(e.getCause()).hasMessageThat().isEqualTo(ERROR_MESSAGE);
       throw (e);
     }
   }
@@ -148,8 +149,9 @@ public class ClientTest extends BaseTest {
   @Test
   @Enqueue
   public void userAgentHeader() throws Exception {
-    String versionName = Util.getProperty("version.name");
-    assertThat(versionName).isNotEmpty();
+    String versionName = GeneratedBuildParameters.PROJECT_VERSION;
+    assertThat(versionName).matches("^\\d+\\.\\d+\\.\\d+(-\\w+)?$");
+
     client.fetchSpace();
     RecordedRequest request = server.takeRequest();
 

@@ -8,12 +8,15 @@ import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
+//BEGIN TO LONG CODE LINES
 /**
  * Simple interceptor to log a request and its response.
  *
  * @see <a href="https://github.com/square/okhttp/wiki/Interceptors">https://github.com/square/okhttp/wiki/Interceptors</a>
  */
+//END TO LONG CODE LINES
 public class LogInterceptor implements Interceptor {
+  private static final double NANOS_PER_SECOND = 1000000d;
   private final Logger logger;
 
   /**
@@ -31,7 +34,7 @@ public class LogInterceptor implements Interceptor {
   }
 
   /**
-   * Log the incomming request.
+   * Log the incoming request.
    * <p>
    * Once a request gets triggered in okhttp3, this interceptor gets called.
    *
@@ -50,7 +53,7 @@ public class LogInterceptor implements Interceptor {
 
     long t2 = System.nanoTime();
     logger.log(String.format("Received response for %s in %.1fms%n%s",
-        response.request().url(), (t2 - t1) / 1e6d, response.headers()));
+        response.request().url(), (t2 - t1) / NANOS_PER_SECOND, response.headers()));
 
     return response;
   }

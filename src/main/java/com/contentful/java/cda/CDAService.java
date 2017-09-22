@@ -30,5 +30,5 @@ interface CDAService {
   Flowable<Response<SynchronizedSpace>> sync(
       @Path("space") String space,
       @Query("initial") Boolean initial,
-      @Query("sync_token") String sync_token);
+      @Query("sync_token") String syncToken);
 }

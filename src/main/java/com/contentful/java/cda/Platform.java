@@ -10,13 +10,17 @@ import java.util.concurrent.Executor;
  * An platform abstraction layer singleton providing information about the underlying system.
  */
 public abstract class Platform {
-  private static Platform PLATFORM = null;
+  private static Platform platform = null;
 
   /**
    * @return the current platform.
    */
   public static Platform get() {
-    return PLATFORM == null ? PLATFORM = findPlatform() : PLATFORM;
+    if (platform == null) {
+      platform = findPlatform();
+    }
+
+    return platform;
   }
 
   /**
