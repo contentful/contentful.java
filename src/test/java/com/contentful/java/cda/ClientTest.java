@@ -339,7 +339,7 @@ public class ClientTest extends BaseTest {
     final RecordedRequest request = server.takeRequest();
     final String headerValue = request.getHeader(ContentfulUserAgentHeaderInterceptor.HEADER_NAME);
 
-    assertThat(headerValue).matches("((sdk|platform|os) [.a-zA-Z0-9]+/[.a-zA-Z0-9]+(-[A-Z]+[0-9]*)?; ?){3}");
+    assertThat(headerValue).matches("((sdk|platform|os) [.a-zA-Z0-9]+/[.a-zA-Z0-9]+(-.*)?; ?){3}");
   }
 
 
