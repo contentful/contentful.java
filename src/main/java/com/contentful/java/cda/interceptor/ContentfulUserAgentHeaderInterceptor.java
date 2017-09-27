@@ -15,6 +15,8 @@ import static java.util.regex.Pattern.compile;
  */
 public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
   public static final String HEADER_NAME = "X-Contentful-User-Agent";
+  private static final String NO_ASCII_REGEX = "[^\\p{ASCII}]+";
+  private static final Pattern NO_ASCII_PATTERN = Pattern.compile(NO_ASCII_REGEX);
 
   /**
    * A section of values used to fill out the Contentful custom HTTP header.
@@ -35,6 +37,7 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
        * @see Platform
        */
       public static OperatingSystem parse(String osName) {
+        osName = removeNonAsciiCharacters(osName);
         if (osName.startsWith("Windows")) {
           return Windows;
         }
@@ -84,6 +87,8 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
           return null;
         }
 
+        version = removeNonAsciiCharacters(version);
+
         if (!version.contains(".")) {
           return null;
         } else if (version.indexOf(".") == version.lastIndexOf(".")) {
@@ -123,6 +128,7 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
           return null;
         }
         stability = stability.substring(1);
+        stability = removeNonAsciiCharacters(stability);
 
         // check for consecutive letters
         final Matcher matcher = STABILITY_PATTERN.matcher(stability);
@@ -276,6 +282,7 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
       if (name == null || name.length() <= 0) {
         return null;
       }
+      name = removeNonAsciiCharacters(name);
       return name.replace(" ", "-").toLowerCase();
     }
 
@@ -290,8 +297,8 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
      * @param version What is the version of this fields' value?
      */
     private Section(String identifier, String name, Version version) {
-      this.identifier = identifier;
-      this.name = name;
+      this.identifier = removeNonAsciiCharacters(identifier);
+      this.name = removeNonAsciiCharacters(name);
       this.version = version;
     }
 
@@ -371,5 +378,14 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
       builder.append(section.toString());
     }
     return builder.toString();
+  }
+
+  private static String removeNonAsciiCharacters(String input) {
+    final Matcher m = NO_ASCII_PATTERN.matcher(input);
+    String result = input;
+    if (m.find()) {
+      result = m.replaceAll("");
+    }
+    return result;
   }
 }

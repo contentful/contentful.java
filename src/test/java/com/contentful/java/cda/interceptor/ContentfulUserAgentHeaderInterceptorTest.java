@@ -13,7 +13,6 @@ import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInter
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.OperatingSystem.Linux;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.OperatingSystem.Windows;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.OperatingSystem.macOS;
-import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.Version.parse;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.app;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.integration;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.os;
@@ -26,10 +25,10 @@ public class ContentfulUserAgentHeaderInterceptorTest {
   public void testCompleteHeaderGetsCreated() {
     final ContentfulUserAgentHeaderInterceptor header =
         new ContentfulUserAgentHeaderInterceptor(
-            app("app", parse("1.0.0")),
-            integration("int", parse("2.1.0")),
-            sdk("sdk", parse("3.0.1")),
-            platform("plat", parse("4.0.0-dev234")),
+            app("app", Version.parse("1.0.0")),
+            integration("int", Version.parse("2.1.0")),
+            sdk("sdk", Version.parse("3.0.1")),
+            platform("plat", Version.parse("4.0.0-dev234")),
             os(OperatingSystem.parse("Linux"), Version.parse("5.1.2-ASDF"))
         );
 
@@ -47,7 +46,7 @@ public class ContentfulUserAgentHeaderInterceptorTest {
 
   @Test
   public void testConvertJavaStyleVersions() {
-    assertThat(parse("1.8.0_0123456780-b17").toString()).isEqualTo("1.8.0");
+    assertThat(Version.parse("1.8.0_0123456780-b17").toString()).isEqualTo("1.8.0");
   }
 
   @Test
@@ -68,8 +67,8 @@ public class ContentfulUserAgentHeaderInterceptorTest {
   public void testTwiceSameNameTakesLast() {
     final ContentfulUserAgentHeaderInterceptor header =
         new ContentfulUserAgentHeaderInterceptor(
-            app("foo", parse("1.0.0")),
-            app("bar", parse("2.0.0"))
+            app("foo", Version.parse("1.0.0")),
+            app("bar", Version.parse("2.0.0"))
         );
 
     final String value = header.getValue();
@@ -81,7 +80,7 @@ public class ContentfulUserAgentHeaderInterceptorTest {
 
   @Test
   public void testNoNameInPairIgnoresApp() {
-    assertThat(app(null, parse("1.0.0"))).isNull();
+    assertThat(app(null, Version.parse("1.0.0"))).isNull();
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -91,12 +90,12 @@ public class ContentfulUserAgentHeaderInterceptorTest {
 
   @Test
   public void parsingNegativeVersionIgnoresVersion() {
-    assertThat(parse("-1.0.0")).isNull();
+    assertThat(Version.parse("-1.0.0")).isNull();
   }
 
   @Test
   public void parsingGarbageIgnoresVersion() {
-    assertThat(parse("♻")).isNull();
+    assertThat(Version.parse("♻")).isNull();
   }
 
   @Test
@@ -123,22 +122,22 @@ public class ContentfulUserAgentHeaderInterceptorTest {
 
   @Test
   public void parsingVersionWithWrongStabilityIgnoresStability() {
-    assertThat(parse("1.0.0-🤖").toString()).isEqualTo("1.0.0");
+    assertThat(Version.parse("1.0.0-🤖").toString()).isEqualTo("1.0.0");
   }
 
   @Test
   public void missingPatchVersionNumberDoesNotThrow() {
-    assertThat(parse("1.0").toString()).isEqualTo("1.0.0");
+    assertThat(Version.parse("1.0").toString()).isEqualTo("1.0.0");
   }
 
   @Test
   public void nullVersionIsIgnored() {
-    assertThat(parse(null)).isNull();
+    assertThat(Version.parse(null)).isNull();
   }
 
   @Test
   public void allZeroVersionGetsIgnored() {
-    assertThat(parse("0.0")).isNull();
+    assertThat(Version.parse("0.0")).isNull();
   }
 
   @Test
@@ -213,5 +212,32 @@ public class ContentfulUserAgentHeaderInterceptorTest {
 
     // mock static field to include android os version
     assertThat(OperatingSystem.parse("Android")).isEqualTo(Android);
+  }
+
+  @Test
+  public void testIgnoreNonAsciiCharactersInStability() {
+    assertThat(Version.parse("3.4.0-Xceed™-D851").toString()).isEqualTo("3.4.0-Xceed-D851");
+  }
+
+  @Test
+  public void testIgnoreNonAsciiCharactersInVersionNumber() {
+    assertThat(Version.parse("۷.۶.۲")).isNull();
+    assertThat(Version.parse("۰.۹.۰")).isNull();
+    assertThat(Version.parse("۶.۰.۱")).isNull();
+  }
+
+  @Test
+  public void testNonAsciiCharactersComplete() {
+    final ContentfulUserAgentHeaderInterceptor header =
+        new ContentfulUserAgentHeaderInterceptor(
+            app("my-app🤖", Version.parse("1.0.۹-۹"))
+        );
+
+    final String value = header.getValue();
+    final String name = header.getName();
+
+    assertThat(name).isEqualTo("X-Contentful-User-Agent");
+    assertThat(value).isEqualTo("app my-app; ");
+
   }
 }
