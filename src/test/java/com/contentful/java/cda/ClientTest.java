@@ -215,14 +215,91 @@ public class ClientTest extends BaseTest {
 
   @Test
   @Enqueue("demo/content_types_cat.json")
-  public void usingTLS12DoesNotThrow() {
+  public void enforcingCustomTLS12DoesNotThrow() {
     final CDAClient client = createBuilder()
-        .useTLS12()
+        .setTls12Implementation(Tls12Implementation.sdkProvided)
         .build();
 
     assertThat(client).isNotNull();
 
     client.fetch(CDAEntry.class).all();
+  }
+
+  @Test
+  @Enqueue("demo/content_types_cat.json")
+  public void enforcingSystemTLS12DoesNotThrow() {
+    final CDAClient client = createBuilder()
+        .setTls12Implementation(Tls12Implementation.systemProvided)
+        .build();
+
+    assertThat(client).isNotNull();
+
+    client.fetch(CDAEntry.class).all();
+  }
+
+  @Test
+  @Enqueue("demo/content_types_cat.json")
+  public void usingTLS12recommendationDoesNotThrow() {
+    final CDAClient client = createBuilder()
+        .setTls12Implementation(Tls12Implementation.useRecommendation)
+        .build();
+
+    assertThat(client).isNotNull();
+
+    client.fetch(CDAEntry.class).all();
+  }
+
+  @Test
+  public void androidBelow20CreatesNewTLSFactoryIfNotEnforcedNotTo() {
+    try {
+      Platform.platform = new Platform.Android(18, "Mocked Android Platform");
+      final CDAClient.Builder builder = CDAClient.builder();
+
+      builder.setTls12Implementation(Tls12Implementation.useRecommendation);
+      assertThat(builder.isSdkTlsSocketFactoryWanted()).isTrue();
+
+      builder.setTls12Implementation(Tls12Implementation.sdkProvided);
+      assertThat(builder.isSdkTlsSocketFactoryWanted()).isTrue();
+
+      builder.setTls12Implementation(Tls12Implementation.systemProvided);
+      assertThat(builder.isSdkTlsSocketFactoryWanted()).isFalse();
+    } finally {
+      Platform.platform = null;
+    }
+  }
+
+  @Test
+  public void androidAtLeast20UsesSystemTLSFactoryIfNotEnforcedToNotTo() {
+    try {
+      Platform.platform = new Platform.Android(23, "Mocked _NEW_ Android Platform");
+      final CDAClient.Builder builder = CDAClient.builder();
+
+      builder.setTls12Implementation(Tls12Implementation.useRecommendation);
+      assertThat(builder.isSdkTlsSocketFactoryWanted()).isFalse();
+
+      builder.setTls12Implementation(Tls12Implementation.sdkProvided);
+      assertThat(builder.isSdkTlsSocketFactoryWanted()).isTrue();
+
+      builder.setTls12Implementation(Tls12Implementation.systemProvided);
+      assertThat(builder.isSdkTlsSocketFactoryWanted()).isFalse();
+    } finally {
+      Platform.platform = null;
+    }
+  }
+
+  @Test
+  public void javaUsesSystemsTLSFactoryIfNotForcedToCustom() {
+    final CDAClient.Builder builder = CDAClient.builder();
+    Platform.platform = new Platform.Base();
+
+    builder.setTls12Implementation(Tls12Implementation.useRecommendation);
+    assertThat(builder.isSdkTlsSocketFactoryWanted()).isFalse();
+
+    builder.setTls12Implementation(Tls12Implementation.sdkProvided);
+    assertThat(builder.isSdkTlsSocketFactoryWanted()).isTrue();
+
+    builder.setTls12Implementation(Tls12Implementation.systemProvided);
+    assertThat(builder.isSdkTlsSocketFactoryWanted()).isFalse();
   }
 
   @Test(expected = CDAHttpException.class)
