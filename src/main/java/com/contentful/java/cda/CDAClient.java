@@ -28,6 +28,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.contentful.java.cda.Constants.ENDPOINT_PROD;
 import static com.contentful.java.cda.Constants.PATH_CONTENT_TYPES;
+import static com.contentful.java.cda.Tls12Implementation.useRecommendation;
 import static com.contentful.java.cda.Util.checkNotNull;
 import static com.contentful.java.cda.build.GeneratedBuildParameters.PROJECT_VERSION;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.os;
@@ -454,7 +455,7 @@ public class CDAClient {
     Call.Factory callFactory;
 
     boolean preview;
-    boolean useTLS12;
+    Tls12Implementation tls12Implementation = useRecommendation;
 
     Section application;
     Section integration;
@@ -575,15 +576,27 @@ public class CDAClient {
     }
 
     private OkHttpClient.Builder useTLS12IfWanted(OkHttpClient.Builder okBuilder) {
-      if (useTLS12) {
+      if (isSdkTlsSocketFactoryWanted()) {
         try {
-          okBuilder.sslSocketFactory(new TLSSocketFactory());
+          okBuilder.sslSocketFactory(new TlsSocketFactory());
         } catch (Exception e) {
           throw new IllegalArgumentException("Cannot create TLSSocketFactory for TLS 1.2", e);
         }
       }
 
       return okBuilder;
+    }
+
+    boolean isSdkTlsSocketFactoryWanted() {
+      switch (tls12Implementation) {
+        case sdkProvided:
+          return true;
+        case systemProvided:
+          return false;
+        default:
+        case useRecommendation:
+          return Platform.get().needsCustomTLSSocketFactory();
+      }
     }
 
     /**
@@ -611,19 +624,19 @@ public class CDAClient {
       return okBuilder;
     }
 
-    //BEGIN TO LONG CODE LINES
     /**
-     * Sets the flag of enforcing TLS 1.2.
+     * Overwrite the recommendation from the SDK for using a custom TLS12 socket factory.
      * <p>
-     * If this is not used, TLS 1.2 may not be used per default on all
-     * configurations.
-     *
-     * @return this builder for chaining.
-     * @see <a href="https://developer.android.com/reference/javax/net/ssl/SSLSocket.html">reference</a>
+     * This SDK recommends a TLS12 socket factory to be used: Either the system one, or an SDK owned
+     * implementation. If this recommendation does not fit your needs, feel free to overwrite the
+     * recommendation here.
+     * <p>
+     * Some operation systems and frameworks, esp. Android and Java 1.6, might opt for implementing
+     * TLS12 (enforced by Contentful) but do not enable it. The SDK tries to find those situations
+     * and recommends to either use the system TLSSocketFactory or a SDK provided one.
      */
-    //END TO LONG CODE LINES
-    public Builder useTLS12() {
-      this.useTLS12 = true;
+    public Builder setTls12Implementation(Tls12Implementation implementation) {
+      this.tls12Implementation = implementation;
       return this;
     }
 

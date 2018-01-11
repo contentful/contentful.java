@@ -15,13 +15,13 @@ import javax.net.ssl.SSLSocketFactory;
  * <p>
  * {@see https://developer.android.com/reference/javax/net/ssl/SSLSocket.html}
  */
-final class TLSSocketFactory extends SSLSocketFactory {
+final class TlsSocketFactory extends SSLSocketFactory {
 
   private static final String[] PROTOCOLS_TLS_1_2_ONLY = {"TLSv1.2"};
 
   private final SSLSocketFactory delegate;
 
-  TLSSocketFactory() throws KeyManagementException, NoSuchAlgorithmException {
+  TlsSocketFactory() throws KeyManagementException, NoSuchAlgorithmException {
     SSLContext context = SSLContext.getInstance("TLS");
     context.init(null, null, null);
     delegate = context.getSocketFactory();

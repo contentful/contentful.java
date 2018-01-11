@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Version [9.0.0] - (2018-01-11)
+- **Remove** `.useTLS12()` from [7.4.0] and replace it with automated approach.
+
 ## Version [8.0.1] - (2017-10-18)
 - Change: Use `filtered` java file to create version number
 - Fix: Gracefully ignore non ascii characters on HTTP header generation.
@@ -195,7 +198,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-8.0.1...HEAD
+[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-9.0.0...HEAD
+[9.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-8.0.1...java-sdk-9.0.0
 [8.0.1]: https://github.com/contentful/contentful.java/compare/java-sdk-8.0.0...java-sdk-8.0.1
 [8.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-7.6.3...java-sdk-8.0.0
 [7.6.2]: https://github.com/contentful/contentful.java/compare/java-sdk-7.6.2...java-sdk-7.6.3
