@@ -11,11 +11,20 @@ import com.contentful.java.cda.interceptor.ErrorInterceptor;
 import com.contentful.java.cda.interceptor.LogInterceptor;
 import com.contentful.java.cda.interceptor.UserAgentHeaderInterceptor;
 
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
+
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
@@ -34,6 +43,7 @@ import static com.contentful.java.cda.build.GeneratedBuildParameters.PROJECT_VER
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.os;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.platform;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.sdk;
+import static javax.net.ssl.TrustManagerFactory.getDefaultAlgorithm;
 //END TO LONG CODE LINES
 
 /**
@@ -575,16 +585,43 @@ public class CDAClient {
       return okBuilder;
     }
 
-    private OkHttpClient.Builder useTLS12IfWanted(OkHttpClient.Builder okBuilder) {
+    private OkHttpClient.Builder useTls12IfWanted(OkHttpClient.Builder okBuilder) {
       if (isSdkTlsSocketFactoryWanted()) {
         try {
-          okBuilder.sslSocketFactory(new TlsSocketFactory());
-        } catch (Exception e) {
-          throw new IllegalArgumentException("Cannot create TLSSocketFactory for TLS 1.2", e);
+          okBuilder.sslSocketFactory(new TlsSocketFactory(), getX509TrustManager());
+        } catch (GeneralSecurityException exception) {
+          throw new IllegalArgumentException(
+              "Cannot create TlsSocketFactory for TLS 1.2. "
+                  + "Please consider using 'setTls12Implementation(systemProvided)', "
+                  + "or update to a system providing TLS 1.2 support.",
+              exception);
         }
       }
 
       return okBuilder;
+    }
+
+    X509TrustManager getX509TrustManager() throws NoSuchAlgorithmException, KeyStoreException {
+      final TrustManagerFactory trustManagerFactory =
+          TrustManagerFactory.getInstance(getDefaultAlgorithm());
+      trustManagerFactory.init((KeyStore) null);
+
+      return extractX509TrustManager(trustManagerFactory.getTrustManagers());
+    }
+
+    X509TrustManager extractX509TrustManager(TrustManager[] trustManagers)
+        throws NoSuchAlgorithmException {
+      if (trustManagers != null) {
+        for (final TrustManager manager : trustManagers) {
+          if (manager instanceof X509TrustManager) {
+            return (X509TrustManager) manager;
+          }
+        }
+      }
+
+      throw new NoSuchAlgorithmException(
+          "Cannot find a 'X509TrustManager' in system provided managers: '"
+              + Arrays.toString(trustManagers) + "'.");
     }
 
     boolean isSdkTlsSocketFactoryWanted() {
@@ -619,7 +656,7 @@ public class CDAClient {
           .addInterceptor(new ErrorInterceptor());
 
       setLogger(okBuilder);
-      useTLS12IfWanted(okBuilder);
+      useTls12IfWanted(okBuilder);
 
       return okBuilder;
     }
