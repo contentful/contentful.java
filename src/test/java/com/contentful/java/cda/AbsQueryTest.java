@@ -122,6 +122,20 @@ public class AbsQueryTest {
     assertThat(query.params).containsEntry("select", "sys,fields.bar,fields.bar2");
   }
 
+  @Test
+  public void linksToEntryId() throws Exception {
+    query.linksToEntryId("nyancat");
+
+    assertThat(query.params).containsEntry("links_to_entry", "nyancat");
+  }
+
+  @Test
+  public void linksToAssetId() throws Exception {
+      query.linksToAssetId("nyancat");
+
+      assertThat(query.params).containsEntry("links_to_asset", "nyancat");
+  }
+
   @Test(expected = IllegalStateException.class)
   public void selectsWithoutTypeThrows() throws Exception {
     query.select("fields.bar", "fields.bar2");
