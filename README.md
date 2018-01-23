@@ -42,15 +42,6 @@ maven { url 'https://jitpack.io' }
 compile 'com.github.contentful:contentful.java:java-sdk-9.0.1-SNAPSHOT'
 ```
 
-
-### Default Client
-
-The SDK uses Retrofit under the hood as a REST client, which detects [OkHttp][5] in your classpath and uses it if it's available, otherwise falls back to the default `HttpURLConnection`.
-
-The recommended approach would be to add [okhttp-urlconnection][5] as a dependency to your project (okhttp already included), but that is completely optional.
-
-You can also specify a custom client to be used, refer to the [official documentation][3] for instructions.
-
 ### Proguard
 
 Grab the [ProGuard configuration file][proguard] and apply to your project.
@@ -154,7 +145,6 @@ Copyright (c) 2017 Contentful GmbH. See [LICENSE.txt][6] for further details.
  [2]: https://oss.sonatype.org/service/local/repositories/releases/content/com/contentful/java/java-sdk/9.0.1/java-sdk-9.0.1.jar
  [3]: https://contentful.github.io/contentful.java/
  [4]: https://www.contentful.com/developers/documentation/content-delivery-api/
- [5]: https://square.github.io/okhttp/
  [6]: LICENSE.txt
  [7]: https://github.com/contentful/contentful.java/wiki/3.0-Migration
  [proguard]: proguard-cda.cfg  
