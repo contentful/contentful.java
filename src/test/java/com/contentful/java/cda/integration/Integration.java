@@ -289,34 +289,6 @@ public class Integration {
     assertThat(items.get(items.size() - 1).id()).isEqualTo("nyancat");
   }
 
-  //"/spaces/{space_id}/entries?links_to_entry={value}",
-  @Test
-  public void fetchEntriesWithLinksToEntryMethod() {
-    CDAEntry entry = client.fetch(CDAEntry.class).one("nyancat");
-    CDAArray found = client.fetch(CDAEntry.class)
-            .linksToEntry(entry)
-            .all();
-
-    assertThat(found.total()).isEqualTo(1);
-    List<CDAResource> items = found.items();
-    assertThat(items.get(items.size() - 1).id()).isEqualTo("happycat");
-  }
-
-
-  //"/spaces/{space_id}/entries?links_to_asset={value}",
-  @Test
-  public void fetchEntriesWithLinksToAssetMethod() {
-    CDAAsset asset = client.fetch(CDAAsset.class).one("nyancat");
-    CDAArray found = client.fetch(CDAEntry.class)
-            .linksToAsset(asset)
-            .all();
-
-    assertThat(found.total()).isEqualTo(1);
-    List<CDAResource> items = found.items();
-    assertThat(items.get(items.size() - 1).id()).isEqualTo("nyancat");
-  }
-
-
 
   //"/spaces/{space_id}/entries?order={attribute}",
   @Test

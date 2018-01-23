@@ -118,21 +118,6 @@ public abstract class AbsQuery<
 
 
   /**
-   * Request entries that link to given entry
-   *
-   * @param  entry to be used.
-   * @return the calling query for chaining.
-   * @throws NullPointerException     if entry is null.
-   * @throws IllegalArgumentException if entry is empty.
-   */
-  @SuppressWarnings("unchecked")
-  public Query linksToEntry(CDAEntry entry) {
-    checkNotNull(entry, "entry must not be null.");
-
-    return this.linksToEntryId(entry.id());
-  }
-
-  /**
    * Request entries that link to given entryId
    *
    * @param  entryId to be used.
@@ -147,22 +132,6 @@ public abstract class AbsQuery<
     params.put(PARAMETER_LINKS_TO_ENTRY, entryId);
 
     return (Query) this;
-  }
-
-
-  /**
-   * Request entries that link to given entry
-   *
-   * @param  asset to be used.
-   * @return the calling query for chaining.
-   * @throws NullPointerException     if asset is null.
-   * @throws IllegalArgumentException if asset is empty.
-   */
-  @SuppressWarnings("unchecked")
-  public Query linksToAsset(CDAAsset asset) {
-    checkNotNull(asset, "asset must not be null.");
-
-    return this.linksToAssetId(asset.id());
   }
 
   /**
