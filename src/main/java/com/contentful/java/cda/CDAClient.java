@@ -262,7 +262,11 @@ public class CDAClient {
    */
 
   public SyncQuery sync() {
-    return sync(null, null);
+    return sync(null, (SynchronizedSpace) null);
+  }
+
+  public SyncQuery sync(String type, String contentType) {
+    return sync(null, null, type, contentType);
   }
 
   /**
@@ -275,7 +279,7 @@ public class CDAClient {
    * @return query instance.
    */
   public SyncQuery sync(String syncToken) {
-    return sync(syncToken, null);
+    return sync(syncToken, (SynchronizedSpace) null);
   }
 
   /**
@@ -291,6 +295,10 @@ public class CDAClient {
   }
 
   private SyncQuery sync(String syncToken, SynchronizedSpace synchronizedSpace) {
+    return sync(syncToken, synchronizedSpace, null, null);
+  }
+
+  private SyncQuery sync(String syncToken, SynchronizedSpace synchronizedSpace, String type, String contentType) {
     if (preview) {
       syncToken = null;
       synchronizedSpace = null;
@@ -302,6 +310,12 @@ public class CDAClient {
     }
     if (syncToken != null) {
       builder.setSyncToken(syncToken);
+    }
+    if (type != null) {
+      builder.setType(type);
+    }
+    if (contentType != null) {
+      builder.setContentType(contentType);
     }
     return builder.build();
   }
