@@ -298,7 +298,8 @@ public class CDAClient {
     return sync(syncToken, synchronizedSpace, null, null);
   }
 
-  private SyncQuery sync(String syncToken, SynchronizedSpace synchronizedSpace, String type, String contentType) {
+  private SyncQuery sync(String syncToken, SynchronizedSpace synchronizedSpace,
+                         String type, String contentType) {
     if (preview) {
       syncToken = null;
       synchronizedSpace = null;
