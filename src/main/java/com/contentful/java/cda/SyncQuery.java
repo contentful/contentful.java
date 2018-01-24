@@ -51,7 +51,8 @@ public class SyncQuery {
     return client.cacheAll(true)
         .flatMap(new Function<Cache, Flowable<Response<SynchronizedSpace>>>() {
           @Override public Flowable<Response<SynchronizedSpace>> apply(Cache cache) {
-            return client.service.sync(client.spaceId, initial ? initial : null, token, type, contentType);
+            return client.service.sync(client.spaceId, initial ? initial : null, token,
+                type, contentType);
           }
         }).map(new Function<Response<SynchronizedSpace>, SynchronizedSpace>() {
           @Override public SynchronizedSpace apply(Response<SynchronizedSpace> synchronizedSpace) {
