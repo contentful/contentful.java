@@ -185,4 +185,18 @@ public class SyncTest extends BaseTest {
 
     assertInitial(space);
   }
+
+  @Test
+  public void syncUsesResourceType() throws Exception {
+    final SyncQuery query = client.sync("DeletedEntry", null);
+
+    assertThat("DeletedEntry").isEqualTo(query.type);
+  }
+
+  @Test
+  public void syncUsesContentType() throws Exception {
+    final SyncQuery query = client.sync("Entry", "customType");
+
+    assertThat("customType").isEqualTo(query.contentType);
+  }
 }

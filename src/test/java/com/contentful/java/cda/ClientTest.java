@@ -10,6 +10,7 @@ import com.contentful.java.cda.lib.EnqueueResponse;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 
 import okhttp3.Call;
 import okhttp3.Headers;
@@ -449,6 +450,34 @@ public class ClientTest extends BaseTest {
     final String headerValue = request.getHeader(ContentfulUserAgentHeaderInterceptor.HEADER_NAME);
 
     assertThat(headerValue).contains("integration contentful.awesomelib.java/0.0.1-beta9;");
+  }
+
+  @Test
+  @Enqueue({"demo/space.json", "demo/content_types.json", "demo/sync_initial_p1.json"})
+  public void syncTypeIsAddedToRequest() throws Exception {
+    final CDAClient client = createPreviewClient();
+
+    final CountDownLatch latch = new CountDownLatch(1);
+    client.sync("ResourceType", "CustomType").fetch(new CDACallback<SynchronizedSpace>() {
+      @Override
+      protected void onSuccess(SynchronizedSpace result) {
+        latch.countDown();
+      }
+
+      @Override
+      protected void onFailure(Throwable error) {
+        latch.countDown();
+      }
+
+    });
+
+    latch.await();
+    RecordedRequest request = null;
+    for (int i = server.getRequestCount(); i > 0; --i) {
+      request = server.takeRequest();
+    }
+    assertThat(request.getPath()).contains("type=ResourceType");
+    assertThat(request.getPath()).contains("content_type=CustomType");
   }
 
 }
