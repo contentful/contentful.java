@@ -3,8 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## Version [9.1.0] - (2018-01-23)
-- Added support for [incoming-links](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/links-to-entry/query-entries/console/java), via `links_to_entry` and `links_to_asset` query. 
+## Version [9.1.0][unreleased]
+- Added support for [incoming-links](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/links-to-entry/query-entries/console/java) via `AbsQuery.linksToEntryId(…)` and `AbsQuery.linksToAssetId(…)`.
 
 ## Version [9.0.1] - (2018-01-15)
 - Fix: Use system provided `X509TrustManager` and avoid deprecation and reflection used by previous okhttp method.

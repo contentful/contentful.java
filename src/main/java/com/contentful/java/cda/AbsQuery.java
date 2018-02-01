@@ -118,7 +118,7 @@ public abstract class AbsQuery<
 
 
   /**
-   * Request entries that link to given entryId
+   * Request entries that link to given entryId.
    *
    * @param  entryId to be used.
    * @return the calling query for chaining.
@@ -135,7 +135,7 @@ public abstract class AbsQuery<
   }
 
   /**
-   * Request entries that link to given entryId
+   * Request entries that link to given entryId.
    *
    * @param  assetId to be used.
    * @return the calling query for chaining.
