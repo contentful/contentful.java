@@ -5,7 +5,7 @@ import java.util.Locale;
 /**
  * This class holds specific constants, used throughout the sdk, not accessible by mere mortals.
  */
-public class Constants {
+class Constants {
   /**
    * DO NOT CALL THIS CONSTRUCTOR
    *

@@ -18,7 +18,7 @@ public class SyncQuery {
 
   final boolean initial;
 
-  private SyncQuery(Builder builder) {
+  SyncQuery(Builder builder) {
     this.client = checkNotNull(builder.client, "Client must not be null.");
     this.syncToken = builder.syncToken;
     this.space = builder.space;
