@@ -24,7 +24,7 @@ public class SyncQuery {
     this.client = checkNotNull(builder.client, "Client must not be null.");
     this.syncToken = builder.syncToken;
     this.space = builder.space;
-    this.initial = space == null && syncToken == null;
+    this.initial = builder.isInitial();
     this.type = builder.type;
   }
 
@@ -50,8 +50,8 @@ public class SyncQuery {
           @Override public Flowable<Response<SynchronizedSpace>> apply(Cache cache) {
             return client.service.sync(client.spaceId,
                 initial ? initial : null, token,
-                type != null ? type.getName() : null,
-                type != null ? type.getContentType() : null);
+                initial && type != null ? type.getName() : null,
+                initial && type != null ? type.getContentType() : null);
           }
         }).map(new Function<Response<SynchronizedSpace>, SynchronizedSpace>() {
           @Override public SynchronizedSpace apply(Response<SynchronizedSpace> synchronizedSpace) {
@@ -110,8 +110,14 @@ public class SyncQuery {
     }
 
     Builder setType(SyncType type) {
-      this.type = type;
+      if (isInitial()) {
+        this.type = type;
+      }
       return this;
+    }
+
+    boolean isInitial() {
+      return space == null && syncToken == null;
     }
 
     SyncQuery build() {
