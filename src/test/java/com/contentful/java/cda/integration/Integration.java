@@ -38,6 +38,7 @@ import static com.contentful.java.cda.QueryOperation.IsNotEqualTo;
 import static com.contentful.java.cda.QueryOperation.IsWithinBoundingBoxOf;
 import static com.contentful.java.cda.QueryOperation.IsWithinCircleOf;
 import static com.contentful.java.cda.QueryOperation.Matches;
+import static com.contentful.java.cda.SyncType.onlyEntriesOfType;
 import static com.google.common.truth.Truth.assertThat;
 
 public class Integration {
@@ -140,6 +141,24 @@ public class Integration {
     CDAEntry nyanCat = space.entries().get("nyancat");
     assertThat(nyanCat).isNotNull();
     assertThat(nyanCat.getField("name")).isEqualTo("Nyan vIghro'");
+    assertThat(nyanCat.getField("color")).isEqualTo("rainbow");
+    List<String> likes = nyanCat.getField("likes");
+    assertThat(likes).containsExactly("rainbows", "fish");
+  }
+
+  // "/spaces/{space_id}/sync?initial=true&type=Entry&content_type=cat",
+  @Test
+  public void syncWithTypes() throws Exception {
+    SynchronizedSpace space = client.sync(onlyEntriesOfType("cat")).observe().blockingFirst();
+    space = client.sync(space).observe().blockingFirst();
+
+    assertThat(space.nextSyncUrl()).isNotEmpty();
+    assertThat(space.items()).hasSize(3);
+    assertThat(space.deletedEntries()).hasSize(0);
+
+    CDAEntry nyanCat = space.entries().get("nyancat");
+    assertThat(nyanCat).isNotNull();
+    assertThat(nyanCat.getField("name")).isEqualTo("Nyan Cat");
     assertThat(nyanCat.getField("color")).isEqualTo("rainbow");
     List<String> likes = nyanCat.getField("likes");
     assertThat(likes).containsExactly("rainbows", "fish");
