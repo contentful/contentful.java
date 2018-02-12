@@ -67,7 +67,7 @@ public class CDAClient {
 
   final boolean preview;
 
-  private CDAClient(Builder builder) {
+  CDAClient(Builder builder) {
     this(new Cache(),
         Platform.get().callbackExecutor(),
         createService(builder),
@@ -470,7 +470,7 @@ public class CDAClient {
     Section application;
     Section integration;
 
-    private Builder() {
+    Builder() {
     }
 
     /**
@@ -551,7 +551,7 @@ public class CDAClient {
       return this;
     }
 
-    private Call.Factory createOrGetCallFactory(Builder clientBuilder) {
+    Call.Factory createOrGetCallFactory(Builder clientBuilder) {
       final Call.Factory callFactory;
 
       if (clientBuilder.callFactory == null) {
