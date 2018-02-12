@@ -18,17 +18,14 @@ public class SyncQuery {
 
   final boolean initial;
 
-  final String type;
+  final SyncType type;
 
-  final String contentType;
-
-  private SyncQuery(Builder builder) {
+  SyncQuery(Builder builder) {
     this.client = checkNotNull(builder.client, "Client must not be null.");
     this.syncToken = builder.syncToken;
     this.space = builder.space;
     this.initial = space == null && syncToken == null;
     this.type = builder.type;
-    this.contentType = builder.contentType;
   }
 
   /**
@@ -51,8 +48,10 @@ public class SyncQuery {
     return client.cacheAll(true)
         .flatMap(new Function<Cache, Flowable<Response<SynchronizedSpace>>>() {
           @Override public Flowable<Response<SynchronizedSpace>> apply(Cache cache) {
-            return client.service.sync(client.spaceId, initial ? initial : null, token,
-                type, contentType);
+            return client.service.sync(client.spaceId,
+                initial ? initial : null, token,
+                type != null ? type.getName() : null,
+                type != null ? type.getContentType() : null);
           }
         }).map(new Function<Response<SynchronizedSpace>, SynchronizedSpace>() {
           @Override public SynchronizedSpace apply(Response<SynchronizedSpace> synchronizedSpace) {
@@ -93,9 +92,7 @@ public class SyncQuery {
 
     SynchronizedSpace space;
 
-    String type;
-
-    String contentType;
+    SyncType type;
 
     Builder setClient(CDAClient client) {
       this.client = client;
@@ -112,13 +109,8 @@ public class SyncQuery {
       return this;
     }
 
-    Builder setType(String type) {
+    Builder setType(SyncType type) {
       this.type = type;
-      return this;
-    }
-
-    Builder setContentType(String contentType) {
-      this.contentType = contentType;
       return this;
     }
 

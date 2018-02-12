@@ -9,6 +9,8 @@ import java.util.Map;
 
 import okhttp3.HttpUrl;
 
+import static com.contentful.java.cda.SyncType.onlyEntriesOfType;
+import static com.contentful.java.cda.SyncType.onlyDeletedEntries;
 import static com.google.common.truth.Truth.assertThat;
 
 public class SyncTest extends BaseTest {
@@ -188,15 +190,15 @@ public class SyncTest extends BaseTest {
 
   @Test
   public void syncUsesResourceType() throws Exception {
-    final SyncQuery query = client.sync("DeletedEntry", null);
+    final SyncQuery query = client.sync(onlyDeletedEntries());
 
-    assertThat("DeletedEntry").isEqualTo(query.type);
+    assertThat(query.type.getName()).isEqualTo("DeletedEntry");
   }
 
   @Test
   public void syncUsesContentType() throws Exception {
-    final SyncQuery query = client.sync("Entry", "customType");
+    final SyncQuery query = client.sync(onlyEntriesOfType("customType"));
 
-    assertThat("customType").isEqualTo(query.contentType);
+    assertThat(query.type.getContentType()).isEqualTo("customType");
   }
 }

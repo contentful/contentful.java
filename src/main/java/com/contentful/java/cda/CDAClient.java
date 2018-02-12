@@ -274,8 +274,8 @@ public class CDAClient {
    * @param type the type to be sync'ed.
    * @return query instance.
    */
-  public SyncQuery sync(String type, String contentType) {
-    return sync(null, null, type, contentType);
+  public SyncQuery sync(SyncType type) {
+    return sync(null, null, type);
   }
 
   /**
@@ -304,11 +304,11 @@ public class CDAClient {
   }
 
   private SyncQuery sync(String syncToken, SynchronizedSpace synchronizedSpace) {
-    return sync(syncToken, synchronizedSpace, null, null);
+    return sync(syncToken, synchronizedSpace, null);
   }
 
   private SyncQuery sync(String syncToken, SynchronizedSpace synchronizedSpace,
-                         String type, String contentType) {
+                         SyncType type) {
     if (preview) {
       syncToken = null;
       synchronizedSpace = null;
@@ -323,9 +323,6 @@ public class CDAClient {
     }
     if (type != null) {
       builder.setType(type);
-    }
-    if (contentType != null) {
-      builder.setContentType(contentType);
     }
     return builder.build();
   }

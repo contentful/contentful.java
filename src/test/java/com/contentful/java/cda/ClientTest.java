@@ -19,6 +19,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import okhttp3.mockwebserver.RecordedRequest;
 
+import static com.contentful.java.cda.SyncType.onlyEntriesOfType;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -458,7 +459,7 @@ public class ClientTest extends BaseTest {
     final CDAClient client = createPreviewClient();
 
     final CountDownLatch latch = new CountDownLatch(1);
-    client.sync("ResourceType", "CustomType").fetch(new CDACallback<SynchronizedSpace>() {
+    client.sync(onlyEntriesOfType("CustomType")).fetch(new CDACallback<SynchronizedSpace>() {
       @Override
       protected void onSuccess(SynchronizedSpace result) {
         latch.countDown();
@@ -476,7 +477,7 @@ public class ClientTest extends BaseTest {
     for (int i = server.getRequestCount(); i > 0; --i) {
       request = server.takeRequest();
     }
-    assertThat(request.getPath()).contains("type=ResourceType");
+    assertThat(request.getPath()).contains("type=Entry");
     assertThat(request.getPath()).contains("content_type=CustomType");
   }
 
