@@ -17,12 +17,12 @@ public class SyncQuery {
   final SynchronizedSpace space;
 
   final boolean initial;
-
+  
   final String type;
 
   final String contentType;
 
-  private SyncQuery(Builder builder) {
+  SyncQuery(Builder builder) {
     this.client = checkNotNull(builder.client, "Client must not be null.");
     this.syncToken = builder.syncToken;
     this.space = builder.space;

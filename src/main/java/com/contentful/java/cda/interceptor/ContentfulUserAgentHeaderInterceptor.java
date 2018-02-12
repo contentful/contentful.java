@@ -380,7 +380,7 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
     return builder.toString();
   }
 
-  private static String removeNonAsciiCharacters(String input) {
+  static String removeNonAsciiCharacters(String input) {
     final Matcher m = NO_ASCII_PATTERN.matcher(input);
     String result = input;
     if (m.find()) {
