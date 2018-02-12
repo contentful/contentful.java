@@ -262,7 +262,7 @@ public class CDAClient {
    */
 
   public SyncQuery sync() {
-    return sync(null, (SynchronizedSpace) null);
+    return sync(null, null);
   }
 
   /**
@@ -288,7 +288,7 @@ public class CDAClient {
    * @return query instance.
    */
   public SyncQuery sync(String syncToken) {
-    return sync(syncToken, (SynchronizedSpace) null);
+    return sync(syncToken, null);
   }
 
   /**
