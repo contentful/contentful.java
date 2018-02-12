@@ -265,6 +265,15 @@ public class CDAClient {
     return sync(null, (SynchronizedSpace) null);
   }
 
+  /**
+   * Returns a {@link SyncQuery} for synchronization with the provided {@code syncToken} via
+   * the Sync API.
+   * <p>
+   * If called from a {@link #preview} client, this will always do an initial sync.
+   *
+   * @param type the type to be sync'ed.
+   * @return query instance.
+   */
   public SyncQuery sync(String type, String contentType) {
     return sync(null, null, type, contentType);
   }
