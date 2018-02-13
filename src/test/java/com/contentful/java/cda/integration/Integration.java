@@ -239,6 +239,57 @@ public class Integration {
     assertThat(found.total()).isEqualTo(1);
   }
 
+  //"/spaces/{space_id}/entries?links_to_entry={value}",
+  @Test
+  public void fetchEntriesWithLinksToEntryQuery() {
+    CDAArray found = client.fetch(CDAEntry.class)
+            .where("links_to_entry", "nyancat")
+            .all();
+
+    assertThat(found.total()).isEqualTo(1);
+    List<CDAResource> items = found.items();
+    assertThat(items.get(items.size() - 1).id()).isEqualTo("happycat");
+  }
+
+
+  //"/spaces/{space_id}/entries?links_to_asset={value}",
+  @Test
+  public void fetchEntriesWithLinksToAssetQuery() {
+    CDAArray found = client.fetch(CDAEntry.class)
+            .where("links_to_asset", "nyancat")
+            .all();
+
+    assertThat(found.total()).isEqualTo(1);
+    List<CDAResource> items = found.items();
+    assertThat(items.get(items.size() - 1).id()).isEqualTo("nyancat");
+  }
+
+  //"/spaces/{space_id}/entries?links_to_entry={value}",
+  @Test
+  public void fetchEntriesWithLinksToEntryIdMethod() {
+    CDAArray found = client.fetch(CDAEntry.class)
+            .linksToEntryId("nyancat")
+            .all();
+
+    assertThat(found.total()).isEqualTo(1);
+    List<CDAResource> items = found.items();
+    assertThat(items.get(items.size() - 1).id()).isEqualTo("happycat");
+  }
+
+
+  //"/spaces/{space_id}/entries?links_to_asset={value}",
+  @Test
+  public void fetchEntriesWithLinksToAssetIdMethod() {
+    CDAArray found = client.fetch(CDAEntry.class)
+            .linksToAssetId("nyancat")
+            .all();
+
+    assertThat(found.total()).isEqualTo(1);
+    List<CDAResource> items = found.items();
+    assertThat(items.get(items.size() - 1).id()).isEqualTo("nyancat");
+  }
+
+
   //"/spaces/{space_id}/entries?order={attribute}",
   @Test
   public void fetchEntriesWithOrder() {

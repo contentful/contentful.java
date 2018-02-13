@@ -27,6 +27,8 @@ public abstract class AbsQuery<
   private static final String PARAMETER_LIMIT = "limit";
   private static final String PARAMETER_SKIP = "skip";
   private static final String PARAMETER_INCLUDE = "include";
+  private static final String PARAMETER_LINKS_TO_ENTRY = "links_to_entry";
+  private static final String PARAMETER_LINKS_TO_ASSET = "links_to_asset";
   private static final int MAX_LIMIT = 1000;
 
   final Class<Resource> type;
@@ -110,6 +112,41 @@ public abstract class AbsQuery<
     } else {
       params.put(PARAMETER_SELECT, "sys," + selection);
     }
+
+    return (Query) this;
+  }
+
+
+  /**
+   * Request entries that link to given entryId.
+   *
+   * @param  entryId to be used.
+   * @return the calling query for chaining.
+   * @throws NullPointerException     if entryId is null.
+   * @throws IllegalArgumentException if entryId is empty.
+   */
+  @SuppressWarnings("unchecked")
+  public Query linksToEntryId(String entryId) {
+    checkNotEmpty(entryId, "entryId must not be empty.");
+
+    params.put(PARAMETER_LINKS_TO_ENTRY, entryId);
+
+    return (Query) this;
+  }
+
+  /**
+   * Request entries that link to given entryId.
+   *
+   * @param  assetId to be used.
+   * @return the calling query for chaining.
+   * @throws NullPointerException     if entryId is null.
+   * @throws IllegalArgumentException if entryId is empty.
+   */
+  @SuppressWarnings("unchecked")
+  public Query linksToAssetId(String assetId) {
+    checkNotEmpty(assetId, "assetId must not be empty.");
+
+    params.put(PARAMETER_LINKS_TO_ASSET, assetId);
 
     return (Query) this;
   }
