@@ -3,8 +3,11 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## Version [9.1.0][unreleased]
-- Added support for [incoming-links](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/links-to-entry/query-entries/console/java) via `AbsQuery.linksToEntryId(…)` and `AbsQuery.linksToAssetId(…)`.
+## Version [9.1.0] - (2018-02-13)
+- Add: Support for [incoming-links](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/links-to-entry/query-entries/console/java) by @shm.
+- Add: Support for [partial syncing](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/synchronization/initial-synchronization-of-entries-of-a-specific-content-type) by @vbondarovich.
+- Fix: Remove synthetic internal methods by @marukami.
+❤ Thanks for all the awesome contributions. Keep it up!
 
 ## Version [9.0.1] - (2018-01-15)
 - Fix: Use system provided `X509TrustManager` and avoid deprecation and reflection used by previous okhttp method.
@@ -205,7 +208,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-9.0.1...HEAD
+[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-9.1.0...HEAD
+[9.1.0]: https://github.com/contentful/contentful.java/compare/java-sdk-9.0.1...java-sdk-9.1.0
 [9.0.1]: https://github.com/contentful/contentful.java/compare/java-sdk-9.0.0...java-sdk-9.0.1
 [9.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-8.0.1...java-sdk-9.0.0
 [8.0.1]: https://github.com/contentful/contentful.java/compare/java-sdk-8.0.0...java-sdk-8.0.1
