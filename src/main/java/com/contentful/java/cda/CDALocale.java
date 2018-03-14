@@ -2,12 +2,10 @@ package com.contentful.java.cda;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
-
 /**
  * Represents a single locale.
  */
-public class CDALocale implements Serializable {
+public class CDALocale extends CDAResource {
   String code;
 
   String name;
@@ -44,5 +42,17 @@ public class CDALocale implements Serializable {
    */
   public boolean isDefaultLocale() {
     return defaultLocale;
+  }
+
+  /**
+   * @return a human readable string, representing the object.
+   */
+  @Override public String toString() {
+    return "CDALocale { " + super.toString() + " "
+        + "code = " + code() + ", "
+        + "defaultLocale = " + isDefaultLocale() + ", "
+        + "fallbackLocaleCode = " + fallbackLocaleCode() + ", "
+        + "name = " + name() + " "
+        + "}";
   }
 }

@@ -7,6 +7,7 @@ import com.contentful.java.cda.CDAClient;
 import com.contentful.java.cda.CDAContentType;
 import com.contentful.java.cda.CDAEntry;
 import com.contentful.java.cda.CDAHttpException;
+import com.contentful.java.cda.CDALocale;
 import com.contentful.java.cda.CDAResource;
 import com.contentful.java.cda.CDAResourceNotFoundException;
 import com.contentful.java.cda.CDASpace;
@@ -263,8 +264,8 @@ public class Integration {
   @Test
   public void fetchEntriesWithLinksToEntryQuery() {
     CDAArray found = client.fetch(CDAEntry.class)
-            .where("links_to_entry", "nyancat")
-            .all();
+        .where("links_to_entry", "nyancat")
+        .all();
 
     assertThat(found.total()).isEqualTo(1);
     List<CDAResource> items = found.items();
@@ -276,8 +277,8 @@ public class Integration {
   @Test
   public void fetchEntriesWithLinksToAssetQuery() {
     CDAArray found = client.fetch(CDAEntry.class)
-            .where("links_to_asset", "nyancat")
-            .all();
+        .where("links_to_asset", "nyancat")
+        .all();
 
     assertThat(found.total()).isEqualTo(1);
     List<CDAResource> items = found.items();
@@ -288,8 +289,8 @@ public class Integration {
   @Test
   public void fetchEntriesWithLinksToEntryIdMethod() {
     CDAArray found = client.fetch(CDAEntry.class)
-            .linksToEntryId("nyancat")
-            .all();
+        .linksToEntryId("nyancat")
+        .all();
 
     assertThat(found.total()).isEqualTo(1);
     List<CDAResource> items = found.items();
@@ -301,8 +302,8 @@ public class Integration {
   @Test
   public void fetchEntriesWithLinksToAssetIdMethod() {
     CDAArray found = client.fetch(CDAEntry.class)
-            .linksToAssetId("nyancat")
-            .all();
+        .linksToAssetId("nyancat")
+        .all();
 
     assertThat(found.total()).isEqualTo(1);
     List<CDAResource> items = found.items();
@@ -542,6 +543,40 @@ public class Integration {
         .all();
 
     assertThat(found.items().size()).isEqualTo(4);
+  }
+
+  // "/spaces/{space_id}/locales",
+  @Test
+  public void fetchAllLocales() {
+    CDAArray found = client.fetch(CDALocale.class)
+        .all();
+
+    assertThat(found.limit()).isEqualTo(1000);
+    assertThat(found.total()).isEqualTo(2);
+    assertThat(found.items().size()).isEqualTo(2);
+
+    final CDALocale first = (CDALocale) found.items().get(0);
+    assertThat(first.code()).isEqualTo("en-US");
+    assertThat(first.name()).isEqualTo("English");
+    assertThat(first.fallbackLocaleCode()).isNull();
+    assertThat(first.isDefaultLocale()).isTrue();
+
+    final CDALocale second = (CDALocale) found.items().get(1);
+    assertThat(second.code()).isEqualTo("tlh");
+    assertThat(second.name()).isEqualTo("Klingon");
+    assertThat(second.fallbackLocaleCode()).isEqualTo("en-US");
+    assertThat(second.isDefaultLocale()).isFalse();
+  }
+
+  // "/spaces/{space_id}/locales/{id}",
+  @Test
+  public void fetchOneLocale() {
+    final CDALocale found = client.fetch(CDALocale.class).one("2oQPjMCL9bQkylziydLh57");
+
+    assertThat(found.code()).isEqualTo("en-US");
+    assertThat(found.name()).isEqualTo("English");
+    assertThat(found.fallbackLocaleCode()).isNull();
+    assertThat(found.isDefaultLocale()).isTrue();
   }
 
   @SuppressWarnings("unchecked") @Test

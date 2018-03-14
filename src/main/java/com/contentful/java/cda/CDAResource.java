@@ -48,4 +48,16 @@ public abstract class CDAResource implements Serializable {
   public <T> T getAttribute(String key) {
     return (T) attrs.get(key);
   }
+
+
+  /**
+   * @return a human readable string, representing the object.
+   */
+  @Override public String toString() {
+    return "CDAResource { "
+        + "attrs = " + attrs() + ", "
+        + "id = " + id() + ", "
+        + "type = " + type() + " "
+        + "}";
+  }
 }

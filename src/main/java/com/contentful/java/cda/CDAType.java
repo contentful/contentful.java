@@ -8,5 +8,6 @@ public enum CDAType {
   DELETEDASSET,
   DELETEDENTRY,
   ENTRY,
+  LOCALE,
   SPACE
 }
