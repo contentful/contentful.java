@@ -7,6 +7,7 @@ import retrofit2.Response;
 import static com.contentful.java.cda.CDAType.ASSET;
 import static com.contentful.java.cda.CDAType.CONTENTTYPE;
 import static com.contentful.java.cda.CDAType.ENTRY;
+import static com.contentful.java.cda.CDAType.LOCALE;
 import static com.contentful.java.cda.Util.typeForClass;
 
 /**
@@ -42,6 +43,12 @@ public class ObserveQuery<T extends CDAResource> extends AbsQuery<T, ObserveQuer
           return (T) array.entries().get(id);
         } else if (CONTENTTYPE.equals(resourceType)) {
           return (T) array.items().get(0);
+        } else if (LOCALE.equals(resourceType)) {
+          T found = findById(array, id);
+          if (found == null) {
+            throw new CDAResourceNotFoundException(type, id);
+          }
+          return found;
         } else {
           throw new IllegalArgumentException("Cannot invoke query for type: " + type.getName());
         }
@@ -59,6 +66,17 @@ public class ObserveQuery<T extends CDAResource> extends AbsQuery<T, ObserveQuer
       });
     }
     return flowable;
+  }
+
+  T findById(CDAArray array, String id) {
+    for (int i = 0; i < array.items.size(); ++i) {
+      final CDAResource item = array.items.get(i);
+      if (item.id().equals(id)) {
+        return (T) item;
+      }
+    }
+
+    return null;
   }
 
   /**

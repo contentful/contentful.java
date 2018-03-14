@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Version [10.0.0] - TBD
+- Add `locales` endpoint
+
 ## Version [9.1.1] - (2018-03-21)
 - Fix: numbers in http headers default back to english.
 
@@ -210,7 +213,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-9.1.1...HEAD
+[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-10.0.0...HEAD
+[10.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-9.1.1...java-sdk-10.0.0
 [9.1.1]: https://github.com/contentful/contentful.java/compare/java-sdk-9.1.0...java-sdk-9.1.1
 [9.1.0]: https://github.com/contentful/contentful.java/compare/java-sdk-9.0.1...java-sdk-9.1.0
 [9.0.1]: https://github.com/contentful/contentful.java/compare/java-sdk-9.0.0...java-sdk-9.0.1

@@ -9,10 +9,12 @@ import static com.contentful.java.cda.CDAType.CONTENTTYPE;
 import static com.contentful.java.cda.CDAType.DELETEDASSET;
 import static com.contentful.java.cda.CDAType.DELETEDENTRY;
 import static com.contentful.java.cda.CDAType.ENTRY;
+import static com.contentful.java.cda.CDAType.LOCALE;
 import static com.contentful.java.cda.CDAType.SPACE;
 import static com.contentful.java.cda.Constants.PATH_ASSETS;
 import static com.contentful.java.cda.Constants.PATH_CONTENT_TYPES;
 import static com.contentful.java.cda.Constants.PATH_ENTRIES;
+import static com.contentful.java.cda.Constants.PATH_LOCALES;
 
 final class Util {
   private Util() {
@@ -53,6 +55,8 @@ final class Util {
       return PATH_CONTENT_TYPES;
     } else if (CDAEntry.class.equals(clazz)) {
       return PATH_ENTRIES;
+    } else if (CDALocale.class.equals(clazz)) {
+      return PATH_LOCALES;
     }
     throw new IllegalArgumentException("Invalid type specified: " + clazz.getName());
   }
@@ -66,6 +70,8 @@ final class Util {
       return CDAEntry.class;
     } else if (SPACE.equals(type)) {
       return CDASpace.class;
+    } else if (LOCALE.equals(type)) {
+      return CDALocale.class;
     } else if (DELETEDASSET.equals(type) || DELETEDENTRY.equals(type)) {
       return DeletedResource.class;
     }
@@ -81,6 +87,8 @@ final class Util {
       return ENTRY;
     } else if (CDASpace.class.equals(clazz)) {
       return SPACE;
+    } else if (CDALocale.class.equals(clazz)) {
+      return LOCALE;
     }
     throw new IllegalArgumentException("Invalid class provided: " + clazz.getName());
   }

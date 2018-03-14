@@ -32,5 +32,7 @@ class Constants {
 
   static final String PATH_ENTRIES = "entries";
 
+  static final String PATH_LOCALES = "locales";
+
   static final String PROPERTIES = "contentful_cda.properties";
 }
