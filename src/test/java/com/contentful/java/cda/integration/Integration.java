@@ -202,7 +202,7 @@ public class Integration {
   public void fetchSpecificAsset() {
     CDAAsset entry = client.fetch(CDAAsset.class).one("nyancat");
 
-    assertThat(entry.url()).isEqualTo("//images.contentful.com/cfexampleapi/" +
+    assertThat(entry.url()).isEqualTo("//images.ctfassets.net/cfexampleapi/" +
         "4gp6taAwW4CmSgumq2ekUm/9da0cd1936871b8d72343e895a00d611/Nyan_cat_250px_frame.png");
   }
 
