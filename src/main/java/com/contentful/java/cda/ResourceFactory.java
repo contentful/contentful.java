@@ -20,19 +20,13 @@ final class ResourceFactory {
 
   static final Gson GSON = createGson();
 
-  static CDASpace space(Response<CDASpace> response) {
-    CDASpace space = response.body();
-    setDefaultLocale(space);
-    return space;
-  }
-
   static CDAArray array(Response<CDAArray> arrayResponse, CDAClient client) {
     CDAArray array = arrayResponse.body();
     array.assets = new LinkedHashMap<String, CDAAsset>();
     array.entries = new LinkedHashMap<String, CDAEntry>();
 
     Set<CDAResource> resources = collectResources(array);
-    ResourceUtils.localizeResources(resources, client.cache.space());
+    ResourceUtils.localizeResources(resources, client.cache);
     ResourceUtils.mapResources(resources, array.assets, array.entries);
     ResourceUtils.setRawFields(array);
     ResourceUtils.resolveLinks(array, client);
@@ -85,13 +79,15 @@ final class ResourceFactory {
     return response.body();
   }
 
-  private static void setDefaultLocale(CDASpace space) {
-    for (CDALocale locale : space.locales()) {
-      if (locale.isDefaultLocale()) {
-        space.defaultLocale = locale;
-        break;
-      }
+  @SuppressWarnings("unchecked")
+  static <T extends CDAResource> List<T> fromArrayToItems(CDAArray array) {
+    final List<T> result = new ArrayList<T>(array.items.size());
+
+    for (CDAResource resource : array.items) {
+      result.add((T) resource);
     }
+
+    return result;
   }
 
   private static Gson createGson() {

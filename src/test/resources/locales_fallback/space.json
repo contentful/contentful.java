@@ -1,0 +1,33 @@
+{
+  "sys": {
+    "type": "Space",
+    "id": "7dh3w86is8ls"
+  },
+  "name": "Fallback Locales",
+  "locales": [
+    {
+      "code": "default",
+      "default": true,
+      "name": "default locale",
+      "fallbackCode": null
+    },
+    {
+      "code": "first",
+      "default": false,
+      "name": "first locale",
+      "fallbackCode": "inbetween"
+    },
+    {
+      "code": "inbetween",
+      "default": false,
+      "name": "inbetween locale",
+      "fallbackCode": "default"
+    },
+    {
+      "code": "null",
+      "default": false,
+      "name": "locale with fallback set to null",
+      "fallbackCode": null
+    }
+  ]
+}

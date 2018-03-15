@@ -143,7 +143,7 @@ public class EntryTest extends BaseTest {
   @Test
   @Enqueue(
       defaults = {
-          "demo/space.json",
+          "demo/locales.json",
           "content_types/populate_cache_simple.json"
       },
       value = {
@@ -177,7 +177,7 @@ public class EntryTest extends BaseTest {
   @Test
   @Enqueue(
       defaults = {
-          "demo/space.json",
+          "demo/locales.json",
           "content_types/populate_cache_simple.json"
       },
       value = {
@@ -212,7 +212,7 @@ public class EntryTest extends BaseTest {
   @Test
   @Enqueue(
       defaults = {
-          "demo/space.json",
+          "demo/locales.json",
           "content_types/populate_cache_simple.json"
       },
       value = {
@@ -281,7 +281,7 @@ public class EntryTest extends BaseTest {
 
   @Test
   @Enqueue(
-      defaults = {"arrays/space.json", "arrays/content_types.json"},
+      defaults = {"arrays/locales.json", "arrays/content_types.json"},
       value = "arrays/entries.json"
   )
   public void arrayItemsContainOnlyTopLevelEntries() throws Exception {

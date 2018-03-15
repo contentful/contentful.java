@@ -375,11 +375,23 @@ public class ClientTest extends BaseTest {
   public void clearingTheCacheClearsTheCache() {
     client.fetch(CDAContentType.class).all();
     assertThat(client.cache.types()).isNotNull();
-    assertThat(client.cache.space()).isNotNull();
+    assertThat(client.cache.locales()).isNotNull();
+    assertThat(client.cache.locales()).hasSize(2);
 
     client.clearCache();
     assertThat(client.cache.types()).isNull();
-    assertThat(client.cache.space()).isNull();
+    assertThat(client.cache.locales()).isNull();
+  }
+
+  @Test
+  @Enqueue("demo/content_types_cat.json")
+  public void localesGetCached() {
+    client.fetch(CDAContentType.class).all();
+    assertThat(client.cache.types()).hasSize(5);
+    assertThat(client.cache.locales()).hasSize(2);
+    assertThat(client.cache.locales().get(0).code()).isEqualTo("en-US");
+    assertThat(client.cache.locales().get(1).code()).isEqualTo("tlh");
+    assertThat(client.cache.defaultLocale().code()).isEqualTo("en-US");
   }
 
   static class InterceptingInterceptor implements Interceptor {
@@ -454,7 +466,7 @@ public class ClientTest extends BaseTest {
   }
 
   @Test
-  @Enqueue({"demo/space.json", "demo/content_types.json", "demo/sync_initial_p1.json"})
+  @Enqueue({"demo/locales.json", "demo/content_types.json", "demo/sync_initial_p1.json"})
   public void syncTypeIsAddedToRequest() throws Exception {
     final CDAClient client = createPreviewClient();
 

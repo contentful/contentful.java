@@ -1,0 +1,54 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 4,
+  "skip": 0,
+  "limit": 1000,
+  "items": [
+    {
+      "code": "default",
+      "default": true,
+      "name": "default locale",
+      "fallbackCode": null,
+      "sys": {
+        "id": "2oQPjMCL9bQkylziydLh57",
+        "type": "Locale",
+        "version": 1
+      }
+    },
+    {
+      "code": "first",
+      "default": false,
+      "name": "first locale",
+      "fallbackCode": "inbetween",
+      "sys": {
+        "id": "2oQPjMCL9bQkylziydLh57",
+        "type": "Locale",
+        "version": 1
+      }
+    },
+    {
+      "code": "inbetween",
+      "default": false,
+      "name": "inbetween locale",
+      "fallbackCode": "default",
+      "sys": {
+        "id": "2oQPjMCL9bQkylziydLh57",
+        "type": "Locale",
+        "version": 1
+      }
+    },
+    {
+      "code": "null",
+      "default": false,
+      "name": "locale with fallback set to null",
+      "fallbackCode": null,
+      "sys": {
+        "id": "2oQPjMCL9bQkylziydLh57",
+        "type": "Locale",
+        "version": 1
+      }
+    }
+  ]
+}

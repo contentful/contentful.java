@@ -38,7 +38,7 @@ final class ResourceUtils {
       space = nextSpace;
     }
     space.items = items;
-    localizeResources(space.items(), client.cache.space());
+    localizeResources(space.items(), client.cache);
     return space;
   }
 
@@ -211,18 +211,18 @@ final class ResourceUtils {
     space.deletedEntries = entries;
   }
 
-  static void localizeResources(Collection<? extends CDAResource> resources, CDASpace space) {
+  static void localizeResources(Collection<? extends CDAResource> resources, Cache cache) {
     for (CDAResource resource : resources) {
       CDAType type = resource.type();
       if (ASSET.equals(type) || ENTRY.equals(type)) {
-        localize((LocalizedResource) resource, space);
+        localize((LocalizedResource) resource, cache);
       }
     }
   }
 
-  static void localize(LocalizedResource resource, CDASpace space) {
-    resource.setDefaultLocale(space.defaultLocale().code());
-    resource.setFallbackLocaleMap(getFallbackLocaleMap(space));
+  static void localize(LocalizedResource resource, Cache cache) {
+    resource.setDefaultLocale(cache.defaultLocale().code());
+    resource.setFallbackLocaleMap(getFallbackLocaleMap(cache));
     String resourceLocale = resource.getAttribute("locale");
     if (resourceLocale == null) {
       // sync
@@ -234,10 +234,10 @@ final class ResourceUtils {
     }
   }
 
-  private static Map<String, String> getFallbackLocaleMap(CDASpace space) {
-    final Map<String, String> fallbackLocales = new HashMap<String, String>(space.locales().size());
+  private static Map<String, String> getFallbackLocaleMap(Cache cache) {
+    final Map<String, String> fallbackLocales = new HashMap<String, String>(cache.locales().size());
 
-    for (final CDALocale locale : space.locales()) {
+    for (final CDALocale locale : cache.locales()) {
       final String fallback = locale.fallbackLocaleCode();
       if (fallback != null && !"".equals(fallback)) {
         fallbackLocales.put(locale.code, fallback);

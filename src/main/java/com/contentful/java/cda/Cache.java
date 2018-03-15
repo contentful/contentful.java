@@ -1,25 +1,42 @@
 package com.contentful.java.cda;
 
+import java.util.List;
 import java.util.Map;
 
-final class Cache {
-  private CDASpace space;
+class Cache {
+  private List<CDALocale> locales;
+
+  private CDALocale defaultLocale;
 
   private Map<String, CDAContentType> types;
 
-  private final Object spaceLock = new Object();
+  private final Object localesLock = new Object();
 
   private final Object typesLock = new Object();
 
-  CDASpace space() {
-    synchronized (spaceLock) {
-      return space;
+  List<CDALocale> locales() {
+    return locales;
+  }
+
+  CDALocale defaultLocale() {
+    return defaultLocale;
+  }
+
+  void setLocales(List<CDALocale> locales) {
+    synchronized (localesLock) {
+      this.locales = locales;
+
+      updateDefaultLocale();
     }
   }
 
-  void setSpace(CDASpace space) {
-    synchronized (spaceLock) {
-      this.space = space;
+  void updateDefaultLocale() {
+    if (this.locales != null) {
+      for (final CDALocale locale : this.locales) {
+        if (locale.isDefaultLocale()) {
+          this.defaultLocale = locale;
+        }
+      }
     }
   }
 
@@ -36,8 +53,9 @@ final class Cache {
   }
 
   void clear() {
-    synchronized (spaceLock) {
-      space = null;
+    synchronized (localesLock) {
+      locales = null;
+      defaultLocale = null;
     }
 
     synchronized (typesLock) {

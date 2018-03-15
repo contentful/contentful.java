@@ -21,7 +21,7 @@ public class LinkTest extends BaseTest {
 
   @SuppressWarnings("unchecked")
   @Test @Enqueue(defaults = {
-      "links/space.json",
+      "links/locales.json",
       "links/content_types.json"
   }, value = {
       "links/entries.json"
@@ -54,7 +54,7 @@ public class LinkTest extends BaseTest {
   }
 
   @Test @Enqueue(defaults = {
-      "links/space.json",
+      "links/locales.json",
       "links/content_types.json"
   }, value = {
       "links/sync_empty_links.json"
