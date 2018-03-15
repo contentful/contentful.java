@@ -221,15 +221,14 @@ final class ResourceUtils {
   }
 
   static void localize(LocalizedResource resource, Cache cache) {
-    resource.setDefaultLocale(cache.defaultLocale().code());
-    resource.setFallbackLocaleMap(getFallbackLocaleMap(cache));
+    resource.defaultLocale = cache.defaultLocale().code();
+    resource.fallbackLocaleMap = getFallbackLocaleMap(cache);
     String resourceLocale = resource.getAttribute("locale");
     if (resourceLocale == null) {
       // sync
-      resource.setLocale(resource.defaultLocale());
     } else {
       // normal
-      resource.setLocale(resourceLocale);
+      resource.defaultLocale = resourceLocale;
       normalizeFields(resource);
     }
   }
@@ -257,7 +256,7 @@ final class ResourceUtils {
         fields.put(key, value);
       } else {
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put(resource.locale(), value);
+        map.put(resource.defaultLocale, value);
         fields.put(key, map);
       }
     }
@@ -266,7 +265,7 @@ final class ResourceUtils {
 
   private static boolean resourceContainsLocaleMap(LocalizedResource resource, Object value) {
     return value instanceof Map
-        && ((Map) value).containsKey(resource.locale);
+        && ((Map) value).containsKey(resource.defaultLocale);
   }
 
   static void setRawFields(ArrayResource array) {

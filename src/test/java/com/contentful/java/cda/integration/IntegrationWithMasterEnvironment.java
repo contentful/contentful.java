@@ -5,6 +5,7 @@ import com.contentful.java.cda.CDAClient;
 import com.contentful.java.cda.CDAEntry;
 import com.contentful.java.cda.CDALocale;
 import com.contentful.java.cda.CDASpace;
+import com.contentful.java.cda.LocalizedResource;
 
 import java.util.List;
 
@@ -62,9 +63,8 @@ public class IntegrationWithMasterEnvironment extends Integration {
     assertThat(entry).isSameAs(((CDAEntry) bestFriend).getField("bestFriend"));
 
     // Localization
-    assertThat(entry.locale()).isEqualTo("en-US");
-    entry.setLocale("tlh");
-    assertThat(entry.getField("color")).isEqualTo("rainbow");
-    assertThat(entry.getField("non-existing-does-not-throw")).isNull();
+    final LocalizedResource.Localizer localized = entry.localize("tlh");
+    assertThat(localized.getField("color")).isEqualTo("rainbow");
+    assertThat(localized.getField("non-existing-does-not-throw")).isNull();
   }
 }
