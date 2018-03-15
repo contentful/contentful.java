@@ -35,4 +35,6 @@ class Constants {
   static final String PATH_LOCALES = "locales";
 
   static final String PROPERTIES = "contentful_cda.properties";
+
+  static final String DEFAULT_ENVIRONMENT = "master";
 }

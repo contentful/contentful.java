@@ -61,6 +61,8 @@ public class CDAClient {
 
   final String spaceId;
 
+  final String environmentId;
+
   final String token;
 
   final CDAService service;
@@ -84,12 +86,15 @@ public class CDAClient {
     this.callbackExecutor = executor;
     this.service = service;
     this.spaceId = builder.space;
+    this.environmentId = builder.environment;
     this.token = builder.token;
     this.preview = builder.preview;
   }
 
   private void validate(Builder builder) {
     checkNotNull(builder.space, "Space ID must be provided.");
+    checkNotNull(builder.environment, "Environment ID must not be null.");
+
     if (builder.callFactory == null) {
       checkNotNull(builder.token, "A token must be provided, if no call factory is specified.");
     }
@@ -381,7 +386,7 @@ public class CDAClient {
   Flowable<List<CDALocale>> cacheLocales(boolean invalidate) {
     List<CDALocale> locales = invalidate ? null : cache.locales();
     if (locales == null) {
-      return service.array(spaceId, PATH_LOCALES, new HashMap<String, String>())
+      return service.array(spaceId, environmentId, PATH_LOCALES, new HashMap<String, String>())
           .map(new Function<Response<CDAArray>, List<CDALocale>>() {
             @Override public List<CDALocale> apply(Response<CDAArray> localesResponse) {
               final List<CDALocale> locales = fromArrayToItems(fromResponse(localesResponse));
@@ -396,7 +401,12 @@ public class CDAClient {
   Flowable<Map<String, CDAContentType>> cacheTypes(boolean invalidate) {
     Map<String, CDAContentType> types = invalidate ? null : cache.types();
     if (types == null) {
-      return service.array(spaceId, PATH_CONTENT_TYPES, new HashMap<String, String>()).map(
+      return service.array(
+          spaceId,
+          environmentId,
+          PATH_CONTENT_TYPES,
+          new HashMap<String, String>()
+      ).map(
           new Function<Response<CDAArray>, Map<String, CDAContentType>>() {
             @Override public Map<String, CDAContentType> apply(Response<CDAArray> arrayResponse) {
               CDAArray array = ResourceFactory.array(arrayResponse, CDAClient.this);
@@ -486,6 +496,7 @@ public class CDAClient {
    */
   public static class Builder {
     String space;
+    String environment = Constants.DEFAULT_ENVIRONMENT;
     String token;
     String endpoint;
 
@@ -511,6 +522,17 @@ public class CDAClient {
      */
     public Builder setSpace(String space) {
       this.space = space;
+      return this;
+    }
+
+    /**
+     * Sets the environment ID.
+     *
+     * @param environment the space id to be set.
+     * @return this builder for chaining.
+     */
+    public Builder setEnvironment(String environment) {
+      this.environment = environment;
       return this;
     }
 
