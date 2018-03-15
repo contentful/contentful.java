@@ -26,8 +26,6 @@ public class IntegrationWithMasterEnvironment extends Integration {
     assertThat(space.name()).isEqualTo("Contentful Example API with En");
     assertThat(space.id()).isEqualTo("5s4tdjmyjfpl");
     assertThat(space.type()).isEqualTo(SPACE);
-    assertThat(space.locales()).hasSize(2);
-    assertThat(space.defaultLocale().code()).isEqualTo("en-US");
   }
 
   // asset url changed between master and staging
