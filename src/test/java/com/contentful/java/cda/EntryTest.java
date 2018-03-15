@@ -274,7 +274,7 @@ public class EntryTest extends BaseTest {
     assertThat(entry).isSameAs(((CDAEntry) bestFriend).getField("bestFriend"));
 
     // Localization
-    assertThat(entry.locale()).isEqualTo("en-US");
+    assertThat(entry.defaultLocale).isEqualTo("en-US");
     assertThat(entry.getField("color")).isEqualTo("rainbow");
     assertThat(entry.getField("non-existing-does-not-throw")).isNull();
   }

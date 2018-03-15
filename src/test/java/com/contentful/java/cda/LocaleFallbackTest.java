@@ -44,14 +44,11 @@ public class LocaleFallbackTest extends BaseTest {
     final CDAEntry nofirst = entries.get("no-first");
     assertThat(nofirst.getField("title")).isEqualTo("no-first");
 
-    nofirst.setLocale("first");
-    assertThat(nofirst.getField("title")).isEqualTo("inbetween");
+    assertThat(nofirst.getField("first", "title")).isEqualTo("inbetween");
 
-    nofirst.setLocale("inbetween");
-    assertThat(nofirst.getField("title")).isEqualTo("inbetween");
+    assertThat(nofirst.getField("inbetween", "title")).isEqualTo("inbetween");
 
-    nofirst.setLocale("default");
-    assertThat(nofirst.getField("title")).isEqualTo("no-first");
+    assertThat(nofirst.getField("default", "title")).isEqualTo("no-first");
   }
 
   @Test
@@ -63,17 +60,14 @@ public class LocaleFallbackTest extends BaseTest {
     final CDAArray all = client.fetch(CDAEntry.class).all();
     final Map<String, CDAEntry> entries = all.entries();
 
-    final CDAEntry noFirstAndNoInBetween = entries.get("no-first-and-no-inbetween");
-    assertThat(noFirstAndNoInBetween.getField("title")).isEqualTo("no-first-and-no-inbetween");
+    final CDAEntry subject = entries.get("no-first-and-no-inbetween");
+    assertThat(subject.getField("title")).isEqualTo("no-first-and-no-inbetween");
 
-    noFirstAndNoInBetween.setLocale("first");
-    assertThat(noFirstAndNoInBetween.getField("title")).isEqualTo("no-first-and-no-inbetween");
+    assertThat(subject.getField("first", "title")).isEqualTo("no-first-and-no-inbetween");
 
-    noFirstAndNoInBetween.setLocale("inbetween");
-    assertThat(noFirstAndNoInBetween.getField("title")).isEqualTo("no-first-and-no-inbetween");
+    assertThat(subject.getField("inbetween", "title")).isEqualTo("no-first-and-no-inbetween");
 
-    noFirstAndNoInBetween.setLocale("default");
-    assertThat(noFirstAndNoInBetween.getField("title")).isEqualTo("no-first-and-no-inbetween");
+    assertThat(subject.getField("default", "title")).isEqualTo("no-first-and-no-inbetween");
   }
 
   @Test
@@ -88,8 +82,7 @@ public class LocaleFallbackTest extends BaseTest {
     final CDAEntry toNull = entries.get("no-null");
     assertThat(toNull.getField("title")).isEqualTo("no-null");
 
-    toNull.setLocale("null");
-    assertThat(toNull.getField("title")).isNull();
+    assertThat(toNull.getField("null", "title")).isNull();
   }
 
 

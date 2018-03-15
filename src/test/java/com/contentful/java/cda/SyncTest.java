@@ -60,7 +60,7 @@ public class SyncTest extends BaseTest {
     for (CDAResource resource : space.items()) {
       assertThat(resource).isInstanceOf(LocalizedResource.class);
       LocalizedResource localized = (LocalizedResource) resource;
-      assertThat(localized.locale()).isEqualTo("en-US");
+      assertThat(localized.defaultLocale).isEqualTo("en-US");
     }
 
     for (CDAEntry entry : space.entries().values()) {
@@ -85,13 +85,13 @@ public class SyncTest extends BaseTest {
     assertThat(happyCat.getField("name")).isEqualTo("Happy Cat");
 
     // Localization
-    assertThat(nyanCat.locale()).isEqualTo("en-US");
+    assertThat(nyanCat.defaultLocale).isEqualTo("en-US");
     assertThat(nyanCat.getField("name")).isEqualTo("Nyan Cat");
     assertThat(nyanCat.getField("color")).isEqualTo("rainbow");
-    nyanCat.setLocale("tlh");
-    assertThat(nyanCat.getField("name")).isEqualTo("Nyan vIghro'");
-    assertThat(nyanCat.getField("color")).isEqualTo("rainbow"); // fallback
-    assertThat(nyanCat.getField("non-existing-does-not-throw")).isNull();
+    final LocalizedResource.Localizer localizedNyanCat = nyanCat.localize("tlh");
+    assertThat(localizedNyanCat.getField("name")).isEqualTo("Nyan vIghro'");
+    assertThat(localizedNyanCat.getField("color")).isEqualTo("rainbow"); // fallback
+    assertThat(localizedNyanCat.getField("non-existing-does-not-throw")).isNull();
   }
 
   @SuppressWarnings("unchecked") @Test @Enqueue(defaults = {}, value = {

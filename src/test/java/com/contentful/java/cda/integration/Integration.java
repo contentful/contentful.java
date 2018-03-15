@@ -139,7 +139,8 @@ public class Integration {
 
     CDAEntry nyanCat = space.entries().get("nyancat");
     assertThat(nyanCat).isNotNull();
-    assertThat(nyanCat.getField("name")).isEqualTo("Nyan vIghro'");
+    assertThat(nyanCat.getField("tlh", "name")).isEqualTo("Nyan vIghro'");
+    assertThat(nyanCat.getField("name")).isEqualTo("Nyan Cat");
     assertThat(nyanCat.getField("color")).isEqualTo("rainbow");
     List<String> likes = nyanCat.getField("likes");
     assertThat(likes).containsExactly("rainbows", "fish");
@@ -618,8 +619,6 @@ public class Integration {
 
     for (CDAResource resource : space.items()) {
       assertThat(resource).isInstanceOf(LocalizedResource.class);
-      LocalizedResource localized = (LocalizedResource) resource;
-      assertThat(localized.locale()).isEqualTo("en-US");
     }
 
     for (CDAEntry entry : space.entries().values()) {
@@ -644,13 +643,12 @@ public class Integration {
     assertThat(happyCat.getField("name")).isEqualTo("Happy Cat");
 
     // Localization
-    assertThat(nyanCat.locale()).isEqualTo("en-US");
     assertThat(nyanCat.getField("name")).isEqualTo("Nyan Cat");
     assertThat(nyanCat.getField("color")).isEqualTo("rainbow");
-    nyanCat.setLocale("tlh");
-    assertThat(nyanCat.getField("name")).isEqualTo("Nyan vIghro'");
-    assertThat(nyanCat.getField("color")).isEqualTo("rainbow"); // fallback
-    assertThat(nyanCat.getField("non-existing-does-not-throw")).isNull();
+    final LocalizedResource.Localizer localizedCat = nyanCat.localize("tlh");
+    assertThat(localizedCat.getField("name")).isEqualTo("Nyan vIghro'");
+    assertThat(localizedCat.getField("color")).isEqualTo("rainbow"); // fallback
+    assertThat(localizedCat.getField("non-existing-does-not-throw")).isNull();
   }
 
   void assertNyanCat(CDAEntry entry) {
@@ -668,9 +666,8 @@ public class Integration {
     assertThat(entry).isSameAs(((CDAEntry) bestFriend).getField("bestFriend"));
 
     // Localization
-    assertThat(entry.locale()).isEqualTo("en-US");
-    entry.setLocale("tlh");
-    assertThat(entry.getField("color")).isEqualTo("rainbow");
-    assertThat(entry.getField("non-existing-does-not-throw")).isNull();
+    final LocalizedResource.Localizer localizedCat = entry.localize("tlh");
+    assertThat(localizedCat.getField("color")).isEqualTo("rainbow");
+    assertThat(localizedCat.getField("non-existing-does-not-throw")).isNull();
   }
 }
