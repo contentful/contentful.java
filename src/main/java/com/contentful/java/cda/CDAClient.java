@@ -119,9 +119,11 @@ public class CDAClient {
    * Returns a {@link FetchQuery} for a given {@code type}, which can be used to fulfill the
    * request synchronously or asynchronously when a callback is provided.
    *
-   * @param type resource type.
-   * @param <T>  resource type.
-   * @return query instance.
+   * @param type resource type. This can be either a {@link CDALocale}, a {@link CDAEntry},
+   *             a {@link CDAAsset}, or a {@link CDAContentType}
+   * @param <T>  type for avoiding casting on calling side.
+   * @return A query to call {@link FetchQuery#all()} or {@link FetchQuery#one(String)} on it.
+   * @see #fetchSpace()
    */
   public <T extends CDAResource> FetchQuery<T> fetch(Class<T> type) {
     return new FetchQuery<T>(type, this);
@@ -131,9 +133,11 @@ public class CDAClient {
    * Returns an {@link ObserveQuery} for a given {@code type}, which can be used to return
    * an {@link Flowable} that fetches the desired resources.
    *
-   * @param type resource type.
-   * @param <T>  resource type.
-   * @return query instance.
+   * @param type resource type. This can be either a {@link CDALocale}, a {@link CDAEntry},
+   *             a {@link CDAAsset}, or a {@link CDAContentType}
+   * @param <T>  type for avoiding casting on calling side.
+   * @return A query to call {@link ObserveQuery#all()} or {@link ObserveQuery#one(String)} on it.
+   * @see #observeSpace()
    */
   public <T extends CDAResource> ObserveQuery<T> observe(Class<T> type) {
     return new ObserveQuery<T>(type, this);
