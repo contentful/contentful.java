@@ -43,7 +43,7 @@ import static com.contentful.java.cda.SyncType.onlyEntriesOfType;
 import static com.google.common.truth.Truth.assertThat;
 
 public class Integration {
-  private CDAClient client;
+  CDAClient client;
 
   @Before public void setUp() throws Exception {
     client = CDAClient.builder()
@@ -653,7 +653,7 @@ public class Integration {
     assertThat(nyanCat.getField("non-existing-does-not-throw")).isNull();
   }
 
-  private void assertNyanCat(CDAEntry entry) {
+  void assertNyanCat(CDAEntry entry) {
     assertThat(entry.id()).isEqualTo("nyancat");
     assertThat(entry.getField("name")).isEqualTo("Nyan Cat");
     assertThat(entry.getField("color")).isEqualTo("rainbow");

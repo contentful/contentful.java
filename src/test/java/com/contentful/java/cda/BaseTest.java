@@ -25,6 +25,7 @@ import static com.google.common.truth.Truth.assertThat;
 public class BaseTest {
   public static final String DEFAULT_TOKEN = "test_token";
   public static final String DEFAULT_SPACE = "test_space";
+  public static final String STAGING_ENVIRONMENT = "staging";
 
   CDAClient client;
 

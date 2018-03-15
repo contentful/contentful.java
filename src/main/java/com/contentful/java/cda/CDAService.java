@@ -14,15 +14,10 @@ interface CDAService {
   Flowable<Response<CDASpace>> space(
       @Path("space") String space);
 
-  @GET("spaces/{space}/{type}/{identifier}")
-  Flowable<Response<CDAResource>> one(
-      @Path("space") String space,
-      @Path("type") String type,
-      @Path("identifier") String identifier);
-
-  @GET("spaces/{space}/{type}")
+  @GET("spaces/{space}/environments/{environment}/{type}")
   Flowable<Response<CDAArray>> array(
       @Path("space") String space,
+      @Path("environment") String environment,
       @Path("type") String type,
       @QueryMap Map<String, String> query);
 
