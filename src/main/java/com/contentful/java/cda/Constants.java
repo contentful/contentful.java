@@ -6,19 +6,7 @@ import java.util.Locale;
  * This class holds specific constants, used throughout the sdk, not accessible by mere mortals.
  */
 class Constants {
-  /**
-   * DO NOT CALL THIS CONSTRUCTOR
-   *
-   * Calling this constructor will result in an {@link AssertionError},
-   * since no instances of this class shall exist.
-   */
-  private Constants() {
-    throw new AssertionError();
-  }
-
   static final Locale LOCALE = Locale.US;
-
-  static final String CHARSET = "UTF-8";
 
   static final String SCHEME = "https";
 
@@ -33,8 +21,6 @@ class Constants {
   static final String PATH_ENTRIES = "entries";
 
   static final String PATH_LOCALES = "locales";
-
-  static final String PROPERTIES = "contentful_cda.properties";
 
   static final String DEFAULT_ENVIRONMENT = "master";
 }

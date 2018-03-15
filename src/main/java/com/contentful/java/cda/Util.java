@@ -38,16 +38,6 @@ final class Util {
     return string;
   }
 
-  static void checkState(boolean condition, String format, Object... args) {
-    if (!condition) {
-      throw new IllegalStateException(String.format(format, args));
-    }
-  }
-
-  static void checkArgument(boolean condition, String format, Object... args) {
-    if (!condition) throw new IllegalArgumentException(String.format(format, args));
-  }
-
   static String resourcePath(Class<? extends CDAResource> clazz) {
     if (CDAAsset.class.equals(clazz)) {
       return PATH_ASSETS;

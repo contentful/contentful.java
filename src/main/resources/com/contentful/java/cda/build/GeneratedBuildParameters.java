@@ -8,12 +8,6 @@ package com.contentful.java.cda.build;
  */
 public final class GeneratedBuildParameters {
   /**
-   * Hide constructor.
-   */
-  GeneratedBuildParameters() {
-  }
-
-  /**
    * Which version of '${project.name}' is getting used?
    */
   public static final String PROJECT_VERSION = "${project.version}";
