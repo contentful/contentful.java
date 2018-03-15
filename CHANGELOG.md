@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Version [10.0.0] - TBD
 - Add `locales` endpoint
+- Update cache to store locales and not spaces
+- Remove locales from `Space`
 
 ## Version [9.1.1] - (2018-03-21)
 - Fix: numbers in http headers default back to english.

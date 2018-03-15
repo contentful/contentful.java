@@ -17,6 +17,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,6 +38,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.contentful.java.cda.Constants.ENDPOINT_PROD;
 import static com.contentful.java.cda.Constants.PATH_CONTENT_TYPES;
+import static com.contentful.java.cda.Constants.PATH_LOCALES;
+import static com.contentful.java.cda.ResourceFactory.fromArrayToItems;
+import static com.contentful.java.cda.ResourceFactory.fromResponse;
 import static com.contentful.java.cda.Tls12Implementation.useRecommendation;
 import static com.contentful.java.cda.Util.checkNotNull;
 import static com.contentful.java.cda.build.GeneratedBuildParameters.PROJECT_VERSION;
@@ -350,16 +354,20 @@ public class CDAClient {
    * @return an {@link Flowable} that fetches the space for this client.
    */
   public Flowable<CDASpace> observeSpace() {
-    return cacheSpace(true);
+    return service.space(spaceId).map(new Function<Response<? extends CDASpace>, CDASpace>() {
+      @Override public CDASpace apply(Response<? extends CDASpace> response) throws Exception {
+        return fromResponse(response);
+      }
+    });
   }
 
   /**
    * Caching
    */
   Flowable<Cache> cacheAll(final boolean invalidate) {
-    return cacheSpace(invalidate)
-        .flatMap(new Function<CDASpace, Flowable<Map<String, CDAContentType>>>() {
-          @Override public Flowable<Map<String, CDAContentType>> apply(CDASpace cdaSpace) {
+    return cacheLocales(invalidate)
+        .flatMap(new Function<List<CDALocale>, Flowable<Map<String, CDAContentType>>>() {
+          @Override public Flowable<Map<String, CDAContentType>> apply(List<CDALocale> locales) {
             return cacheTypes(invalidate);
           }
         })
@@ -370,18 +378,19 @@ public class CDAClient {
         });
   }
 
-  Flowable<CDASpace> cacheSpace(boolean invalidate) {
-    CDASpace space = invalidate ? null : cache.space();
-    if (space == null) {
-      return service.space(spaceId).map(new Function<Response<CDASpace>, CDASpace>() {
-        @Override public CDASpace apply(Response<CDASpace> response) {
-          CDASpace space = ResourceFactory.space(response);
-          cache.setSpace(space);
-          return space;
-        }
-      });
+  Flowable<List<CDALocale>> cacheLocales(boolean invalidate) {
+    List<CDALocale> locales = invalidate ? null : cache.locales();
+    if (locales == null) {
+      return service.array(spaceId, PATH_LOCALES, new HashMap<String, String>())
+          .map(new Function<Response<CDAArray>, List<CDALocale>>() {
+            @Override public List<CDALocale> apply(Response<CDAArray> localesResponse) {
+              final List<CDALocale> locales = fromArrayToItems(fromResponse(localesResponse));
+              cache.setLocales(locales);
+              return locales;
+            }
+          });
     }
-    return Flowable.just(space);
+    return Flowable.just(locales);
   }
 
   Flowable<Map<String, CDAContentType>> cacheTypes(boolean invalidate) {

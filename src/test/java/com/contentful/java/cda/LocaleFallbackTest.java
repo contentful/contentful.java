@@ -8,15 +8,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.contentful.java.cda.ResourceFactory.fromArrayToItems;
 import static com.google.common.truth.Truth.assertThat;
 
 public class LocaleFallbackTest extends BaseTest {
   @Test
-  @Enqueue(value = "locales/space.json", defaults = {})
+  @Enqueue(
+      defaults = {"locales_fallback/fetch_all_locales.json", "locales_fallback/content_types.json"},
+      value = "locales_fallback/fetch_all_locales.json"
+  )
   public void fetchLocales() throws Exception {
-    final CDASpace space = client.fetchSpace();
-
-    final List<CDALocale> locales = space.locales;
+    final List<CDALocale> locales = fromArrayToItems(client.fetch(CDALocale.class).all());
     Map<String, CDALocale> localesByCodeMap = listToMapByNamer(locales, localeNamer);
 
     assertThat(localesByCodeMap).hasSize(4);
@@ -32,8 +34,8 @@ public class LocaleFallbackTest extends BaseTest {
 
   @Test
   @Enqueue(
-      defaults = {"locales/space.json", "locales/content_types.json"},
-      value = "locales/entries.json"
+      defaults = {"locales_fallback/fetch_all_locales.json", "locales_fallback/content_types.json"},
+      value = "locales_fallback/entries.json"
   )
   public void testFallbackLocaleQueueToDefaultOneHop() throws Exception {
     final CDAArray all = client.fetch(CDAEntry.class).all();
@@ -54,8 +56,8 @@ public class LocaleFallbackTest extends BaseTest {
 
   @Test
   @Enqueue(
-      defaults = {"locales/space.json", "locales/content_types.json"},
-      value = "locales/entries.json"
+      defaults = {"locales_fallback/fetch_all_locales.json", "locales_fallback/content_types.json"},
+      value = "locales_fallback/entries.json"
   )
   public void testFallbackLocaleQueueToDefaultTwoHops() throws Exception {
     final CDAArray all = client.fetch(CDAEntry.class).all();
@@ -76,8 +78,8 @@ public class LocaleFallbackTest extends BaseTest {
 
   @Test
   @Enqueue(
-      defaults = {"locales/space.json", "locales/content_types.json"},
-      value = "locales/entries.json"
+      defaults = {"locales_fallback/fetch_all_locales.json", "locales_fallback/content_types.json"},
+      value = "locales_fallback/entries.json"
   )
   public void testFallbackLocaleQueueToNull() throws Exception {
     final CDAArray all = client.fetch(CDAEntry.class).all();

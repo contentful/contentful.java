@@ -8,7 +8,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Executor;
 
 import retrofit2.Response;
@@ -23,17 +22,10 @@ public class ResourceFactoryUnitTest {
   CDAClient client;
 
   @Mock
-  public CDASpace space;
-
-  @Mock
-  public Map<String, CDAContentType> types;
+  public Cache cache;
 
   @Before public void setup() {
-    final Cache cache = new Cache();
-    cache.setSpace(space);
-    cache.setTypes(types);
-
-    when(space.defaultLocale()).thenReturn(mock(CDALocale.class));
+    when(cache.defaultLocale()).thenReturn(mock(CDALocale.class));
 
     client = new CDAClient(
         cache,

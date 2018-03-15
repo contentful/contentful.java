@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Enqueue {
-  String[] defaults() default { "demo/space.json", "demo/content_types.json" };
+  String[] defaults() default { "demo/locales.json", "demo/content_types.json" };
 
   String[] value() default {};
 

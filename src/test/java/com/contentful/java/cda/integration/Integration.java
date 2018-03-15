@@ -123,8 +123,6 @@ public class Integration {
     assertThat(space.name()).isEqualTo("Contentful Example API");
     assertThat(space.id()).isEqualTo("cfexampleapi");
     assertThat(space.type()).isEqualTo(SPACE);
-    assertThat(space.locales()).hasSize(2);
-    assertThat(space.defaultLocale().code()).isEqualTo("en-US");
   }
 
   // "/spaces/{space_id}/sync?initial=true",

@@ -35,7 +35,7 @@ public class ContentTypeTest extends BaseTest {
 
   @Test
   @Enqueue(defaults = {
-      "cda/space.json"
+      "cda/locales.json"
   }, value = {
       "cda/content_types_foo.json",
       "cda/entries.json",
