@@ -3,11 +3,11 @@ package com.contentful.java.cda.interceptor;
 import com.contentful.java.cda.Platform;
 
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.lang.String.format;
-import static java.util.Locale.getDefault;
 import static java.util.regex.Pattern.compile;
 
 /**
@@ -56,13 +56,13 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
      */
     public static class Version {
 
-      private static final String VERSION_REGEX = "^([0-9]+).([0-9]+).([0-9]+)(.*)?$";
+      private static final String VERSION_REGEX = "^(\\p{N}+).(\\p{N}+).(\\p{N}+)(.*)?$";
       private static final Pattern VERSION_PATTERN = compile(VERSION_REGEX);
       private static final int VERSION_PATTERN_GROUP_COUNT = 4;
       private static final int VERSION_PATTERN_GROUP_MAJOR = 1;
       private static final int VERSION_PATTERN_GROUP_MINOR = 2;
       private static final int VERSION_PATTERN_GROUP_PATCH = 3;
-      private static final String STABILITY_REGEX = "^([a-zA-Z]+[0-9]*).*";
+      private static final String STABILITY_REGEX = "^\\p{Alpha}+\\p{Alnum}*";
       private static final Pattern STABILITY_PATTERN = compile(STABILITY_REGEX);
 
       /**
@@ -86,8 +86,6 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
         if (version == null || version.length() <= 0) {
           return null;
         }
-
-        version = removeNonAsciiCharacters(version);
 
         if (!version.contains(".")) {
           return null;
@@ -205,9 +203,9 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
        */
       @Override public String toString() {
         if (stability == null) {
-          return format(getDefault(), "%d.%d.%d", major, minor, patch);
+          return format(Locale.ENGLISH, "%d.%d.%d", major, minor, patch);
         } else {
-          return format(getDefault(), "%d.%d.%d-%s", major, minor, patch, stability);
+          return format(Locale.ENGLISH, "%d.%d.%d-%s", major, minor, patch, stability);
         }
       }
     }
@@ -329,14 +327,14 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
     public String toString() {
       if (getVersion() == null) {
         return format(
-            getDefault(),
+            Locale.ENGLISH,
             "%s %s; ",
             getIdentifier(),
             getName()
         );
       } else {
         return format(
-            getDefault(),
+            Locale.ENGLISH,
             "%s %s/%s; ",
             getIdentifier(),
             getName(),
