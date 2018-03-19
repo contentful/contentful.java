@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Locale;
 
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.OperatingSystem.Android;
 import static com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.OperatingSystem.Linux;
@@ -216,14 +217,20 @@ public class ContentfulUserAgentHeaderInterceptorTest {
 
   @Test
   public void testIgnoreNonAsciiCharactersInStability() {
-    assertThat(Version.parse("3.4.0-Xceed™-D851").toString()).isEqualTo("3.4.0-Xceed-D851");
+    assertThat(Version.parse("3.4.0-Xceed™-D851").toString()).isEqualTo("3.4.0-Xceed");
   }
 
   @Test
   public void testIgnoreNonAsciiCharactersInVersionNumber() {
-    assertThat(Version.parse("۷.۶.۲")).isNull();
-    assertThat(Version.parse("۰.۹.۰")).isNull();
-    assertThat(Version.parse("۶.۰.۱")).isNull();
+    final Locale aDefault = Locale.getDefault();
+    Locale.setDefault(new Locale("ar", "EG"));
+    try {
+      assertThat(Version.parse("۷.۶.۲").toString()).isEqualTo("7.6.2");
+      assertThat(Version.parse("۰.۹.۰").toString()).isEqualTo("0.9.0");
+      assertThat(Version.parse("۶.۰.۱").toString()).isEqualTo("6.0.1");
+    } finally {
+      Locale.setDefault(aDefault);
+    }
   }
 
   @Test
@@ -237,7 +244,7 @@ public class ContentfulUserAgentHeaderInterceptorTest {
     final String name = header.getName();
 
     assertThat(name).isEqualTo("X-Contentful-User-Agent");
-    assertThat(value).isEqualTo("app my-app; ");
+    assertThat(value).isEqualTo("app my-app/1.0.9; ");
 
   }
 }

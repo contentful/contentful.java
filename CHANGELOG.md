@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Version [9.1.1] - (TBD)
+- Fix: numbers in http headers default back to english.
 
 ## Version [9.1.0] - (2018-02-13)
 - Add: Support for [incoming-links](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/search-parameters/links-to-entry/query-entries/console/java) by @shm.
