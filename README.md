@@ -16,12 +16,12 @@ Grab via Maven:
 <dependency>
   <groupId>com.contentful.java</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>9.1.0</version>
+  <version>9.1.1</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.contentful.java:java-sdk:9.1.0'
+compile 'com.contentful.java:java-sdk:9.1.1'
 ```
 
 The SDK requires at minimum Java 6 or Android 2.3.
@@ -32,14 +32,14 @@ Snapshots of the development version are available through [Sonatype's `snapshot
 
 ```groovy
 maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-compile 'com.contentful.java:java-sdk:9.1.0-SNAPSHOT'
+compile 'com.contentful.java:java-sdk:9.1.1-SNAPSHOT'
 ```
 
 and through [jitpack.io][jitpack]:
 
 ```groovy
 maven { url 'https://jitpack.io' }
-compile 'com.github.contentful:contentful.java:java-sdk-9.1.0-SNAPSHOT'
+compile 'com.github.contentful:contentful.java:java-sdk-9.1.1-SNAPSHOT'
 ```
 
 ### Proguard
@@ -142,7 +142,7 @@ Copyright (c) 2017 Contentful GmbH. See [LICENSE.txt][6] for further details.
 
 
  [1]: https://www.contentful.com
- [2]: https://oss.sonatype.org/service/local/repositories/releases/content/com/contentful/java/java-sdk/9.1.0/java-sdk-9.1.0.jar
+ [2]: https://oss.sonatype.org/service/local/repositories/releases/content/com/contentful/java/java-sdk/9.1.1/java-sdk-9.1.1.jar
  [3]: https://contentful.github.io/contentful.java/
  [4]: https://www.contentful.com/developers/documentation/content-delivery-api/
  [6]: LICENSE.txt
