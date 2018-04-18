@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [10.0.0] - TBD
+## Version [10.0.0] - (2018-04-18)
 - Add `locales` endpoint
 - Add `Localizer` to make localizing entries thread save.
 - Update cache to store locales and not spaces
