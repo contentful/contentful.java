@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Version [10.1.0] - To be released
+- Add `png8` image option for returning images in png with up to 256 colours.
+
 ## Version [10.0.0] - (2018-04-18)
 - Add `locales` endpoint
 - Add `Localizer` to make localizing entries thread save.
@@ -217,7 +220,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-10.0.0...HEAD
+[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-10.1.0...HEAD
+[10.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-10.0.0...java-sdk-10.1.0
 [10.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-9.1.1...java-sdk-10.0.0
 [9.1.1]: https://github.com/contentful/contentful.java/compare/java-sdk-9.1.0...java-sdk-9.1.1
 [9.1.0]: https://github.com/contentful/contentful.java/compare/java-sdk-9.0.1...java-sdk-9.1.0

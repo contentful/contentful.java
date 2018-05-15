@@ -27,9 +27,37 @@ public class ImageOption {
     png,
 
     /**
+     * Use lossy, 256 coloured PNG image format.
+     */
+    png8("png&fl=png8"),
+
+    /**
      * Use googles lossy and lossless format.
      */
-    webp
+    webp;
+
+    final String override;
+
+    /**
+     * use default url parameter.
+     */
+    Format() {
+      this.override = null;
+    }
+
+    /**
+     * Override name, if special values are required.
+     */
+    Format(String override) {
+      this.override = override;
+    }
+
+    /**
+     * @return the url parameter used for this format.
+     */
+    public String toUrlParameter() {
+      return override == null ? super.name() : override;
+    }
   }
 
   /**
@@ -120,7 +148,7 @@ public class ImageOption {
    * @see Format
    */
   public static ImageOption formatOf(Format format) {
-    return new ImageOption("fm", format.name());
+    return new ImageOption("fm", format.toUrlParameter());
   }
 
   /**
