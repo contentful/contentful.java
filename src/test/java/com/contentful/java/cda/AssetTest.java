@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import static com.contentful.java.cda.image.ImageOption.Focus.top;
 import static com.contentful.java.cda.image.ImageOption.Format.jpg;
+import static com.contentful.java.cda.image.ImageOption.Format.png8;
 import static com.contentful.java.cda.image.ImageOption.Resize.crop;
 import static com.contentful.java.cda.image.ImageOption.backgroundColorOf;
 import static com.contentful.java.cda.image.ImageOption.blackBackgroundColor;
@@ -99,6 +100,27 @@ public class AssetTest extends BaseTest {
             + "&f=top"
             + "&r=10.0"
             + "&bg=rgb:000000"
+    );
+  }
+
+  @Test
+  @Enqueue("demo/assets_jake.json")
+  public void augmentPng8() throws Exception {
+    final CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
+
+    assertThat(
+        asset.urlForImageWith(
+            formatOf(png8),
+            https()
+        )
+    ).isEqualTo(
+        "https://images.contentful.com"
+            + "/cfexampleapi"
+            + "/4hlteQAXS8iS0YCMU6QMWg"
+            + "/2a4d826144f014109364ccf5c891d2dd"
+            + "/jake.png"
+            + "?fm=png"
+            + "&fl=png8"
     );
   }
 
