@@ -35,10 +35,12 @@ import static com.contentful.java.cda.QueryOperation.IsEarlierOrAt;
 import static com.contentful.java.cda.QueryOperation.IsEarlierThan;
 import static com.contentful.java.cda.QueryOperation.IsEqualTo;
 import static com.contentful.java.cda.QueryOperation.IsLaterOrAt;
+import static com.contentful.java.cda.QueryOperation.IsLessThanOrEqualTo;
 import static com.contentful.java.cda.QueryOperation.IsNotEqualTo;
 import static com.contentful.java.cda.QueryOperation.IsWithinBoundingBoxOf;
 import static com.contentful.java.cda.QueryOperation.IsWithinCircleOf;
 import static com.contentful.java.cda.QueryOperation.Matches;
+import static com.contentful.java.cda.SyncType.onlyDeletedAssets;
 import static com.contentful.java.cda.SyncType.onlyEntriesOfType;
 import static com.google.common.truth.Truth.assertThat;
 
@@ -148,7 +150,7 @@ public class Integration {
 
   // "/spaces/{space_id}/sync?initial=true&type=Entry&content_type=cat",
   @Test
-  public void syncWithTypes() throws Exception {
+  public void syncOnlyContentTypeCat() throws Exception {
     SynchronizedSpace space = client.sync(onlyEntriesOfType("cat")).observe().blockingFirst();
     space = client.sync(space).observe().blockingFirst();
 
@@ -162,6 +164,20 @@ public class Integration {
     assertThat(nyanCat.getField("color")).isEqualTo("rainbow");
     List<String> likes = nyanCat.getField("likes");
     assertThat(likes).containsExactly("rainbows", "fish");
+  }
+
+  // "/spaces/{space_id}/sync?initial=true&type=DELETEDASSETS",
+  @Test
+  public void syncTypeOfDeletedAssets() throws Exception {
+    final SynchronizedSpace space = client.sync(onlyDeletedAssets()).fetch();
+
+    assertThat(space.nextSyncUrl()).isNotEmpty();
+    assertThat(space.items()).hasSize(0);
+    assertThat(space.assets()).hasSize(0);
+    assertThat(space.deletedEntries()).hasSize(0);
+    assertThat(space.deletedAssets()).hasSize(6);
+
+    assertThat(space.deletedAssets()).contains("finn");
   }
 
   // "/spaces/{space_id}/content_types/{content_type_id}",
@@ -258,6 +274,25 @@ public class Integration {
 
     assertThat(found.total()).isEqualTo(1);
   }
+
+  //"/spaces/{space_id}/entries?limit={value}",
+  @Test
+  public void fetchEntriesWithLimit() throws Exception {
+    final CDAArray entries = client.fetch(CDAEntry.class).limit(5).all();
+
+    assertThat(entries.limit()).isEqualTo(5);
+    assertThat(entries.items()).hasSize(5);
+  }
+
+  //"/spaces/{space_id}/entries?skip={value}",
+  @Test
+  public void fetchEntriesWithSkip() throws Exception {
+    final CDAArray entries = client.fetch(CDAEntry.class).skip(4).all();
+
+    assertThat(entries.skip()).isEqualTo(4);
+    assertThat(entries.items()).hasSize(6);
+  }
+
 
   //"/spaces/{space_id}/entries?links_to_entry={value}",
   @Test
@@ -431,6 +466,18 @@ public class Integration {
     assertThat(found.items().size()).isEqualTo(0);
   }
 
+  //"/spaces/{space_id}/entries?content_type={content_type}&{attribute}%5Bexists%5D={value}",
+  @Test
+  public void fetchWithExistsQueryOnFields() {
+    CDAArray found = client.fetch(CDAEntry.class)
+        .withContentType("cat")
+        .where("fields.bestFriend", Exists, false) // entries without id
+        .all();
+
+    assertThat(found.items()).hasSize(1);
+    assertThat(found.entries().get("garfield").getField("name")).isEqualTo("Garfield");
+  }
+
   //"/spaces/{space_id}/entries?content_type={content_type}&{attribute}%5Blte%5D={value}",
   @Test
   public void fetchEntriesInRange() {
@@ -442,6 +489,17 @@ public class Integration {
     assertThat(found.items().size()).isEqualTo(1);
     CDAEntry nyancat = (CDAEntry) found.items().get(0);
     assertThat(nyancat.getField("name")).isEqualTo("Garfield");
+  }
+
+  //"/spaces/{space_id}/entries?{attribute}%5Blte%5D={value}",
+  @Test
+  public void fetchEntriesVersionLTE100() {
+    CDAArray found = client.fetch(CDAEntry.class)
+        .where("sys.revision", IsLessThanOrEqualTo, 0)
+        .all();
+
+    assertThat(found.total()).isEqualTo(0);
+    assertThat(found.items()).hasSize(0);
   }
 
   //"/spaces/{space_id}/entries?content_type={content_type}&{attribute}%5Blte%5D={value}",
