@@ -39,15 +39,4 @@ public class EnvironmentTest extends BaseTest {
     final RecordedRequest recordedRequest = server.takeRequest();
     assertThat(recordedRequest.getRequestUrl().toString()).contains("/environments/" + STAGING_ENVIRONMENT + "/");
   }
-
-  @Test(expected = IllegalStateException.class)
-  public void syncOnNonMasterThrows() throws Exception {
-    createBuilder()
-        .setSpace(DEFAULT_SPACE)
-        .setEnvironment(STAGING_ENVIRONMENT)
-        .build()
-        .sync()
-        .fetch()
-    ;
-  }
 }
