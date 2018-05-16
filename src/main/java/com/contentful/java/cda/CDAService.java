@@ -21,9 +21,10 @@ interface CDAService {
       @Path("type") String type,
       @QueryMap Map<String, String> query);
 
-  @GET("spaces/{space}/sync")
+  @GET("spaces/{space}/environments/{environment}/sync")
   Flowable<Response<SynchronizedSpace>> sync(
       @Path("space") String space,
+      @Path("environment") String environment,
       @Query("initial") Boolean initial,
       @Query("sync_token") String syncToken,
       @Query("type") String type,

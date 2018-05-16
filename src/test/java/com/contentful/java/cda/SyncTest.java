@@ -4,13 +4,14 @@ import com.contentful.java.cda.lib.Enqueue;
 
 import org.junit.Test;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import okhttp3.HttpUrl;
 
-import static com.contentful.java.cda.SyncType.onlyEntriesOfType;
 import static com.contentful.java.cda.SyncType.onlyDeletedEntries;
+import static com.contentful.java.cda.SyncType.onlyEntriesOfType;
 import static com.google.common.truth.Truth.assertThat;
 
 public class SyncTest extends BaseTest {
@@ -186,6 +187,29 @@ public class SyncTest extends BaseTest {
     final SynchronizedSpace space = client.sync().fetch();
 
     assertInitial(space);
+  }
+
+  @Test
+  @Enqueue({
+      "demo/sync_initial_staging_p1.json",
+      "demo/sync_initial_staging_p2.json",
+      "demo/locales.json"})
+  public void syncingWithEnvironmentsWorks() throws Exception {
+    client = createBuilder()
+        .setEnvironment("staging")
+        .build();
+
+    final SynchronizedSpace space = client.sync().fetch();
+
+    assertInitial(space);
+
+    final Collection<CDAEntry> entries = space.entries.values();
+    assertThat(entries.size()).isEqualTo(11);
+    final Object object = entries.toArray()[0];
+    final CDAResource resource = (CDAResource) object;
+    final Map<String, Map<String, Object>> environment = resource.getAttribute("environment");
+    final Map<String, Object> sys = environment.get("sys");
+    assertThat(sys.get("id")).isEqualTo("staging");
   }
 
   @Test

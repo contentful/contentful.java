@@ -4,17 +4,14 @@ import com.contentful.java.cda.CDAArray;
 import com.contentful.java.cda.CDAClient;
 import com.contentful.java.cda.CDAEntry;
 import com.contentful.java.cda.CDAHttpException;
-import com.contentful.java.cda.CDAResourceNotFoundException;
-import com.contentful.java.cda.CDASpace;
 
 import org.junit.Test;
 
-import static com.contentful.java.cda.CDAType.SPACE;
 import static com.contentful.java.cda.QueryOperation.IsEarlierOrAt;
 import static com.contentful.java.cda.QueryOperation.IsEarlierThan;
 import static com.google.common.truth.Truth.assertThat;
 
-public class IntegrationWithStagingEnvirnoment extends IntegrationWithMasterEnvironment {
+public class IntegrationWithStagingEnvironment extends IntegrationWithMasterEnvironment {
   public void setUp() throws Exception {
     client = CDAClient.builder()
         .setSpace("5s4tdjmyjfpl")
@@ -24,35 +21,10 @@ public class IntegrationWithStagingEnvirnoment extends IntegrationWithMasterEnvi
   }
 
 
-  // cannot fetch space on master
+  // cannot fetch space on non master token
   @Test(expected = CDAHttpException.class)
   @Override public void fetchSpace() throws Exception {
-    CDASpace space = client.fetchSpace();
-    assertThat(space.name()).isEqualTo("Contentful Example API with En");
-    assertThat(space.id()).isEqualTo("5s4tdjmyjfpl");
-    assertThat(space.type()).isEqualTo(SPACE);
-  }
-
-  // cannot sync on non master
-  @Test(expected = IllegalStateException.class)
-  @Override
-  public void sync() throws Exception {
-    super.sync();
-  }
-
-  // cannot sync on non master
-  @Test(expected = IllegalStateException.class)
-  @Override
-  public void syncWithTypes() throws Exception {
-    super.syncWithTypes();
-  }
-
-
-  // cannot sync on non master
-  @Test(expected = IllegalStateException.class)
-  @Override
-  public void testRawFields() throws Exception {
-    super.testRawFields();
+    client.fetchSpace();
   }
 
   @Override

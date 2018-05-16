@@ -32,13 +32,8 @@ public class SyncQuery {
    * Returns an {@link Flowable} to which one can subscribe in order to fulfill this sync query.
    *
    * @return {@link Flowable} instance.
-   * @throws IllegalStateException if called on non master environments.
    */
   public Flowable<SynchronizedSpace> observe() {
-    if (!Constants.DEFAULT_ENVIRONMENT.equals(client.environmentId)) {
-      throw new IllegalStateException("Cannot call 'sync' on non master environments!");
-    }
-
     final String token;
     if (space != null) {
       String nextSyncUrl = space.nextSyncUrl();
@@ -53,7 +48,9 @@ public class SyncQuery {
     return client.cacheAll(true)
         .flatMap(new Function<Cache, Flowable<Response<SynchronizedSpace>>>() {
           @Override public Flowable<Response<SynchronizedSpace>> apply(Cache cache) {
-            return client.service.sync(client.spaceId,
+            return client.service.sync(
+                client.spaceId,
+                client.environmentId,
                 initial ? initial : null, token,
                 initial && type != null ? type.getName() : null,
                 initial && type != null ? type.getContentType() : null);
@@ -69,7 +66,6 @@ public class SyncQuery {
    * Invokes the request to sync (blocking).
    *
    * @return {@link SynchronizedSpace} instance.
-   * @throws IllegalStateException if called on non master environments.
    */
   public SynchronizedSpace fetch() {
     return observe().blockingFirst();

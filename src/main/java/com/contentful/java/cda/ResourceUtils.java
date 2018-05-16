@@ -49,8 +49,13 @@ final class ResourceUtils {
     }
 
     Response<SynchronizedSpace> synchronizedSpace =
-        client.service.sync(client.spaceId, null, queryParam(nextPageUrl, "sync_token"),
-            null, null)
+        client.service.sync(
+            client.spaceId,
+            client.environmentId,
+            null,
+            queryParam(nextPageUrl, "sync_token"),
+            null,
+            null)
             .blockingFirst();
 
     return synchronizedSpace.body();
