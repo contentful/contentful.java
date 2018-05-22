@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [10.1.0] - To be released
+## Version [10.1.0] - (2018-05-22)
 - Add `png8` image option for returning images in png with up to 256 colours.
 - Make `sync` environment aware.
 
