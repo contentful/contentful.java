@@ -21,14 +21,14 @@ public abstract class AbsQuery<
     Resource extends CDAResource,
     Query extends AbsQuery<Resource, Query>
     > {
-  private static final String PARAMETER_CONTENT_TYPE = "content_type";
-  private static final String PARAMETER_SELECT = "select";
-  private static final String PARAMETER_ORDER = "order";
-  private static final String PARAMETER_LIMIT = "limit";
-  private static final String PARAMETER_SKIP = "skip";
-  private static final String PARAMETER_INCLUDE = "include";
-  private static final String PARAMETER_LINKS_TO_ENTRY = "links_to_entry";
-  private static final String PARAMETER_LINKS_TO_ASSET = "links_to_asset";
+  public static final String PARAMETER_CONTENT_TYPE = "content_type";
+  public static final String PARAMETER_SELECT = "select";
+  public static final String PARAMETER_ORDER = "order";
+  public static final String PARAMETER_LIMIT = "limit";
+  public static final String PARAMETER_SKIP = "skip";
+  public static final String PARAMETER_INCLUDE = "include";
+  public static final String PARAMETER_LINKS_TO_ENTRY = "links_to_entry";
+  public static final String PARAMETER_LINKS_TO_ASSET = "links_to_asset";
   private static final int MAX_LIMIT = 1000;
 
   final Class<Resource> type;
