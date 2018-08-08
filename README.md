@@ -15,12 +15,12 @@ contentful.java - Contentful Java Delivery SDK
 [![Build Status](https://travis-ci.org/contentful/contentful.java.svg)](https://travis-ci.org/contentful/contentful.java/builds#)
 [![codecov](https://codecov.io/gh/contentful/contentful.java/branch/master/graph/badge.svg)](https://codecov.io/gh/contentful/contentful.java)
 
-> Java SDK for [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/). It helps you to easily access your content stored in Contentful with your Java applications.
+> Java SDK for [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/). It helps in easily accessing the content stored in Contentful using Java applications.
 
 
 What is Contentful?
 -------------------
-[Contentful](https://www.contentful.com) provides a content infrastructure for digital teams to power content in websites, apps, and devices. Unlike a CMS, Contentful was built to integrate with the modern software stack. It offers a central hub for structured content, powerful management and delivery APIs, and a customizable web app that enable developers and content creators to ship digital products faster.
+[Contentful](https://www.contentful.com) provides a content infrastructure for digital teams to power content in websites, apps, and devices. Contentful, unlike any other CMS, is built to integrate with the modern software stack. It offers a central hub for structured content, powerful management and delivery APIs, and a customizable web app that enable developers and content creators to ship digital products faster.
 
 <details open>
 <summary>Table of contents</summary>
@@ -63,7 +63,7 @@ Install the Contentful dependency:
 compile 'com.contentful.java:java-sdk:10.0.0'
 ```
 
-This SDK needs at least Java 7 or Android 5.
+This SDK requires Java 7 (or higher version) or Android 5.
 
 Snapshots
 ---------
@@ -87,7 +87,7 @@ compile 'com.github.contentful:contentful.java:java-sdk-10.0.0-SNAPSHOT'
 Proguard
 --------
 
-The [ProGuard configuration file](proguard-cda.cfg) is used for minifying Android Apps using this SDK.
+The [ProGuard configuration file](proguard-cda.cfg) is used to minify Android Apps using this SDK.
 
 Usage
 =====
@@ -136,7 +136,7 @@ CDAArray result =
         .all();
 ```
 
-Lastly fetching _Assets_<sup><a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/assets" title="All external binary data stored in Contentful. Images, videos, pdf, etc"/>i</a></sup> follows the same principles:
+Finally fetching _Assets_<sup><a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/assets" title="All external binary data stored in Contentful. Images, videos, pdf, etc"/>i</a></sup> follows the same principles:
 
 ```java
 // Fetch an Asset with a specific id
@@ -163,7 +163,7 @@ client
 
 > Note: The return value for any asynchronous methods is the Callback itself, making sure keeping a reference to it and clearing it according to its host lifecycle events is adviced. 
 
-If _RxJava_<sup><a href="https://github.com/ReactiveX/RxJava" title="a library for composing asynchronous and event-based programs using observable sequences for the Java VM."/>i</a></sup> is wanted instead, the `.observe()` method can be used to get an `Observable` instance:
+If _RxJava_<sup><a href="https://github.com/ReactiveX/RxJava" title="a library for composing asynchronous and event-based programs using observable sequences for the Java VM."/>i</a></sup> is required instead, the `.observe()` method can be used to get an `Observable` instance:
 
 ```java
 client
@@ -175,7 +175,7 @@ client
 Paging
 ------
 
-If more then _100_ Resources are in the Space, `.fetchAll()` will only return the first _100_. If more Resources are needed, specify the limit with the `.limit(X)` like so:
+If more then _100_ Resources are in the Space, `.fetchAll()` only returns the first _100_. If more Resources are needed, specify the limit with the `.limit(X)` for example:
 
 ```java
 CDAArray result = 
@@ -191,7 +191,7 @@ For more then _1000_ Resources `.skip(N)`, `.limit(L)` and `.orderBy(F)` methods
 
 To guarantee ordering, the use of the `.orderBy` method is required: It enforces the _Array_<sup><a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/collection-resources-and-pagination" title="A collection of Resources from Contentful. Containts meta information about number and limits of the Resources it contains."/>i</a></sup> to be in a predictable order. 
 
-The following code can be used to request all Entries:
+The following code is used to request all Entries:
 
 ```java
 // get the amount of Entries, without fetching the actual content
@@ -233,9 +233,9 @@ CDAArray result =
         .all();
 ```
 
-The above snippet will fetch the first _23_ Entries, ordered by newest-to-oldest creation day.
+The above snippet will fetch the first _23_ Entries, sorted by creation date with the latest ones on top.
 
-[Sync](#sync) is used to fetch all entries in one call and to get only changed Resources in following calls.
+[Sync](#sync) is used to fetch all entries in a single call and to get only changed Resources in following calls.
 
 Preview
 -------
@@ -253,7 +253,7 @@ CDAClient client =
 
 The _Preview Access Token_<sup><a href="https://www.contentful.com/developers/docs/references/content-preview-api/#/introduction/preview-api-authentication" title="A password for this specific API."/>i</a></sup> is exposed on the [Contentful Web App](https://app.contentful.com/deeplink?link=api). 
 
-> Note: In Preview Resources can be invalid since no validation is performed prior to publishing.
+> Note: In Preview, Resources can be invalid since no validation is performed prior to publishing.
 
 Sync
 ----
@@ -264,15 +264,15 @@ Fetching all Resources and retrieving only changes on subsequent calls is accomp
 SynchronizedSpace space = client.sync().fetch();
 ```
 
-The _SynchronizedSpace_ will contain _all_ _published_ Resources. If `.preview()` ([see Preview](#preview)) is used it'll also contain all unpublished Resources.
+The _SynchronizedSpace_ contains _all_ _published_ Resources. If `.preview()` ([see Preview](#preview)) is used, it also contains all unpublished Resources.
 
-If at a later point in time changes should be fetched, calling `sync()` again using the given SynchronizedSpace as a parameter is needed:
+If changes are to be fetched later, calling `sync()` again using the given SynchronizedSpace as a parameter is needed:
 
 ```java
 SynchronizedSpace later = client.sync(space).fetch();
 ```
 
-If an Entry got deleted, its _id_<sup><a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/common-resource-attributes" title="Every Resource has a unique id."/>i</a></sup> is returned in the`SynchronizedSpace.deletedEntries()` set. Same is true for the deleted Assets through `SynchronizedSpace.deletedAssets()`.
+If an Entry gets deleted, its _id_<sup><a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/common-resource-attributes" title="Every Resource has a unique id."/>i</a></sup> is returned in the`SynchronizedSpace.deletedEntries()` set. Same is true for the deleted Assets through `SynchronizedSpace.deletedAssets()`.
 
 Documentation
 =============
