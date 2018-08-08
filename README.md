@@ -326,7 +326,7 @@ Questions
 Bugs and Feature Requests
 -------------------------
 
-* File an issue here [![File an issue](https://img.shields.io/badge/-Create%20Issue-6cc644.svg?logo=github&maxAge=31557600)](https://github.com/contentful/contentful.js/issues/new). Make sure to remove any credential from your code before sharing it.
+* File an issue here [![File an issue](https://img.shields.io/badge/-Create%20Issue-6cc644.svg?logo=github&maxAge=31557600)](https://github.com/contentful/contentful.java/issues/new).
 
 Sharing Confidential Information
 --------------------------------
