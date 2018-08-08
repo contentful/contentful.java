@@ -26,25 +26,46 @@ What is Contentful?
 <summary>Table of contents</summary>
 
 <!-- TOC -->
-
-- [Setup](#setup)
-  - [Snapshots](#snapshots)
-  - [Proguard](#proguard)
+- [Core Features](#core-features)
+- [Getting Started](#getting-started)
+  - [Setup](#setup)
+  - [Client Creation](#client-creation)
+  - [First Request](#first-request)
 - [Usage](#usage)
-  - [Fetching Resources](#fetching-resources)
+  - [Filtering](#filtering)
   - [Calls in Parralel](#calls-in-parallel)
   - [Paging](#paging)
   - [Preview Mode](#preview)
   - [Sync](#sync)
+  - [Proguard](#proguard)
+  - [Pre-Releases](#pre-releases)
 - [Documentation](#documentation)
 - [License](#license)
+- [Reaching Contentful](#reaching-contentful)
+  - [Bugs and Feature Requests](#bugs-and-feature-requests)
+  - [Sharing Confidential Information](#sharing-confidential-information)
+  - [Getting involved](#getting-involved)
+- [Code of Conduct](#code-of-conduct)
 
 </details>
 
 <!-- /TOC -->
 
+Core Features
+=============
+
+- Content retrieval through [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/).
+- [Synchronization](https://www.contentful.com/developers/docs/concepts/sync/)
+- [Localization support](https://www.contentful.com/developers/docs/concepts/locales/)
+- [Link resolution](https://www.contentful.com/developers/docs/concepts/links/)
+- Supports [Environments](https://www.contentful.com/developers/docs/concepts/multiple-environments/)
+- Synchronous and asynchrouns methods of fetching content
+
+Getting Started
+===============
+
 Setup
-=====
+-----
 
 Install the Contentful dependency:
 
@@ -65,32 +86,8 @@ compile 'com.contentful.java:java-sdk:10.0.0'
 
 This SDK requires Java 7 (or higher version) or Android 5.
 
-Snapshots
----------
-
-Development versions of this SDK are available through 
-
-* [Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/com/contentful/java/java-sdk/):
-
-```groovy
-maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-compile 'com.contentful.java:java-sdk:10.0.0-SNAPSHOT'
-```
-
-* [jitpack.io](https://jitpack.io/#contentful/contentful.java/master-SNAPSHOT):
-
-```groovy
-maven { url 'https://jitpack.io' }
-compile 'com.github.contentful:contentful.java:java-sdk-10.0.0-SNAPSHOT'
-```
-
-Proguard
---------
-
-The [ProGuard configuration file](proguard-cda.cfg) is used to minify Android Apps using this SDK.
-
-Usage
-=====
+Client Creation
+---------------
 
 The `CDAClient` manages all interactions with the _Content Delivery API_.
 
@@ -101,10 +98,12 @@ CDAClient client = CDAClient.builder()
     .build();
 ```
 
-Fetching Resources
-------------------
+The <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/spaces" title="A Space is a container for all Resources in Contentful."/>_Space_</a>-id and <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/authentication" title="An access token is a password to the content of the Space.">_Access Token_</a> are retrived from the <a href="https://app.contentful.com/deeplink?link=api" title="The Web App is used to edit content visually.">Contentful WebApp</a>.
 
-Fetching is achieved by calling the `CDAClient.fetch()`-method. It fetches all _Resources_<sup><a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/common-resource-attributes" title="Everything stored in Contentful is a Resource."/>i</a></sup> from a _Space_<sup><a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/spaces" title="A Space is a container for all Resources."/>i</a></sup>. The following code fetches all _Entries_<sup><a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/entries" title="An Entry stores content in a user defined structure."/>i</a></sup>:
+First Request
+-------------
+
+Fetching content is achieved by calling the `CDAClient.fetch()`-method. It fetches all <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/common-resource-attributes" title="Everything stored in Contentful is a Resource."/>_Resources_</a> from a Space. The following code fetches all <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/entries" title="An Entry stores content in a user defined structure."/>_Entries_</a>:
 
 ```java
 // Fetch entries
@@ -114,20 +113,24 @@ CDAArray array =
         .all();
 ```
 
-Filtering of these Resources can be done by chaining method calls after the fetch. Using `.one()` and a Resource id retrieves only the specifyied Resource:
+Usage
+=====
+
+Filtering
+---------
+
+Filtering of Resources can be done by chaining method calls after the `.fetch()`. Using `.one()` and a Resource id retrieves only the specifyied Resource:
 
 ```java
-// Fetch an Entry with a specific id
 CDAEntry entry =
     client
         .fetch(CDAEntry.class)
         .one("{entry-id-goes-here}");
 ```
 
-Fetching only Entries of a specific _ContentType_<sup><a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-types" title="A ContentType defines the structure of an Entries field."/>i</a></sup> is done by adding a `.withContentType({id})` call to the chain:
+Fetching only Entries of a specific <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-types" title="A ContentType defines the structure of an Entries field."/>_Content Type_</a> is done by adding the `.withContentType({id})` call to the chain:
 
 ```java
-// Fetch entries with custom query
 CDAArray result = 
     client
         .fetch(CDAEntry.class)
@@ -136,7 +139,7 @@ CDAArray result =
         .all();
 ```
 
-Finally fetching _Assets_<sup><a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/assets" title="All external binary data stored in Contentful. Images, videos, pdf, etc"/>i</a></sup> follows the same principles:
+Finally fetching <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/assets" title="All external binary data stored in Contentful. Images, videos, pdf, etc"/>_Assets_</a> follows the same principles:
 
 ```java
 // Fetch an Asset with a specific id
@@ -149,7 +152,7 @@ CDAEntry entry =
 Calls in Parallel
 -----------------
 
-All of the above examples are synchronous. In order to request asynchronously, provide a callback to `.all(…)` or `.one(…)`:
+All of the above examples are executed synchronously. In order to request asynchronously, provide a callback to `.all(…)` or `.one(…)`:
 
 ```java
 client
@@ -163,7 +166,7 @@ client
 
 > Note: The return value for any asynchronous methods is the Callback itself, making sure keeping a reference to it and clearing it according to its host lifecycle events is adviced. 
 
-If _RxJava_<sup><a href="https://github.com/ReactiveX/RxJava" title="a library for composing asynchronous and event-based programs using observable sequences for the Java VM."/>i</a></sup> is required instead, the `.observe()` method can be used to get an `Observable` instance:
+If <a href="https://github.com/ReactiveX/RxJava" title="a library for composing asynchronous and event-based programs using observable sequences for the Java VM."/>_RxJava_</a> is required instead, the `.observe()` method can be used to get an `Observable` instance:
 
 ```java
 client
@@ -189,7 +192,7 @@ The maximum number of Resources to be requested is _1000_.
 
 For more then _1000_ Resources `.skip(N)`, `.limit(L)` and `.orderBy(F)` methods are needed. By using `.skip(N)`, the first _N_ Resources are ignored and _L_, from `.limit(L)`, items are returned. 
 
-To guarantee ordering, the use of the `.orderBy` method is required: It enforces the _Array_<sup><a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/collection-resources-and-pagination" title="A collection of Resources from Contentful. Containts meta information about number and limits of the Resources it contains."/>i</a></sup> to be in a predictable order. 
+To guarantee ordering, the use of the `.orderBy` method is required: It enforces the <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/collection-resources-and-pagination" title="A collection of Resources from Contentful. Containts meta information about number and limits of the Resources it contains."/>_Array_</a> to be in a predictable order. 
 
 The following code is used to request all Entries:
 
@@ -240,7 +243,7 @@ The above snippet will fetch the first _23_ Entries, sorted by creation date wit
 Preview
 -------
 
-The _Content Delivery API_ only returns _published_ Entries. The _Content Preview API_<sup><a href="https://www.contentful.com/developers/docs/references/content-preview-api/" title="Shortened to Preview from now on."/>i</a></sup> will return _all_ Entries, even not published ones:
+The _Content Delivery API_ only returns _published_ Entries. The <a href="https://www.contentful.com/developers/docs/references/content-preview-api/" title="Shortened to Preview from now on."/>_Content Preview API_</a> will return _all_ Entries, even not published ones:
 
 ```java
 CDAClient client = 
@@ -251,7 +254,7 @@ CDAClient client =
         .build();
 ```
 
-The _Preview Access Token_<sup><a href="https://www.contentful.com/developers/docs/references/content-preview-api/#/introduction/preview-api-authentication" title="A password for this specific API."/>i</a></sup> is exposed on the [Contentful Web App](https://app.contentful.com/deeplink?link=api). 
+The <a href="https://www.contentful.com/developers/docs/references/content-preview-api/#/introduction/preview-api-authentication" title="A password for this specific API."/>_Preview Access Token_</a> is exposed on the [Contentful Web App](https://app.contentful.com/deeplink?link=api). 
 
 > Note: In Preview, Resources can be invalid since no validation is performed prior to publishing.
 
@@ -272,7 +275,31 @@ If changes are to be fetched later, calling `sync()` again using the given Synch
 SynchronizedSpace later = client.sync(space).fetch();
 ```
 
-If an Entry gets deleted, its _id_<sup><a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/common-resource-attributes" title="Every Resource has a unique id."/>i</a></sup> is returned in the`SynchronizedSpace.deletedEntries()` set. Same is true for the deleted Assets through `SynchronizedSpace.deletedAssets()`.
+If an Entry gets deleted, its <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/common-resource-attributes" title="Every Resource has a unique id."/>_id_</a> is returned in the`SynchronizedSpace.deletedEntries()` set. Same is true for the deleted Assets through `SynchronizedSpace.deletedAssets()`.
+
+Proguard
+--------
+
+The [ProGuard configuration file](proguard-cda.cfg) is used to minify Android Apps using this SDK.
+
+Pre-releases
+------------
+
+Development versions of this SDK are available through 
+
+* [Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/com/contentful/java/java-sdk/):
+
+```groovy
+maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+compile 'com.contentful.java:java-sdk:10.0.0-SNAPSHOT'
+```
+
+* [jitpack.io](https://jitpack.io/#contentful/contentful.java/master-SNAPSHOT):
+
+```groovy
+maven { url 'https://jitpack.io' }
+compile 'com.github.contentful:contentful.java:java-sdk-10.0.0-SNAPSHOT'
+```
 
 Documentation
 =============
@@ -285,3 +312,35 @@ License
 =======
 
 > Copyright (c) 2018 Contentful GmbH. See [LICENSE.txt](LICENSE.txt) for further details.
+
+
+Reaching Contentful
+===================
+
+Questions
+---------
+
+* Use the community forum: [![Contentful Community Forum](https://img.shields.io/badge/-Join%20Community%20Forum-3AB2E6.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiA1OSI+CiAgPHBhdGggZmlsbD0iI0Y4RTQxOCIgZD0iTTE4IDQxYTE2IDE2IDAgMCAxIDAtMjMgNiA2IDAgMCAwLTktOSAyOSAyOSAwIDAgMCAwIDQxIDYgNiAwIDEgMCA5LTkiIG1hc2s9InVybCgjYikiLz4KICA8cGF0aCBmaWxsPSIjNTZBRUQyIiBkPSJNMTggMThhMTYgMTYgMCAwIDEgMjMgMCA2IDYgMCAxIDAgOS05QTI5IDI5IDAgMCAwIDkgOWE2IDYgMCAwIDAgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0UwNTM0RSIgZD0iTTQxIDQxYTE2IDE2IDAgMCAxLTIzIDAgNiA2IDAgMSAwLTkgOSAyOSAyOSAwIDAgMCA0MSAwIDYgNiAwIDAgMC05LTkiLz4KICA8cGF0aCBmaWxsPSIjMUQ3OEE0IiBkPSJNMTggMThhNiA2IDAgMSAxLTktOSA2IDYgMCAwIDEgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0JFNDMzQiIgZD0iTTE4IDUwYTYgNiAwIDEgMS05LTkgNiA2IDAgMCAxIDkgOSIvPgo8L3N2Zz4K&maxAge=31557600)](https://support.contentful.com/)
+* Use the community slack channel: [![Contentful Community Slack](https://img.shields.io/badge/-Join%20Community%20Slack-2AB27B.svg?logo=slack&maxAge=31557600)](https://www.contentful.com/slack/)
+
+Bugs and Feature Requests
+-------------------------
+
+* File an issue here [![File an issue](https://img.shields.io/badge/-Create%20Issue-6cc644.svg?logo=github&maxAge=31557600)](https://github.com/contentful/contentful.js/issues/new). Make sure to remove any credential from your code before sharing it.
+
+Sharing Confidential Information
+--------------------------------
+
+* File a support ticket at our Contentful Customer Support: [![File support ticket](https://img.shields.io/badge/-Submit%20Support%20Ticket-3AB2E6.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiA1OSI+CiAgPHBhdGggZmlsbD0iI0Y4RTQxOCIgZD0iTTE4IDQxYTE2IDE2IDAgMCAxIDAtMjMgNiA2IDAgMCAwLTktOSAyOSAyOSAwIDAgMCAwIDQxIDYgNiAwIDEgMCA5LTkiIG1hc2s9InVybCgjYikiLz4KICA8cGF0aCBmaWxsPSIjNTZBRUQyIiBkPSJNMTggMThhMTYgMTYgMCAwIDEgMjMgMCA2IDYgMCAxIDAgOS05QTI5IDI5IDAgMCAwIDkgOWE2IDYgMCAwIDAgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0UwNTM0RSIgZD0iTTQxIDQxYTE2IDE2IDAgMCAxLTIzIDAgNiA2IDAgMSAwLTkgOSAyOSAyOSAwIDAgMCA0MSAwIDYgNiAwIDAgMC05LTkiLz4KICA8cGF0aCBmaWxsPSIjMUQ3OEE0IiBkPSJNMTggMThhNiA2IDAgMSAxLTktOSA2IDYgMCAwIDEgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0JFNDMzQiIgZD0iTTE4IDUwYTYgNiAwIDEgMS05LTkgNiA2IDAgMCAxIDkgOSIvPgo8L3N2Zz4K&maxAge=31557600)](https://www.contentful.com/support/)
+
+Getting involved
+----------------
+
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?maxAge=31557600)](http://makeapullrequest.com)
+
+Code of Conduct
+===============
+
+Contentful wants to provide a safe, inclusive, welcoming, and harassment-free space and experience for all participants, regardless of gender identity and expression, sexual orientation, disability, physical appearance, socioeconomic status, body size, ethnicity, nationality, level of experience, age, religion (or lack thereof), or other identity markers.
+
+[Full Code of Conduct](https://github.com/contentful-developer-relations/community-code-of-conduct).
