@@ -1,0 +1,66 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 1,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "<space_id>"
+          }
+        },
+        "id": "42c9Fb0T0As26K0W0E48U2",
+        "type": "Entry",
+        "createdAt": "2018-10-17T13:32:32.829Z",
+        "updatedAt": "2018-10-17T13:32:32.829Z",
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "revision": 1,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "rich"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "name": "simple_text_underline",
+        "rich": {
+          "content": [
+            {
+              "data": {},
+              "content": [
+                {
+                  "marks": [
+                    {
+                      "data": {},
+                      "type": "underline",
+                      "object": "mark"
+                    }
+                  ],
+                  "value": "This is some simple text",
+                  "nodeType": "text"
+                }
+              ],
+              "nodeType": "paragraph"
+            }
+          ],
+          "nodeType": "document"
+        }
+      }
+    }
+  ]
+}

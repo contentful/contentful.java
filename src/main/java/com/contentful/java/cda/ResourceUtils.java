@@ -19,7 +19,7 @@ import static com.contentful.java.cda.Constants.LOCALE;
 import static com.contentful.java.cda.Util.extractNested;
 import static com.contentful.java.cda.Util.queryParam;
 
-final class ResourceUtils {
+public final class ResourceUtils {
   private ResourceUtils() {
     throw new AssertionError();
   }
@@ -72,7 +72,7 @@ final class ResourceUtils {
     }
   }
 
-  static void ensureContentType(CDAEntry entry, CDAClient client) {
+  public static void ensureContentType(CDAEntry entry, CDAClient client) {
     CDAContentType contentType = entry.contentType();
     if (contentType != null) {
       return;

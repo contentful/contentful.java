@@ -13,6 +13,8 @@ import java.util.Set;
 
 import retrofit2.Response;
 
+import static com.contentful.java.cda.rich.RichTextFactory.resolveRichTextField;
+
 final class ResourceFactory {
   private ResourceFactory() {
     throw new AssertionError();
@@ -29,6 +31,7 @@ final class ResourceFactory {
     ResourceUtils.localizeResources(resources, client.cache);
     ResourceUtils.mapResources(resources, array.assets, array.entries);
     ResourceUtils.setRawFields(array);
+    resolveRichTextField(array, client);
     ResourceUtils.resolveLinks(array, client);
     return array;
   }
@@ -70,6 +73,7 @@ final class ResourceFactory {
     result.entries = entries;
 
     ResourceUtils.setRawFields(result);
+    resolveRichTextField(result, client);
     ResourceUtils.resolveLinks(result, client);
 
     return result;

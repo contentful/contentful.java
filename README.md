@@ -35,7 +35,7 @@ What is Contentful?
   - [Filtering](#filtering)
   - [Calls in Parralel](#calls-in-parallel)
   - [Paging](#paging)
-  - [Inlcludes](#includes)
+  - [Includes](#includes)
   - [Preview Mode](#preview)
   - [Sync](#sync)
   - [Http Client](#http-client)
@@ -86,7 +86,7 @@ Install the Contentful dependency:
 compile 'com.contentful.java:java-sdk:10.0.0'
 ```
 
-This SDK requires Java 7 (or higher version) or Android 5.
+This SDK requires Java 8 (or higher version) or Android 5.
 
 Client Creation
 ---------------
