@@ -35,6 +35,7 @@ What is Contentful?
   - [Filtering](#filtering)
   - [Calls in Parralel](#calls-in-parallel)
   - [Paging](#paging)
+  - [Inlcludes](#includes)
   - [Preview Mode](#preview)
   - [Sync](#sync)
   - [Proguard](#proguard)
@@ -239,6 +240,39 @@ CDAArray result =
 The above snippet will fetch the first _23_ Entries, sorted by creation date with the latest ones on top.
 
 [Sync](#sync) is used to fetch all entries in a single call and to get only changed Resources in following calls.
+
+Includes
+--------
+
+The SDK contains a feature called link resolution, which will take a link and resolve them. So there is no need to look through entry id's manually, a simple `.getField(…)` retrieves and entry directly, no need to use the link elements themselves.
+
+For this feature to work, the linked entry needs to be _published_ (see [preview](#preview)) and the include level needs to be set to include this entry. A level of `2` means, that the links of links are getting resolved. Entries of deeper levels contain an empty field if the link could not be resolved. Finding the id of the not resolved field can be achieved through comparing the `.rawFields` with the `.fields` property of an Entry.
+
+In order to change the level of includes, the following snippet can be used as a guide:
+
+```
+CDAArray found = client.fetch(CDAEntry.class)
+        .include(1) // maximum is 10
+        .all();
+```
+
+This only resolves the first level of includes. `10` is the maximum number of levels to be included and should be used sparringly, since this will bloat up the response by a lot.
+
+Select
+------
+
+The amount of data returned by the API can be reduced by using the `.select()` method on a query. With this, Contentful only returns the selected fields. The SDK enforces that the `sys` fields (`.getAttribute()` on an Entry) will always be returned, since it is used for the proper functioning of the SDK.
+
+If reducing the payload size is wanted, the following snippet can explain how to accomplish that
+
+```
+CDAArray found = client.fetch(CDAEntry.class)
+    .withContentType("cat");
+    .select("fields.name");
+```
+This snippet makes sure that the entries of type `cat` are only containing its `name` field. All other fields will be `null` or its respective default value. 
+
+> Note: The content type has to be added through `.withContentType(…)` otherwise an error ensues.
 
 Preview
 -------
