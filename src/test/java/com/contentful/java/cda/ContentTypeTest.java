@@ -13,7 +13,7 @@ import static com.google.common.truth.Truth.assertThat;
 public class ContentTypeTest extends BaseTest {
   @Test
   @Enqueue("demo/content_types_cat.json")
-  public void fetchContentType() throws Exception {
+  public void fetchContentType() {
     CDAContentType cat = client.fetch(CDAContentType.class).one("cat");
     assertThat(cat.name()).isEqualTo("Cat");
     assertThat(cat.displayField()).isEqualTo("name");
@@ -23,7 +23,7 @@ public class ContentTypeTest extends BaseTest {
 
   @Test
   @Enqueue({"demo/content_types_cat.json", "demo/content_types_fake.json"})
-  public void manuallyFetchedContentTypeIsCached() throws Exception {
+  public void manuallyFetchedContentTypeIsCached() {
     client.fetch(CDAContentType.class).one("cat");
     assertThat(client.cache.types()).hasSize(5);
     assertThat(client.cache.types()).doesNotContainKey("fake");
@@ -41,7 +41,7 @@ public class ContentTypeTest extends BaseTest {
       "cda/entries.json",
       "cda/content_types_bar.json"
   })
-  public void missingContentTypeIsFetchedAndCached() throws Exception {
+  public void missingContentTypeIsFetchedAndCached() {
     assertThat(client.cache.types()).isNull();
     CDAArray array = client.fetch(CDAEntry.class).all();
     CDAEntry foo = array.entries().get("3UpazZmO8g8iI0iWAMmGMS");
@@ -49,7 +49,7 @@ public class ContentTypeTest extends BaseTest {
 
     CDAEntry bar = foo.getField("link");
     assertThat(bar).isNotNull();
-    assertThat(bar.getField("name")).isEqualTo("bar");
+    assertThat(bar.<String>getField("name")).isEqualTo("bar");
 
     assertThat(client.cache.types()).containsKey("3lYaFZKDgQCUwWy6uEoQYi");
   }
@@ -59,7 +59,7 @@ public class ContentTypeTest extends BaseTest {
       "demo/entries_fake.json",
       "array_empty.json"
   })
-  public void badTypeMappingThrows() throws Exception {
+  public void badTypeMappingThrows() {
     try {
       client.fetch(CDAEntry.class).all();
     } catch (CDAContentTypeNotFoundException e) {
@@ -72,7 +72,7 @@ public class ContentTypeTest extends BaseTest {
 
   @Test
   @Enqueue("demo/content_types_cat.json")
-  public void fetchFieldValidations() throws Exception {
+  public void fetchFieldValidations() {
     CDAContentType catContentType = client.fetch(CDAContentType.class).one("cat");
     assertThat(catContentType).isNotNull();
     CDAField colorField = findFieldById(catContentType.fields(), "color");

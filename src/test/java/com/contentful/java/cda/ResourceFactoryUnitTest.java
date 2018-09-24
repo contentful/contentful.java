@@ -35,9 +35,9 @@ public class ResourceFactoryUnitTest {
   }
 
   @Test
-  public void testPreserveOrderOfElements() throws Exception {
+  public void testPreserveOrderOfElements() {
     final CDAArray inputArray = new CDAArray();
-    inputArray.items = new ArrayList<CDAResource>();
+    inputArray.items = new ArrayList<>();
     for (int i = 0; i < 23; ++i) {
       inputArray.items().add(createCdaEntry(String.format("%03d", i)));
     }
@@ -50,12 +50,12 @@ public class ResourceFactoryUnitTest {
 
   private CDAEntry createCdaEntry(String id) {
     final CDAEntry entry = new CDAEntry();
-    entry.fields = new HashMap<String, Object>();
-    entry.attrs = new HashMap<String, Object>();
+    entry.fields = new HashMap<>();
+    entry.attrs = new HashMap<>();
     entry.attrs.put("type", CDAType.ENTRY.name());
     entry.attrs.put("id", id);
     entry.setContentType(new CDAContentType());
-    entry.contentType().fields = new ArrayList<CDAField>();
+    entry.contentType().fields = new ArrayList<>();
     return entry;
   }
 }

@@ -24,7 +24,7 @@ import static com.google.common.truth.Truth.assertThat;
 public class AssetTest extends BaseTest {
   @Test
   @Enqueue("demo/assets_jake.json")
-  public void fetchAsset() throws Exception {
+  public void fetchAsset() {
     final CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
 
     assertThat(asset.id()).isEqualTo("jake");
@@ -39,7 +39,7 @@ public class AssetTest extends BaseTest {
 
   @Test
   @Enqueue("demo/assets_jake.json")
-  public void augmentUrlSimple() throws Exception {
+  public void augmentUrlSimple() {
     final CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
 
     assertThat(asset.urlForImageWith(http(), widthOf(10)))
@@ -52,7 +52,7 @@ public class AssetTest extends BaseTest {
 
   @Test
   @Enqueue("demo/assets_jake.json")
-  public void augmentUrlWithSameOperationUsesLastOption() throws Exception {
+  public void augmentUrlWithSameOperationUsesLastOption() {
     final CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
 
     assertThat(
@@ -68,7 +68,7 @@ public class AssetTest extends BaseTest {
 
   @Test
   @Enqueue("demo/assets_jake.json")
-  public void augmentUrlComplete() throws Exception {
+  public void augmentUrlComplete() {
     final CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
 
     assertThat(
@@ -105,7 +105,7 @@ public class AssetTest extends BaseTest {
 
   @Test
   @Enqueue("demo/assets_jake.json")
-  public void augmentPng8() throws Exception {
+  public void augmentPng8() {
     final CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
 
     assertThat(
@@ -126,7 +126,7 @@ public class AssetTest extends BaseTest {
 
   @Test(expected = IllegalStateException.class)
   @Enqueue("demo/assets_no_image.json")
-  public void expectThrowIfNotImageAsset() throws Exception {
+  public void expectThrowIfNotImageAsset() {
     CDAAsset asset = client.fetch(CDAAsset.class).one("6OpsQmtnl6uYyeUmkOiYYq");
 
     asset.urlForImageWith(http());
@@ -134,7 +134,7 @@ public class AssetTest extends BaseTest {
 
   @Test(expected = IllegalArgumentException.class)
   @Enqueue("demo/assets_jake.json")
-  public void expectThrowIfWidthIsNegative() throws Exception {
+  public void expectThrowIfWidthIsNegative() {
     CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
 
     asset.urlForImageWith(widthOf(-1));
@@ -142,7 +142,7 @@ public class AssetTest extends BaseTest {
 
   @Test(expected = IllegalArgumentException.class)
   @Enqueue("demo/assets_jake.json")
-  public void expectThrowIfHeightIsNegative() throws Exception {
+  public void expectThrowIfHeightIsNegative() {
     CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
 
     asset.urlForImageWith(heightOf(-1));
@@ -150,7 +150,7 @@ public class AssetTest extends BaseTest {
 
   @Test(expected = IllegalArgumentException.class)
   @Enqueue("demo/assets_jake.json")
-  public void expectThrowIfRadiusIsNegative() throws Exception {
+  public void expectThrowIfRadiusIsNegative() {
     CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
 
     asset.urlForImageWith(roundedCornerRadiusOf(-1));
@@ -158,7 +158,7 @@ public class AssetTest extends BaseTest {
 
   @Test(expected = IllegalArgumentException.class)
   @Enqueue("demo/assets_jake.json")
-  public void expectThrowIfColorIsNegative() throws Exception {
+  public void expectThrowIfColorIsNegative() {
     CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
 
     asset.urlForImageWith(backgroundColorOf(-1));
@@ -166,7 +166,7 @@ public class AssetTest extends BaseTest {
 
   @Test(expected = IllegalArgumentException.class)
   @Enqueue("demo/assets_jake.json")
-  public void expectThrowIfColorIsToLarge() throws Exception {
+  public void expectThrowIfColorIsToLarge() {
     CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
 
     asset.urlForImageWith(backgroundColorOf(0xFFFFFF + 1));
@@ -174,7 +174,7 @@ public class AssetTest extends BaseTest {
 
   @Test(expected = IllegalArgumentException.class)
   @Enqueue("demo/assets_jake.json")
-  public void expectThrowIfRedColorComponentIsNegative() throws Exception {
+  public void expectThrowIfRedColorComponentIsNegative() {
     CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
 
     asset.urlForImageWith(backgroundColorOf(-1, 0, 0));
@@ -182,7 +182,7 @@ public class AssetTest extends BaseTest {
 
   @Test(expected = IllegalArgumentException.class)
   @Enqueue("demo/assets_jake.json")
-  public void expectThrowIfRedColorComponentIsToLarge() throws Exception {
+  public void expectThrowIfRedColorComponentIsToLarge() {
     CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
 
     asset.urlForImageWith(backgroundColorOf(0xFF + 1, 0, 0));
@@ -190,7 +190,7 @@ public class AssetTest extends BaseTest {
 
   @Test(expected = IllegalArgumentException.class)
   @Enqueue("demo/assets_jake.json")
-  public void expectThrowIfGreenColorComponentIsNegative() throws Exception {
+  public void expectThrowIfGreenColorComponentIsNegative() {
     CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
 
     asset.urlForImageWith(backgroundColorOf(0, -1, 0));
@@ -198,7 +198,7 @@ public class AssetTest extends BaseTest {
 
   @Test(expected = IllegalArgumentException.class)
   @Enqueue("demo/assets_jake.json")
-  public void expectThrowIfGreenColorComponentIsToLarge() throws Exception {
+  public void expectThrowIfGreenColorComponentIsToLarge() {
     CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
 
     asset.urlForImageWith(backgroundColorOf(0, 0xFF + 1, 0));
@@ -206,7 +206,7 @@ public class AssetTest extends BaseTest {
 
   @Test(expected = IllegalArgumentException.class)
   @Enqueue("demo/assets_jake.json")
-  public void expectThrowIfBlueColorComponentIsNegative() throws Exception {
+  public void expectThrowIfBlueColorComponentIsNegative() {
     CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
 
     asset.urlForImageWith(backgroundColorOf(0, 0, -1));
@@ -214,7 +214,7 @@ public class AssetTest extends BaseTest {
 
   @Test(expected = IllegalArgumentException.class)
   @Enqueue("demo/assets_jake.json")
-  public void expectThrowIfBlueColorComponentIsToLarge() throws Exception {
+  public void expectThrowIfBlueColorComponentIsToLarge() {
     CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
 
     asset.urlForImageWith(backgroundColorOf(0, 0, 0xFF + 1));
@@ -222,7 +222,7 @@ public class AssetTest extends BaseTest {
 
   @Test(expected = IllegalArgumentException.class)
   @Enqueue("demo/assets_jake.json")
-  public void expectThrowIfQualityIsToSmall() throws Exception {
+  public void expectThrowIfQualityIsToSmall() {
     CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
 
     asset.urlForImageWith(jpegQualityOf(-1));
@@ -230,7 +230,7 @@ public class AssetTest extends BaseTest {
 
   @Test(expected = IllegalArgumentException.class)
   @Enqueue("demo/assets_jake.json")
-  public void expectThrowIfQualityIsToHigh() throws Exception {
+  public void expectThrowIfQualityIsToHigh() {
     CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
 
     asset.urlForImageWith(jpegQualityOf(0xFFFFFF + 1));
@@ -238,7 +238,7 @@ public class AssetTest extends BaseTest {
 
   @Test(expected = IllegalArgumentException.class)
   @Enqueue("demo/assets_jake.json")
-  public void expectThrowIfEmptyOption() throws Exception {
+  public void expectThrowIfEmptyOption() {
     CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
 
     asset.urlForImageWith();
@@ -246,7 +246,7 @@ public class AssetTest extends BaseTest {
 
   @Test
   @Enqueue("demo/assets_jake.json")
-  public void firstHttpOptionSurvives() throws Exception {
+  public void firstHttpOptionSurvives() {
     CDAAsset asset = client.fetch(CDAAsset.class).one("jake");
 
     assertThat(asset.urlForImageWith(http(), https())).startsWith("http:");

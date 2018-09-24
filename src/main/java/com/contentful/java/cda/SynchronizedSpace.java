@@ -6,6 +6,7 @@ import java.util.Set;
  * Represents results for synchronization via the Sync API.
  */
 public class SynchronizedSpace extends ArrayResource {
+  private static final long serialVersionUID = 8618757744312417604L;
   String nextPageUrl;
 
   String nextSyncUrl;

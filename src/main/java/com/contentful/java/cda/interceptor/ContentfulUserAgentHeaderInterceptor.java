@@ -362,7 +362,7 @@ public class ContentfulUserAgentHeaderInterceptor extends HeaderInterceptor {
 
   private static String sectionsToString(Section[] sections) {
     // take last section of same identifier
-    final LinkedHashMap<String, Section> mappedSections = new LinkedHashMap<String, Section>();
+    final LinkedHashMap<String, Section> mappedSections = new LinkedHashMap<>();
     for (final Section section : sections) {
       if (section != null) {
         final String identifier = section.getIdentifier();

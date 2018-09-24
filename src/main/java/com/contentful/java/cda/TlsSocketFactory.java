@@ -66,7 +66,7 @@ final class TlsSocketFactory extends SSLSocketFactory {
   }
 
   private Socket enableTlsOnSocket(Socket socket) {
-    if (socket != null && (socket instanceof SSLSocket)) {
+    if (socket instanceof SSLSocket) {
       ((SSLSocket) socket).setEnabledProtocols(PROTOCOLS_TLS_1_2_ONLY);
     }
     return socket;

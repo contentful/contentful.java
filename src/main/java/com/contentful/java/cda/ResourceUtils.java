@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 import io.reactivex.Flowable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Predicate;
 import retrofit2.Response;
 
 import static com.contentful.java.cda.CDAType.ASSET;
@@ -103,9 +101,9 @@ final class ResourceUtils {
       if (links == null) {
         continue;
       }
-      List<CDAResource> resolved = new ArrayList<CDAResource>();
-      for (int i = 0; i < links.size(); i++) {
-        String linkId = getLinkId(links.get(i));
+      List<CDAResource> resolved = new ArrayList<>();
+      for (final Object link : links) {
+        String linkId = getLinkId(link);
         if (linkId == null) {
           continue;
         }
@@ -125,7 +123,7 @@ final class ResourceUtils {
     if (value == null) {
       return;
     }
-    Set<String> toRemove = new HashSet<String>();
+    Set<String> toRemove = new HashSet<>();
     for (String locale : value.keySet()) {
       String linkId = getLinkId(value.get(locale));
       if (linkId == null) {
@@ -184,32 +182,28 @@ final class ResourceUtils {
   static void mapDeletedResources(SynchronizedSpace space) {
     final Set<String> assets;
     if (space.deletedAssets == null) {
-      assets = new HashSet<String>();
+      assets = new HashSet<>();
     } else {
-      assets = new HashSet<String>(space.deletedAssets);
+      assets = new HashSet<>(space.deletedAssets);
     }
 
     final Set<String> entries;
     if (space.deletedEntries == null) {
-      entries = new HashSet<String>();
+      entries = new HashSet<>();
     } else {
-      entries = new HashSet<String>(space.deletedEntries);
+      entries = new HashSet<>(space.deletedEntries);
     }
 
     Flowable.fromIterable(space.items())
-        .filter(new Predicate<CDAResource>() {
-          @Override public boolean test(CDAResource resource) {
-            CDAType type = resource.type();
-            return DELETEDASSET.equals(type) || DELETEDENTRY.equals(type);
-          }
+        .filter(resource -> {
+          CDAType type = resource.type();
+          return DELETEDASSET.equals(type) || DELETEDENTRY.equals(type);
         })
-        .subscribe(new Consumer<CDAResource>() {
-          @Override public void accept(CDAResource resource) {
-            if (DELETEDASSET.equals(resource.type())) {
-              assets.add(resource.id());
-            } else {
-              entries.add(resource.id());
-            }
+        .subscribe(resource -> {
+          if (DELETEDASSET.equals(resource.type())) {
+            assets.add(resource.id());
+          } else {
+            entries.add(resource.id());
           }
         });
     space.deletedAssets = assets;
@@ -239,7 +233,7 @@ final class ResourceUtils {
   }
 
   private static Map<String, String> getFallbackLocaleMap(Cache cache) {
-    final Map<String, String> fallbackLocales = new HashMap<String, String>(cache.locales().size());
+    final Map<String, String> fallbackLocales = new HashMap<>(cache.locales().size());
 
     for (final CDALocale locale : cache.locales()) {
       final String fallback = locale.fallbackLocaleCode();
@@ -252,7 +246,7 @@ final class ResourceUtils {
   }
 
   static void normalizeFields(LocalizedResource resource) {
-    Map<String, Object> fields = new HashMap<String, Object>();
+    Map<String, Object> fields = new HashMap<>();
     for (String key : resource.fields.keySet()) {
       Object value = resource.fields.get(key);
       if (value == null) {
@@ -260,7 +254,7 @@ final class ResourceUtils {
       } else if (resourceContainsLocaleMap(resource, value)) {
         fields.put(key, value);
       } else {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put(resource.defaultLocale, value);
         fields.put(key, map);
       }
@@ -284,10 +278,9 @@ final class ResourceUtils {
 
   @SuppressWarnings("unchecked")
   private static void setRawFields(LocalizedResource resource) {
-    Map<String, Object> rawFields = new HashMap<String, Object>();
+    Map<String, Object> rawFields = new HashMap<>();
     for (String key : resource.fields.keySet()) {
-      Map<String, Object> map = new HashMap<String, Object>();
-      map.putAll((Map<String, ?>) resource.fields.get(key));
+      Map<String, Object> map = new HashMap<>((Map<String, ?>) resource.fields.get(key));
       rawFields.put(key, map);
     }
     resource.rawFields = rawFields;

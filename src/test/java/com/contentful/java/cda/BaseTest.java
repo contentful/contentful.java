@@ -35,7 +35,7 @@ public class BaseTest {
 
   @Rule public EnqueueResponseRule enqueueResponse = new EnqueueResponseRule();
 
-  @Before public void setUp() throws Exception {
+  @Before public void setUp() throws IOException {
     LogManager.getLogManager().reset();
     server = createServer();
     server.start();
@@ -49,7 +49,7 @@ public class BaseTest {
     }
   }
 
-  @After public void tearDown() throws Exception {
+  @After public void tearDown() throws IOException {
     server.shutdown();
   }
 

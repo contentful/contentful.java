@@ -6,6 +6,7 @@ import java.util.List;
  * Represents a single content type.
  */
 public class CDAContentType extends CDAResource {
+  private static final long serialVersionUID = 7901798878659781364L;
   List<CDAField> fields;
 
   String name;

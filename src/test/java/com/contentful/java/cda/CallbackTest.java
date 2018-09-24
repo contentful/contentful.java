@@ -16,17 +16,17 @@ import static org.junit.Assert.fail;
 public class CallbackTest extends BaseTest {
   @Test
   @Enqueue("demo/entries_nyancat.json")
-  public void fetchEntryAsync() throws Exception {
+  public void fetchEntryAsync() throws InterruptedException {
     assertCallback(
-        client.fetch(CDAEntry.class).one("nyancat", new TestCallback<CDAEntry>())
+        client.fetch(CDAEntry.class).one("nyancat", new TestCallback<>())
             .await());
   }
 
   @Test
-  public void onFailure() throws Exception {
+  public void onFailure() throws InterruptedException {
     server.enqueue(new MockResponse().setStatus("404"));
     try {
-      client.fetchSpace(new TestCallback<CDASpace>()).await();
+      client.fetchSpace(new TestCallback<>()).await();
     } catch (Exception e) {
       assertThat(e.getMessage()).isEqualTo("Cannot log to a null logger. Please set either logLevel to None, or do set a Logger");
       throw e;
@@ -35,7 +35,7 @@ public class CallbackTest extends BaseTest {
 
   @Test
   @Enqueue("array_empty.json")
-  public void cancel() throws Exception {
+  public void cancel() throws InterruptedException {
     CDACallback<CDAArray> callback = new CDACallback<CDAArray>() {
       @Override protected void onSuccess(CDAArray result) {
         fail("Callback should not be invoked.");

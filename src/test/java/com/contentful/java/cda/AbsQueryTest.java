@@ -43,24 +43,24 @@ public class AbsQueryTest {
 
   @Before
   public void setup() {
-    query = new FetchQuery<CDAResource>(CDAResource.class, client);
+    query = new FetchQuery<>(CDAResource.class, client);
   }
 
   @Test
-  public void contentType() throws Exception {
+  public void contentType() {
     query.withContentType("foo");
 
     assertThat(query.params).containsEntry("content_type", "foo");
   }
 
   @Test(expected = IllegalStateException.class)
-  public void settingContentTypeTwiceThrows() throws Exception {
+  public void settingContentTypeTwiceThrows() {
     query.withContentType("foo");
     query.withContentType("bar");
   }
 
   @Test
-  public void select() throws Exception {
+  public void select() {
     query.withContentType("foo");
     query.select("fields.bar");
 
@@ -68,19 +68,19 @@ public class AbsQueryTest {
   }
 
   @Test(expected = IllegalStateException.class)
-  public void selectWithoutContentTypeThrows() throws Exception {
+  public void selectWithoutContentTypeThrows() {
     query.select("fields.bar");
   }
 
   @Test
-  public void selectWithSys() throws Exception {
+  public void selectWithSys() {
     query.select("sys");
 
     assertThat(query.params).containsEntry("select", "sys");
   }
 
   @Test
-  public void selectWithSysAndFields() throws Exception {
+  public void selectWithSysAndFields() {
     query.withContentType("foo");
     query.select("sys");
     query.select("fields.bar");
@@ -89,18 +89,18 @@ public class AbsQueryTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void emptySelectThrows() throws Exception {
+  public void emptySelectThrows() {
     query.withContentType("foo");
     query.select();
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void selectWithEmptyNameThrows() throws Exception {
+  public void selectWithEmptyNameThrows() {
     query.select("");
   }
 
   @Test
-  public void selectDifferentFieldNames() throws Exception {
+  public void selectDifferentFieldNames() {
     query.withContentType("foo");
     query.select("fields.bar");
     query.select("fields.bar2");
@@ -109,13 +109,13 @@ public class AbsQueryTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void selectWithToManyLevelsThrows() throws Exception {
+  public void selectWithToManyLevelsThrows() {
     query.withContentType("foo");
     query.select("fields.baz.bar");
   }
 
   @Test
-  public void selects() throws Exception {
+  public void selects() {
     query.withContentType("foo");
     query.select("fields.bar", "fields.bar2");
 
@@ -123,32 +123,32 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void linksToEntryId() throws Exception {
+  public void linksToEntryId() {
     query.linksToEntryId("nyancat");
 
     assertThat(query.params).containsEntry("links_to_entry", "nyancat");
   }
 
   @Test
-  public void linksToAssetId() throws Exception {
+  public void linksToAssetId() {
       query.linksToAssetId("nyancat");
 
       assertThat(query.params).containsEntry("links_to_asset", "nyancat");
   }
 
   @Test(expected = IllegalStateException.class)
-  public void selectsWithoutTypeThrows() throws Exception {
+  public void selectsWithoutTypeThrows() {
     query.select("fields.bar", "fields.bar2");
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void selectsWithoutFieldNames() throws Exception {
+  public void selectsWithoutFieldNames() {
     query.withContentType("foo");
     query.select();
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void selectsWithoutNullEntry() throws Exception {
+  public void selectsWithoutNullEntry() {
     query.withContentType("foo");
     query.select("bar", null);
   }
@@ -197,7 +197,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void notEqual() throws Exception {
+  public void notEqual() {
     query.withContentType("foo");
     query.where("fields.bar", IsNotEqualTo, "baz");
 
@@ -205,7 +205,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void all() throws Exception {
+  public void all() {
     query.withContentType("foo");
     query.where("fields.bar", HasAllOf, "a,b,c,d");
 
@@ -213,7 +213,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void allSeparated() throws Exception {
+  public void allSeparated() {
     query.withContentType("foo");
     query.where("fields.bar", HasAllOf, "a", "b", "c", "d");
 
@@ -221,7 +221,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void atLeasOnOf() throws Exception {
+  public void atLeasOnOf() {
     query.withContentType("foo");
     query.where("fields.bar", HasOneOf, "a", "b", "c", "d");
 
@@ -229,7 +229,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void noneOf() throws Exception {
+  public void noneOf() {
     query.withContentType("foo");
     query.where("fields.bar", HasNoneOf, "a", "b", "c", "d");
 
@@ -237,7 +237,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void fieldExists() throws Exception {
+  public void fieldExists() {
     query.withContentType("foo");
     query.where("fields.bar", Exists);
 
@@ -245,7 +245,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void fieldDoesNotExists() throws Exception {
+  public void fieldDoesNotExists() {
     query.withContentType("foo");
     query.where("fields.bar", Exists, false);
 
@@ -253,7 +253,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void isLessThan() throws Exception {
+  public void isLessThan() {
     query.withContentType("foo");
     query.where("fields.bar", IsLessThan, 1);
 
@@ -261,7 +261,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void isLessOrEqualTo() throws Exception {
+  public void isLessOrEqualTo() {
     query.withContentType("foo");
     query.where("fields.bar", IsLessThanOrEqualTo, 1);
 
@@ -269,7 +269,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void isGreaterThan() throws Exception {
+  public void isGreaterThan() {
     query.withContentType("foo");
     query.where("fields.bar", IsGreaterThan, 1);
 
@@ -277,7 +277,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void isGreaterThanOrEqualTo() throws Exception {
+  public void isGreaterThanOrEqualTo() {
     query.withContentType("foo");
     query.where("fields.bar", IsGreaterThanOrEqualTo, 1);
 
@@ -285,7 +285,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void isEarlierThan() throws Exception {
+  public void isEarlierThan() {
     query.withContentType("foo");
     query.where("fields.bar", IsEarlierThan, "2013-02-02T14:34+01:00");
 
@@ -293,7 +293,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void isEarlierThanOrAt() throws Exception {
+  public void isEarlierThanOrAt() {
     query.withContentType("foo");
     query.where("fields.bar", IsEarlierOrAt, "2013-02-02T14:34+01:00");
 
@@ -302,7 +302,7 @@ public class AbsQueryTest {
 
 
   @Test
-  public void isLaterThan() throws Exception {
+  public void isLaterThan() {
     query.withContentType("foo");
     query.where("fields.bar", IsLaterThan, "2013-02-02T14:34+01:00");
 
@@ -310,7 +310,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void isLaterThanOrEqualTo() throws Exception {
+  public void isLaterThanOrEqualTo() {
     query.withContentType("foo");
     query.where("fields.bar", IsLaterOrAt, "2013-02-02T14:34+01:00");
 
@@ -318,7 +318,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void matchQuery() throws Exception {
+  public void matchQuery() {
     query.withContentType("foo");
     query.where("fields.bar", Matches, "bar");
 
@@ -327,18 +327,18 @@ public class AbsQueryTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void matchQueryWithEmptyValueThrows() throws Exception {
+  public void matchQueryWithEmptyValueThrows() {
     query.withContentType("foo");
     query.where("fields.bar", Matches);
   }
 
   @Test(expected = IllegalStateException.class)
-  public void matchQueryWithNoContentTypeButFieldsThrows() throws Exception {
+  public void matchQueryWithNoContentTypeButFieldsThrows() {
     query.where("fields.foo", Matches, "b");
   }
 
   @Test
-  public void matchQueryWithSys() throws Exception {
+  public void matchQueryWithSys() {
     query.where("sys.id", Matches, "foo");
 
     assertThat(query.params).containsEntry("sys.id[match]", "foo");
@@ -346,7 +346,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void near() throws Exception {
+  public void near() {
     query.withContentType("foo");
     query.where("fields.bar", IsCloseTo, new Location(52d, 14d));
 
@@ -359,12 +359,12 @@ public class AbsQueryTest {
   }
 
   @Test(expected = IllegalStateException.class)
-  public void nearThrowsIfNotUsedWithContentType() throws Exception {
+  public void nearThrowsIfNotUsedWithContentType() {
     query.where("fields.bar", IsCloseTo, new Location(52, 14));
   }
 
   @Test
-  public void withinBoundingBox() throws Exception {
+  public void withinBoundingBox() {
     query.withContentType("foo");
     query.where("fields.bar", IsWithinBoundingBoxOf,
         new BoundingBox(new Location(0, 1), new Location(2, 3)));
@@ -380,7 +380,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void withinBoundingBoxOfDoubles() throws Exception {
+  public void withinBoundingBoxOfDoubles() {
     query.withContentType("foo");
     query.where("fields.bar", IsWithinBoundingBoxOf, new BoundingBox(0, 1, 2, 3));
 
@@ -395,7 +395,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void withinBoundingCircle() throws Exception {
+  public void withinBoundingCircle() {
     query.withContentType("foo");
     query.where("fields.bar", IsWithinCircleOf, new BoundingCircle(52d, 14d, 10d));
 
@@ -409,7 +409,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void withinTypeSaveBoundingCircle() throws Exception {
+  public void withinTypeSaveBoundingCircle() {
     query.withContentType("foo");
     query.where("fields.bar", IsWithinCircleOf, new BoundingCircle(new Location(52d, 14d), 10d));
 
@@ -423,7 +423,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void orderByField() throws Exception {
+  public void orderByField() {
     query.withContentType("foo");
     query.orderBy("fields.bar");
 
@@ -432,7 +432,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void orderBySysWithoutField() throws Exception {
+  public void orderBySysWithoutField() {
     query.orderBy("sys.foo");
 
     assertThat(query.params).doesNotContainKey("content_type");
@@ -440,22 +440,22 @@ public class AbsQueryTest {
   }
 
   @Test(expected = IllegalStateException.class)
-  public void orderByThrowsOnFieldWithoutContentType() throws Exception {
+  public void orderByThrowsOnFieldWithoutContentType() {
     query.orderBy("fields.foo");
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void orderByThrowsOnEmptyKey() throws Exception {
+  public void orderByThrowsOnEmptyKey() {
     query.orderBy("");
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void orderByThrowsOnNullKey() throws Exception {
+  public void orderByThrowsOnNullKey() {
     query.orderBy((String) null);
   }
 
   @Test
-  public void orderByMultipleFields() throws Exception {
+  public void orderByMultipleFields() {
     query.withContentType("foo");
     query.orderBy("fields.bar", "fields.baz");
 
@@ -464,7 +464,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void orderByMultipleFieldsWithSys() throws Exception {
+  public void orderByMultipleFieldsWithSys() {
     query.withContentType("foo");
     query.orderBy("fields.bar", "sys.id");
 
@@ -473,7 +473,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void orderByMultipleOnlySysAndNoContentType() throws Exception {
+  public void orderByMultipleOnlySysAndNoContentType() {
     query.orderBy("sys.foo", "sys.bar");
 
     assertThat(query.params).doesNotContainKey("content_type");
@@ -481,26 +481,26 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void orderByMultipleOneReverse() throws Exception {
+  public void orderByMultipleOneReverse() {
     query.orderBy("sys.foo", "-sys.bar");
 
     assertThat(query.params).containsEntry("order", "sys.foo,-sys.bar");
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void orderByOneNullThrows() throws Exception {
+  public void orderByOneNullThrows() {
     query.withContentType("foo");
     query.orderBy("fields.bar", null);
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void orderByOneEmptyThrows() throws Exception {
+  public void orderByOneEmptyThrows() {
     query.withContentType("foo");
     query.orderBy("fields.bar", "", "fields.baz");
   }
 
   @Test
-  public void reverseOrderByField() throws Exception {
+  public void reverseOrderByField() {
     query.withContentType("foo");
     query.reverseOrderBy("fields.bar");
 
@@ -509,7 +509,7 @@ public class AbsQueryTest {
   }
 
   @Test
-  public void reverseOrderBySysWithoutField() throws Exception {
+  public void reverseOrderBySysWithoutField() {
     query.reverseOrderBy("sys.foo");
 
     assertThat(query.params).doesNotContainKey("content_type");
@@ -517,87 +517,87 @@ public class AbsQueryTest {
   }
 
   @Test(expected = IllegalStateException.class)
-  public void reverseOrderByThrowsOnFieldWithoutContentType() throws Exception {
+  public void reverseOrderByThrowsOnFieldWithoutContentType() {
     query.reverseOrderBy("fields.foo");
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void reverseOrderByThrowsOnEmptyKey() throws Exception {
+  public void reverseOrderByThrowsOnEmptyKey() {
     query.reverseOrderBy("");
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void reverseOrderByThrowsOnNullKey() throws Exception {
+  public void reverseOrderByThrowsOnNullKey() {
     query.reverseOrderBy(null);
   }
 
   @Test
-  public void limit() throws Exception {
+  public void limit() {
     query.limit(3);
 
     assertThat(query.params).containsEntry("limit", "3");
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void limitWithNegativeThrows() throws Exception {
+  public void limitWithNegativeThrows() {
     query.limit(-1);
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void limitWithMoreThen1kThrows() throws Exception {
+  public void limitWithMoreThen1kThrows() {
     query.limit(1001);
   }
 
   @Test
-  public void skip() throws Exception {
+  public void skip() {
     query.skip(3);
 
     assertThat(query.params).containsEntry("skip", "3");
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void skipWithNegativeThrows() throws Exception {
+  public void skipWithNegativeThrows() {
     query.skip(-1);
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void skipWithNegInfThrows() throws Exception {
+  public void skipWithNegInfThrows() {
     query.skip(Integer.MIN_VALUE);
   }
 
   @Test
-  public void includeZero() throws Exception {
+  public void includeZero() {
     query.include(0);
 
     assertThat(query.params).containsEntry("include", "0");
   }
 
   @Test
-  public void includeTen() throws Exception {
+  public void includeTen() {
     query.include(10);
 
     assertThat(query.params).containsEntry("include", "10");
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void includeToManyLevelThrows() throws Exception {
+  public void includeToManyLevelThrows() {
     query.include(11);
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void includeNegative() throws Exception {
+  public void includeNegative() {
     query.include(-1);
   }
 
   @Test
   public void queryingAssetTitlesDoesNotThrowWithoutTypeSet() {
-    final FetchQuery<CDAAsset> assetQuery = new FetchQuery<CDAAsset>(CDAAsset.class, client);
+    final FetchQuery<CDAAsset> assetQuery = new FetchQuery<>(CDAAsset.class, client);
     assetQuery.where("fields.title", IsEqualTo, "bar");
   }
 
   @Test
   public void queryForAContentTypesNameDoesNotThrow() {
-    final FetchQuery<CDAContentType> typeQuery = new FetchQuery<CDAContentType>(CDAContentType.class, client);
+    final FetchQuery<CDAContentType> typeQuery = new FetchQuery<>(CDAContentType.class, client);
     typeQuery.where("name", Matches, "Auth");
   }
 }

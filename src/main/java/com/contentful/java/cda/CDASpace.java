@@ -4,6 +4,7 @@ package com.contentful.java.cda;
  * Represents a single space.
  */
 public class CDASpace extends CDAResource {
+  private static final long serialVersionUID = 8920494351623297673L;
   String name;
 
   /**

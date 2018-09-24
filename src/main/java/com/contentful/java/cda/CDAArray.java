@@ -8,6 +8,7 @@ import java.util.List;
  * Collection of CDA resources.
  */
 public class CDAArray extends ArrayResource {
+  private static final long serialVersionUID = 6596224363025698245L;
   int total;
 
   int skip;

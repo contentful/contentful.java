@@ -17,7 +17,7 @@ public class LocaleFallbackTest extends BaseTest {
       defaults = {"locales_fallback/fetch_all_locales.json", "locales_fallback/content_types.json"},
       value = "locales_fallback/fetch_all_locales.json"
   )
-  public void fetchLocales() throws Exception {
+  public void fetchLocales() {
     final List<CDALocale> locales = fromArrayToItems(client.fetch(CDALocale.class).all());
     Map<String, CDALocale> localesByCodeMap = listToMapByNamer(locales, localeNamer);
 
@@ -37,18 +37,18 @@ public class LocaleFallbackTest extends BaseTest {
       defaults = {"locales_fallback/fetch_all_locales.json", "locales_fallback/content_types.json"},
       value = "locales_fallback/entries.json"
   )
-  public void testFallbackLocaleQueueToDefaultOneHop() throws Exception {
+  public void testFallbackLocaleQueueToDefaultOneHop() {
     final CDAArray all = client.fetch(CDAEntry.class).all();
     final Map<String, CDAEntry> entries = all.entries();
 
     final CDAEntry nofirst = entries.get("no-first");
-    assertThat(nofirst.getField("title")).isEqualTo("no-first");
+    assertThat(nofirst.<String>getField("title")).isEqualTo("no-first");
 
-    assertThat(nofirst.getField("first", "title")).isEqualTo("inbetween");
+    assertThat(nofirst.<String>getField("first", "title")).isEqualTo("inbetween");
 
-    assertThat(nofirst.getField("inbetween", "title")).isEqualTo("inbetween");
+    assertThat(nofirst.<String>getField("inbetween", "title")).isEqualTo("inbetween");
 
-    assertThat(nofirst.getField("default", "title")).isEqualTo("no-first");
+    assertThat(nofirst.<String>getField("default", "title")).isEqualTo("no-first");
   }
 
   @Test
@@ -56,18 +56,18 @@ public class LocaleFallbackTest extends BaseTest {
       defaults = {"locales_fallback/fetch_all_locales.json", "locales_fallback/content_types.json"},
       value = "locales_fallback/entries.json"
   )
-  public void testFallbackLocaleQueueToDefaultTwoHops() throws Exception {
+  public void testFallbackLocaleQueueToDefaultTwoHops() {
     final CDAArray all = client.fetch(CDAEntry.class).all();
     final Map<String, CDAEntry> entries = all.entries();
 
     final CDAEntry subject = entries.get("no-first-and-no-inbetween");
-    assertThat(subject.getField("title")).isEqualTo("no-first-and-no-inbetween");
+    assertThat(subject.<String>getField("title")).isEqualTo("no-first-and-no-inbetween");
 
-    assertThat(subject.getField("first", "title")).isEqualTo("no-first-and-no-inbetween");
+    assertThat(subject.<String>getField("first", "title")).isEqualTo("no-first-and-no-inbetween");
 
-    assertThat(subject.getField("inbetween", "title")).isEqualTo("no-first-and-no-inbetween");
+    assertThat(subject.<String>getField("inbetween", "title")).isEqualTo("no-first-and-no-inbetween");
 
-    assertThat(subject.getField("default", "title")).isEqualTo("no-first-and-no-inbetween");
+    assertThat(subject.<String>getField("default", "title")).isEqualTo("no-first-and-no-inbetween");
   }
 
   @Test
@@ -75,29 +75,25 @@ public class LocaleFallbackTest extends BaseTest {
       defaults = {"locales_fallback/fetch_all_locales.json", "locales_fallback/content_types.json"},
       value = "locales_fallback/entries.json"
   )
-  public void testFallbackLocaleQueueToNull() throws Exception {
+  public void testFallbackLocaleQueueToNull() {
     final CDAArray all = client.fetch(CDAEntry.class).all();
     final Map<String, CDAEntry> entries = all.entries();
 
     final CDAEntry toNull = entries.get("no-null");
-    assertThat(toNull.getField("title")).isEqualTo("no-null");
+    assertThat(toNull.<String>getField("title")).isEqualTo("no-null");
 
-    assertThat(toNull.getField("null", "title")).isNull();
+    assertThat(toNull.<Object>getField("null", "title")).isNull();
   }
 
 
-  private static Namer<CDALocale> localeNamer = new Namer<CDALocale>() {
-    @Override public String name(CDALocale cdaLocale) {
-      return cdaLocale.code();
-    }
-  };
+  private static final Namer<CDALocale> localeNamer = CDALocale::code;
 
   private interface Namer<T> {
     String name(T t);
   }
 
   private <T> Map<String, T> listToMapByNamer(List<T> list, Namer<T> namer) {
-    final HashMap<String, T> map = new HashMap<String, T>();
+    final HashMap<String, T> map = new HashMap<>();
 
     for (T item : list) {
       final String key = namer.name(item);

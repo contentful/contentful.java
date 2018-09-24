@@ -6,6 +6,8 @@ import java.util.Map;
  * Represents a resource which may contain field values for multiple locales.
  */
 public abstract class LocalizedResource extends CDAResource {
+  private static final long serialVersionUID = 5713028146014748949L;
+
   public class Localizer {
     private final String locale;
 

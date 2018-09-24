@@ -8,7 +8,8 @@ import java.util.Map;
  *
  * @see CDAResource
  */
-abstract class ArrayResource extends CDAResource {
+public abstract class ArrayResource extends CDAResource {
+  private static final long serialVersionUID = -2702554830040250962L;
   List<CDAResource> items;
 
   Map<String, CDAAsset> assets;

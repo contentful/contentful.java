@@ -12,6 +12,7 @@ import static com.contentful.java.cda.Constants.LOCALE;
  * for CDAContentType, CDASpace and, indirectly, for CDAEntry.
  */
 public abstract class CDAResource implements Serializable {
+  private static final long serialVersionUID = -160701290783423915L;
   @SerializedName("sys")
   Map<String, Object> attrs;
 

@@ -10,14 +10,12 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.functions.Consumer;
-
 import static com.google.common.truth.Truth.assertThat;
 
 public class EntryTest extends BaseTest {
   @Test(expected = CDAResourceNotFoundException.class)
   @Enqueue("array_empty.json")
-  public void fetchNonExistingReturnsNull() throws Exception {
+  public void fetchNonExistingReturnsNull() {
     try {
       client.fetch(CDAEntry.class).one("foo");
     } catch (NullPointerException e) {
@@ -28,7 +26,7 @@ public class EntryTest extends BaseTest {
 
   @Test
   @Enqueue("array_empty.json")
-  public void fetchNonExistingEntryThrowsError() throws Exception {
+  public void fetchNonExistingEntryThrowsError() throws InterruptedException {
     final Object result[] = new Object[]{new Object()};
     final Object error[] = new Object[]{new Object()};
     final CountDownLatch latch = new CountDownLatch(1);
@@ -36,20 +34,16 @@ public class EntryTest extends BaseTest {
     client.observe(CDAEntry.class)
         .one("foo")
         .subscribe(
-            new Consumer<CDAEntry>() {
-              @Override public void accept(CDAEntry entry) {
-                result[0] = entry;
-                error[0] = null;
+            entry -> {
+              result[0] = entry;
+              error[0] = null;
 
-                latch.countDown();
-              }
-            }, new Consumer<Throwable>() {
-              @Override public void accept(Throwable throwable) {
-                result[0] = null;
-                error[0] = throwable;
+              latch.countDown();
+            }, throwable -> {
+              result[0] = null;
+              error[0] = throwable;
 
-                latch.countDown();
-              }
+              latch.countDown();
             }
         );
 
@@ -65,9 +59,9 @@ public class EntryTest extends BaseTest {
 
   @Test
   @Enqueue("array_empty.json")
-  public void fetchNonExistingEntryInvokesSuccessWithNull() throws Exception {
+  public void fetchNonExistingEntryInvokesSuccessWithNull() throws InterruptedException {
     TestCallback<CDAEntry> callback = client.fetch(CDAEntry.class)
-        .one("foo", new TestCallback<CDAEntry>())
+        .one("foo", new TestCallback<>())
         .await();
 
     assertThat(callback.error()).isNotNull();
@@ -79,7 +73,7 @@ public class EntryTest extends BaseTest {
 
   @Test
   @Enqueue("demo/entries_nofields.json")
-  public void entryNoFields() throws Exception {
+  public void entryNoFields() {
     CDAEntry foo = client.fetch(CDAEntry.class).one("foo");
     assertThat(foo).isNotNull();
     assertThat(foo.fields).isEmpty();
@@ -87,20 +81,20 @@ public class EntryTest extends BaseTest {
 
   @Test
   @Enqueue("demo/entries_nyancat.json")
-  public void entryContentType() throws Exception {
+  public void entryContentType() {
     CDAEntry entry = client.fetch(CDAEntry.class).one("nyancat");
     assertThat(entry.contentType()).isNotNull();
   }
 
   @Test
   @Enqueue("demo/entries_nyancat.json")
-  public void fetchEntry() throws Exception {
+  public void fetchEntry() {
     assertNyanCat(client.fetch(CDAEntry.class).one("nyancat"));
   }
 
   @Test
   @Enqueue("demo/entries_nyancat.json")
-  public void fetchEntryAsync() throws Exception {
+  public void fetchEntryAsync() throws InterruptedException {
     final CountDownLatch latch = new CountDownLatch(1);
     final CDAEntry[] result = {null};
 
@@ -121,22 +115,22 @@ public class EntryTest extends BaseTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void populationThrowsOnZeroLimit() throws Exception {
+  public void populationThrowsOnZeroLimit() {
     client.populateContentTypeCache(0);
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void populationThrowsOnThought() throws Exception {
+  public void populationThrowsOnThought() {
     client.populateContentTypeCache(1001);
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void observePopulationThrowsOnZeroLimit() throws Exception {
+  public void observePopulationThrowsOnZeroLimit() {
     client.observeContentTypeCachePopulation(0);
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void observePopulationThrowsOnThought() throws Exception {
+  public void observePopulationThrowsOnThought() {
     client.observeContentTypeCachePopulation(1001);
   }
 
@@ -150,7 +144,7 @@ public class EntryTest extends BaseTest {
           "content_types/populate_cache_simple.json"
       }
   )
-  public void populateAllContentTypesSinglePage() throws Exception {
+  public void populateAllContentTypesSinglePage() {
     final int contentTypesCached = client.populateContentTypeCache();
 
     assertThat(contentTypesCached).isEqualTo(3);
@@ -186,7 +180,7 @@ public class EntryTest extends BaseTest {
           "content_types/populate_cache_complex_p3.json"
       }
   )
-  public void populateAllContentTypesMultiplePages() throws Exception {
+  public void populateAllContentTypesMultiplePages() {
     int numberOfContentTypes = client.populateContentTypeCache(60);
 
     assertThat(numberOfContentTypes).isEqualTo(151);
@@ -222,7 +216,7 @@ public class EntryTest extends BaseTest {
           "content_types/populate_cache_last_entry.json"
       }
   )
-  public void aPopulatedContentTypeCacheDoesNotToFetchContentTypes() throws Exception {
+  public void aPopulatedContentTypeCacheDoesNotToFetchContentTypes() {
     client.populateContentTypeCache(60);
 
     assertThat(client.cache.types().size()).isEqualTo(151);
@@ -240,7 +234,7 @@ public class EntryTest extends BaseTest {
 
   @Test
   @Enqueue("demo/entries.json")
-  public void fetchAllEntries() throws Exception {
+  public void fetchAllEntries() {
     CDAArray array = client.fetch(CDAEntry.class).all();
     assertThat(array.items()).hasSize(11);
     assertThat(array.assets()).hasSize(4);
@@ -261,10 +255,10 @@ public class EntryTest extends BaseTest {
 
   private void assertNyanCat(CDAEntry entry) {
     assertThat(entry.id()).isEqualTo("nyancat");
-    assertThat(entry.getField("name")).isEqualTo("Nyan Cat");
-    assertThat(entry.getField("color")).isEqualTo("rainbow");
-    assertThat(entry.getField("birthday")).isEqualTo("2011-04-04T22:00:00+00:00");
-    assertThat(entry.getField("lives")).isEqualTo(1337.0);
+    assertThat(entry.<String>getField("name")).isEqualTo("Nyan Cat");
+    assertThat(entry.<String>getField("color")).isEqualTo("rainbow");
+    assertThat(entry.<String>getField("birthday")).isEqualTo("2011-04-04T22:00:00+00:00");
+    assertThat(entry.<Double>getField("lives")).isEqualTo(1337.0);
 
     List<String> likes = entry.getField("likes");
     assertThat(likes).containsExactly("rainbows", "fish");
@@ -275,8 +269,8 @@ public class EntryTest extends BaseTest {
 
     // Localization
     assertThat(entry.defaultLocale).isEqualTo("en-US");
-    assertThat(entry.getField("color")).isEqualTo("rainbow");
-    assertThat(entry.getField("non-existing-does-not-throw")).isNull();
+    assertThat(entry.<String>getField("color")).isEqualTo("rainbow");
+    assertThat(entry.<Object>getField("non-existing-does-not-throw")).isNull();
   }
 
   @Test
@@ -284,7 +278,7 @@ public class EntryTest extends BaseTest {
       defaults = {"arrays/locales.json", "arrays/content_types.json"},
       value = "arrays/entries.json"
   )
-  public void arrayItemsContainOnlyTopLevelEntries() throws Exception {
+  public void arrayItemsContainOnlyTopLevelEntries() {
     CDAArray array =
         client.fetch(CDAEntry.class).where("content_type", "Jm9AuzgH8OyocaMQSMwKC").all();
 
