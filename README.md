@@ -38,6 +38,7 @@ What is Contentful?
   - [Inlcludes](#includes)
   - [Preview Mode](#preview)
   - [Sync](#sync)
+  - [Http Client](#http-client)
   - [Proguard](#proguard)
   - [Pre-Releases](#pre-releases)
 - [Documentation](#documentation)
@@ -310,6 +311,29 @@ SynchronizedSpace later = client.sync(space).fetch();
 ```
 
 If an Entry gets deleted, its <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/common-resource-attributes" title="Every Resource has a unique id."/>_id_</a> is returned in the`SynchronizedSpace.deletedEntries()` set. Same is true for the deleted Assets through `SynchronizedSpace.deletedAssets()`.
+
+Http Client
+-----------
+
+Changing the settings of the http client, without losing the information setup in the client build process, is achieved by requesting the `.defaultCallFactoryBuilder()` from the `CDAClient.Builder`, changing it and then reapplying it:
+
+```java
+// create a client builder as usual
+CDAClient.Builder clientBuilder = CDAClient.builder()
+        .setSpace("space-id-goes-here")
+        .setEnvironment("environment-id-goes-here")  // optional
+        .setToken("cda-token-goes-here");
+
+// request the http client with the settings from above (token, error interceptor, etc)
+OkHttpClient httpClient = clientBuilder.defaultCallFactoryBuilder()
+        .addInterceptor(interceptor) // adding a custom interceptor
+        .connectTimeout(5, TimeUnit.SECONDS) // adding a timeout 
+        .cache(new Cache(new File("/tmp"), CACHE_SIZE_BYTES)) // adding a simple http cache
+        .build();
+
+// reapply the http changes and build a contentful client
+CDAClient cdaClient = clientBuilder.setCallFactory(httpClient).build();
+```
 
 Proguard
 --------
