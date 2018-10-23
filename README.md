@@ -35,7 +35,7 @@ What is Contentful?
   - [Filtering](#filtering)
   - [Calls in Parralel](#calls-in-parallel)
   - [Paging](#paging)
-  - [Inlcludes](#includes)
+  - [Includes](#includes)
   - [Preview Mode](#preview)
   - [Sync](#sync)
   - [Http Client](#http-client)
