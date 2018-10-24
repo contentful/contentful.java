@@ -145,9 +145,9 @@ Finally fetching <a href="https://www.contentful.com/developers/docs/references/
 
 ```java
 // Fetch an Asset with a specific id
-CDAEntry entry =
+CDAAsset asset =
     client
-        .fetch(CDAEntry.class)
+        .fetch(CDAAsset.class)
         .one("{asset-id-goes-here}");
 ```
 
