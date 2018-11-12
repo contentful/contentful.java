@@ -79,6 +79,7 @@ public abstract class LocalizedResource extends CDAResource {
   /**
    * Extracts a field from the fields set of the active locale, result type is inferred.
    *
+   * @param locale locale to be used.
    * @param key field key.
    * @param <T> type.
    * @return field value, null if it doesn't exist.

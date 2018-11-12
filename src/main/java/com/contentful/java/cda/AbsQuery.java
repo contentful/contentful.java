@@ -357,7 +357,7 @@ public abstract class AbsQuery<
    * Limits the amount of elements to a given number.
    * <p>
    * If more then the number given elements are present, you can use {@link #skip(int)} and
-   * {@see #limit(int)} for pagination.
+   * this method for pagination.
    *
    * @param limit a non negative number less than 1001 to include elements.
    * @return the calling query for chaining.

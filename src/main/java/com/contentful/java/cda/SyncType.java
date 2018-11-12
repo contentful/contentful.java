@@ -66,6 +66,7 @@ public class SyncType {
   /**
    * Sync all entries of a specific content type.
    *
+   * @param type which content type to sync.
    * @return a type syncing all entries of a specific type.
    * @see <a href=https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/synchronization/initial-synchronization-of-entries-of-a-specific-content-type>Contentful Docs</a>
    */

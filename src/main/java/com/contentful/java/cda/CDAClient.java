@@ -706,6 +706,9 @@ public class CDAClient {
      * Some operation systems and frameworks, esp. Android and Java 1.6, might opt for implementing
      * TLS12 (enforced by Contentful) but do not enable it. The SDK tries to find those situations
      * and recommends to either use the system TLSSocketFactory or a SDK provided one.
+     *
+     * @param implementation which implementation to be used.
+     * @return this builder for ease of chaining.
      */
     public Builder setTls12Implementation(Tls12Implementation implementation) {
       this.tls12Implementation = implementation;
