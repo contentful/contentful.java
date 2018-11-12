@@ -47,7 +47,7 @@ import static com.google.common.truth.Truth.assertThat;
 public class Integration {
   CDAClient client;
 
-  @Before public void setUp() throws Exception {
+  @Before public void setUp() {
     client = CDAClient.builder()
         .setSpace("cfexampleapi")
         .setToken("b4c0n73n7fu1")
@@ -55,7 +55,7 @@ public class Integration {
   }
 
   @Test
-  public void fetchContentType() throws Exception {
+  public void fetchContentType() {
     CDAContentType cat = client.fetch(CDAContentType.class).one("cat");
     assertThat(cat.name()).isEqualTo("Cat");
     assertThat(cat.displayField()).isEqualTo("name");
@@ -64,7 +64,7 @@ public class Integration {
   }
 
   @Test
-  public void fetchNyancatEntryAsync() throws Exception {
+  public void fetchNyancatEntryAsync() throws InterruptedException {
     final CountDownLatch latch = new CountDownLatch(1);
     final CDAEntry[] result = {null};
 
@@ -85,7 +85,7 @@ public class Integration {
   }
 
   @Test
-  public void fetchAllEntries() throws Exception {
+  public void fetchAllEntries() {
     CDAArray array = client.fetch(CDAEntry.class).all();
     assertThat(array.items()).hasSize(10);
     assertThat(array.assets()).hasSize(4);
@@ -105,22 +105,22 @@ public class Integration {
   }
 
   @Test(expected = CDAResourceNotFoundException.class)
-  public void fetchOneNonExistingEntry() throws Exception {
+  public void fetchOneNonExistingEntry() {
     client.fetch(CDAEntry.class).one("fooooo");
   }
 
   @Test(expected = CDAResourceNotFoundException.class)
-  public void fetchOneNonExistingAsset() throws Exception {
+  public void fetchOneNonExistingAsset() {
     client.fetch(CDAAsset.class).one("fooooo");
   }
 
   @Test(expected = CDAResourceNotFoundException.class)
-  public void fetchOneNonExistingContentType() throws Exception {
+  public void fetchOneNonExistingContentType() {
     client.fetch(CDAContentType.class).one("fooooo");
   }
 
   @Test
-  public void fetchSpace() throws Exception {
+  public void fetchSpace() {
     CDASpace space = client.fetchSpace();
     assertThat(space.name()).isEqualTo("Contentful Example API");
     assertThat(space.id()).isEqualTo("cfexampleapi");
@@ -129,7 +129,7 @@ public class Integration {
 
   // "/spaces/{space_id}/sync?initial=true",
   @Test
-  public void sync() throws Exception {
+  public void sync() {
     SynchronizedSpace space = client.sync().observe().blockingFirst();
     assertInitial(space);
 
@@ -141,16 +141,16 @@ public class Integration {
 
     CDAEntry nyanCat = space.entries().get("nyancat");
     assertThat(nyanCat).isNotNull();
-    assertThat(nyanCat.getField("tlh", "name")).isEqualTo("Nyan vIghro'");
-    assertThat(nyanCat.getField("name")).isEqualTo("Nyan Cat");
-    assertThat(nyanCat.getField("color")).isEqualTo("rainbow");
+    assertThat(nyanCat.<String>getField("tlh", "name")).isEqualTo("Nyan vIghro'");
+    assertThat(nyanCat.<String>getField("name")).isEqualTo("Nyan Cat");
+    assertThat(nyanCat.<String>getField("color")).isEqualTo("rainbow");
     List<String> likes = nyanCat.getField("likes");
     assertThat(likes).containsExactly("rainbows", "fish");
   }
 
   // "/spaces/{space_id}/sync?initial=true&type=Entry&content_type=cat",
   @Test
-  public void syncOnlyContentTypeCat() throws Exception {
+  public void syncOnlyContentTypeCat() {
     SynchronizedSpace space = client.sync(onlyEntriesOfType("cat")).observe().blockingFirst();
     space = client.sync(space).observe().blockingFirst();
 
@@ -160,15 +160,15 @@ public class Integration {
 
     CDAEntry nyanCat = space.entries().get("nyancat");
     assertThat(nyanCat).isNotNull();
-    assertThat(nyanCat.getField("name")).isEqualTo("Nyan Cat");
-    assertThat(nyanCat.getField("color")).isEqualTo("rainbow");
+    assertThat(nyanCat.<String>getField("name")).isEqualTo("Nyan Cat");
+    assertThat(nyanCat.<String>getField("color")).isEqualTo("rainbow");
     List<String> likes = nyanCat.getField("likes");
     assertThat(likes).containsExactly("rainbows", "fish");
   }
 
   // "/spaces/{space_id}/sync?initial=true&type=DELETEDASSETS",
   @Test
-  public void syncTypeOfDeletedAssets() throws Exception {
+  public void syncTypeOfDeletedAssets() {
     final SynchronizedSpace space = client.sync(onlyDeletedAssets()).fetch();
 
     assertThat(space.nextSyncUrl()).isNotEmpty();
@@ -277,7 +277,7 @@ public class Integration {
 
   //"/spaces/{space_id}/entries?limit={value}",
   @Test
-  public void fetchEntriesWithLimit() throws Exception {
+  public void fetchEntriesWithLimit() {
     final CDAArray entries = client.fetch(CDAEntry.class).limit(5).all();
 
     assertThat(entries.limit()).isEqualTo(5);
@@ -286,7 +286,7 @@ public class Integration {
 
   //"/spaces/{space_id}/entries?skip={value}",
   @Test
-  public void fetchEntriesWithSkip() throws Exception {
+  public void fetchEntriesWithSkip() {
     final CDAArray entries = client.fetch(CDAEntry.class).skip(4).all();
 
     assertThat(entries.skip()).isEqualTo(4);
@@ -390,7 +390,7 @@ public class Integration {
 
     assertThat(found.items().size()).isEqualTo(1);
     CDAEntry entry = (CDAEntry) found.items().get(0);
-    assertThat(entry.getField("name")).isEqualTo("Berlin");
+    assertThat(entry.<String>getField("name")).isEqualTo("Berlin");
   }
 
   //"/spaces/{space_id}/entries?skip={value}",
@@ -403,7 +403,7 @@ public class Integration {
 
     assertThat(found.items().size()).isEqualTo(9);
     CDAEntry entry = (CDAEntry) found.items().get(0);
-    assertThat(entry.getField("name")).isEqualTo("London");
+    assertThat(entry.<String>getField("name")).isEqualTo("London");
   }
 
   //"/spaces/{space_id}/entries?include={value}",
@@ -422,14 +422,15 @@ public class Integration {
   public void fetchWithInQuery() {
     CDAArray found = client.fetch(CDAEntry.class)
         .where("sys.id", HasOneOf, "finn", "jake")
+        .orderBy("sys.id")
         .all();
 
     assertThat(found.items().size()).isEqualTo(2);
     CDAEntry finn = (CDAEntry) found.items().get(0);
-    assertThat(finn.getField("name")).isEqualTo("Finn");
+    assertThat(finn.<String>getField("name")).isEqualTo("Finn");
 
     CDAEntry jake = (CDAEntry) found.items().get(1);
-    assertThat(jake.getField("name")).isEqualTo("Jake");
+    assertThat(jake.<String>getField("name")).isEqualTo("Jake");
   }
 
   //"/spaces/{space_id}/entries?{attribute}%5Ball%5D={value}",
@@ -442,7 +443,7 @@ public class Integration {
 
     assertThat(found.items().size()).isEqualTo(1);
     CDAEntry finn = (CDAEntry) found.items().get(0);
-    assertThat(finn.getField("name")).isEqualTo("Nyan Cat");
+    assertThat(finn.<String>getField("name")).isEqualTo("Nyan Cat");
   }
 
   //"/spaces/{space_id}/entries?content_type={content_type}&{attribute}%5Bnin%5D={value}",
@@ -475,7 +476,7 @@ public class Integration {
         .all();
 
     assertThat(found.items()).hasSize(1);
-    assertThat(found.entries().get("garfield").getField("name")).isEqualTo("Garfield");
+    assertThat(found.entries().get("garfield").<String>getField("name")).isEqualTo("Garfield");
   }
 
   //"/spaces/{space_id}/entries?content_type={content_type}&{attribute}%5Blte%5D={value}",
@@ -488,7 +489,7 @@ public class Integration {
 
     assertThat(found.items().size()).isEqualTo(1);
     CDAEntry nyancat = (CDAEntry) found.items().get(0);
-    assertThat(nyancat.getField("name")).isEqualTo("Garfield");
+    assertThat(nyancat.<String>getField("name")).isEqualTo("Garfield");
   }
 
   //"/spaces/{space_id}/entries?{attribute}%5Blte%5D={value}",
@@ -512,7 +513,7 @@ public class Integration {
 
     assertThat(found.items().size()).isEqualTo(1);
     CDAEntry cat = (CDAEntry) found.items().get(0);
-    assertThat(cat.getField("name")).isEqualTo("Garfield");
+    assertThat(cat.<String>getField("name")).isEqualTo("Garfield");
   }
 
   //"/spaces/{space_id}/entries?content_type={content_type}&{attribute}%5Blte%5D={value}",
@@ -525,7 +526,7 @@ public class Integration {
 
     assertThat(found.items().size()).isEqualTo(1);
     CDAEntry cat = (CDAEntry) found.items().get(0);
-    assertThat(cat.getField("name")).isEqualTo("Nyan Cat");
+    assertThat(cat.<String>getField("name")).isEqualTo("Nyan Cat");
   }
 
   //"/spaces/{space_id}/entries?content_type={content_type}&fields.{field_id}%5Bmatch%5D={value}",
@@ -538,7 +539,7 @@ public class Integration {
 
     assertThat(found.items().size()).isEqualTo(1);
     CDAEntry nyancat = (CDAEntry) found.items().get(0);
-    assertThat(nyancat.getField("name")).isEqualTo("Happy Cat");
+    assertThat(nyancat.<String>getField("name")).isEqualTo("Happy Cat");
   }
 
   //"/spaces/{space_id}/entries?fields.center%5Bnear%5D={coordinate}&content_type={content_type}",
@@ -551,9 +552,9 @@ public class Integration {
 
     assertThat(found.items().size()).isEqualTo(4);
     CDAEntry sf = (CDAEntry) found.items().get(0);
-    assertThat(sf.getField("name")).isEqualTo("San Francisco");
+    assertThat(sf.<String>getField("name")).isEqualTo("San Francisco");
     CDAEntry london = (CDAEntry) found.items().get(1);
-    assertThat(london.getField("name")).isEqualTo("London");
+    assertThat(london.<String>getField("name")).isEqualTo("London");
   }
 
   //"/spaces/{space_id}/entries?fields.center%5Bnear%5D={coordinate}&content_type={content_type}",
@@ -566,7 +567,7 @@ public class Integration {
 
     assertThat(found.items().size()).isEqualTo(1);
     CDAEntry sf = (CDAEntry) found.items().get(0);
-    assertThat(sf.getField("name")).isEqualTo("San Francisco");
+    assertThat(sf.<String>getField("name")).isEqualTo("San Francisco");
   }
 
   //"/spaces/{space_id}/entries?fields.center%5Bwithin%5D={rectangle}&content_type={content_type}",
@@ -579,7 +580,7 @@ public class Integration {
 
     assertThat(found.items().size()).isEqualTo(1);
     CDAEntry sf = (CDAEntry) found.items().get(0);
-    assertThat(sf.getField("name")).isEqualTo("San Francisco");
+    assertThat(sf.<String>getField("name")).isEqualTo("San Francisco");
   }
 
   //"/spaces/{space_id}/entries?{attribute}%5Bne%5D={value}",
@@ -637,7 +638,7 @@ public class Integration {
   }
 
   @SuppressWarnings("unchecked") @Test
-  public void testRawFields() throws Exception {
+  public void testRawFields() {
     SynchronizedSpace space = client.sync().fetch();
     assertThat(space.items()).hasSize(14);
     assertThat(space.assets()).hasSize(4);
@@ -645,8 +646,8 @@ public class Integration {
 
     CDAEntry happycat = space.entries().get("happycat");
     assertThat(happycat).isNotNull();
-    assertThat(happycat.getField("image")).isNotNull();
-    assertThat(happycat.getField("bestFriend")).isNotNull();
+    assertThat(happycat.<Object>getField("image")).isNotNull();
+    assertThat(happycat.<Object>getField("bestFriend")).isNotNull();
 
     // image
     Map<String, Map<?, ?>> rawImage = (Map<String, Map<?, ?>>) happycat.rawFields().get("image");
@@ -660,7 +661,7 @@ public class Integration {
   }
 
   @Test(expected = CDAHttpException.class)
-  public void testErrorResponse() throws Exception {
+  public void testErrorResponse() {
     try {
       client.fetch(CDAEntry.class).where("sys.asdf", "fas").one("nope");
     } catch (CDAHttpException cdaException) {
@@ -693,28 +694,28 @@ public class Integration {
     assertThat(space.entries()).hasSize(10);
     CDAEntry nyanCat = space.entries().get("nyancat");
     assertThat(nyanCat).isNotNull();
-    assertThat(nyanCat.getField("name")).isEqualTo("Nyan Cat");
-    assertThat(nyanCat.getField("bestFriend")).isInstanceOf(CDAEntry.class);
+    assertThat(nyanCat.<String>getField("name")).isEqualTo("Nyan Cat");
+    assertThat(nyanCat.<Object>getField("bestFriend")).isInstanceOf(CDAEntry.class);
 
     CDAEntry happyCat = space.entries().get("happycat");
     assertThat(happyCat).isNotNull();
-    assertThat(happyCat.getField("name")).isEqualTo("Happy Cat");
+    assertThat(happyCat.<String>getField("name")).isEqualTo("Happy Cat");
 
     // Localization
-    assertThat(nyanCat.getField("name")).isEqualTo("Nyan Cat");
-    assertThat(nyanCat.getField("color")).isEqualTo("rainbow");
+    assertThat(nyanCat.<String>getField("name")).isEqualTo("Nyan Cat");
+    assertThat(nyanCat.<String>getField("color")).isEqualTo("rainbow");
     final LocalizedResource.Localizer localizedCat = nyanCat.localize("tlh");
-    assertThat(localizedCat.getField("name")).isEqualTo("Nyan vIghro'");
-    assertThat(localizedCat.getField("color")).isEqualTo("rainbow"); // fallback
-    assertThat(localizedCat.getField("non-existing-does-not-throw")).isNull();
+    assertThat(localizedCat.<String>getField("name")).isEqualTo("Nyan vIghro'");
+    assertThat(localizedCat.<String>getField("color")).isEqualTo("rainbow"); // fallback
+    assertThat(localizedCat.<Object>getField("non-existing-does-not-throw")).isNull();
   }
 
   void assertNyanCat(CDAEntry entry) {
     assertThat(entry.id()).isEqualTo("nyancat");
-    assertThat(entry.getField("name")).isEqualTo("Nyan Cat");
-    assertThat(entry.getField("color")).isEqualTo("rainbow");
-    assertThat(entry.getField("birthday")).isEqualTo("2011-04-04T22:00:00+00:00");
-    assertThat(entry.getField("lives")).isEqualTo(1337.0);
+    assertThat(entry.<String>getField("name")).isEqualTo("Nyan Cat");
+    assertThat(entry.<String>getField("color")).isEqualTo("rainbow");
+    assertThat(entry.<String>getField("birthday")).isEqualTo("2011-04-04T22:00:00+00:00");
+    assertThat(entry.<Double>getField("lives")).isEqualTo(1337.0);
 
     List<String> likes = entry.getField("likes");
     assertThat(likes).containsExactly("rainbows", "fish");
@@ -725,7 +726,7 @@ public class Integration {
 
     // Localization
     final LocalizedResource.Localizer localizedCat = entry.localize("tlh");
-    assertThat(localizedCat.getField("color")).isEqualTo("rainbow");
-    assertThat(localizedCat.getField("non-existing-does-not-throw")).isNull();
+    assertThat(localizedCat.<String>getField("color")).isEqualTo("rainbow");
+    assertThat(localizedCat.<Object>getField("non-existing-does-not-throw")).isNull();
   }
 }

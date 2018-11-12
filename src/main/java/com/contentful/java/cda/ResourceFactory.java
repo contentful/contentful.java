@@ -13,6 +13,8 @@ import java.util.Set;
 
 import retrofit2.Response;
 
+import static com.contentful.java.cda.rich.RichTextFactory.resolveRichTextField;
+
 final class ResourceFactory {
   private ResourceFactory() {
     throw new AssertionError();
@@ -22,19 +24,20 @@ final class ResourceFactory {
 
   static CDAArray array(Response<CDAArray> arrayResponse, CDAClient client) {
     CDAArray array = arrayResponse.body();
-    array.assets = new LinkedHashMap<String, CDAAsset>();
-    array.entries = new LinkedHashMap<String, CDAEntry>();
+    array.assets = new LinkedHashMap<>();
+    array.entries = new LinkedHashMap<>();
 
     Set<CDAResource> resources = collectResources(array);
     ResourceUtils.localizeResources(resources, client.cache);
     ResourceUtils.mapResources(resources, array.assets, array.entries);
     ResourceUtils.setRawFields(array);
+    resolveRichTextField(array, client);
     ResourceUtils.resolveLinks(array, client);
     return array;
   }
 
   private static Set<CDAResource> collectResources(CDAArray array) {
-    Set<CDAResource> resources = new LinkedHashSet<CDAResource>(array.items());
+    Set<CDAResource> resources = new LinkedHashSet<>(array.items());
     if (array.includes != null) {
       if (array.includes.assets != null) {
         resources.addAll(array.includes.assets);
@@ -50,8 +53,8 @@ final class ResourceFactory {
       Response<SynchronizedSpace> newSpace,
       SynchronizedSpace oldSpace,
       CDAClient client) {
-    Map<String, CDAAsset> assets = new HashMap<String, CDAAsset>();
-    Map<String, CDAEntry> entries = new HashMap<String, CDAEntry>();
+    Map<String, CDAAsset> assets = new HashMap<>();
+    Map<String, CDAEntry> entries = new HashMap<>();
 
     // Map resources from existing space
     if (oldSpace != null) {
@@ -62,7 +65,7 @@ final class ResourceFactory {
     ResourceUtils.mapResources(result.items(), assets, entries);
     ResourceUtils.mapDeletedResources(result);
 
-    List<CDAResource> items = new ArrayList<CDAResource>();
+    List<CDAResource> items = new ArrayList<>();
     items.addAll(assets.values());
     items.addAll(entries.values());
     result.items = items;
@@ -70,6 +73,7 @@ final class ResourceFactory {
     result.entries = entries;
 
     ResourceUtils.setRawFields(result);
+    resolveRichTextField(result, client);
     ResourceUtils.resolveLinks(result, client);
 
     return result;
@@ -81,7 +85,7 @@ final class ResourceFactory {
 
   @SuppressWarnings("unchecked")
   static <T extends CDAResource> List<T> fromArrayToItems(CDAArray array) {
-    final List<T> result = new ArrayList<T>(array.items.size());
+    final List<T> result = new ArrayList<>(array.items.size());
 
     for (CDAResource resource : array.items) {
       result.add((T) resource);

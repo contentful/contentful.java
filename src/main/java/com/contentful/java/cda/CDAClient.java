@@ -31,7 +31,6 @@ import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -126,7 +125,7 @@ public class CDAClient {
    * @see #fetchSpace()
    */
   public <T extends CDAResource> FetchQuery<T> fetch(Class<T> type) {
-    return new FetchQuery<T>(type, this);
+    return new FetchQuery<>(type, this);
   }
 
   /**
@@ -140,7 +139,7 @@ public class CDAClient {
    * @see #observeSpace()
    */
   public <T extends CDAResource> ObserveQuery<T> observe(Class<T> type) {
-    return new ObserveQuery<T>(type, this);
+    return new ObserveQuery<>(type, this);
   }
 
   /**
@@ -223,7 +222,7 @@ public class CDAClient {
             .all()
             .map(
                 new Function<CDAArray, CDAArray>() {
-                  @Override public CDAArray apply(CDAArray array) throws Exception {
+                  @Override public CDAArray apply(CDAArray array) {
                     if (array.skip() + array.limit() < array.total()) {
                       return nextPage(array);
                     } else {
@@ -250,20 +249,18 @@ public class CDAClient {
                 }
             )
             .map(
-                new Function<CDAArray, Integer>() {
-                  @Override public Integer apply(CDAArray array) throws Exception {
-                    for (CDAResource resource : array.items) {
-                      if (resource instanceof CDAContentType) {
-                        cache.types().put(resource.id(), (CDAContentType) resource);
-                      } else {
-                        throw new IllegalStateException(
-                            "Requesting a list of content types should not return "
-                                + "any other type.");
-                      }
+                array -> {
+                  for (CDAResource resource : array.items) {
+                    if (resource instanceof CDAContentType) {
+                      cache.types().put(resource.id(), (CDAContentType) resource);
+                    } else {
+                      throw new IllegalStateException(
+                          "Requesting a list of content types should not return "
+                              + "any other type.");
                     }
-
-                    return array.total;
                   }
+
+                  return array.total;
                 }
             );
   }
@@ -363,11 +360,7 @@ public class CDAClient {
    * @return an {@link Flowable} that fetches the space for this client.
    */
   public Flowable<CDASpace> observeSpace() {
-    return service.space(spaceId).map(new Function<Response<? extends CDASpace>, CDASpace>() {
-      @Override public CDASpace apply(Response<? extends CDASpace> response) throws Exception {
-        return fromResponse(response);
-      }
-    });
+    return service.space(spaceId).map(ResourceFactory::fromResponse);
   }
 
   /**
@@ -375,28 +368,18 @@ public class CDAClient {
    */
   Flowable<Cache> cacheAll(final boolean invalidate) {
     return cacheLocales(invalidate)
-        .flatMap(new Function<List<CDALocale>, Flowable<Map<String, CDAContentType>>>() {
-          @Override public Flowable<Map<String, CDAContentType>> apply(List<CDALocale> locales) {
-            return cacheTypes(invalidate);
-          }
-        })
-        .map(new Function<Map<String, CDAContentType>, Cache>() {
-          @Override public Cache apply(Map<String, CDAContentType> stringCDAContentTypeMap) {
-            return cache;
-          }
-        });
+        .flatMap(locales -> cacheTypes(invalidate))
+        .map(stringCDAContentTypeMap -> cache);
   }
 
   Flowable<List<CDALocale>> cacheLocales(boolean invalidate) {
     List<CDALocale> locales = invalidate ? null : cache.locales();
     if (locales == null) {
-      return service.array(spaceId, environmentId, PATH_LOCALES, new HashMap<String, String>())
-          .map(new Function<Response<CDAArray>, List<CDALocale>>() {
-            @Override public List<CDALocale> apply(Response<CDAArray> localesResponse) {
-              final List<CDALocale> locales = fromArrayToItems(fromResponse(localesResponse));
-              cache.setLocales(locales);
-              return locales;
-            }
+      return service.array(spaceId, environmentId, PATH_LOCALES, new HashMap<>())
+          .map(localesResponse -> {
+            final List<CDALocale> locales1 = fromArrayToItems(fromResponse(localesResponse));
+            cache.setLocales(locales1);
+            return locales1;
           });
     }
     return Flowable.just(locales);
@@ -409,18 +392,16 @@ public class CDAClient {
           spaceId,
           environmentId,
           PATH_CONTENT_TYPES,
-          new HashMap<String, String>()
+          new HashMap<>()
       ).map(
-          new Function<Response<CDAArray>, Map<String, CDAContentType>>() {
-            @Override public Map<String, CDAContentType> apply(Response<CDAArray> arrayResponse) {
-              CDAArray array = ResourceFactory.array(arrayResponse, CDAClient.this);
-              Map<String, CDAContentType> tmp = new ConcurrentHashMap<String, CDAContentType>();
-              for (CDAResource resource : array.items()) {
-                tmp.put(resource.id(), (CDAContentType) resource);
-              }
-              cache.setTypes(tmp);
-              return tmp;
+          arrayResponse -> {
+            CDAArray array = ResourceFactory.array(arrayResponse, CDAClient.this);
+            Map<String, CDAContentType> tmp = new ConcurrentHashMap<>();
+            for (CDAResource resource : array.items()) {
+              tmp.put(resource.id(), (CDAContentType) resource);
             }
+            cache.setTypes(tmp);
+            return tmp;
           });
     }
     return Flowable.just(types);
@@ -432,13 +413,11 @@ public class CDAClient {
       return observe(CDAContentType.class)
           .one(id)
           .map(
-              new Function<CDAContentType, CDAContentType>() {
-                @Override public CDAContentType apply(CDAContentType resource) {
-                  if (resource != null) {
-                    cache.types().put(resource.id(), resource);
-                  }
-                  return resource;
+              resource -> {
+                if (resource != null) {
+                  cache.types().put(resource.id(), resource);
                 }
+                return resource;
               }
           );
     }

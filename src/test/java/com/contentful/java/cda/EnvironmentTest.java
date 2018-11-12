@@ -11,7 +11,7 @@ import static com.google.common.truth.Truth.assertThat;
 public class EnvironmentTest extends BaseTest {
 
   @Test @Enqueue("demo/entries.json")
-  public void creatingDefaultClientTalksToMaster() throws Exception {
+  public void creatingDefaultClientTalksToMaster() throws InterruptedException {
 
     createBuilder()
         .setSpace(DEFAULT_SPACE)
@@ -26,7 +26,7 @@ public class EnvironmentTest extends BaseTest {
   }
 
   @Test @Enqueue("demo/entries.json")
-  public void settingEnvironmentUpdatesRequestURI() throws Exception {
+  public void settingEnvironmentUpdatesRequestURI() throws InterruptedException {
     createBuilder()
         .setSpace(DEFAULT_SPACE)
         .setEnvironment(STAGING_ENVIRONMENT)

@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Represents a single locale.
  */
 public class CDALocale extends CDAResource {
+  private static final long serialVersionUID = -5710267672379169621L;
   String code;
 
   String name;

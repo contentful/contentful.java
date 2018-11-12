@@ -9,14 +9,14 @@ import java.util.List;
 import static com.google.common.truth.Truth.assertThat;
 
 public class LinkTest extends BaseTest {
-  @Test @Enqueue("demo/links_unresolved.json") public void unresolvedLinkIsNull() throws Exception {
+  @Test @Enqueue("demo/links_unresolved.json") public void unresolvedLinkIsNull() {
     CDAArray array = client.fetch(CDAEntry.class).all();
     assertThat(array.items()).hasSize(1);
     assertThat(array.entries()).hasSize(1);
 
     CDAEntry entry = array.entries().get("happycat");
     assertThat(entry).isNotNull();
-    assertThat(entry.getField("bestFriend")).isNull();
+    assertThat(entry.<String>getField("bestFriend")).isNull();
   }
 
   @SuppressWarnings("unchecked")
@@ -25,7 +25,7 @@ public class LinkTest extends BaseTest {
       "links/content_types.json"
   }, value = {
       "links/entries.json"
-  }) public void arrays() throws Exception {
+  }) public void arrays() {
     CDAArray array = client.fetch(CDAEntry.class).all();
     assertThat(array.total()).isEqualTo(4);
     assertThat(array.items()).hasSize(4);
@@ -34,8 +34,8 @@ public class LinkTest extends BaseTest {
 
     CDAEntry container = array.entries().get("3vyEoAvlkk8yE4a8gCCkiu");
     assertThat(container).isNotNull();
-    assertThat(container.getField("asset")).isInstanceOf(CDAAsset.class);
-    assertThat(container.getField("entry")).isInstanceOf(CDAEntry.class);
+    assertThat(container.<Object>getField("asset")).isInstanceOf(CDAAsset.class);
+    assertThat(container.<Object>getField("entry")).isInstanceOf(CDAEntry.class);
 
     List<CDAAsset> assets = container.getField("assets");
     assertThat(assets).isNotNull();
@@ -58,7 +58,7 @@ public class LinkTest extends BaseTest {
       "links/content_types.json"
   }, value = {
       "links/sync_empty_links.json"
-  }) public void testEmptyLinks() throws Exception {
+  }) public void testEmptyLinks() {
     client.sync().fetch();
   }
 }

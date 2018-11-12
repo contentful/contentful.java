@@ -10,6 +10,8 @@ import static java.util.Locale.getDefault;
  */
 public class CDAContentTypeNotFoundException extends RuntimeException {
 
+  private static final long serialVersionUID = -5839900656195732862L;
+
   /**
    * Create a new exception.
    *

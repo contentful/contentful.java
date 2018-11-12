@@ -15,7 +15,7 @@ final class Callbacks {
     ConnectableFlowable<O> connectable = flowable.observeOn(Schedulers.io()).publish();
 
     callback.setSubscription(connectable.subscribe(
-        new SuccessAction<O>(callback, client),
+        new SuccessAction<>(callback, client),
         new FailureAction(callback, client)));
 
     connectable.connect();
@@ -55,7 +55,7 @@ final class Callbacks {
     @SuppressWarnings("unchecked")
     @Override
     protected void doCall(E e) {
-      execute(new SuccessRunnable<E>(e, (CDACallback<E>) callback));
+      execute(new SuccessRunnable<>(e, (CDACallback<E>) callback));
     }
   }
 

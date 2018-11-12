@@ -20,7 +20,7 @@ public class SyncTest extends BaseTest {
       "demo/locales.json", "demo/content_types.json",
       "demo/sync_update_p1.json", "demo/sync_update_p2.json"
   })
-  public void sync() throws Exception {
+  public void sync() {
     SynchronizedSpace first = client.sync().observe().blockingFirst();
     assertInitial(first);
 
@@ -37,18 +37,18 @@ public class SyncTest extends BaseTest {
 
     CDAEntry superCat = space.entries().get("supercat");
     assertThat(superCat).isNotNull();
-    assertThat(superCat.getField("name")).isEqualTo("Super Cat");
-    assertThat(superCat.getField("color")).isEqualTo("black");
+    assertThat(superCat.<String>getField("name")).isEqualTo("Super Cat");
+    assertThat(superCat.<String>getField("color")).isEqualTo("black");
     List<String> likes = superCat.getField("likes");
     assertThat(likes).containsExactly("nothing");
 
     CDAEntry nyanCat = space.entries().get("nyancat");
     assertThat(nyanCat).isNotNull();
-    assertThat(nyanCat.getField("name")).isEqualTo("foo");
-    assertThat(nyanCat.getField("color")).isEqualTo("red");
+    assertThat(nyanCat.<String>getField("name")).isEqualTo("foo");
+    assertThat(nyanCat.<String>getField("color")).isEqualTo("red");
     likes = nyanCat.getField("likes");
     assertThat(likes).containsExactly("a", "b", "c");
-    assertThat(nyanCat.getField("bestFriend")).isSameAs(superCat);
+    assertThat(nyanCat.<CDAEntry>getField("bestFriend")).isSameAs(superCat);
   }
 
   private void assertInitial(SynchronizedSpace space) {
@@ -78,28 +78,28 @@ public class SyncTest extends BaseTest {
     assertThat(space.entries()).hasSize(11);
     CDAEntry nyanCat = space.entries().get("nyancat");
     assertThat(nyanCat).isNotNull();
-    assertThat(nyanCat.getField("name")).isEqualTo("Nyan Cat");
-    assertThat(nyanCat.getField("bestFriend")).isInstanceOf(CDAEntry.class);
+    assertThat(nyanCat.<String>getField("name")).isEqualTo("Nyan Cat");
+    assertThat(nyanCat.<CDAEntry>getField("bestFriend")).isInstanceOf(CDAEntry.class);
 
     CDAEntry happyCat = space.entries().get("happycat");
     assertThat(happyCat).isNotNull();
-    assertThat(happyCat.getField("name")).isEqualTo("Happy Cat");
+    assertThat(happyCat.<String>getField("name")).isEqualTo("Happy Cat");
 
     // Localization
     assertThat(nyanCat.defaultLocale).isEqualTo("en-US");
-    assertThat(nyanCat.getField("name")).isEqualTo("Nyan Cat");
-    assertThat(nyanCat.getField("color")).isEqualTo("rainbow");
+    assertThat(nyanCat.<String>getField("name")).isEqualTo("Nyan Cat");
+    assertThat(nyanCat.<String>getField("color")).isEqualTo("rainbow");
     final LocalizedResource.Localizer localizedNyanCat = nyanCat.localize("tlh");
-    assertThat(localizedNyanCat.getField("name")).isEqualTo("Nyan vIghro'");
-    assertThat(localizedNyanCat.getField("color")).isEqualTo("rainbow"); // fallback
-    assertThat(localizedNyanCat.getField("non-existing-does-not-throw")).isNull();
+    assertThat(localizedNyanCat.<String>getField("name")).isEqualTo("Nyan vIghro'");
+    assertThat(localizedNyanCat.<String>getField("color")).isEqualTo("rainbow"); // fallback
+    assertThat(localizedNyanCat.<Object>getField("non-existing-does-not-throw")).isNull();
   }
 
   @SuppressWarnings("unchecked") @Test @Enqueue(defaults = {}, value = {
       "shallow/locales.json", "shallow/types.json", "shallow/initial.json",
       "shallow/locales.json", "shallow/types.json", "shallow/update.json"
   })
-  public void testRawFields() throws Exception {
+  public void testRawFields() {
     SynchronizedSpace space = client.sync().fetch();
     assertThat(space.items()).hasSize(2);
     assertThat(space.assets()).hasSize(1);
@@ -107,7 +107,7 @@ public class SyncTest extends BaseTest {
 
     CDAEntry foo = space.entries().get("2k5aHpfw7m0waMKYksC2Ww");
     assertThat(foo).isNotNull();
-    assertThat(foo.getField("image")).isNotNull();
+    assertThat(foo.<Object>getField("image")).isNotNull();
 
     // image
     Map<String, Map<?, ?>> rawImage = (Map<String, Map<?, ?>>) foo.rawFields().get("image");
@@ -123,7 +123,7 @@ public class SyncTest extends BaseTest {
     space = client.sync(syncToken).fetch();
     foo = space.entries().get("2k5aHpfw7m0waMKYksC2Ww");
     assertThat(foo).isNotNull();
-    assertThat(foo.getField("image")).isNull();
+    assertThat(foo.<String>getField("image")).isNull();
 
     // image
     rawImage = (Map<String, Map<?, ?>>) foo.rawFields().get("image");
@@ -145,7 +145,7 @@ public class SyncTest extends BaseTest {
           "links_invalid/sync_initial.json"
       }
   )
-  public void invalidLinkDoesNotThrow() throws Exception {
+  public void invalidLinkDoesNotThrow() {
     client.sync().fetch();
   }
 
@@ -153,7 +153,7 @@ public class SyncTest extends BaseTest {
       "demo/sync_initial_preview_p1.json", "demo/sync_initial_preview_p2.json",
       "demo/locales.json", "demo/content_types.json"
   })
-  public void syncingInPreviewWithTokenSyncsInitial() throws Exception {
+  public void syncingInPreviewWithTokenSyncsInitial() {
     client = createPreviewClient();
 
     final SynchronizedSpace space = client.sync("sometoken").fetch();
@@ -167,7 +167,7 @@ public class SyncTest extends BaseTest {
       "demo/sync_initial_preview_p1.json", "demo/sync_initial_preview_p2.json",
       "demo/locales.json", "demo/content_types.json"
   })
-  public void syncingInPreviewWithPreviousSpaceSyncsInitial() throws Exception {
+  public void syncingInPreviewWithPreviousSpaceSyncsInitial() {
     client = createPreviewClient();
 
     SynchronizedSpace space = client.sync().fetch();
@@ -182,7 +182,7 @@ public class SyncTest extends BaseTest {
       "demo/sync_initial_preview_p1.json",
       "demo/sync_initial_preview_p2.json",
       "demo/locales.json"})
-  public void syncingWithPreviewWorks() throws Exception {
+  public void syncingWithPreviewWorks() {
     client = createPreviewClient();
     final SynchronizedSpace space = client.sync().fetch();
 
@@ -194,7 +194,7 @@ public class SyncTest extends BaseTest {
       "demo/sync_initial_staging_p1.json",
       "demo/sync_initial_staging_p2.json",
       "demo/locales.json"})
-  public void syncingWithEnvironmentsWorks() throws Exception {
+  public void syncingWithEnvironmentsWorks() {
     client = createBuilder()
         .setEnvironment("staging")
         .build();
@@ -213,14 +213,14 @@ public class SyncTest extends BaseTest {
   }
 
   @Test
-  public void syncUsesResourceType() throws Exception {
+  public void syncUsesResourceType() {
     final SyncQuery query = client.sync(onlyDeletedEntries());
 
     assertThat(query.type.getName()).isEqualTo("DeletedEntry");
   }
 
   @Test
-  public void syncUsesContentType() throws Exception {
+  public void syncUsesContentType() {
     final SyncQuery query = client.sync(onlyEntriesOfType("customType"));
 
     assertThat(query.type.getContentType()).isEqualTo("customType");

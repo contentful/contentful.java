@@ -20,8 +20,7 @@ public class EnqueueResponseRule implements MethodRule {
             + "when using @"
             + Enqueue.class.getSimpleName());
       }
-      List<TestResponse> responses = new ArrayList<TestResponse>();
-      responses.addAll(enqueueToTestResponse(enqueue));
+      List<TestResponse> responses = new ArrayList<>(enqueueToTestResponse(enqueue));
       ((BaseTest) o).setResponseQueue(responses);
     }
     return statement;
@@ -29,7 +28,7 @@ public class EnqueueResponseRule implements MethodRule {
 
   private Collection<? extends TestResponse> enqueueToTestResponse(Enqueue enqueue) {
     final List<TestResponse> responses
-        = new ArrayList<TestResponse>(
+        = new ArrayList<>(
         enqueue.complex().length
             + enqueue.value().length);
 

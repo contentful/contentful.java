@@ -6,14 +6,16 @@ import com.contentful.java.cda.CDAEntry;
 import com.contentful.java.cda.CDALocale;
 import com.contentful.java.cda.CDASpace;
 import com.contentful.java.cda.LocalizedResource;
+import com.contentful.java.cda.SynchronizedSpace;
 
 import java.util.List;
 
 import static com.contentful.java.cda.CDAType.SPACE;
+import static com.contentful.java.cda.SyncType.onlyDeletedAssets;
 import static com.google.common.truth.Truth.assertThat;
 
 public class IntegrationWithMasterEnvironment extends Integration {
-  @Override public void setUp() throws Exception {
+  @Override public void setUp() {
     client = CDAClient.builder()
         .setSpace("5s4tdjmyjfpl")
         .setToken("84017d3a5da6d3ae9c733c6c210c55eebc3da033730b4e5093a6e6aa099b4995")
@@ -22,7 +24,7 @@ public class IntegrationWithMasterEnvironment extends Integration {
   }
 
   // space id and so on changed on master
-  @Override public void fetchSpace() throws Exception {
+  @Override public void fetchSpace() {
     CDASpace space = client.fetchSpace();
     assertThat(space.name()).isEqualTo("Contentful Example API with En");
     assertThat(space.id()).isEqualTo("5s4tdjmyjfpl");
@@ -50,10 +52,10 @@ public class IntegrationWithMasterEnvironment extends Integration {
 
   @Override void assertNyanCat(CDAEntry entry) {
     assertThat(entry.id()).isEqualTo("nyancat");
-    assertThat(entry.getField("name")).isEqualTo("Nyan Cat");
-    assertThat(entry.getField("color")).isEqualTo("rainbow");
-    assertThat(entry.getField("birthday")).isEqualTo("2011-04-04T22:00+00:00");
-    assertThat(entry.getField("lives")).isEqualTo(1337.0);
+    assertThat(entry.<String>getField("name")).isEqualTo("Nyan Cat");
+    assertThat(entry.<String>getField("color")).isEqualTo("rainbow");
+    assertThat(entry.<String>getField("birthday")).isEqualTo("2011-04-04T22:00+00:00");
+    assertThat(entry.<Double>getField("lives")).isEqualTo(1337.0);
 
     List<String> likes = entry.getField("likes");
     assertThat(likes).containsExactly("rainbows", "fish");
@@ -64,7 +66,17 @@ public class IntegrationWithMasterEnvironment extends Integration {
 
     // Localization
     final LocalizedResource.Localizer localized = entry.localize("tlh");
-    assertThat(localized.getField("color")).isEqualTo("rainbow");
-    assertThat(localized.getField("non-existing-does-not-throw")).isNull();
+    assertThat(localized.<String>getField("color")).isEqualTo("rainbow");
+    assertThat(localized.<Object>getField("non-existing-does-not-throw")).isNull();
+  }
+
+  @Override public void syncTypeOfDeletedAssets() {
+    final SynchronizedSpace space = client.sync(onlyDeletedAssets()).fetch();
+
+    assertThat(space.nextSyncUrl()).isNotEmpty();
+    assertThat(space.items()).hasSize(0);
+    assertThat(space.assets()).hasSize(0);
+    assertThat(space.deletedEntries()).hasSize(0);
+    assertThat(space.deletedAssets()).hasSize(0);
   }
 }

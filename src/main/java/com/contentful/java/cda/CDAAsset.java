@@ -10,6 +10,8 @@ import java.util.Map;
  */
 public class CDAAsset extends LocalizedResource {
 
+  private static final long serialVersionUID = -4645571481643616657L;
+
   /**
    * @return title of this asset.
    */
@@ -53,7 +55,7 @@ public class CDAAsset extends LocalizedResource {
     }
 
     final Map<String, ImageOption> mappedOptions
-        = new LinkedHashMap<String, ImageOption>(options.length);
+        = new LinkedHashMap<>(options.length);
 
     for (final ImageOption option : options) {
       mappedOptions.put(option.getOperation(), option);

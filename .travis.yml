@@ -2,9 +2,9 @@ language: java
 sudo: false
 
 jdk:
-  - openjdk7
   - openjdk8
   - oraclejdk8
+  - oraclejdk9
 
 script:
   - mvn jacoco:prepare-agent test jacoco:report

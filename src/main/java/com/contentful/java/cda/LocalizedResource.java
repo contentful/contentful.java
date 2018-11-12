@@ -6,6 +6,8 @@ import java.util.Map;
  * Represents a resource which may contain field values for multiple locales.
  */
 public abstract class LocalizedResource extends CDAResource {
+  private static final long serialVersionUID = 5713028146014748949L;
+
   public class Localizer {
     private final String locale;
 
@@ -83,6 +85,22 @@ public abstract class LocalizedResource extends CDAResource {
    */
   public <T> T getField(String locale, String key) {
     return localize(locale).getField(key);
+  }
+
+  /**
+   * Internal method for updating contents of a field.
+   * <p>
+   * This method is used by the SDK to generate objects based on raw fields.
+   *
+   * <b>Do not use this field to update data on Contentful. Take a look at the CMA-SDK for that.</b>
+   *
+   * @param locale locale to be updated.
+   * @param key    the key of the field to be updated.
+   * @param value  the value of the field to be used.
+   */
+  @SuppressWarnings("unchecked")
+  public void setField(String locale, String key, Object value) {
+    ((Map<String, Object>) fields.get(key)).put(locale, value);
   }
 
   /**

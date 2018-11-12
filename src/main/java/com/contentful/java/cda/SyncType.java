@@ -39,8 +39,8 @@ public class SyncType {
     DeletedEntry
   }
 
-  Type type;
-  String contentType;
+  final Type type;
+  final String contentType;
 
   SyncType(Type type, String contentType) {
     this.type = type;

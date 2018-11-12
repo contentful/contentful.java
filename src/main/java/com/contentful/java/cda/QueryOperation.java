@@ -7,34 +7,33 @@ package com.contentful.java.cda;
  */
 public class QueryOperation<T> {
 
-  public static final QueryOperation<String> IsEqualTo = new QueryOperation<String>("");
-  public static final QueryOperation<String> IsNotEqualTo = new QueryOperation<String>("[ne]");
-  public static final QueryOperation<String> HasOneOf = new QueryOperation<String>("[in]");
-  public static final QueryOperation<String> HasNoneOf = new QueryOperation<String>("[nin]");
-  public static final QueryOperation<String> HasAllOf = new QueryOperation<String>("[all]");
+  public static final QueryOperation<String> IsEqualTo = new QueryOperation<>("");
+  public static final QueryOperation<String> IsNotEqualTo = new QueryOperation<>("[ne]");
+  public static final QueryOperation<String> HasOneOf = new QueryOperation<>("[in]");
+  public static final QueryOperation<String> HasNoneOf = new QueryOperation<>("[nin]");
+  public static final QueryOperation<String> HasAllOf = new QueryOperation<>("[all]");
 
-  public static final QueryOperation<Integer> IsLessThan = new QueryOperation<Integer>("[lt]");
+  public static final QueryOperation<Integer> IsLessThan = new QueryOperation<>("[lt]");
   public static final QueryOperation<Integer> IsLessThanOrEqualTo
-      = new QueryOperation<Integer>("[lte]");
-  public static final QueryOperation<Integer> IsGreaterThan = new QueryOperation<Integer>("[gt]");
+      = new QueryOperation<>("[lte]");
+  public static final QueryOperation<Integer> IsGreaterThan = new QueryOperation<>("[gt]");
   public static final QueryOperation<Integer> IsGreaterThanOrEqualTo
-      = new QueryOperation<Integer>("[gte]");
+      = new QueryOperation<>("[gte]");
 
-  public static final QueryOperation<Boolean> Exists = new QueryOperation<Boolean>("[exists]"
-      , true);
+  public static final QueryOperation<Boolean> Exists = new QueryOperation<>("[exists]", true);
 
-  public static final QueryOperation<String> IsEarlierThan = new QueryOperation<String>("[lt]");
-  public static final QueryOperation<String> IsEarlierOrAt = new QueryOperation<String>("[lte]");
-  public static final QueryOperation<String> IsLaterThan = new QueryOperation<String>("[gt]");
-  public static final QueryOperation<String> IsLaterOrAt = new QueryOperation<String>("[gte]");
+  public static final QueryOperation<String> IsEarlierThan = new QueryOperation<>("[lt]");
+  public static final QueryOperation<String> IsEarlierOrAt = new QueryOperation<>("[lte]");
+  public static final QueryOperation<String> IsLaterThan = new QueryOperation<>("[gt]");
+  public static final QueryOperation<String> IsLaterOrAt = new QueryOperation<>("[gte]");
 
-  public static final QueryOperation<String> Matches = new QueryOperation<String>("[match]");
+  public static final QueryOperation<String> Matches = new QueryOperation<>("[match]");
 
-  public static final QueryOperation<Location> IsCloseTo = new QueryOperation<Location>("[near]");
+  public static final QueryOperation<Location> IsCloseTo = new QueryOperation<>("[near]");
   public static final QueryOperation<BoundingBox> IsWithinBoundingBoxOf
-      = new QueryOperation<BoundingBox>("[within]");
+      = new QueryOperation<>("[within]");
   public static final QueryOperation<BoundingCircle> IsWithinCircleOf
-      = new QueryOperation<BoundingCircle>("[within]");
+      = new QueryOperation<>("[within]");
 
   final String operator;
   final T defaultValue;

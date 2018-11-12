@@ -1,0 +1,71 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 1,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "<space_id>"
+          }
+        },
+        "id": "52TyxOtKLCQu6mu8aACYKa",
+        "type": "Entry",
+        "createdAt": "2018-10-17T13:32:27.618Z",
+        "updatedAt": "2018-10-17T13:32:27.618Z",
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "revision": 1,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "rich"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "name": "simple_headline_5",
+        "rich": {
+          "content": [
+            {
+              "data": {},
+              "content": [
+                {
+                  "marks": [],
+                  "value": "This is some simple text",
+                  "nodeType": "text"
+                }
+              ],
+              "nodeType": "heading-5"
+            },
+            {
+              "data": {},
+              "content": [
+                {
+                  "marks": [],
+                  "value": "asdfadfadf",
+                  "nodeType": "text"
+                }
+              ],
+              "nodeType": "paragraph"
+            }
+          ],
+          "nodeType": "document"
+        }
+      }
+    }
+  ]
+}

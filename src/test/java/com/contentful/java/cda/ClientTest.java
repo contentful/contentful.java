@@ -34,7 +34,7 @@ public class ClientTest extends BaseTest {
   public static final String ERROR_MESSAGE = "This is an expected error!";
 
   @Test @Enqueue
-  public void notUsingCustomCallFactoryDoesCreateCallFactoryWithAuthAndUserAgentInterceptors() throws Exception {
+  public void notUsingCustomCallFactoryDoesCreateCallFactoryWithAuthAndUserAgentInterceptors() throws InterruptedException {
 
     createClient().fetchSpace();
 
@@ -48,7 +48,7 @@ public class ClientTest extends BaseTest {
   }
 
   @Test @Enqueue
-  public void usingCustomCallFactoryDoesNotAddDefaultHeaders() throws Exception {
+  public void usingCustomCallFactoryDoesNotAddDefaultHeaders() throws InterruptedException {
     final Call.Factory callFactory = new OkHttpClient.Builder().build();
 
     createBuilder()
@@ -69,7 +69,7 @@ public class ClientTest extends BaseTest {
   }
 
   @Test @Enqueue
-  public void customCallFactoryCanAddInterceptors() throws Exception {
+  public void customCallFactoryCanAddInterceptors() throws IOException {
     final Interceptor interceptor = spy(new AuthorizationHeaderInterceptor(DEFAULT_TOKEN));
 
     Call.Factory callFactory = new OkHttpClient.Builder()
@@ -86,11 +86,9 @@ public class ClientTest extends BaseTest {
   }
 
   @Test(expected = RuntimeException.class) @Enqueue
-  public void throwingAnExceptionInAnInterceptorResultsInRuntimeException() throws Exception {
-    final Interceptor interceptor = new Interceptor() {
-      @Override public Response intercept(Chain chain) throws IOException {
-        throw new IOException(ERROR_MESSAGE);
-      }
+  public void throwingAnExceptionInAnInterceptorResultsInRuntimeException() {
+    final Interceptor interceptor = chain -> {
+      throw new IOException(ERROR_MESSAGE);
     };
 
     Call.Factory callFactory = new OkHttpClient.Builder()
@@ -113,7 +111,7 @@ public class ClientTest extends BaseTest {
   }
 
   @Test(expected = NullPointerException.class)
-  public void clientWithNoSpaceAndNoCallFactoryThrows() throws Exception {
+  public void clientWithNoSpaceAndNoCallFactoryThrows() {
     try {
       CDAClient.builder().setToken("token").build();
     } catch (NullPointerException e) {
@@ -123,7 +121,7 @@ public class ClientTest extends BaseTest {
   }
 
   @Test
-  public void clientWithNoSpaceButCallFactoryBuilds() throws Exception {
+  public void clientWithNoSpaceButCallFactoryBuilds() {
     CDAClient.builder()
         .setCallFactory(mock(Call.Factory.class))
         .setSpace(DEFAULT_SPACE)
@@ -131,7 +129,7 @@ public class ClientTest extends BaseTest {
   }
 
   @Test(expected = NullPointerException.class)
-  public void clientWithNoTokenThrows() throws Exception {
+  public void clientWithNoTokenThrows() {
     try {
       CDAClient.builder().setSpace("space").build();
     } catch (NullPointerException e) {
@@ -142,7 +140,7 @@ public class ClientTest extends BaseTest {
 
   @Test
   @Enqueue
-  public void authHeader() throws Exception {
+  public void authHeader() throws InterruptedException {
     client.fetchSpace();
     RecordedRequest request = server.takeRequest();
     assertThat(request.getHeader("authorization")).isEqualTo("Bearer " + DEFAULT_TOKEN);
@@ -150,7 +148,7 @@ public class ClientTest extends BaseTest {
 
   @Test
   @Enqueue
-  public void userAgentHeader() throws Exception {
+  public void userAgentHeader() throws InterruptedException {
     String versionName = GeneratedBuildParameters.PROJECT_VERSION;
     assertThat(versionName).matches("^\\d+\\.\\d+\\.\\d+(-\\w+)?$");
 
@@ -163,7 +161,7 @@ public class ClientTest extends BaseTest {
 
   @Test(expected = IllegalArgumentException.class)
   @Enqueue
-  public void fetchInvalidTypeThrows() throws Exception {
+  public void fetchInvalidTypeThrows() {
     try {
       client.fetch(CDAResource.class).all();
     } catch (IllegalArgumentException e) {
@@ -309,7 +307,7 @@ public class ClientTest extends BaseTest {
       defaults = {},
       complex = {@EnqueueResponse(fileName = "errors/invalid_query.json", code = 404)}
   )
-  public void sendingInvalidQueriesThrowsMeaningfulException() throws Throwable {
+  public void sendingInvalidQueriesThrowsMeaningfulException() {
 
     final CDAClient client = createClient();
 
@@ -337,7 +335,7 @@ public class ClientTest extends BaseTest {
           }
       )}
   )
-  public void requestingWhileRateLimitedThrows() throws Throwable {
+  public void requestingWhileRateLimitedThrows() {
 
     final CDAClient client = createClient();
 
@@ -404,7 +402,7 @@ public class ClientTest extends BaseTest {
   }
 
   @Test @Enqueue
-  public void customCallFactoryCanUseDefault() throws Exception {
+  public void customCallFactoryCanUseDefault() {
 
     final CDAClient.Builder builder = createBuilder();
 
@@ -422,7 +420,7 @@ public class ClientTest extends BaseTest {
 
   @Test
   @Enqueue
-  public void contentfulCustomHeaderUsed() throws Exception {
+  public void contentfulCustomHeaderUsed() throws InterruptedException {
     final CDAClient client = createBuilder().build();
 
     client.fetchSpace();
@@ -436,7 +434,7 @@ public class ClientTest extends BaseTest {
 
   @Test
   @Enqueue
-  public void addingApplicationToCustomHeaderWorks() throws Exception {
+  public void addingApplicationToCustomHeaderWorks() throws InterruptedException {
     final CDAClient client = createBuilder()
         .setApplication("Contentful Java Unit Test", "0.0.1-beta4")
         .build();
@@ -451,7 +449,7 @@ public class ClientTest extends BaseTest {
 
   @Test
   @Enqueue
-  public void addingIntegrationToCustomHeaderWorks() throws Exception {
+  public void addingIntegrationToCustomHeaderWorks() throws InterruptedException {
     // use this features if you are using creating a library on top of the sdk.
     final CDAClient client = createBuilder()
         .setIntegration("contentful.awesomelib.java", "0.0.1-beta9")
@@ -467,7 +465,7 @@ public class ClientTest extends BaseTest {
 
   @Test
   @Enqueue({"demo/locales.json", "demo/content_types.json", "demo/sync_initial_p1.json"})
-  public void syncTypeIsAddedToRequest() throws Exception {
+  public void syncTypeIsAddedToRequest() throws InterruptedException {
     final CDAClient client = createPreviewClient();
 
     final CountDownLatch latch = new CountDownLatch(1);
@@ -492,5 +490,4 @@ public class ClientTest extends BaseTest {
     assertThat(request.getPath()).contains("type=Entry");
     assertThat(request.getPath()).contains("content_type=CustomType");
   }
-
 }

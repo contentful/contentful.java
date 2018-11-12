@@ -86,7 +86,7 @@ Install the Contentful dependency:
 compile 'com.contentful.java:java-sdk:10.0.0'
 ```
 
-This SDK requires Java 7 (or higher version) or Android 5.
+This SDK requires Java 8 (or higher version) or Android 5.
 
 Client Creation
 ---------------

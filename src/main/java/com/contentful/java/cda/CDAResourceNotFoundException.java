@@ -7,6 +7,8 @@ import java.util.Locale;
  */
 public class CDAResourceNotFoundException extends RuntimeException {
 
+  private static final long serialVersionUID = -7419778969492055048L;
+
   /**
    * Create a new exception
    *

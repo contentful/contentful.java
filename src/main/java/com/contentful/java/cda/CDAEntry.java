@@ -4,6 +4,7 @@ package com.contentful.java.cda;
  * The class represents a basic entry in the space.
  */
 public class CDAEntry extends LocalizedResource {
+  private static final long serialVersionUID = 5902790363045498307L;
   private CDAContentType contentType;
 
   /**

@@ -35,7 +35,7 @@ public abstract class AbsQuery<
 
   final CDAClient client;
 
-  final Map<String, String> params = new HashMap<String, String>();
+  final Map<String, String> params = new HashMap<>();
 
   AbsQuery(Class<Resource> type, CDAClient client) {
     this.type = type;
@@ -357,7 +357,7 @@ public abstract class AbsQuery<
    * Limits the amount of elements to a given number.
    * <p>
    * If more then the number given elements are present, you can use {@link #skip(int)} and
-   * {@link #limit(int)} for pagination.
+   * {@see #limit(int)} for pagination.
    *
    * @param limit a non negative number less than 1001 to include elements.
    * @return the calling query for chaining.

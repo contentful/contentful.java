@@ -16,6 +16,7 @@ import static java.lang.String.format;
  * This class will represent known Contentful exceptions
  */
 public class CDAHttpException extends RuntimeException {
+  private static final long serialVersionUID = 637581021148308658L;
   private final Request request;
   private final Response response;
   private final String responseBody;
