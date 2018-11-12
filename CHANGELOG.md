@@ -2,8 +2,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [10.2.0] - (TBD)
-- Add `rich text` to entry types.
+## Version [10.2.0] - (2018-11-12)
+- Add [rich text](https://www.contentful.com/developers/docs/concepts/rich-text/) to entry types.
 
 ## Version [10.1.0] - (2018-05-22)
 - Add `png8` image option for returning images in png with up to 256 colours.
