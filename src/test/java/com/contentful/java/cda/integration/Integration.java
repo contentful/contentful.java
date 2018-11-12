@@ -422,6 +422,7 @@ public class Integration {
   public void fetchWithInQuery() {
     CDAArray found = client.fetch(CDAEntry.class)
         .where("sys.id", HasOneOf, "finn", "jake")
+        .orderBy("sys.id")
         .all();
 
     assertThat(found.items().size()).isEqualTo(2);

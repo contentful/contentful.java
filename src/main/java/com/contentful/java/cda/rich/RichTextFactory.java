@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 import static com.contentful.java.cda.ResourceUtils.ensureContentType;
 
 /**
- * This factory will be used in order to create the {@see CDARichTextNode}-graph representation of
+ * This factory will be used in order to create the {@link CDARichNode}-graph representation of
  * the Contentful data returned by a rich text - field.
  */
 @SuppressWarnings("unchecked")

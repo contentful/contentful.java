@@ -26,15 +26,6 @@ public class CDARichText extends CDARichNode {
   }
 
   /**
-   * Create a text with the given marks
-   *
-   * @param text the text to be displayed
-   */
-  public CDARichText(String text) {
-    this(text, new ArrayList<>());
-  }
-
-  /**
    * @return the text of this node.
    */
   public CharSequence getText() {

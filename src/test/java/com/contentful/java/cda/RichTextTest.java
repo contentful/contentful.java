@@ -396,6 +396,7 @@ public class RichTextTest extends BaseTest {
     assertThat(rich.getContent().get(0)).isInstanceOf(CDARichUnorderedList.class);
 
     final CDARichUnorderedList list = (CDARichUnorderedList) rich.getContent().get(0);
+    assertThat(list.getDecoration()).isEqualTo("*");
     assertThat(list.getContent()).hasSize(6);
 
     final CDARichBlock item = (CDARichBlock) list.getContent().get(0);
