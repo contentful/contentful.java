@@ -72,6 +72,12 @@ public final class ResourceUtils {
     }
   }
 
+  /**
+   * Make sure that the given entry has a filled in content type.
+   *
+   * @param entry  entry to be filled
+   * @param client to be used if more content types need to be requested.
+   */
   public static void ensureContentType(CDAEntry entry, CDAClient client) {
     CDAContentType contentType = entry.contentType();
     if (contentType != null) {
