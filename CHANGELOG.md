@@ -2,7 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [10.2.2] - (TBD)
+## Version [unreleased]
+- TBD
+
+## Version [10.3.0] - (2019-01-30)
+- Add Unwrapping of Contentful entries to custom types.
 - Update dependencies
 
 ## Version [10.2.1] - (2019-01-14)
@@ -230,13 +234,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/10.2.2...HEAD
-[10.2.1]: https://github.com/contentful/contentful.java/compare/10.2.1...10.2.2
-[10.2.1]: https://github.com/contentful/contentful.java/compare/10.2.0...10.2.1
+[unreleased]: https://github.com/contentful/contentful.java/compare/10.3.0...HEAD
+[10.3.0]: https://github.com/contentful/contentful.java/compare/10.2.1...10.3.0
 [10.2.1]: https://github.com/contentful/contentful.java/compare/10.2.0...10.2.1
 [10.2.0]: https://github.com/contentful/contentful.java/compare/10.1.0...10.2.0
 [10.1.0]: https://github.com/contentful/contentful.java/compare/10.0.0...10.1.0
-[10.0.0]: https://github.com/contentful/contentful.java/compare/9.1.1...java-sdk-10.0.0
+[10.0.0]: https://github.com/contentful/contentful.java/compare/9.1.1...10.0.0
 [9.1.1]: https://github.com/contentful/contentful.java/compare/java-sdk-9.1.0...9.1.1
 [9.1.0]: https://github.com/contentful/contentful.java/compare/java-sdk-9.0.1...java-sdk-9.1.0
 [9.0.1]: https://github.com/contentful/contentful.java/compare/java-sdk-9.0.0...java-sdk-9.0.1

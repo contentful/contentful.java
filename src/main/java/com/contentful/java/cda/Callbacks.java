@@ -10,7 +10,7 @@ final class Callbacks {
     throw new AssertionError();
   }
 
-  static <O extends CDAResource, C extends CDAResource> CDACallback<C> subscribeAsync(
+  static <O, C> CDACallback<C> subscribeAsync(
       Flowable<O> flowable, CDACallback<C> callback, CDAClient client) {
     ConnectableFlowable<O> connectable = flowable.observeOn(Schedulers.io()).publish();
 
@@ -24,11 +24,11 @@ final class Callbacks {
   }
 
   abstract static class BaseAction<E> implements Consumer<E> {
-    protected final CDACallback<? extends CDAResource> callback;
+    protected final CDACallback<?> callback;
 
     protected final CDAClient client;
 
-    BaseAction(CDACallback<? extends CDAResource> callback, CDAClient client) {
+    BaseAction(CDACallback<?> callback, CDAClient client) {
       this.callback = callback;
       this.client = client;
     }
@@ -47,8 +47,8 @@ final class Callbacks {
     }
   }
 
-  static class SuccessAction<E extends CDAResource> extends BaseAction<E> {
-    SuccessAction(CDACallback<? extends CDAResource> callback, CDAClient client) {
+  static class SuccessAction<E> extends BaseAction<E> {
+    SuccessAction(CDACallback<?> callback, CDAClient client) {
       super(callback, client);
     }
 
@@ -60,7 +60,7 @@ final class Callbacks {
   }
 
   static class FailureAction extends BaseAction<Throwable> {
-    FailureAction(CDACallback<? extends CDAResource> callback, CDAClient client) {
+    FailureAction(CDACallback<?> callback, CDAClient client) {
       super(callback, client);
     }
 
@@ -69,7 +69,7 @@ final class Callbacks {
     }
   }
 
-  static class SuccessRunnable<E extends CDAResource> implements Runnable {
+  static class SuccessRunnable<E> implements Runnable {
     private final E result;
 
     private final CDACallback<E> callback;
@@ -89,9 +89,9 @@ final class Callbacks {
   static class FailureRunnable implements Runnable {
     private final Throwable throwable;
 
-    private final CDACallback<? extends CDAResource> callback;
+    private final CDACallback<?> callback;
 
-    FailureRunnable(Throwable throwable, CDACallback<? extends CDAResource> callback) {
+    FailureRunnable(Throwable throwable, CDACallback<?> callback) {
       this.throwable = throwable;
       this.callback = callback;
     }

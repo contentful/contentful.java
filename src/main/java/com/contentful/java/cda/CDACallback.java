@@ -8,7 +8,7 @@ import io.reactivex.disposables.Disposable;
  *
  * @param <T> expected response type.
  */
-public abstract class CDACallback<T extends CDAResource> {
+public abstract class CDACallback<T> {
   private final Object lock = new Object();
 
   private boolean cancelled;

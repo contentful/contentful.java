@@ -33,9 +33,10 @@ What is Contentful?
   - [First Request](#first-request)
 - [Usage](#usage)
   - [Filtering](#filtering)
-  - [Calls in Parralel](#calls-in-parallel)
+  - [Calls in Parallel](#calls-in-parallel)
   - [Paging](#paging)
   - [Includes](#includes)
+  - [Unwrapping](#unwrapping)
   - [Preview Mode](#preview)
   - [Sync](#sync)
   - [Http Client](#http-client)
@@ -257,7 +258,56 @@ CDAArray found = client.fetch(CDAEntry.class)
         .all();
 ```
 
-This only resolves the first level of includes. `10` is the maximum number of levels to be included and should be used sparringly, since this will bloat up the response by a lot.
+This only resolves the first level of includes. `10` is the maximum number of levels to be included and should be used sparingly, since this will bloat up the response by a lot.
+
+Unwrapping
+----------
+
+> 🚧 This feature is regarded as beta and is up for debate if it should be included in the official SDK. Comments and feedback wanted. 🚧
+
+
+Unwrapping is the process of taking a `CDAEntry` and transforming it into custom types. The following code demonstrates the definition of a custom type:
+
+```
+import com.contentful.java.cda.TransformQuery.ContentfulEntryModel;
+import com.contentful.java.cda.TransformQuery.ContentfulField;
+
+@ContentfulEntryModel("cat")
+public static class Cat {
+  @ContentfulField
+  String name;
+
+  @ContentfulField("bestFriend")
+  Cat mate;
+
+  @ContentfulField
+  CDAEntry favoriteFood;
+
+  @ContentfulSystemField("id")
+  String contentfulId;
+
+  @ContentfulField(value = "likes", locale = "de-DE")
+  List<String> germanFavorites;
+}
+```
+
+If this SDK should return a given response like the one above instead of a CDAEntry, the following code snippet will accomplish that:
+
+```
+Cat happycat = client
+    .observeAndTransform(Cat.class)
+    .one("happycat")
+    .blockingFirst();
+```
+
+In addition to returning the Content in a fashion flexible for various use-cases, this feature also uses the [select](#select) filter to only return the fields required, making the response smaller and more focused.
+
+> Notes:
+> * Specifying a `value` for the `@ContentfulField`-annotation , will use the value of the similarly called field instead of the name of the custom field.
+> * A `locale` can be used to specify a given locale of this entry. If no locale is given, the default locale will be used. 
+> * `@ContentfulSystemField` is used for CDAEntries attributes (`sys.id`, etc) to be inserted.
+> * Currently only one type is transformed. A cat cannot have another content type transformed. Using CDAEntries instead is recommended.
+
 
 Select
 ------
