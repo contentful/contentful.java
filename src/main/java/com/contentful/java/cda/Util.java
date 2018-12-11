@@ -38,7 +38,7 @@ final class Util {
     return string;
   }
 
-  static String resourcePath(Class<? extends CDAResource> clazz) {
+  static String resourcePath(Class<?> clazz) {
     if (CDAAsset.class.equals(clazz)) {
       return PATH_ASSETS;
     } else if (CDAContentType.class.equals(clazz)) {

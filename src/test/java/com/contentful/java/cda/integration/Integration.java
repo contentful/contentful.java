@@ -16,6 +16,9 @@ import com.contentful.java.cda.QueryOperation.BoundingBox;
 import com.contentful.java.cda.QueryOperation.BoundingCircle;
 import com.contentful.java.cda.QueryOperation.Location;
 import com.contentful.java.cda.SynchronizedSpace;
+import com.contentful.java.cda.TransformQuery.ContentfulEntryModel;
+import com.contentful.java.cda.TransformQuery.ContentfulField;
+import com.contentful.java.cda.TransformQuery.ContentfulSystemField;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -668,6 +671,54 @@ public class Integration {
       assertThat(cdaException.responseBody()).isNotEmpty();
       throw cdaException;
     }
+  }
+
+  @ContentfulEntryModel("cat")
+  public static class Cat {
+    @ContentfulSystemField("id") // all top level sys fields:
+    String internal_id;
+
+    @ContentfulField
+    String name;
+
+    @ContentfulField("likes")
+    List<String> enjoys;
+
+    @ContentfulField("birthday")
+    String dayOfBirth;
+
+    @ContentfulField(locale = "en-US")
+    Double lives; // remember: Contentful ints are javas Doubles
+
+    @ContentfulField
+    Cat bestFriend;
+
+    @ContentfulField
+    CDAAsset image;
+  }
+
+  @Test
+  public void testTransformation() {
+    Cat happycat = client.observeAndTransform(Cat.class).one("happycat").blockingFirst();
+    assertThat(happycat).isNotNull();
+
+    assertThat(happycat.internal_id).isEqualTo("happycat");
+    assertThat(happycat.name).isEqualTo("Happy Cat");
+
+    assertThat(happycat.image).isNotNull();
+    assertThat(happycat.image).isInstanceOf(CDAAsset.class);
+    assertThat(happycat.image.url()).contains("happycatw.jpg");
+
+    assertThat(happycat.bestFriend).isNotNull();
+    assertThat(happycat.bestFriend.internal_id).isEqualTo("nyancat");
+    assertThat(happycat.bestFriend.lives).isWithin(0.01).of(1337);
+
+    assertThat(happycat.lives).isEqualTo(1.0);
+
+    assertThat(happycat.dayOfBirth).isEqualTo("2003-10-28T23:00:00+00:00");
+
+    assertThat(happycat.enjoys).hasSize(1);
+    assertThat(happycat.enjoys.get(0)).isEqualTo("cheezburger");
   }
 
   private void assertInitial(SynchronizedSpace space) {

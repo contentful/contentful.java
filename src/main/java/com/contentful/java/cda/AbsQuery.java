@@ -18,7 +18,7 @@ import static java.lang.String.format;
  * @param <Query>    The query type to be returned on chaining to avoid casting on client side.
  */
 public abstract class AbsQuery<
-    Resource extends CDAResource,
+    Resource,
     Query extends AbsQuery<Resource, Query>
     > {
   private static final String PARAMETER_CONTENT_TYPE = "content_type";

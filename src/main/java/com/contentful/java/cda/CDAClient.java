@@ -129,6 +129,23 @@ public class CDAClient {
   }
 
   /**
+   * Returns a {@link TransformQuery} to transform the default contentful response into a specific
+   * custom model type.
+   *
+   * This functionality is considered as beta and might or might not be stable. Please use at own
+   * risk and report behaviour back.
+   *
+   * @param <T> An annotated custom {@link TransformQuery.ContentfulEntryModel} model.
+   * @return a query for async calls to Contentful transforming the response to custom types
+   * @see TransformQuery.ContentfulEntryModel
+   * @see TransformQuery.ContentfulField
+   * @see TransformQuery.ContentfulSystemField
+   */
+  public <T> TransformQuery<T> observeAndTransform(Class<T> type) {
+    return new TransformQuery<>(type, this);
+  }
+
+  /**
    * Returns an {@link ObserveQuery} for a given {@code type}, which can be used to return
    * an {@link Flowable} that fetches the desired resources.
    *
