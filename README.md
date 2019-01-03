@@ -76,14 +76,14 @@ Install the Contentful dependency:
 <dependency>
   <groupId>com.contentful.java</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>10.0.0</version>
+  <version>10.2.0</version>
 </dependency>
 ```
 
 * _Gradle_
 
 ```groovy
-compile 'com.contentful.java:java-sdk:10.0.0'
+compile 'com.contentful.java:java-sdk:10.2.0'
 ```
 
 This SDK requires Java 8 (or higher version) or Android 5.
@@ -349,14 +349,14 @@ Development versions of this SDK are available through
 
 ```groovy
 maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-compile 'com.contentful.java:java-sdk:10.0.0-SNAPSHOT'
+implementation 'com.contentful.java:java-sdk:10.2.1-SNAPSHOT'
 ```
 
 * [jitpack.io](https://jitpack.io/#contentful/contentful.java/master-SNAPSHOT):
 
 ```groovy
 maven { url 'https://jitpack.io' }
-compile 'com.github.contentful:contentful.java:java-sdk-10.0.0-SNAPSHOT'
+implementation 'com.github.contentful:contentful.java:java-sdk-10.2.1-SNAPSHOT'
 ```
 
 Documentation
@@ -399,6 +399,6 @@ Getting involved
 Code of Conduct
 ===============
 
-Contentful wants to provide a safe, inclusive, welcoming, and harassment-free space and experience for all participants, regardless of gender identity and expression, sexual orientation, disability, physical appearance, socioeconomic status, body size, ethnicity, nationality, level of experience, age, religion (or lack thereof), or other identity markers.
+Contentful wants to provide a safe, inclusive, welcoming, and harassment-free space and experience for all participants, regardless of their identity markers.
 
 [Full Code of Conduct](https://github.com/contentful-developer-relations/community-code-of-conduct).
