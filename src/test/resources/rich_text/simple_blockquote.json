@@ -18,15 +18,15 @@
         "id": "3f6f7Q6FhCIka0OqEuWoMc",
         "type": "Entry",
         "createdAt": "2018-10-17T13:32:33.981Z",
-        "updatedAt": "2018-10-17T13:33:43.652Z",
+        "updatedAt": "2019-01-04T14:08:01.334Z",
         "environment": {
           "sys": {
-            "id": "master",
+            "id": "human-readable",
             "type": "Link",
             "linkType": "Environment"
           }
         },
-        "revision": 2,
+        "revision": 3,
         "contentType": {
           "sys": {
             "type": "Link",
@@ -50,7 +50,7 @@
                     {
                       "data": {},
                       "marks": [],
-                      "value": "This is some simple blockquote",
+                      "value": "This is a blockquote",
                       "nodeType": "text"
                     }
                   ],

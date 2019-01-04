@@ -18,15 +18,15 @@
         "id": "42c9Fb0T0As26K0W0E48U2",
         "type": "Entry",
         "createdAt": "2018-10-17T13:32:32.829Z",
-        "updatedAt": "2018-10-17T13:32:32.829Z",
+        "updatedAt": "2019-01-04T15:07:25.350Z",
         "environment": {
           "sys": {
-            "id": "master",
+            "id": "human-readable",
             "type": "Link",
             "linkType": "Environment"
           }
         },
-        "revision": 1,
+        "revision": 3,
         "contentType": {
           "sys": {
             "type": "Link",
@@ -39,19 +39,19 @@
       "fields": {
         "name": "simple_text_underline",
         "rich": {
+          "data": {},
           "content": [
             {
               "data": {},
               "content": [
                 {
+                  "data": {},
                   "marks": [
                     {
-                      "data": {},
-                      "type": "underline",
-                      "object": "mark"
+                      "type": "underline"
                     }
                   ],
-                  "value": "This is some simple text",
+                  "value": "This is some underlined text",
                   "nodeType": "text"
                 }
               ],
