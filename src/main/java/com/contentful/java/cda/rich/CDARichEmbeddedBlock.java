@@ -5,13 +5,13 @@ package com.contentful.java.cda.rich;
  *
  * @see com.contentful.java.cda.CDAEntry
  */
-public class CDARichEmbeddedLink extends CDARichHyperLink {
+public class CDARichEmbeddedBlock extends CDARichHyperLink {
   /**
    * Create a link pointing to a CDAEntry.
    *
    * @param target an entry to be pointed to.
    */
-  public CDARichEmbeddedLink(Object target) {
+  public CDARichEmbeddedBlock(Object target) {
     super(target);
   }
 }

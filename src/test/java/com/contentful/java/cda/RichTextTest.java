@@ -3,7 +3,8 @@ package com.contentful.java.cda;
 import com.contentful.java.cda.lib.Enqueue;
 import com.contentful.java.cda.rich.CDARichBlock;
 import com.contentful.java.cda.rich.CDARichDocument;
-import com.contentful.java.cda.rich.CDARichEmbeddedLink;
+import com.contentful.java.cda.rich.CDARichEmbeddedBlock;
+import com.contentful.java.cda.rich.CDARichEmbeddedInline;
 import com.contentful.java.cda.rich.CDARichHeading;
 import com.contentful.java.cda.rich.CDARichHorizontalRule;
 import com.contentful.java.cda.rich.CDARichHyperLink;
@@ -348,8 +349,8 @@ public class RichTextTest extends BaseTest {
     assertThat(rich).isNotNull();
 
     assertThat(rich.getContent()).hasSize(2);
-    assertThat(rich.getContent().get(0)).isInstanceOf(CDARichEmbeddedLink.class);
-    final CDARichEmbeddedLink embedded = (CDARichEmbeddedLink) rich.getContent().get(0);
+    assertThat(rich.getContent().get(0)).isInstanceOf(CDARichEmbeddedBlock.class);
+    final CDARichEmbeddedBlock embedded = (CDARichEmbeddedBlock) rich.getContent().get(0);
 
     assertThat(embedded.getData()).isInstanceOf(CDAEntry.class);
     final CDAEntry cdaEntry = (CDAEntry) embedded.getData();
@@ -407,5 +408,118 @@ public class RichTextTest extends BaseTest {
 
     final CDARichText text = (CDARichText) block.getContent().get(0);
     assertThat(text.getText()).isEqualTo("This");
+  }
+
+  @Test
+  @Enqueue(value = "rich_text/inline_hyperlink_integration.json", defaults = {"rich_text/locales.json", "rich_text/content_types.json"})
+  public void hyperlink_integration() {
+    final CDAEntry entry = (CDAEntry) client.fetch(CDAEntry.class).all().items().get(0);
+    final CDARichDocument rich = entry.getField("rich");
+    assertThat(rich).isNotNull();
+
+    assertThat(rich.getContent()).hasSize(1);
+    assertThat(rich.getContent().get(0)).isInstanceOf(CDARichParagraph.class);
+
+    final CDARichParagraph paragraph = (CDARichParagraph) rich.getContent().get(0);
+
+    assertThat(paragraph.getContent()).hasSize(9);
+
+    assertThat(paragraph.getContent().get(1)).isInstanceOf(CDARichHyperLink.class);
+    final CDARichHyperLink simpleUrlLink = (CDARichHyperLink) paragraph.getContent().get(1);
+    assertThat(simpleUrlLink.getData()).isEqualTo("https://www.example.com/");
+
+    assertThat(paragraph.getContent().get(3)).isInstanceOf(CDARichHyperLink.class);
+    final CDARichHyperLink entryLink = (CDARichHyperLink) paragraph.getContent().get(3);
+    assertThat(entryLink.getData()).isInstanceOf(CDAEntry.class);
+
+    assertThat(paragraph.getContent().get(5)).isInstanceOf(CDARichHyperLink.class);
+    final CDARichHyperLink assetLink = (CDARichHyperLink) paragraph.getContent().get(5);
+    assertThat(assetLink.getData()).isInstanceOf(CDAAsset.class);
+  }
+
+  @Test
+  @Enqueue(value = "rich_text/simple_entry_inline.json", defaults = {"rich_text/locales.json", "rich_text/content_types.json"})
+  public void hyperlink_entry_block() {
+    final CDAEntry entry = (CDAEntry) client.fetch(CDAEntry.class).all().items().get(0);
+    final CDARichDocument rich = entry.getField("rich");
+    assertThat(rich).isNotNull();
+
+    assertThat(rich.getContent()).hasSize(1);
+    assertThat(rich.getContent().get(0)).isInstanceOf(CDARichParagraph.class);
+    final CDARichParagraph paragraph = (CDARichParagraph) rich.getContent().get(0);
+
+    assertThat(paragraph.getContent()).hasSize(3);
+    assertThat(paragraph.getContent().get(1)).isInstanceOf(CDARichEmbeddedInline.class);
+
+    final CDARichEmbeddedInline link = (CDARichEmbeddedInline) paragraph.getContent().get(1);
+    assertThat(link.getData()).isInstanceOf(CDAEntry.class);
+  }
+
+  @Test
+  @Enqueue(value = "rich_text/simple_entry_hyperlink.json", defaults = {"rich_text/locales.json", "rich_text/content_types.json"})
+  public void hyperlink_entry_link() {
+    final CDAEntry entry = (CDAEntry) client.fetch(CDAEntry.class).all().items().get(0);
+    final CDARichDocument rich = entry.getField("rich");
+    assertThat(rich).isNotNull();
+
+    assertThat(rich.getContent()).hasSize(1);
+    assertThat(rich.getContent().get(0)).isInstanceOf(CDARichParagraph.class);
+    final CDARichParagraph paragraph = (CDARichParagraph) rich.getContent().get(0);
+
+    assertThat(paragraph.getContent()).hasSize(3);
+    assertThat(paragraph.getContent().get(1)).isInstanceOf(CDARichHyperLink.class);
+
+    final CDARichHyperLink link = (CDARichHyperLink) paragraph.getContent().get(1);
+    assertThat(link.getData()).isInstanceOf(CDAEntry.class);
+  }
+
+  @Test
+  @Enqueue(value = "rich_text/simple_asset_block.json", defaults = {"rich_text/locales.json", "rich_text/content_types.json"})
+  public void hyperlink_asset_block() {
+    final CDAEntry entry = (CDAEntry) client.fetch(CDAEntry.class).all().items().get(0);
+    final CDARichDocument rich = entry.getField("rich");
+    assertThat(rich).isNotNull();
+
+    assertThat(rich.getContent()).hasSize(2);
+    assertThat(rich.getContent().get(0)).isInstanceOf(CDARichEmbeddedBlock.class);
+
+    final CDARichEmbeddedBlock link = (CDARichEmbeddedBlock) rich.getContent().get(0);
+    assertThat(link.getData()).isInstanceOf(CDAAsset.class);
+  }
+
+  @Test
+  @Enqueue(value = "rich_text/simple_asset_hyperlink.json", defaults = {"rich_text/locales.json", "rich_text/content_types.json"})
+  public void hyperlink_asset_link() {
+    final CDAEntry entry = (CDAEntry) client.fetch(CDAEntry.class).all().items().get(0);
+    final CDARichDocument rich = entry.getField("rich");
+    assertThat(rich).isNotNull();
+
+    assertThat(rich.getContent()).hasSize(1);
+    assertThat(rich.getContent().get(0)).isInstanceOf(CDARichParagraph.class);
+    final CDARichParagraph paragraph = (CDARichParagraph) rich.getContent().get(0);
+
+    assertThat(paragraph.getContent()).hasSize(3);
+    assertThat(paragraph.getContent().get(1)).isInstanceOf(CDARichHyperLink.class);
+
+    final CDARichHyperLink link = (CDARichHyperLink) paragraph.getContent().get(1);
+    assertThat(link.getData()).isInstanceOf(CDAAsset.class);
+  }
+
+  @Test
+  @Enqueue(value = "rich_text/simple_hyperlink.json", defaults = {"rich_text/locales.json", "rich_text/content_types.json"})
+  public void hyperlink() {
+    final CDAEntry entry = (CDAEntry) client.fetch(CDAEntry.class).all().items().get(0);
+    final CDARichDocument rich = entry.getField("rich");
+    assertThat(rich).isNotNull();
+
+    assertThat(rich.getContent()).hasSize(1);
+    assertThat(rich.getContent().get(0)).isInstanceOf(CDARichParagraph.class);
+    final CDARichParagraph paragraph = (CDARichParagraph) rich.getContent().get(0);
+
+    assertThat(paragraph.getContent()).hasSize(3);
+    assertThat(paragraph.getContent().get(1)).isInstanceOf(CDARichHyperLink.class);
+
+    final CDARichHyperLink link = (CDARichHyperLink) paragraph.getContent().get(1);
+    assertThat(link.getData()).isEqualTo("https://www.example.com/");
   }
 }

@@ -1,0 +1,131 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 1,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "<space_id>"
+          }
+        },
+        "id": "3hSV7a95dSiMGcgmSGsi6I",
+        "type": "Entry",
+        "createdAt": "2018-10-31T10:22:06.907Z",
+        "updatedAt": "2018-10-31T10:22:06.907Z",
+        "environment": {
+          "sys": {
+            "id": "human-readable",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "revision": 1,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "rich"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "name": "simple_asset_hyperlink",
+        "rich": {
+          "data": {},
+          "content": [
+            {
+              "data": {},
+              "content": [
+                {
+                  "data": {},
+                  "marks": [],
+                  "value": "",
+                  "nodeType": "text"
+                },
+                {
+                  "data": {
+                    "target": {
+                      "sys": {
+                        "id": "47Q1142uaI6SuK8UoGeeQy",
+                        "type": "Link",
+                        "linkType": "Asset"
+                      }
+                    }
+                  },
+                  "content": [
+                    {
+                      "data": {},
+                      "marks": [],
+                      "value": "Asset hyperlink to cat image",
+                      "nodeType": "text"
+                    }
+                  ],
+                  "nodeType": "asset-hyperlink"
+                },
+                {
+                  "data": {},
+                  "marks": [],
+                  "value": "",
+                  "nodeType": "text"
+                }
+              ],
+              "nodeType": "paragraph"
+            }
+          ],
+          "nodeType": "document"
+        }
+      }
+    }
+  ],
+  "includes": {
+    "Asset": [
+      {
+        "sys": {
+          "space": {
+            "sys": {
+              "type": "Link",
+              "linkType": "Space",
+              "id": "<space_id>"
+            }
+          },
+          "id": "47Q1142uaI6SuK8UoGeeQy",
+          "type": "Asset",
+          "createdAt": "2018-10-31T10:21:34.784Z",
+          "updatedAt": "2018-10-31T10:21:34.784Z",
+          "environment": {
+            "sys": {
+              "id": "human-readable",
+              "type": "Link",
+              "linkType": "Environment"
+            }
+          },
+          "revision": 1,
+          "locale": "en-US"
+        },
+        "fields": {
+          "title": "cat",
+          "file": {
+            "url": "//images.ctfassets.net/<space_id>/47Q1142uaI6SuK8UoGeeQy/4136a21284ad31498f2cbb5996329396/Kittyply_edit1.jpg",
+            "details": {
+              "size": 1009523,
+              "image": {
+                "width": 1728,
+                "height": 1152
+              }
+            },
+            "fileName": "Kittyply_edit1.jpg",
+            "contentType": "image/jpeg"
+          }
+        }
+      }
+    ]
+  }
+}
