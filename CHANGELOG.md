@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Version [10.2.1] - (TBD)
+- Add missing links for rich-text nodes.
+
 ## Version [10.2.0] - (2018-11-12)
 - Add [rich text](https://www.contentful.com/developers/docs/concepts/rich-text/) to entry types.
 
@@ -224,7 +227,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-10.2.0...HEAD
+[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-10.2.1...HEAD
+[10.2.1]: https://github.com/contentful/contentful.java/compare/java-sdk-10.2.0...java-sdk-10.2.1
 [10.2.0]: https://github.com/contentful/contentful.java/compare/java-sdk-10.1.0...java-sdk-10.2.0
 [10.1.0]: https://github.com/contentful/contentful.java/compare/java-sdk-10.0.0...java-sdk-10.1.0
 [10.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-9.1.1...java-sdk-10.0.0
