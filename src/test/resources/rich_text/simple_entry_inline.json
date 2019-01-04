@@ -1,0 +1,173 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 1,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "<space_id>"
+          }
+        },
+        "id": "3sngkenyYwQsouQeSWKAO6",
+        "type": "Entry",
+        "createdAt": "2018-10-31T10:47:06.905Z",
+        "updatedAt": "2019-01-04T14:06:48.066Z",
+        "environment": {
+          "sys": {
+            "id": "human-readable",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "revision": 2,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "rich"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "name": "simple_entry_inline",
+        "rich": {
+          "data": {},
+          "content": [
+            {
+              "data": {},
+              "content": [
+                {
+                  "data": {},
+                  "marks": [],
+                  "value": "Inline entry to hello world:",
+                  "nodeType": "text"
+                },
+                {
+                  "data": {
+                    "target": {
+                      "sys": {
+                        "id": "BvBm2SNTEs40wUwyoI0Qo",
+                        "type": "Link",
+                        "linkType": "Entry"
+                      }
+                    }
+                  },
+                  "content": [],
+                  "nodeType": "embedded-entry-inline"
+                },
+                {
+                  "data": {},
+                  "marks": [],
+                  "value": "",
+                  "nodeType": "text"
+                }
+              ],
+              "nodeType": "paragraph"
+            }
+          ],
+          "nodeType": "document"
+        }
+      }
+    }
+  ],
+  "includes": {
+    "Entry": [
+      {
+        "sys": {
+          "space": {
+            "sys": {
+              "type": "Link",
+              "linkType": "Space",
+              "id": "<space_id>"
+            }
+          },
+          "id": "BvBm2SNTEs40wUwyoI0Qo",
+          "type": "Entry",
+          "createdAt": "2018-10-17T13:25:57.926Z",
+          "updatedAt": "2019-01-04T14:07:37.469Z",
+          "environment": {
+            "sys": {
+              "id": "human-readable",
+              "type": "Link",
+              "linkType": "Environment"
+            }
+          },
+          "revision": 4,
+          "contentType": {
+            "sys": {
+              "type": "Link",
+              "linkType": "ContentType",
+              "id": "rich"
+            }
+          },
+          "locale": "en-US"
+        },
+        "fields": {
+          "name": "Hello World",
+          "rich": {
+            "data": {},
+            "content": [
+              {
+                "data": {},
+                "content": [
+                  {
+                    "data": {},
+                    "marks": [
+                      {
+                        "type": "bold"
+                      }
+                    ],
+                    "value": "Hello",
+                    "nodeType": "text"
+                  },
+                  {
+                    "data": {},
+                    "marks": [],
+                    "value": " ",
+                    "nodeType": "text"
+                  },
+                  {
+                    "data": {},
+                    "marks": [
+                      {
+                        "type": "italic"
+                      }
+                    ],
+                    "value": "World",
+                    "nodeType": "text"
+                  },
+                  {
+                    "data": {},
+                    "marks": [
+                      {
+                        "type": "underline"
+                      }
+                    ],
+                    "value": "!",
+                    "nodeType": "text"
+                  },
+                  {
+                    "data": {},
+                    "marks": [],
+                    "value": " Entry for consumption through hyperlinks",
+                    "nodeType": "text"
+                  }
+                ],
+                "nodeType": "paragraph"
+              }
+            ],
+            "nodeType": "document"
+          }
+        }
+      }
+    ]
+  }
+}

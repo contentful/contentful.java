@@ -1,0 +1,82 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 1,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "<space_id>"
+          }
+        },
+        "id": "19QAcMqhFWUIi4EE4GQ00a",
+        "type": "Entry",
+        "createdAt": "2018-10-31T10:23:22.650Z",
+        "updatedAt": "2018-10-31T10:23:22.650Z",
+        "environment": {
+          "sys": {
+            "id": "human-readable",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "revision": 1,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "rich"
+          }
+        },
+        "locale": "en-US"
+      },
+      "fields": {
+        "name": "simple_hyperlink",
+        "rich": {
+          "data": {},
+          "content": [
+            {
+              "data": {},
+              "content": [
+                {
+                  "data": {},
+                  "marks": [],
+                  "value": "",
+                  "nodeType": "text"
+                },
+                {
+                  "data": {
+                    "uri": "https://www.example.com/"
+                  },
+                  "content": [
+                    {
+                      "data": {},
+                      "marks": [],
+                      "value": "Regular hyperlink to example.com",
+                      "nodeType": "text"
+                    }
+                  ],
+                  "nodeType": "hyperlink"
+                },
+                {
+                  "data": {},
+                  "marks": [],
+                  "value": "",
+                  "nodeType": "text"
+                }
+              ],
+              "nodeType": "paragraph"
+            }
+          ],
+          "nodeType": "document"
+        }
+      }
+    }
+  ]
+}

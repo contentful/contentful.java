@@ -165,8 +165,14 @@ public class RichTextFactory {
     RESOLVER_MAP.put("ordered-list", new BlockResolver<>(CDARichOrderedList::new));
     RESOLVER_MAP.put("unordered-list", new BlockResolver<>(CDARichUnorderedList::new));
     RESOLVER_MAP.put("hyperlink", new BlockAndDataResolver<>(CDARichHyperLink::new, "data"));
+    RESOLVER_MAP.put("entry-hyperlink", new BlockAndDataResolver<>(CDARichHyperLink::new, "data"));
+    RESOLVER_MAP.put("asset-hyperlink", new BlockAndDataResolver<>(CDARichHyperLink::new, "data"));
     RESOLVER_MAP.put("embedded-entry-block",
-        new BlockAndDataResolver<>(CDARichEmbeddedLink::new, "data"));
+        new BlockAndDataResolver<>(CDARichEmbeddedBlock::new, "data"));
+    RESOLVER_MAP.put("embedded-entry-inline",
+        new BlockAndDataResolver<>(CDARichEmbeddedInline::new, "data"));
+    RESOLVER_MAP.put("embedded-asset-block",
+        new BlockAndDataResolver<>(CDARichEmbeddedBlock::new, "data"));
     RESOLVER_MAP.put("heading-1", new HeadingResolver(HEADING_LEVEL_1));
     RESOLVER_MAP.put("heading-2", new HeadingResolver(HEADING_LEVEL_2));
     RESOLVER_MAP.put("heading-3", new HeadingResolver(HEADING_LEVEL_3));
