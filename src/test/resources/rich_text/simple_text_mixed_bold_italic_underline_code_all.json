@@ -18,15 +18,15 @@
         "id": "2D1cTTbKDCgY0UAKsCYAea",
         "type": "Entry",
         "createdAt": "2018-10-17T13:32:30.761Z",
-        "updatedAt": "2018-10-17T13:32:30.761Z",
+        "updatedAt": "2019-01-04T14:11:14.470Z",
         "environment": {
           "sys": {
-            "id": "master",
+            "id": "human-readable",
             "type": "Link",
             "linkType": "Environment"
           }
         },
-        "revision": 1,
+        "revision": 2,
         "contentType": {
           "sys": {
             "type": "Link",
@@ -39,98 +39,92 @@
       "fields": {
         "name": "simple_text_mixed_bold_italic_underline_code_all",
         "rich": {
+          "data": {},
           "content": [
             {
               "data": {},
               "content": [
                 {
+                  "data": {},
                   "marks": [
                     {
-                      "data": {},
-                      "type": "bold",
-                      "object": "mark"
+                      "type": "bold"
                     }
                   ],
-                  "value": "This",
+                  "value": "bold",
                   "nodeType": "text"
                 },
                 {
+                  "data": {},
                   "marks": [],
                   "value": " ",
                   "nodeType": "text"
                 },
                 {
+                  "data": {},
                   "marks": [
                     {
-                      "data": {},
-                      "type": "italic",
-                      "object": "mark"
+                      "type": "italic"
                     }
                   ],
-                  "value": "is",
+                  "value": "italic",
                   "nodeType": "text"
                 },
                 {
+                  "data": {},
                   "marks": [],
                   "value": " ",
                   "nodeType": "text"
                 },
                 {
+                  "data": {},
                   "marks": [
                     {
-                      "data": {},
-                      "type": "underline",
-                      "object": "mark"
+                      "type": "underline"
                     }
                   ],
-                  "value": "some",
+                  "value": "underline",
                   "nodeType": "text"
                 },
                 {
+                  "data": {},
                   "marks": [],
                   "value": " ",
                   "nodeType": "text"
                 },
                 {
+                  "data": {},
                   "marks": [
                     {
-                      "data": {},
-                      "type": "code",
-                      "object": "mark"
+                      "type": "code"
                     }
                   ],
-                  "value": "simple",
+                  "value": "code",
                   "nodeType": "text"
                 },
                 {
+                  "data": {},
                   "marks": [],
                   "value": " ",
                   "nodeType": "text"
                 },
                 {
+                  "data": {},
                   "marks": [
                     {
-                      "data": {},
-                      "type": "bold",
-                      "object": "mark"
+                      "type": "bold"
                     },
                     {
-                      "data": {},
-                      "type": "italic",
-                      "object": "mark"
+                      "type": "italic"
                     },
                     {
-                      "data": {},
-                      "type": "underline",
-                      "object": "mark"
+                      "type": "underline"
                     },
                     {
-                      "data": {},
-                      "type": "code",
-                      "object": "mark"
+                      "type": "code"
                     }
                   ],
-                  "value": "text",
+                  "value": "all",
                   "nodeType": "text"
                 }
               ],

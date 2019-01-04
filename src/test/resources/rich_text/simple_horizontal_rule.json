@@ -21,7 +21,7 @@
         "updatedAt": "2018-10-17T13:32:34.679Z",
         "environment": {
           "sys": {
-            "id": "master",
+            "id": "human-readable",
             "type": "Link",
             "linkType": "Environment"
           }

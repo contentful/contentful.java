@@ -37,7 +37,7 @@ public class RichTextTest extends BaseTest {
     assertThat(heading.getContent()).hasSize(1);
     assertThat(heading.getContent().get(0)).isInstanceOf(CDARichText.class);
     final CDARichText text = (CDARichText) heading.getContent().get(0);
-    assertThat(text.getText()).isEqualTo("This is some simple text");
+    assertThat(text.getText()).isEqualTo("This is a level one headline");
   }
 
   @Test
@@ -55,7 +55,7 @@ public class RichTextTest extends BaseTest {
     assertThat(heading.getContent()).hasSize(1);
     assertThat(heading.getContent().get(0)).isInstanceOf(CDARichText.class);
     final CDARichText text = (CDARichText) heading.getContent().get(0);
-    assertThat(text.getText()).isEqualTo("This is some simple text");
+    assertThat(text.getText()).isEqualTo("This is headline level 2");
   }
 
   @Test
@@ -73,7 +73,7 @@ public class RichTextTest extends BaseTest {
     assertThat(heading.getContent()).hasSize(1);
     assertThat(heading.getContent().get(0)).isInstanceOf(CDARichText.class);
     final CDARichText text = (CDARichText) heading.getContent().get(0);
-    assertThat(text.getText()).isEqualTo("This is some simple text");
+    assertThat(text.getText()).isEqualTo("This is heading level 3");
   }
 
   @Test
@@ -91,7 +91,7 @@ public class RichTextTest extends BaseTest {
     assertThat(heading.getContent()).hasSize(1);
     assertThat(heading.getContent().get(0)).isInstanceOf(CDARichText.class);
     final CDARichText text = (CDARichText) heading.getContent().get(0);
-    assertThat(text.getText()).isEqualTo("This is some simple text");
+    assertThat(text.getText()).isEqualTo("Heading 4 looks like this");
   }
 
   @Test
@@ -109,7 +109,7 @@ public class RichTextTest extends BaseTest {
     assertThat(heading.getContent()).hasSize(1);
     assertThat(heading.getContent().get(0)).isInstanceOf(CDARichText.class);
     final CDARichText text = (CDARichText) heading.getContent().get(0);
-    assertThat(text.getText()).isEqualTo("This is some simple text");
+    assertThat(text.getText()).isEqualTo("Headline of level 5.");
   }
 
   @Test
@@ -127,7 +127,7 @@ public class RichTextTest extends BaseTest {
     assertThat(heading.getContent()).hasSize(1);
     assertThat(heading.getContent().get(0)).isInstanceOf(CDARichText.class);
     final CDARichText text = (CDARichText) heading.getContent().get(0);
-    assertThat(text.getText()).isEqualTo("This is some simple text");
+    assertThat(text.getText()).isEqualTo("This is heading is level 6.");
   }
 
   @Test
@@ -152,7 +152,7 @@ public class RichTextTest extends BaseTest {
     assertThat(rich.getContent().get(0)).isInstanceOf(CDARichOrderedList.class);
 
     final CDARichOrderedList list = (CDARichOrderedList) rich.getContent().get(0);
-    assertThat(list.getContent()).hasSize(5);
+    assertThat(list.getContent()).hasSize(6);
 
     final CDARichBlock item = (CDARichBlock) list.getContent().get(0);
     assertThat(item.getContent()).hasSize(1);
@@ -182,7 +182,7 @@ public class RichTextTest extends BaseTest {
     assertThat(block.getContent()).hasSize(1);
 
     final CDARichText text = (CDARichText) block.getContent().get(0);
-    assertThat(text.getText()).isEqualTo("This is some simple blockquote");
+    assertThat(text.getText()).isEqualTo("This is a blockquote");
   }
 
   @Test
@@ -219,7 +219,7 @@ public class RichTextTest extends BaseTest {
     final CDARichText text = (CDARichText) block.getContent().get(0);
     assertThat(text.getMarks()).hasSize(1);
     assertThat(text.getMarks().get(0)).isInstanceOf(CDARichMarkBold.class);
-    assertThat(text.getText()).isEqualTo("This is some simple text");
+    assertThat(text.getText()).isEqualTo("This is bold text");
   }
 
   @Test
@@ -239,7 +239,7 @@ public class RichTextTest extends BaseTest {
     final CDARichText text = (CDARichText) block.getContent().get(0);
     assertThat(text.getMarks()).hasSize(1);
     assertThat(text.getMarks().get(0)).isInstanceOf(CDARichMarkCode.class);
-    assertThat(text.getText()).isEqualTo("This is some simple text");
+    assertThat(text.getText()).isEqualTo("This is code");
   }
 
   @Test
@@ -259,7 +259,7 @@ public class RichTextTest extends BaseTest {
     final CDARichText text = (CDARichText) block.getContent().get(0);
     assertThat(text.getMarks()).hasSize(1);
     assertThat(text.getMarks().get(0)).isInstanceOf(CDARichMarkItalic.class);
-    assertThat(text.getText()).isEqualTo("This is some simple text");
+    assertThat(text.getText()).isEqualTo("This is italic text");
   }
 
   @Test
@@ -279,7 +279,7 @@ public class RichTextTest extends BaseTest {
     final CDARichText text = (CDARichText) block.getContent().get(0);
     assertThat(text.getMarks()).hasSize(1);
     assertThat(text.getMarks().get(0)).isInstanceOf(CDARichMarkUnderline.class);
-    assertThat(text.getText()).isEqualTo("This is some simple text");
+    assertThat(text.getText()).isEqualTo("This is some underlined text");
   }
 
   @Test
@@ -296,7 +296,7 @@ public class RichTextTest extends BaseTest {
     assertThat(block.getContent()).hasSize(9);
 
     final CDARichText first = (CDARichText) block.getContent().get(0);
-    assertThat(first.getText()).isEqualTo("This");
+    assertThat(first.getText()).isEqualTo("bold");
     assertThat(first.getMarks()).hasSize(1);
     assertThat(first.getMarks().get(0)).isInstanceOf(CDARichMarkBold.class);
 
@@ -305,7 +305,7 @@ public class RichTextTest extends BaseTest {
     assertThat(second.getMarks()).hasSize(0);
 
     final CDARichText third = (CDARichText) block.getContent().get(2);
-    assertThat(third.getText()).isEqualTo("is");
+    assertThat(third.getText()).isEqualTo("italic");
     assertThat(third.getMarks()).hasSize(1);
     assertThat(third.getMarks().get(0)).isInstanceOf(CDARichMarkItalic.class);
 
@@ -314,7 +314,7 @@ public class RichTextTest extends BaseTest {
     assertThat(fourth.getMarks()).hasSize(0);
 
     final CDARichText fifth = (CDARichText) block.getContent().get(4);
-    assertThat(fifth.getText()).isEqualTo("some");
+    assertThat(fifth.getText()).isEqualTo("underline");
     assertThat(fifth.getMarks()).hasSize(1);
     assertThat(fifth.getMarks().get(0)).isInstanceOf(CDARichMarkUnderline.class);
 
@@ -323,7 +323,7 @@ public class RichTextTest extends BaseTest {
     assertThat(sixth.getMarks()).hasSize(0);
 
     final CDARichText senventh = (CDARichText) block.getContent().get(6);
-    assertThat(senventh.getText()).isEqualTo("simple");
+    assertThat(senventh.getText()).isEqualTo("code");
     assertThat(senventh.getMarks()).hasSize(1);
     assertThat(senventh.getMarks().get(0)).isInstanceOf(CDARichMarkCode.class);
 
@@ -332,7 +332,7 @@ public class RichTextTest extends BaseTest {
     assertThat(eights.getMarks()).hasSize(0);
 
     final CDARichText ninth = (CDARichText) block.getContent().get(8);
-    assertThat(ninth.getText()).isEqualTo("text");
+    assertThat(ninth.getText()).isEqualTo("all");
     assertThat(ninth.getMarks()).hasSize(4);
     assertThat(ninth.getMarks().get(0)).isInstanceOf(CDARichMarkBold.class);
     assertThat(ninth.getMarks().get(1)).isInstanceOf(CDARichMarkItalic.class);
@@ -382,7 +382,7 @@ public class RichTextTest extends BaseTest {
     assertThat(link.getContent().get(0)).isInstanceOf(CDARichText.class);
 
     final CDARichText text = (CDARichText) link.getContent().get(0);
-    assertThat(text.getText()).isEqualTo("This is some simple text");
+    assertThat(text.getText()).isEqualTo("This is a text with linking to contentful.com");
   }
 
   @Test
@@ -397,7 +397,7 @@ public class RichTextTest extends BaseTest {
 
     final CDARichUnorderedList list = (CDARichUnorderedList) rich.getContent().get(0);
     assertThat(list.getDecoration()).isEqualTo("*");
-    assertThat(list.getContent()).hasSize(6);
+    assertThat(list.getContent()).hasSize(5);
 
     final CDARichBlock item = (CDARichBlock) list.getContent().get(0);
     assertThat(item.getContent()).hasSize(1);

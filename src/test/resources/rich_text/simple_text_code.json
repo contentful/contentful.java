@@ -18,15 +18,15 @@
         "id": "6VkkamQ5zO4qWIugKkWowK",
         "type": "Entry",
         "createdAt": "2018-10-17T13:32:33.090Z",
-        "updatedAt": "2018-10-17T13:32:33.090Z",
+        "updatedAt": "2019-01-04T14:05:26.322Z",
         "environment": {
           "sys": {
-            "id": "master",
+            "id": "human-readable",
             "type": "Link",
             "linkType": "Environment"
           }
         },
-        "revision": 1,
+        "revision": 3,
         "contentType": {
           "sys": {
             "type": "Link",
@@ -39,19 +39,19 @@
       "fields": {
         "name": "simple_text_code",
         "rich": {
+          "data": {},
           "content": [
             {
               "data": {},
               "content": [
                 {
+                  "data": {},
                   "marks": [
                     {
-                      "data": {},
-                      "type": "code",
-                      "object": "mark"
+                      "type": "code"
                     }
                   ],
-                  "value": "This is some simple text",
+                  "value": "This is code",
                   "nodeType": "text"
                 }
               ],

@@ -18,15 +18,15 @@
         "id": "1eIWMi8RNEO0ii4OsAUeow",
         "type": "Entry",
         "createdAt": "2018-10-17T13:32:33.252Z",
-        "updatedAt": "2018-10-17T13:32:33.252Z",
+        "updatedAt": "2019-01-04T14:09:14.741Z",
         "environment": {
           "sys": {
-            "id": "master",
+            "id": "human-readable",
             "type": "Link",
             "linkType": "Environment"
           }
         },
-        "revision": 1,
+        "revision": 2,
         "contentType": {
           "sys": {
             "type": "Link",
@@ -39,19 +39,19 @@
       "fields": {
         "name": "simple_text_italic",
         "rich": {
+          "data": {},
           "content": [
             {
               "data": {},
               "content": [
                 {
+                  "data": {},
                   "marks": [
                     {
-                      "data": {},
-                      "type": "italic",
-                      "object": "mark"
+                      "type": "italic"
                     }
                   ],
-                  "value": "This is some simple text",
+                  "value": "This is italic text",
                   "nodeType": "text"
                 }
               ],

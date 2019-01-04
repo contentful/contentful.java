@@ -18,15 +18,15 @@
         "id": "7Mlh48fMysQqmSwmWUeAU4",
         "type": "Entry",
         "createdAt": "2018-10-17T13:32:31.439Z",
-        "updatedAt": "2018-10-17T13:32:31.439Z",
+        "updatedAt": "2019-01-04T14:10:25.230Z",
         "environment": {
           "sys": {
-            "id": "master",
+            "id": "human-readable",
             "type": "Link",
             "linkType": "Environment"
           }
         },
-        "revision": 1,
+        "revision": 2,
         "contentType": {
           "sys": {
             "type": "Link",
@@ -39,6 +39,7 @@
       "fields": {
         "name": "simple_ordered_list",
         "rich": {
+          "data": {},
           "content": [
             {
               "data": {},
@@ -50,6 +51,7 @@
                       "data": {},
                       "content": [
                         {
+                          "data": {},
                           "marks": [],
                           "value": "This ",
                           "nodeType": "text"
@@ -67,6 +69,7 @@
                       "data": {},
                       "content": [
                         {
+                          "data": {},
                           "marks": [],
                           "value": "is",
                           "nodeType": "text"
@@ -84,8 +87,9 @@
                       "data": {},
                       "content": [
                         {
+                          "data": {},
                           "marks": [],
-                          "value": "some",
+                          "value": "an",
                           "nodeType": "text"
                         }
                       ],
@@ -101,8 +105,9 @@
                       "data": {},
                       "content": [
                         {
+                          "data": {},
                           "marks": [],
-                          "value": "simple",
+                          "value": "ordered",
                           "nodeType": "text"
                         }
                       ],
@@ -118,8 +123,27 @@
                       "data": {},
                       "content": [
                         {
+                          "data": {},
                           "marks": [],
-                          "value": "text",
+                          "value": "list",
+                          "nodeType": "text"
+                        }
+                      ],
+                      "nodeType": "paragraph"
+                    }
+                  ],
+                  "nodeType": "list-item"
+                },
+                {
+                  "data": {},
+                  "content": [
+                    {
+                      "data": {},
+                      "content": [
+                        {
+                          "data": {},
+                          "marks": [],
+                          "value": "Element number 6",
                           "nodeType": "text"
                         }
                       ],
@@ -135,6 +159,7 @@
               "data": {},
               "content": [
                 {
+                  "data": {},
                   "marks": [],
                   "value": "",
                   "nodeType": "text"

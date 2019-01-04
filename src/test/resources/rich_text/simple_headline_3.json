@@ -18,15 +18,15 @@
         "id": "2PuzK2bTpCIuQA6gc6a4sq",
         "type": "Entry",
         "createdAt": "2018-10-17T13:32:28.884Z",
-        "updatedAt": "2018-10-17T13:32:28.884Z",
+        "updatedAt": "2019-01-04T14:12:04.434Z",
         "environment": {
           "sys": {
-            "id": "master",
+            "id": "human-readable",
             "type": "Link",
             "linkType": "Environment"
           }
         },
-        "revision": 1,
+        "revision": 2,
         "contentType": {
           "sys": {
             "type": "Link",
@@ -39,13 +39,15 @@
       "fields": {
         "name": "simple_headline_3",
         "rich": {
+          "data": {},
           "content": [
             {
               "data": {},
               "content": [
                 {
+                  "data": {},
                   "marks": [],
-                  "value": "This is some simple text",
+                  "value": "This is heading level 3",
                   "nodeType": "text"
                 }
               ],
@@ -55,8 +57,9 @@
               "data": {},
               "content": [
                 {
+                  "data": {},
                   "marks": [],
-                  "value": "asdfadfadf",
+                  "value": "",
                   "nodeType": "text"
                 }
               ],

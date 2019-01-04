@@ -18,15 +18,15 @@
         "id": "52TyxOtKLCQu6mu8aACYKa",
         "type": "Entry",
         "createdAt": "2018-10-17T13:32:27.618Z",
-        "updatedAt": "2018-10-17T13:32:27.618Z",
+        "updatedAt": "2019-01-04T14:13:18.764Z",
         "environment": {
           "sys": {
-            "id": "master",
+            "id": "human-readable",
             "type": "Link",
             "linkType": "Environment"
           }
         },
-        "revision": 1,
+        "revision": 2,
         "contentType": {
           "sys": {
             "type": "Link",
@@ -39,13 +39,15 @@
       "fields": {
         "name": "simple_headline_5",
         "rich": {
+          "data": {},
           "content": [
             {
               "data": {},
               "content": [
                 {
+                  "data": {},
                   "marks": [],
-                  "value": "This is some simple text",
+                  "value": "Headline of level 5.",
                   "nodeType": "text"
                 }
               ],
@@ -55,8 +57,9 @@
               "data": {},
               "content": [
                 {
+                  "data": {},
                   "marks": [],
-                  "value": "asdfadfadf",
+                  "value": "",
                   "nodeType": "text"
                 }
               ],

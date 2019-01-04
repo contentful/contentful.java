@@ -18,15 +18,15 @@
         "id": "104F4Lbe2gUKuo42yGygsQ",
         "type": "Entry",
         "createdAt": "2018-10-17T13:32:33.642Z",
-        "updatedAt": "2018-10-17T13:32:33.642Z",
+        "updatedAt": "2019-01-04T14:08:56.346Z",
         "environment": {
           "sys": {
-            "id": "master",
+            "id": "human-readable",
             "type": "Link",
             "linkType": "Environment"
           }
         },
-        "revision": 1,
+        "revision": 3,
         "contentType": {
           "sys": {
             "type": "Link",
@@ -39,11 +39,13 @@
       "fields": {
         "name": "simple_text_with_link",
         "rich": {
+          "data": {},
           "content": [
             {
               "data": {},
               "content": [
                 {
+                  "data": {},
                   "marks": [],
                   "value": "",
                   "nodeType": "text"
@@ -54,14 +56,16 @@
                   },
                   "content": [
                     {
+                      "data": {},
                       "marks": [],
-                      "value": "This is some simple text",
+                      "value": "This is a text with linking to contentful.com",
                       "nodeType": "text"
                     }
                   ],
                   "nodeType": "hyperlink"
                 },
                 {
+                  "data": {},
                   "marks": [],
                   "value": "",
                   "nodeType": "text"
