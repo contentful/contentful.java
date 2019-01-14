@@ -369,7 +369,7 @@ See
 License
 =======
 
-> Copyright (c) 2018 Contentful GmbH. See [LICENSE.txt](LICENSE.txt) for further details.
+> Copyright (c) 2019 Contentful GmbH. See [LICENSE.txt](LICENSE.txt) for further details.
 
 
 Reaching Contentful
