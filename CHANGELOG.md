@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Version [10.2.2] - (TBD)
+- Update dependencies
+
 ## Version [10.2.1] - (2019-01-14)
 - Add missing links for rich-text nodes.
 
@@ -227,12 +230,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/java-sdk-10.2.1...HEAD
-[10.2.1]: https://github.com/contentful/contentful.java/compare/java-sdk-10.2.0...java-sdk-10.2.1
-[10.2.0]: https://github.com/contentful/contentful.java/compare/java-sdk-10.1.0...java-sdk-10.2.0
-[10.1.0]: https://github.com/contentful/contentful.java/compare/java-sdk-10.0.0...java-sdk-10.1.0
-[10.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-9.1.1...java-sdk-10.0.0
-[9.1.1]: https://github.com/contentful/contentful.java/compare/java-sdk-9.1.0...java-sdk-9.1.1
+[unreleased]: https://github.com/contentful/contentful.java/compare/10.2.2...HEAD
+[10.2.1]: https://github.com/contentful/contentful.java/compare/10.2.1...10.2.2
+[10.2.1]: https://github.com/contentful/contentful.java/compare/10.2.0...10.2.1
+[10.2.1]: https://github.com/contentful/contentful.java/compare/10.2.0...10.2.1
+[10.2.0]: https://github.com/contentful/contentful.java/compare/10.1.0...10.2.0
+[10.1.0]: https://github.com/contentful/contentful.java/compare/10.0.0...10.1.0
+[10.0.0]: https://github.com/contentful/contentful.java/compare/9.1.1...java-sdk-10.0.0
+[9.1.1]: https://github.com/contentful/contentful.java/compare/java-sdk-9.1.0...9.1.1
 [9.1.0]: https://github.com/contentful/contentful.java/compare/java-sdk-9.0.1...java-sdk-9.1.0
 [9.0.1]: https://github.com/contentful/contentful.java/compare/java-sdk-9.0.0...java-sdk-9.0.1
 [9.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-8.0.1...java-sdk-9.0.0
