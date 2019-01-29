@@ -4,7 +4,6 @@ import com.contentful.java.cda.lib.EnqueueResponseRule;
 import com.contentful.java.cda.lib.TestCallback;
 import com.contentful.java.cda.lib.TestResponse;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -12,7 +11,6 @@ import org.junit.Rule;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.logging.LogManager;
 
@@ -21,6 +19,8 @@ import okhttp3.mockwebserver.MockWebServer;
 
 import static com.contentful.java.cda.Util.checkNotNull;
 import static com.google.common.truth.Truth.assertThat;
+import static java.nio.charset.Charset.defaultCharset;
+import static org.apache.commons.io.FileUtils.readFileToString;
 
 public class BaseTest {
   public static final String DEFAULT_TOKEN = "test_token";
@@ -83,9 +83,15 @@ public class BaseTest {
   protected void enqueue(TestResponse response) throws IOException {
     URL resource = getClass().getClassLoader().getResource(response.getFileName());
     checkNotNull(resource, "File not found: " + response.getFileName());
-    server.enqueue(new MockResponse().setResponseCode(response.getCode())
-        .setBody(FileUtils.readFileToString(new File(resource.getFile()), Charset.defaultCharset()))
-        .setHeaders(response.headers()));
+    final MockResponse mock = new MockResponse()
+        .setResponseCode(response.getCode())
+        .setBody(readFileToString(new File(resource.getFile()), defaultCharset()));
+
+    if (response.headers().size() > 0) {
+      mock.setHeaders(response.headers());
+    }
+
+    server.enqueue(mock);
   }
 
   public BaseTest setResponseQueue(List<TestResponse> responseQueue) {
