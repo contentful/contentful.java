@@ -1,6 +1,9 @@
 package com.contentful.java.cda;
 
 import io.reactivex.Flowable;
+import io.reactivex.functions.Function;
+import org.reactivestreams.Publisher;
+import retrofit2.Response;
 
 import static com.contentful.java.cda.Util.checkNotNull;
 
@@ -44,14 +47,25 @@ public class SyncQuery {
       token = syncToken;
     }
     return client.cacheAll(true)
-        .flatMap(cache -> client.service.sync(
-            client.spaceId,
-            client.environmentId,
-            initial ? initial : null,
-            token,
-            initial && type != null ? type.getName() : null,
-            initial && type != null ? type.getContentType() : null)).map(
-            synchronizedSpace -> ResourceFactory.sync(synchronizedSpace, space, client)
+        .flatMap(new Function<Cache, Publisher<Response<SynchronizedSpace>>>() {
+                   @Override
+                   public Publisher<Response<SynchronizedSpace>> apply(Cache cache) {
+                     return client.service.sync(
+                         client.spaceId,
+                         client.environmentId,
+                         initial ? initial : null,
+                         token,
+                         initial && type != null ? type.getName() : null,
+                         initial && type != null ? type.getContentType() : null);
+                   }
+                 }
+        ).map(
+            new Function<Response<SynchronizedSpace>, SynchronizedSpace>() {
+              @Override
+              public SynchronizedSpace apply(Response<SynchronizedSpace> synchronizedSpace) {
+                return ResourceFactory.sync(synchronizedSpace, space, client);
+              }
+            }
         );
   }
 

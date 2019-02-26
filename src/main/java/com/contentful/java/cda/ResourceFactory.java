@@ -2,6 +2,7 @@ package com.contentful.java.cda;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import retrofit2.Response;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,8 +11,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import retrofit2.Response;
 
 import static com.contentful.java.cda.rich.RichTextFactory.resolveRichTextField;
 

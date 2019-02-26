@@ -1,17 +1,19 @@
 package com.contentful.java.cda;
 
+import io.reactivex.Flowable;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import io.reactivex.Flowable;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * This query will tranform an incoming contentful entry to a custom type.
@@ -57,11 +59,11 @@ public class TransformQuery<Transformed>
 
   /**
    * This annotation marks a system field.
-   *
+   * <p>
    * System fields are returned in the {@link CDAEntry#getAttribute(String)} method. The parameter
    * will be the name of this attribute. You can define it by either overwriting the annotations
    * value, or naming the annotated field accordingly.
-   *
+   * <p>
    * If a space, or other non primary data type from the attributes is requested, please use a
    * {@link java.util.Map} to capture all the fields.
    */
@@ -147,8 +149,19 @@ public class TransformQuery<Transformed>
     try {
       return baseQuery()
           .one(id)
-          .filter(entry -> entry.contentType().id().equals(contentTypeId))
-          .map(this::transform);
+          .filter(new Predicate<CDAEntry>() {
+            @Override
+            public boolean test(CDAEntry entry) {
+              return entry.contentType().id()
+                  .equals(contentTypeId);
+            }
+          })
+          .map(new Function<CDAEntry, Transformed>() {
+            @Override
+            public Transformed apply(CDAEntry entry) throws Exception {
+              return TransformQuery.this.transform(entry);
+            }
+          });
     } catch (NullPointerException e) {
       throw new CDAResourceNotFoundException(CDAEntry.class, id);
     }
@@ -167,7 +180,12 @@ public class TransformQuery<Transformed>
     return Callbacks.subscribeAsync(
         baseQuery()
             .one(id)
-            .filter(entry -> entry.contentType().id().equals(contentTypeId))
+            .filter(new Predicate<CDAEntry>() {
+              @Override
+              public boolean test(CDAEntry entry) {
+                return entry.contentType().id().equals(contentTypeId);
+              }
+            })
             .map(this::transform),
         callback,
         client);
@@ -185,11 +203,20 @@ public class TransformQuery<Transformed>
     return baseQuery()
         .all()
         .map(
-            array -> array.items.stream()
-                .filter(entry -> entry instanceof CDAEntry
-                    && ((CDAEntry) entry).contentType().id().equals(contentTypeId))
-                .map(item -> transform((CDAEntry) item))
-                .collect(toList())
+            new Function<CDAArray, Collection<Transformed>>() {
+              @Override
+              public Collection<Transformed> apply(CDAArray array) {
+                final ArrayList<Transformed> result = new ArrayList<>(array.total());
+
+                for (final CDAResource resource : array.items) {
+                  if (resource instanceof CDAEntry
+                      && ((CDAEntry) resource).contentType().id().equals(contentTypeId)) {
+                    result.add(TransformQuery.this.transform((CDAEntry) resource));
+                  }
+                }
+                return result;
+              }
+            }
         );
   }
 
@@ -206,11 +233,20 @@ public class TransformQuery<Transformed>
         baseQuery()
             .all()
             .map(
-                array -> array.items.stream()
-                    .filter(entry -> entry instanceof CDAEntry
-                        && ((CDAEntry) entry).contentType().id().equals(contentTypeId))
-                    .map(item -> transform((CDAEntry) item))
-                    .collect(toList())
+                new Function<CDAArray, List<Transformed>>() {
+                  @Override
+                  public List<Transformed> apply(CDAArray array) {
+                    final ArrayList<Transformed> result = new ArrayList<>(array.total());
+
+                    for (final CDAResource resource : array.items) {
+                      if (resource instanceof CDAEntry
+                          && ((CDAEntry) resource).contentType().id().equals(contentTypeId)) {
+                        result.add(TransformQuery.this.transform((CDAEntry) resource));
+                      }
+                    }
+                    return result;
+                  }
+                }
             ),
         callback,
         client);

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import static com.contentful.java.cda.ResourceUtils.ensureContentType;
 
@@ -31,6 +30,10 @@ public class RichTextFactory {
    */
   private interface Resolver {
     CDARichNode resolve(Map<String, Object> raw);
+  }
+
+  private interface Supplier<T> {
+    T get();
   }
 
   /**
@@ -57,7 +60,8 @@ public class RichTextFactory {
      * @param raw representation of the block node coming from Contentful.
      * @return the rich node if resolving was successful.
      */
-    @Override public CDARichNode resolve(Map<String, Object> raw) {
+    @Override
+    public CDARichNode resolve(Map<String, Object> raw) {
       final T resolved = getCDAType(raw);
 
       final List<Map<String, Object>> contents = (List<Map<String, Object>>) raw.get("content");
@@ -93,7 +97,12 @@ public class RichTextFactory {
      * @param level the level of the headings nesting. Should be positive and less then 7.
      */
     HeadingResolver(int level) {
-      super(() -> new CDARichHeading(level));
+      super(new Supplier<CDARichHeading>() {
+        @Override
+        public CDARichHeading get() {
+          return new CDARichHeading(level);
+        }
+      });
       this.level = level;
     }
   }
@@ -151,26 +160,94 @@ public class RichTextFactory {
 
   static {
     // add leafs
-    RESOLVER_MAP.put("text", raw -> new CDARichText(
-        (CharSequence) raw.get("value"),
-        resolveMarks((List<Map<String, Object>>) raw.get("marks"))
-    ));
-    RESOLVER_MAP.put("hr", raw -> new CDARichHorizontalRule());
+    RESOLVER_MAP.put("text", new Resolver() {
+      @Override
+      public CDARichNode resolve(Map<String, Object> raw) {
+        return new CDARichText(
+            (CharSequence) raw.get("value"),
+            resolveMarks((List<Map<String, Object>>) raw.get("marks"))
+        );
+      }
+    });
+    RESOLVER_MAP.put("hr", new Resolver() {
+      @Override
+      public CDARichNode resolve(Map<String, Object> raw) {
+        return new CDARichHorizontalRule();
+      }
+    });
 
     // add blocks
-    RESOLVER_MAP.put("blockquote", new BlockResolver<>(CDARichQuote::new));
-    RESOLVER_MAP.put("paragraph", new BlockResolver<>(CDARichParagraph::new));
-    RESOLVER_MAP.put("document", new BlockResolver<>(CDARichDocument::new));
-    RESOLVER_MAP.put("list-item", new BlockResolver<>(CDARichListItem::new));
-    RESOLVER_MAP.put("ordered-list", new BlockResolver<>(CDARichOrderedList::new));
-    RESOLVER_MAP.put("unordered-list", new BlockResolver<>(CDARichUnorderedList::new));
-    RESOLVER_MAP.put("hyperlink", new BlockAndDataResolver<>(CDARichHyperLink::new, "data"));
-    RESOLVER_MAP.put("entry-hyperlink", new BlockAndDataResolver<>(CDARichHyperLink::new, "data"));
-    RESOLVER_MAP.put("asset-hyperlink", new BlockAndDataResolver<>(CDARichHyperLink::new, "data"));
+    RESOLVER_MAP.put("blockquote", new BlockResolver<>(new Supplier<CDARichQuote>() {
+      @Override
+      public CDARichQuote get() {
+        return new CDARichQuote();
+      }
+    }));
+    RESOLVER_MAP.put("paragraph", new BlockResolver<>(new Supplier<CDARichParagraph>() {
+      @Override
+      public CDARichParagraph get() {
+        return new CDARichParagraph();
+      }
+    }));
+    RESOLVER_MAP.put("document", new BlockResolver<>(new Supplier<CDARichDocument>() {
+      @Override
+      public CDARichDocument get() {
+        return new CDARichDocument();
+      }
+    }));
+    RESOLVER_MAP.put("list-item", new BlockResolver<>(new Supplier<CDARichListItem>() {
+      @Override
+      public CDARichListItem get() {
+        return new CDARichListItem();
+      }
+    }));
+    RESOLVER_MAP.put("ordered-list", new BlockResolver<>(new Supplier<CDARichOrderedList>() {
+      @Override
+      public CDARichOrderedList get() {
+        return new CDARichOrderedList();
+      }
+    }));
+    RESOLVER_MAP.put("unordered-list", new BlockResolver<>(new Supplier<CDARichUnorderedList>() {
+      @Override
+      public CDARichUnorderedList get() {
+        return new CDARichUnorderedList();
+      }
+    }));
+    RESOLVER_MAP.put("hyperlink",
+        new BlockAndDataResolver<>(new SupplierWithData<CDARichHyperLink>() {
+          @Override
+          public CDARichHyperLink get(Object target) {
+            return new CDARichHyperLink(target);
+          }
+        }, "data"));
+    RESOLVER_MAP.put("entry-hyperlink",
+        new BlockAndDataResolver<>(new SupplierWithData<CDARichHyperLink>() {
+          @Override
+          public CDARichHyperLink get(Object target) {
+            return new CDARichHyperLink(target);
+          }
+        }, "data"));
+    RESOLVER_MAP.put("asset-hyperlink",
+        new BlockAndDataResolver<>(new SupplierWithData<CDARichHyperLink>() {
+          @Override
+          public CDARichHyperLink get(Object target) {
+            return new CDARichHyperLink(target);
+          }
+        }, "data"));
     RESOLVER_MAP.put("embedded-entry-block",
-        new BlockAndDataResolver<>(CDARichEmbeddedBlock::new, "data"));
+        new BlockAndDataResolver<>(new SupplierWithData<CDARichEmbeddedBlock>() {
+          @Override
+          public CDARichEmbeddedBlock get(Object target) {
+            return new CDARichEmbeddedBlock(target);
+          }
+        }, "data"));
     RESOLVER_MAP.put("embedded-entry-inline",
-        new BlockAndDataResolver<>(CDARichEmbeddedInline::new, "data"));
+        new BlockAndDataResolver<>(new SupplierWithData<CDARichEmbeddedInline>() {
+          @Override
+          public CDARichEmbeddedInline get(Object target) {
+            return new CDARichEmbeddedInline(target);
+          }
+        }, "data"));
     RESOLVER_MAP.put("embedded-asset-block",
         new BlockAndDataResolver<>(CDARichEmbeddedBlock::new, "data"));
     RESOLVER_MAP.put("heading-1", new HeadingResolver(HEADING_LEVEL_1));

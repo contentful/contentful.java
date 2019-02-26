@@ -86,7 +86,12 @@ public class LocaleFallbackTest extends BaseTest {
   }
 
 
-  private static final Namer<CDALocale> localeNamer = CDALocale::code;
+  private static final Namer<CDALocale> localeNamer = new Namer<CDALocale>() {
+    @Override
+    public String name(CDALocale cdaLocale) {
+      return cdaLocale.code();
+    }
+  };
 
   private interface Namer<T> {
     String name(T t);

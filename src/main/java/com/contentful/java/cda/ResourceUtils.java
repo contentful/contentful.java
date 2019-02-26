@@ -1,5 +1,10 @@
 package com.contentful.java.cda;
 
+import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Predicate;
+import retrofit2.Response;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -7,9 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import io.reactivex.Flowable;
-import retrofit2.Response;
 
 import static com.contentful.java.cda.CDAType.ASSET;
 import static com.contentful.java.cda.CDAType.DELETEDASSET;
@@ -201,15 +203,21 @@ public final class ResourceUtils {
     }
 
     Flowable.fromIterable(space.items())
-        .filter(resource -> {
-          CDAType type = resource.type();
-          return DELETEDASSET.equals(type) || DELETEDENTRY.equals(type);
+        .filter(new Predicate<CDAResource>() {
+          @Override
+          public boolean test(CDAResource resource) {
+            CDAType type = resource.type();
+            return DELETEDASSET.equals(type) || DELETEDENTRY.equals(type);
+          }
         })
-        .subscribe(resource -> {
-          if (DELETEDASSET.equals(resource.type())) {
-            assets.add(resource.id());
-          } else {
-            entries.add(resource.id());
+        .subscribe(new Consumer<CDAResource>() {
+          @Override
+          public void accept(CDAResource resource) {
+            if (DELETEDASSET.equals(resource.type())) {
+              assets.add(resource.id());
+            } else {
+              entries.add(resource.id());
+            }
           }
         });
     space.deletedAssets = assets;
