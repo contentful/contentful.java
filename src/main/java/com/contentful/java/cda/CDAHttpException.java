@@ -1,14 +1,14 @@
 package com.contentful.java.cda;
 
-import java.io.IOException;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
-
 import okhttp3.Headers;
 import okhttp3.Request;
 import okhttp3.Response;
 import okio.BufferedSource;
 import okio.Timeout;
+
+import java.io.IOException;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.String.format;
 

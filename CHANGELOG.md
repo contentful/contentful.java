@@ -2,8 +2,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [unreleased]
-- TBD
+## Version [10.3.1] - (2019-02-27)
+- Fix: Do not use `java.util.function`, it might mess up older android phones (`Lollipop` and `Marshmallow`)
 
 ## Version [10.3.0] - (2019-01-30)
 - Add Unwrapping of Contentful entries to custom types.
@@ -234,7 +234,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/10.3.0...HEAD
+[unreleased]: https://github.com/contentful/contentful.java/compare/10.3.1...HEAD
+[10.3.1]: https://github.com/contentful/contentful.java/compare/10.3.0...10.3.1
 [10.3.0]: https://github.com/contentful/contentful.java/compare/10.2.1...10.3.0
 [10.2.1]: https://github.com/contentful/contentful.java/compare/10.2.0...10.2.1
 [10.2.0]: https://github.com/contentful/contentful.java/compare/10.1.0...10.2.0

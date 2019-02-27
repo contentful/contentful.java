@@ -1,14 +1,13 @@
 package com.contentful.java.cda;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
 
 /**
  * Internal class for enabling TLS 1.2 support on https connections, starting from Android 4.4

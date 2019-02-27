@@ -1,8 +1,8 @@
 package com.contentful.java.cda;
 
-import java.util.Map;
-
 import okhttp3.HttpUrl;
+
+import java.util.Map;
 
 import static com.contentful.java.cda.CDAType.ASSET;
 import static com.contentful.java.cda.CDAType.CONTENTTYPE;

@@ -1,12 +1,11 @@
 package com.contentful.java.cda.interceptor;
 
 import com.contentful.java.cda.Logger;
-
-import java.io.IOException;
-
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import java.io.IOException;
 
 //BEGIN TO LONG CODE LINES
 /**
