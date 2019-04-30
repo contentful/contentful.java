@@ -12,6 +12,9 @@ coverage:
                                 threshold: 1
                                 if_not_found: success
                                 if_no_updates: success
+                patch:
+                        default:
+                                threshold: 10
 
 comment:
         behavior: new
