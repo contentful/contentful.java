@@ -282,7 +282,6 @@ public class RichTextFactory {
    * @param entry the entry to contain the field to be walked
    * @param field the id of the field to be walked.
    */
-  @SuppressWarnings("unchecked")
   private static void resolveRichDocument(CDAEntry entry, CDAField field) {
     final Map<String, Object> rawValue = (Map<String, Object>) entry.rawFields().get(field.id());
     if (rawValue == null) {
@@ -290,12 +289,14 @@ public class RichTextFactory {
     }
 
     for (final String locale : rawValue.keySet()) {
-      final Map<String, Object> raw = (Map<String, Object>) rawValue.get(locale);
-      if (raw == null) {
+      final Object raw = rawValue.get(locale);
+      if (raw == null || raw instanceof CDARichNode) {
+        // ignore null and already parsed values
         continue;
       }
 
-      entry.setField(locale, field.id(), RESOLVER_MAP.get("document").resolve(raw));
+      final Map<String, Object> map = (Map<String, Object>) rawValue.get(locale);
+      entry.setField(locale, field.id(), RESOLVER_MAP.get("document").resolve(map));
     }
   }
 
@@ -370,7 +371,8 @@ public class RichTextFactory {
    */
   private static void resolveOneLink(ArrayResource array, CDAField field, String locale,
                                      CDARichNode node) {
-    if (node instanceof CDARichHyperLink) {
+    if (node instanceof CDARichHyperLink
+        && ((CDARichHyperLink) node).data instanceof Map) {
       final CDARichHyperLink link = (CDARichHyperLink) node;
       final Map<String, Object> data = (Map<String, Object>) link.data;
       final Object target = data.get("target");

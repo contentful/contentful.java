@@ -17,7 +17,6 @@ import com.contentful.java.cda.rich.CDARichParagraph;
 import com.contentful.java.cda.rich.CDARichQuote;
 import com.contentful.java.cda.rich.CDARichText;
 import com.contentful.java.cda.rich.CDARichUnorderedList;
-
 import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -521,5 +520,21 @@ public class RichTextTest extends BaseTest {
 
     final CDARichHyperLink link = (CDARichHyperLink) paragraph.getContent().get(1);
     assertThat(link.getData()).isEqualTo("https://www.example.com/");
+  }
+
+
+  @Test
+  @Enqueue({
+      "rich_text/sync_initial.json",
+      "rich_text/content_types.json",
+      "rich_text/locales.json",
+      "rich_text/sync_continued.json",
+      "rich_text/sync_continued.json"
+  })
+  public void synchronizing_rich_text() {
+    final SynchronizedSpace space = client.sync().fetch();
+    final SynchronizedSpace later = client.sync(space).fetch();
+
+    assertThat(later).isNotEqualTo(space);
   }
 }

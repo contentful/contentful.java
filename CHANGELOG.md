@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Version [10.3.3] - [unreleased]
+- TBD
+
+## Version [10.3.2] - (2019-04-30)
+- Fix: Do not parse already parsed rich text node in sync.
+
 ## Version [10.3.1] - (2019-02-27)
 - Fix: Do not use `java.util.function`, it might mess up older android phones (`Lollipop` and `Marshmallow`)
 
@@ -234,14 +240,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/10.3.1...HEAD
-[10.3.1]: https://github.com/contentful/contentful.java/compare/10.3.0...10.3.1
-[10.3.0]: https://github.com/contentful/contentful.java/compare/10.2.1...10.3.0
-[10.2.1]: https://github.com/contentful/contentful.java/compare/10.2.0...10.2.1
-[10.2.0]: https://github.com/contentful/contentful.java/compare/10.1.0...10.2.0
-[10.1.0]: https://github.com/contentful/contentful.java/compare/10.0.0...10.1.0
-[10.0.0]: https://github.com/contentful/contentful.java/compare/9.1.1...10.0.0
-[9.1.1]: https://github.com/contentful/contentful.java/compare/java-sdk-9.1.0...9.1.1
+[unreleased]: https://github.com/contentful/contentful.java/compare/v10.3.3...HEAD
+[10.3.3]: https://github.com/contentful/contentful.java/compare/v10.3.2...v10.3.3
+[10.3.2]: https://github.com/contentful/contentful.java/compare/v10.3.1...v10.3.2
+[10.3.1]: https://github.com/contentful/contentful.java/compare/v10.3.0...v10.3.1
+[10.3.0]: https://github.com/contentful/contentful.java/compare/v10.2.1...v10.3.0
+[10.2.1]: https://github.com/contentful/contentful.java/compare/v10.2.0...v10.2.1
+[10.2.0]: https://github.com/contentful/contentful.java/compare/v10.1.0...v10.2.0
+[10.1.0]: https://github.com/contentful/contentful.java/compare/v10.0.0...v10.1.0
+[10.0.0]: https://github.com/contentful/contentful.java/compare/v9.1.1...v10.0.0
+[9.1.1]: https://github.com/contentful/contentful.java/compare/java-sdk-9.1.0...v9.1.1
 [9.1.0]: https://github.com/contentful/contentful.java/compare/java-sdk-9.0.1...java-sdk-9.1.0
 [9.0.1]: https://github.com/contentful/contentful.java/compare/java-sdk-9.0.0...java-sdk-9.0.1
 [9.0.0]: https://github.com/contentful/contentful.java/compare/java-sdk-8.0.1...java-sdk-9.0.0
