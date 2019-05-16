@@ -14,6 +14,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This query will tranform an incoming contentful entry to a custom type.
@@ -37,6 +39,8 @@ public class TransformQuery<Transformed>
   @Retention(RetentionPolicy.RUNTIME)
   public @interface ContentfulEntryModel {
     String value();
+
+    Class<?>[] additionalModelHints() default {};
   }
 
   /**
@@ -75,7 +79,8 @@ public class TransformQuery<Transformed>
 
   private final String contentTypeId;
 
-  private final Map<String, Transformed> instanceCache = new HashMap<>();
+  private final Map<String, Object> instanceCache = new HashMap<>();
+  private final Map<String, Class<?>> customClassByContentTypeIdCache = new HashMap<>();
 
   /**
    * Construct a transform query.
@@ -112,6 +117,86 @@ public class TransformQuery<Transformed>
         }
       }
     }
+
+    createCustomClassCache(type);
+  }
+
+  private void createCustomClassCache(Class<?> seedType) {
+    final ContentfulEntryModel seedAnnotation = seedType.getAnnotation(ContentfulEntryModel.class);
+    if (seedAnnotation == null) {
+      throw new IllegalStateException("Custom class has to be annotated with "
+          + "'ContentfulEntryModel' annotation");
+    }
+
+    if (customClassByContentTypeIdCache.containsKey(seedAnnotation.value())) {
+      // ignore already existing content type
+      return;
+    }
+
+    for (final Class<?> model : seedAnnotation.additionalModelHints()) {
+      final ContentfulEntryModel modelAnnotation = model.getAnnotation(ContentfulEntryModel.class);
+      if (modelAnnotation != null) {
+        customClassByContentTypeIdCache.put(modelAnnotation.value(), model);
+      }
+    }
+
+    final String contentTypeId = seedAnnotation.value();
+    customClassByContentTypeIdCache.put(contentTypeId, seedType);
+
+    // loop through fields to find another custom content type
+    for (final Field field : seedType.getDeclaredFields()) {
+      if (isFieldACollection(field)) {
+        final Class<?> itemType = getCollectionFieldEntryType(field);
+        if (itemType == null) {
+          // couldn't derive generic type from Collection
+          continue;
+        }
+
+        final ContentfulEntryModel itemAnnotation = itemType.getAnnotation(
+            ContentfulEntryModel.class
+        );
+        if (itemAnnotation != null) {
+          createCustomClassCache(itemType);
+        }
+      } else {
+        final ContentfulEntryModel fieldCustomAnnotation = field.getType().getAnnotation(
+            ContentfulEntryModel.class
+        );
+        if (fieldCustomAnnotation != null) {
+          createCustomClassCache(field.getType());
+        }
+      }
+    }
+  }
+
+  private Class<?> getCollectionFieldEntryType(Field field) {
+    // This method guesses the type of a generic collection by inspecting its string representation.
+    // This can break with new JVM installations and in this case it is recommended to either update
+    // this implementation or, even better, provide possible types in one of the top level content
+    // type annotations.
+
+    final boolean wasAccessible = field.isAccessible();
+    try {
+      field.setAccessible(true);
+      final String genericType = field.getGenericType().toString();
+      final String genericSubTypeRegex = "^[.\\p{Alpha}]+<(?<subtype>.+)>$";
+      final Pattern pattern = Pattern.compile(genericSubTypeRegex);
+      final Matcher matcher = pattern.matcher(genericType);
+      if (matcher.matches()) {
+        return this.getClass().getClassLoader().loadClass(matcher.group("subtype"));
+      } else {
+        return null;
+      }
+    } catch (Throwable t) {
+      // Could not find the type of the elements of the list at "field".
+      return null;
+    } finally {
+      field.setAccessible(wasAccessible);
+    }
+  }
+
+  private boolean isFieldACollection(Field field) {
+    return Collection.class.isAssignableFrom(field.getType());
   }
 
   private void parseFieldAnnotation(Field field, ContentfulField annotation) {
@@ -158,8 +243,9 @@ public class TransformQuery<Transformed>
           })
           .map(new Function<CDAEntry, Transformed>() {
             @Override
+            @SuppressWarnings("unchecked")
             public Transformed apply(CDAEntry entry) throws Exception {
-              return TransformQuery.this.transform(entry);
+              return (Transformed) TransformQuery.this.transform(entry);
             }
           });
     } catch (NullPointerException e) {
@@ -205,13 +291,14 @@ public class TransformQuery<Transformed>
         .map(
             new Function<CDAArray, Collection<Transformed>>() {
               @Override
+              @SuppressWarnings("unchecked")
               public Collection<Transformed> apply(CDAArray array) {
                 final ArrayList<Transformed> result = new ArrayList<>(array.total());
 
                 for (final CDAResource resource : array.items) {
                   if (resource instanceof CDAEntry
                       && ((CDAEntry) resource).contentType().id().equals(contentTypeId)) {
-                    result.add(TransformQuery.this.transform((CDAEntry) resource));
+                    result.add((Transformed) TransformQuery.this.transform((CDAEntry) resource));
                   }
                 }
                 return result;
@@ -235,13 +322,16 @@ public class TransformQuery<Transformed>
             .map(
                 new Function<CDAArray, List<Transformed>>() {
                   @Override
+                  @SuppressWarnings("unchecked")
                   public List<Transformed> apply(CDAArray array) {
                     final ArrayList<Transformed> result = new ArrayList<>(array.total());
 
                     for (final CDAResource resource : array.items) {
                       if (resource instanceof CDAEntry
                           && ((CDAEntry) resource).contentType().id().equals(contentTypeId)) {
-                        result.add(TransformQuery.this.transform((CDAEntry) resource));
+                        result.add((Transformed) TransformQuery.this.transform(
+                            (CDAEntry) resource)
+                        );
                       }
                     }
                     return result;
@@ -256,8 +346,14 @@ public class TransformQuery<Transformed>
     return client.observe(CDAEntry.class).where(params);
   }
 
-  private Transformed transform(CDAEntry entry) {
-    final Transformed result;
+  private Object transform(CDAEntry entry) {
+    final Object result;
+
+    if (!customClassByContentTypeIdCache.containsKey(entry.contentType().id())) {
+      return entry;
+    }
+
+    final Class<?> type = customClassByContentTypeIdCache.get(entry.contentType().id());
 
     if (instanceCache.containsKey(entry.id())) {
       result = instanceCache.get(entry.id());
@@ -266,7 +362,7 @@ public class TransformQuery<Transformed>
         result = type.newInstance();
       } catch (Exception e) {
         throw new IllegalStateException("Cannot transform entry " + entry + "  to type "
-            + type.getCanonicalName());
+            + type.getCanonicalName(), e);
       }
 
       instanceCache.put(entry.id(), result);
@@ -288,11 +384,13 @@ public class TransformQuery<Transformed>
     return result;
   }
 
-  private void transformFieldAnnotation(CDAEntry entry, Transformed result, Field field,
-                                        ContentfulField annotation) {
-    if (!field.isAccessible()) {
-      field.setAccessible(true);
-    }
+  private void transformFieldAnnotation(
+      CDAEntry entry,
+      Object result,
+      Field field,
+      ContentfulField annotation) {
+    final boolean wasAccessible = field.isAccessible();
+    field.setAccessible(true);
 
     final String key;
     if (annotation.value().isEmpty()) {
@@ -310,23 +408,42 @@ public class TransformQuery<Transformed>
 
     try {
       final Object value = entry.getField(locale, key);
-      if (value instanceof CDAEntry
-          && ((CDAEntry) value).contentType().id().equals(contentTypeId)) {
+      if (value instanceof CDAEntry) {
         final CDAEntry fieldEntry = (CDAEntry) value;
         if (!instanceCache.containsKey(fieldEntry.id())) {
           transform(fieldEntry);
         }
 
         field.set(result, instanceCache.get(fieldEntry.id()));
+      } else if (value instanceof Collection) {
+        @SuppressWarnings("unchecked") final Collection<Object> collection = (Collection) value;
+
+        final ArrayList<Object> transformedList = new ArrayList<>(collection.size());
+        for (final Object element : collection) {
+          if (element instanceof CDAEntry) {
+            final CDAEntry collectionEntry = (CDAEntry) element;
+            if (customClassByContentTypeIdCache.containsKey(collectionEntry.contentType().id())) {
+              transformedList.add(transform(collectionEntry));
+            } else {
+              transformedList.add(element);
+            }
+          } else {
+            transformedList.add(element);
+          }
+
+          field.set(result, transformedList);
+        }
       } else {
         field.set(result, value);
       }
     } catch (IllegalAccessException e) {
       throw new IllegalStateException("Cannot set custom field " + key + ".");
+    } finally {
+      field.setAccessible(wasAccessible);
     }
   }
 
-  private void transformSystemFieldAnnotation(CDAEntry entry, Transformed result, Field field,
+  private void transformSystemFieldAnnotation(CDAEntry entry, Object result, Field field,
                                               ContentfulSystemField annotation) {
     if (!field.isAccessible()) {
       field.setAccessible(true);

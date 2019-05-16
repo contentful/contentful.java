@@ -1,0 +1,188 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 2,
+  "skip": 0,
+  "limit": 1000,
+  "items": [
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "wr6gvsml8b51"
+          }
+        },
+        "id": "author",
+        "type": "ContentType",
+        "createdAt": "2019-05-14T14:41:59.629Z",
+        "updatedAt": "2019-05-14T14:43:41.791Z",
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "publishedVersion": 3,
+        "publishedAt": "2019-05-14T14:43:41.791Z",
+        "firstPublishedAt": "2019-05-14T14:42:00.383Z",
+        "createdBy": {
+          "sys": {
+            "type": "Link",
+            "linkType": "User",
+            "id": "7uJNojWP0gbuP7Pplz7Syo"
+          }
+        },
+        "updatedBy": {
+          "sys": {
+            "type": "Link",
+            "linkType": "User",
+            "id": "7uJNojWP0gbuP7Pplz7Syo"
+          }
+        },
+        "publishedCounter": 2,
+        "version": 4,
+        "publishedBy": {
+          "sys": {
+            "type": "Link",
+            "linkType": "User",
+            "id": "7uJNojWP0gbuP7Pplz7Syo"
+          }
+        }
+      },
+      "displayField": "name",
+      "name": "Author",
+      "description": "This Author authors blog posts.",
+      "fields": [
+        {
+          "id": "name",
+          "name": "Name",
+          "type": "Symbol",
+          "localized": false,
+          "required": false,
+          "validations": [
+          ],
+          "disabled": false,
+          "omitted": false
+        },
+        {
+          "id": "posts",
+          "name": "Blogs posts",
+          "type": "Array",
+          "localized": false,
+          "required": false,
+          "validations": [
+          ],
+          "disabled": false,
+          "omitted": false,
+          "items": {
+            "type": "Link",
+            "validations": [
+              {
+                "linkContentType": [
+                  "post"
+                ]
+              }
+            ],
+            "linkType": "Entry"
+          }
+        }
+      ]
+    },
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "wr6gvsml8b51"
+          }
+        },
+        "id": "post",
+        "type": "ContentType",
+        "createdAt": "2019-05-14T14:43:09.268Z",
+        "updatedAt": "2019-05-14T14:43:09.673Z",
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "publishedVersion": 1,
+        "publishedAt": "2019-05-14T14:43:09.673Z",
+        "firstPublishedAt": "2019-05-14T14:43:09.673Z",
+        "createdBy": {
+          "sys": {
+            "type": "Link",
+            "linkType": "User",
+            "id": "7uJNojWP0gbuP7Pplz7Syo"
+          }
+        },
+        "updatedBy": {
+          "sys": {
+            "type": "Link",
+            "linkType": "User",
+            "id": "7uJNojWP0gbuP7Pplz7Syo"
+          }
+        },
+        "publishedCounter": 1,
+        "version": 2,
+        "publishedBy": {
+          "sys": {
+            "type": "Link",
+            "linkType": "User",
+            "id": "7uJNojWP0gbuP7Pplz7Syo"
+          }
+        }
+      },
+      "displayField": "title",
+      "name": "Blog Post",
+      "description": "This is a posted post.",
+      "fields": [
+        {
+          "id": "title",
+          "name": "Title",
+          "type": "Symbol",
+          "localized": false,
+          "required": false,
+          "validations": [
+          ],
+          "disabled": false,
+          "omitted": false
+        },
+        {
+          "id": "copy",
+          "name": "Copy",
+          "type": "Text",
+          "localized": false,
+          "required": false,
+          "validations": [
+          ],
+          "disabled": false,
+          "omitted": false
+        },
+        {
+          "id": "author",
+          "name": "Author",
+          "type": "Link",
+          "localized": false,
+          "required": false,
+          "validations": [
+            {
+              "linkContentType": [
+                "author"
+              ]
+            }
+          ],
+          "disabled": false,
+          "omitted": false,
+          "linkType": "Entry"
+        }
+      ]
+    }
+  ]
+}

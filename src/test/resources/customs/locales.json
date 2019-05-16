@@ -1,0 +1,54 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 2,
+  "skip": 0,
+  "limit": 1000,
+  "items": [
+    {
+      "name": "English (United States)",
+      "code": "en-US",
+      "fallbackCode": null,
+      "default": true,
+      "contentManagementApi": true,
+      "contentDeliveryApi": true,
+      "optional": false,
+      "sys": {
+        "type": "Locale",
+        "id": "1g7GsNqzbuJyDbi4kkn8AE",
+        "version": 1,
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "wr6gvsml8b51"
+          }
+        },
+        "environment": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Environment",
+            "id": "master"
+          }
+        },
+        "createdBy": {
+          "sys": {
+            "type": "Link",
+            "linkType": "User",
+            "id": "7uJNojWP0gbuP7Pplz7Syo"
+          }
+        },
+        "createdAt": "2019-05-14T14:40:37Z",
+        "updatedBy": {
+          "sys": {
+            "type": "Link",
+            "linkType": "User",
+            "id": "7uJNojWP0gbuP7Pplz7Syo"
+          }
+        },
+        "updatedAt": "2019-05-14T14:40:37Z"
+      }
+    }
+  ]
+}

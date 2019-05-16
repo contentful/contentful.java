@@ -2,8 +2,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Version [10.3.3] - [unreleased]
-- TBD
+## Version [10.4.0] - [unreleased]
+- Make Unwrapping production ready.
 
 ## Version [10.3.2] - (2019-04-30)
 - Fix: Do not parse already parsed rich text node in sync.
@@ -240,7 +240,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/v10.3.3...HEAD
+[unreleased]: https://github.com/contentful/contentful.java/compare/v10.4.0...HEAD
+[10.3.3]: https://github.com/contentful/contentful.java/compare/v10.3.3...v10.4.0
 [10.3.3]: https://github.com/contentful/contentful.java/compare/v10.3.2...v10.3.3
 [10.3.2]: https://github.com/contentful/contentful.java/compare/v10.3.1...v10.3.2
 [10.3.1]: https://github.com/contentful/contentful.java/compare/v10.3.0...v10.3.1
