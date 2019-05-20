@@ -263,9 +263,6 @@ This only resolves the first level of includes. `10` is the maximum number of le
 Unwrapping
 ----------
 
-> 🚧 This feature is regarded as beta and is up for debate if it should be included in the official SDK. Comments and feedback wanted. 🚧
-
-
 Unwrapping is the process of taking a `CDAEntry` and transforming it into custom types. The following code demonstrates the definition of a custom type:
 
 ```
@@ -303,7 +300,7 @@ Cat happycat = client
 In addition to returning the Content in a fashion flexible for various use-cases, this feature also uses the [select](#select) filter to only return the fields required, making the response smaller and more focused.
 
 > Notes:
-> * Specifying a `value` for the `@ContentfulField`-annotation , will use the value of the similarly called field instead of the name of the custom field.
+> * Specifying a `value` for the `@ContentfulField`-annotation , will use the value of the similarly called field id instead of the name of the custom field.
 > * A `locale` can be used to specify a given locale of this entry. If no locale is given, the default locale will be used. 
 > * `@ContentfulSystemField` is used for CDAEntries attributes (`sys.id`, etc) to be inserted.
 > * Currently only one type is transformed. A cat cannot have another content type transformed. Using CDAEntries instead is recommended.
