@@ -246,7 +246,7 @@ The above snippet will fetch the first _23_ Entries, sorted by creation date wit
 Includes
 --------
 
-The SDK contains a feature called link resolution, which will take a link and resolve them. So there is no need to look through entry id's manually, a simple `.getField(…)` retrieves and entry directly, no need to use the link elements themselves.
+The SDK contains a feature called link resolution, which will take a link and resolve them. So there is no need to look through entry id's manually, a simple `.getField(…)` retrieves an entry directly, no need to use the link elements themselves.
 
 For this feature to work, the linked entry needs to be _published_ (see [preview](#preview)) and the include level needs to be set to include this entry. A level of `2` means, that the links of links are getting resolved. Entries of deeper levels contain an empty field if the link could not be resolved. Finding the id of the not resolved field can be achieved through comparing the `.rawFields` with the `.fields` property of an Entry.
 
