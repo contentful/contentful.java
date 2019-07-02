@@ -33,42 +33,36 @@ public class ObserveQuery<T extends CDAResource> extends AbsQuery<T, ObserveQuer
    */
   @SuppressWarnings("unchecked")
   public Flowable<T> one(final String id) {
-    Flowable<T> flowable = where("sys.id", id).all().map(
-        new Function<CDAArray, T>() {
-          @Override
-          public T apply(CDAArray array) {
-            if (array.items().size() == 0) {
-              throw new CDAResourceNotFoundException(type, id);
-            }
-            CDAType resourceType = typeForClass(type);
-            if (ASSET.equals(resourceType)) {
-              return (T) array.assets().get(id);
-            } else if (ENTRY.equals(resourceType)) {
-              return (T) array.entries().get(id);
-            } else if (CONTENTTYPE.equals(resourceType)) {
-              return (T) array.items().get(0);
-            } else if (LOCALE.equals(resourceType)) {
-              T found = findById(array, id);
-              if (found == null) {
-                throw new CDAResourceNotFoundException(type, id);
-              }
-              return found;
-            } else {
-              throw new IllegalArgumentException("Cannot invoke query for type: " + type.getName());
-            }
-          }
+    Flowable<T> flowable = where("sys.id", id).all()
+      .map(array -> {
+        if (array.items().size() == 0) {
+          throw new CDAResourceNotFoundException(type, id);
         }
+        CDAType resourceType = typeForClass(type);
+        if (ASSET.equals(resourceType)) {
+          return (T) array.assets().get(id);
+        } else if (ENTRY.equals(resourceType)) {
+          return (T) array.entries().get(id);
+        } else if (CONTENTTYPE.equals(resourceType)) {
+          return (T) array.items().get(0);
+        } else if (LOCALE.equals(resourceType)) {
+          T found = findById(array, id);
+          if (found == null) {
+            throw new CDAResourceNotFoundException(type, id);
+          }
+          return found;
+        } else {
+          throw new IllegalArgumentException("Cannot invoke query for type: " + type.getName());
+        }
+      }
     );
 
     if (CONTENTTYPE.equals(typeForClass(type))) {
-      flowable = flowable.map(new Function<T, T>() {
-        @Override
-        public T apply(T t) {
-          if (t != null) {
-            client.cache.types().put(t.id(), (CDAContentType) t);
-          }
-          return t;
+      flowable = flowable.map(t -> {
+        if (t != null) {
+          client.cache.types().put(t.id(), (CDAContentType) t);
         }
+        return t;
       });
     }
     return flowable;

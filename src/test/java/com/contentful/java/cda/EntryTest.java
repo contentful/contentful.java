@@ -5,6 +5,7 @@ import com.contentful.java.cda.lib.TestCallback;
 
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -294,5 +295,49 @@ public class EntryTest extends BaseTest {
 
     assertThat(array.items()).containsExactly(parent);
     assertThat(array.entries().values()).containsExactly(parent, child);
+  }
+
+  @Test
+  @Enqueue(defaults = {
+	  "cda/locales.json"
+  }, value = {
+	  "cda/content_types_foo.json",
+	  "cda/entries_with_errors.json",
+	  "cda/content_types_bar.json"
+  })
+  public void getAllEntriesWithErrors() {
+	  CDAArray entries = client.fetch(CDAEntry.class).all();
+
+	  assertThat(entries).isNotNull();
+	  assertThat(entries.getErrors()).isNotNull();
+	  assertThat(entries.getErrors()).hasSize(2);
+
+	  entries.getErrors().forEach(error -> {
+	    assertThat(error.getSys()).isNotNull();
+	    assertThat(error.getSys().get("id")).isEqualTo("notResolvable");
+	    assertThat(error.getSys().get("type")).isEqualTo("error");
+	    assertThat(error.getDetails()).isNotNull();
+	    assertThat(error.getDetails().get("type")).isEqualTo("Link");
+	    assertThat(error.getDetails().get("linkType")).isEqualTo("ContentType");
+
+	    int index = entries.getErrors().indexOf(error);
+	    String itemId = entries.items().get(index).id();
+	    assertThat(error.getDetails().get("id")).isEqualTo(itemId);
+	  });
+  }
+
+  @Test
+  @Enqueue(defaults = {
+	  "cda/locales.json"
+  }, value = {
+	  "cda/content_types_foo.json",
+	  "cda/content_types_bar.json"
+  })
+  public void setAllEntriesWithErrors() {
+	  CDAArray entries = client.fetch(CDAEntry.class).all();
+    List<CDAError> errors = Arrays.asList(new CDAError());
+
+    entries.setErrors(errors);
+    assertThat(entries.getErrors()).hasSize(1);
   }
 }
