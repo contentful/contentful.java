@@ -90,7 +90,7 @@ public abstract class AbsQuery<
     checkNotNull(locale, "Locale must not be null.");
 
     Optional.ofNullable(params.get(PARAMETER_LOCALE)).ifPresent(it -> {
-      throw new IllegalStateException(format("Locale \"%s\" is already present in query.", locale));
+      throw new IllegalStateException(format("Locale \"%s\" is already present in query.", it));
     });
 
     params.put(PARAMETER_LOCALE, locale);
