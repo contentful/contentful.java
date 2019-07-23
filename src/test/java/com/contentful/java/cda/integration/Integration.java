@@ -236,6 +236,17 @@ public class Integration {
     assertThat(all.total()).isEqualTo(3);
   }
 
+  //"/spaces/{space_id}/entries?locale={locale}",
+  @Test
+  public void fetchAllEntriesWithLocale() {
+    CDAArray all = client
+            .fetch(CDAEntry.class)
+            .withLocale("tlh")
+            .all();
+
+    assertThat(all.total()).isEqualTo(10);
+  }
+
   //"/spaces/{space_id}/entries?content_type={content_type}&fields.{field_id}={value}",
   @Test
   public void fetchEntryWithTwoCriteria() {

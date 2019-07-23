@@ -2,6 +2,7 @@ package com.contentful.java.cda;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.contentful.java.cda.Util.checkNotEmpty;
 import static com.contentful.java.cda.Util.checkNotNull;
@@ -22,6 +23,7 @@ public abstract class AbsQuery<
     Query extends AbsQuery<Resource, Query>
     > {
   private static final String PARAMETER_CONTENT_TYPE = "content_type";
+  private static final String PARAMETER_LOCALE = "locale";
   private static final String PARAMETER_SELECT = "select";
   private static final String PARAMETER_ORDER = "order";
   private static final String PARAMETER_LIMIT = "limit";
@@ -68,6 +70,30 @@ public abstract class AbsQuery<
     } else {
       params.put(PARAMETER_CONTENT_TYPE, contentType);
     }
+
+    return (Query) this;
+  }
+
+  /**
+   * Requesting content with specific locale.
+   *
+   * You must specify a locale <b>before</b> querying a specific <b>field</b> on a query, an
+   * exception will be thrown otherwise.
+   *
+   * @param locale the locale to be used.
+   * @return the calling query for chaining.
+   * @throws IllegalArgumentException if locale is null.
+   * @throws IllegalStateException    if locale was set before.
+   */
+  @SuppressWarnings("unchecked")
+  public Query withLocale(String locale) {
+    checkNotNull(locale, "Locale must not be null.");
+
+    Optional.ofNullable(params.get(PARAMETER_LOCALE)).ifPresent(it -> {
+      throw new IllegalStateException(format("Locale \"%s\" is already present in query.", locale));
+    });
+
+    params.put(PARAMETER_LOCALE, locale);
 
     return (Query) this;
   }
