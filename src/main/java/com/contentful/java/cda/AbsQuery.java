@@ -77,9 +77,6 @@ public abstract class AbsQuery<
   /**
    * Requesting content with specific locale.
    *
-   * You must specify a locale <b>before</b> querying a specific <b>field</b> on a query, an
-   * exception will be thrown otherwise.
-   *
    * @param locale the locale to be used.
    * @return the calling query for chaining.
    * @throws IllegalArgumentException if locale is null.
