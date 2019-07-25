@@ -1,10 +1,11 @@
-language: java
 sudo: false
+language: java
+
+dist: trusty
 
 jdk:
-  - openjdk8
   - oraclejdk8
-  - oraclejdk9
+  - openjdk8
 
 script:
   - mvn jacoco:prepare-agent test jacoco:report

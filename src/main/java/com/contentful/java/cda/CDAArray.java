@@ -17,6 +17,8 @@ public class CDAArray extends ArrayResource {
 
   Includes includes;
 
+  private List<CDAError> errors;
+
   /**
    * @return total number of resources (linked excluded).
    */
@@ -36,6 +38,17 @@ public class CDAArray extends ArrayResource {
    */
   public int limit() {
     return limit;
+  }
+
+  /**
+   * @return a list of errors if any present
+   */
+  public List<CDAError> getErrors() {
+    return errors;
+  }
+
+  public void setErrors(List<CDAError> errors) {
+    this.errors = errors;
   }
 
   static class Includes {
