@@ -60,6 +60,19 @@ public class AbsQueryTest {
   }
 
   @Test
+  public void locale() {
+    query.withLocale("en");
+
+    assertThat(query.params).containsEntry("locale", "en");
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void settingLocaleTypeTwiceThrowsError() {
+    query.withLocale("en");
+    query.withLocale("de");
+  }
+
+  @Test
   public void select() {
     query.withContentType("foo");
     query.select("fields.bar");
