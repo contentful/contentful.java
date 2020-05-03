@@ -1,22 +1,29 @@
 package com.contentful.java.cda;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 /**
  * Collection of CDA resources.
  */
+@JsonTypeName("Array")
 public class CDAArray extends ArrayResource {
   private static final long serialVersionUID = 6596224363025698245L;
+  @JsonProperty
   int total;
 
+  @JsonProperty
   int skip;
 
+  @JsonProperty
   int limit;
 
+  @JsonProperty
   Includes includes;
 
+  @JsonProperty
   private List<CDAError> errors;
 
   CDAMetadata metadata;
@@ -54,8 +61,8 @@ public class CDAArray extends ArrayResource {
   }
 
   static class Includes {
-    @SerializedName("Asset") List<CDAAsset> assets;
+    @SerializedName("Asset") @JsonProperty("Asset") List<CDAAsset> assets;
 
-    @SerializedName("Entry") List<CDAEntry> entries;
+    @SerializedName("Entry")  @JsonProperty("Entry")  List<CDAEntry> entries;
   }
 }

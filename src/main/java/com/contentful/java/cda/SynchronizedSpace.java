@@ -1,18 +1,23 @@
 package com.contentful.java.cda;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.Set;
 
 /**
  * Represents results for synchronization via the Sync API.
  */
+@JsonTypeName("Array")
 public class SynchronizedSpace extends ArrayResource {
   private static final long serialVersionUID = 8618757744312417604L;
+  @JsonProperty(defaultValue = "")
   String nextPageUrl;
-
+  @JsonProperty(defaultValue = "")
   String nextSyncUrl;
-
+  @JsonIgnore
   Set<String> deletedAssets;
-
+  @JsonIgnore
   Set<String> deletedEntries;
 
   /**

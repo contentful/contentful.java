@@ -1,13 +1,14 @@
 package com.contentful.java.cda;
 
 import com.contentful.java.cda.image.ImageOption;
-
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * Represents a single asset.
  */
+@JsonTypeName("Asset")
 public class CDAAsset extends LocalizedResource {
 
   private static final long serialVersionUID = -4645571481643616657L;

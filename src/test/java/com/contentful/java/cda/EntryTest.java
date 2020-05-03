@@ -2,14 +2,12 @@ package com.contentful.java.cda;
 
 import com.contentful.java.cda.lib.Enqueue;
 import com.contentful.java.cda.lib.TestCallback;
-
-import org.junit.Test;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -205,7 +203,7 @@ public class EntryTest extends BaseTest {
     assertThat(entry.<String>getField("name")).isEqualTo("Nyan Cat");
     assertThat(entry.<String>getField("color")).isEqualTo("rainbow");
     assertThat(entry.<String>getField("birthday")).isEqualTo("2011-04-04T22:00:00+00:00");
-    assertThat(entry.<Double>getField("lives")).isEqualTo(1337.0);
+    assertThat(entry.<Integer>getField("lives")).isEqualTo(1337);
 
     List<String> likes = entry.getField("likes");
     assertThat(likes).containsExactly("rainbows", "fish");

@@ -12,18 +12,6 @@ import com.contentful.java.cda.interceptor.LogInterceptor;
 import com.contentful.java.cda.interceptor.UserAgentHeaderInterceptor;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import org.reactivestreams.Publisher;
-import retrofit2.Converter;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -35,6 +23,17 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import org.reactivestreams.Publisher;
+import retrofit2.Converter;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import static com.contentful.java.cda.Constants.ENDPOINT_PROD;
 import static com.contentful.java.cda.Constants.PATH_CONTENT_TYPES;
@@ -657,7 +656,8 @@ public class CDAClient {
       final Converter.Factory converterFactory;
 
       if (clientBuilder.converterFactory == null) {
-        converterFactory = GsonConverterFactory.create(ResourceFactory.GSON);
+        // converterFactory = GsonConverterFactory.create(ResourceFactory.GSON);
+        converterFactory = JacksonConverterFactory.create(ResourceFactory.OBJECT_MAPPER);
       } else {
         converterFactory = clientBuilder.converterFactory;
       }
