@@ -2,7 +2,6 @@ package com.contentful.java.cda;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static com.contentful.java.cda.Util.checkNotEmpty;
 import static com.contentful.java.cda.Util.checkNotNull;
