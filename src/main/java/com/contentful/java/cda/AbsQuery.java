@@ -84,7 +84,6 @@ public abstract class AbsQuery<
   @SuppressWarnings("unchecked")
   public Query withLocale(String locale) {
     checkNotNull(locale, "Locale must not be null.");
-
     Optional.ofNullable(params.get(PARAMETER_LOCALE)).ifPresent(it -> {
       throw new IllegalStateException(format("Locale \"%s\" is already present in query.", it));
     });
