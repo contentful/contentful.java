@@ -77,14 +77,14 @@ Install the Contentful dependency:
 <dependency>
   <groupId>com.contentful.java</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>10.4.2</version>
+  <version>10.4.3</version>
 </dependency>
 ```
 
 * _Gradle_
 
 ```groovy
-compile 'com.contentful.java:java-sdk:10.4.2'
+compile 'com.contentful.java:java-sdk:10.4.3'
 ```
 
 This SDK requires Java 8 (or higher version) or Android 5.
