@@ -142,6 +142,11 @@
       <artifactId>gson</artifactId>
       <version>${gson.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.github.tony19</groupId>
+      <artifactId>named-regexp</artifactId>
+      <version>0.2.5</version>
+    </dependency>
   </dependencies>
 
   <build>

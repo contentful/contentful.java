@@ -1,5 +1,7 @@
 package com.contentful.java.cda;
 
+import com.google.code.regexp.Matcher;
+import com.google.code.regexp.Pattern;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
@@ -14,8 +16,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * This query will tranform an incoming contentful entry to a custom type.
