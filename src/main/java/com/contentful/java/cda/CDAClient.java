@@ -72,7 +72,9 @@ public class CDAClient {
 
   final boolean preview;
 
-  final ContentTypeIdProvider contentTypeIdProvider;
+  final SyncContentTypeIdProvider contentTypeIdProvider;
+
+  final SyncAssetValidityChecker assetChecker;
 
   CDAClient(Builder builder) {
     this(new Cache(),
@@ -91,6 +93,7 @@ public class CDAClient {
     this.token = builder.token;
     this.preview = builder.preview;
     this.contentTypeIdProvider = builder.contentTypeIdProvider;
+    this.assetChecker = builder.assetChecker;
   }
 
   private void validate(Builder builder) {
@@ -526,7 +529,8 @@ public class CDAClient {
     String environment = Constants.DEFAULT_ENVIRONMENT;
     String token;
     String endpoint;
-    ContentTypeIdProvider contentTypeIdProvider;
+    SyncContentTypeIdProvider contentTypeIdProvider;
+    SyncAssetValidityChecker assetChecker;
 
     Logger logger;
     Logger.Level logLevel = Logger.Level.NONE;
@@ -586,8 +590,13 @@ public class CDAClient {
       return this;
     }
 
-    public Builder setContentTypeIdProvider(ContentTypeIdProvider contentTypeIdProvider) {
+    public Builder setContentTypeIdProvider(SyncContentTypeIdProvider contentTypeIdProvider) {
       this.contentTypeIdProvider = contentTypeIdProvider;
+      return this;
+    }
+
+    public Builder setAssetChecker(SyncAssetValidityChecker assetChecker) {
+      this.assetChecker = assetChecker;
       return this;
     }
 
