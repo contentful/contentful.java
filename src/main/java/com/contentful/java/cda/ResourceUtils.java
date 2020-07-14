@@ -68,7 +68,7 @@ public final class ResourceUtils {
         if (field.linkType() != null) {
           resolveSingleLink(entry, field, array);
         } else if ("Array".equals(field.type) && "Link".equals(field.items().get("type"))) {
-          resolveArrayOfLinks(entry, field, array);
+          resolveArrayOfLinks(entry, field, array, client.contentTypeIdProvider);
         }
       }
     }
@@ -97,7 +97,7 @@ public final class ResourceUtils {
   }
 
   @SuppressWarnings("unchecked")
-  static void resolveArrayOfLinks(CDAEntry entry, CDAField field, ArrayResource array) {
+  static void resolveArrayOfLinks(CDAEntry entry, CDAField field, ArrayResource array, ContentTypeIdProvider contentTypeIdProvider) {
     CDAType linkType =
         CDAType.valueOf(((String) field.items().get("linkType")).toUpperCase(LOCALE));
     Map<String, Object> value = (Map<String, Object>) entry.fields.get(field.id());
@@ -118,6 +118,17 @@ public final class ResourceUtils {
         CDAResource resource = findLinkedResource(array, linkType, linkId);
         if (resource != null) {
           resolved.add(resource);
+        }
+        else {
+          // Resource is not in response array.
+          String contentTypeId = contentTypeIdProvider.getContentTypeId(linkId);
+          if (contentTypeId != null) {
+            CDAResource faked = new CDAResourceFake().getFake(linkId, contentTypeId, linkType);
+
+            if (faked != null) {
+              resolved.add(faked);
+            }
+          }
         }
       }
       value.put(locale, resolved);
