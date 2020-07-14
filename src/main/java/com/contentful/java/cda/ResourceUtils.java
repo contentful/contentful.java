@@ -66,9 +66,9 @@ public final class ResourceUtils {
       ensureContentType(entry, client);
       for (CDAField field : entry.contentType().fields()) {
         if (field.linkType() != null) {
-          resolveSingleLink(entry, field, array);
+          resolveSingleLink(entry, field, array, client.contentTypeIdProvider);
         } else if ("Array".equals(field.type) && "Link".equals(field.items().get("type"))) {
-          resolveArrayOfLinks(entry, field, array);
+          resolveArrayOfLinks(entry, field, array, client.contentTypeIdProvider);
         }
       }
     }
@@ -97,7 +97,7 @@ public final class ResourceUtils {
   }
 
   @SuppressWarnings("unchecked")
-  static void resolveArrayOfLinks(CDAEntry entry, CDAField field, ArrayResource array) {
+  static void resolveArrayOfLinks(CDAEntry entry, CDAField field, ArrayResource array, ContentTypeIdProvider contentTypeIdProvider) {
     CDAType linkType =
         CDAType.valueOf(((String) field.items().get("linkType")).toUpperCase(LOCALE));
     Map<String, Object> value = (Map<String, Object>) entry.fields.get(field.id());
@@ -116,6 +116,13 @@ public final class ResourceUtils {
           continue;
         }
         CDAResource resource = findLinkedResource(array, linkType, linkId);
+        if(resource == null) {
+          String contentTypeId = contentTypeIdProvider.getContentTypeId(linkId);
+          if(contentTypeId != null) {
+            resource = new CDAResourceFake().getFake(linkId, contentTypeId, linkType);
+          }
+        }
+
         if (resource != null) {
           resolved.add(resource);
         }
@@ -125,7 +132,7 @@ public final class ResourceUtils {
   }
 
   @SuppressWarnings("unchecked")
-  static void resolveSingleLink(CDAEntry entry, CDAField field, ArrayResource array) {
+  static void resolveSingleLink(CDAEntry entry, CDAField field, ArrayResource array, ContentTypeIdProvider contentTypeIdProvider) {
     CDAType linkType = CDAType.valueOf(field.linkType().toUpperCase(LOCALE));
     Map<String, Object> value = (Map<String, Object>) entry.fields.get(field.id());
     if (value == null) {
@@ -138,6 +145,14 @@ public final class ResourceUtils {
         continue;
       }
       CDAResource resource = findLinkedResource(array, linkType, linkId);
+
+      if(resource == null) {
+        String contentTypeId = contentTypeIdProvider.getContentTypeId(linkId);
+        if(contentTypeId != null) {
+          resource = new CDAResourceFake().getFake(linkId, contentTypeId, linkType);
+        }
+      }
+
       if (resource == null) {
         toRemove.add(locale);
       } else {
