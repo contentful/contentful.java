@@ -72,6 +72,8 @@ public class CDAClient {
 
   final boolean preview;
 
+  final ContentTypeIdProvider contentTypeIdProvider;
+
   CDAClient(Builder builder) {
     this(new Cache(),
         Platform.get().callbackExecutor(),
@@ -88,6 +90,7 @@ public class CDAClient {
     this.environmentId = builder.environment;
     this.token = builder.token;
     this.preview = builder.preview;
+    this.contentTypeIdProvider = builder.contentTypeIdProvider;
   }
 
   private void validate(Builder builder) {
@@ -523,6 +526,7 @@ public class CDAClient {
     String environment = Constants.DEFAULT_ENVIRONMENT;
     String token;
     String endpoint;
+    ContentTypeIdProvider contentTypeIdProvider;
 
     Logger logger;
     Logger.Level logLevel = Logger.Level.NONE;
@@ -579,6 +583,11 @@ public class CDAClient {
      */
     public Builder setEndpoint(String endpoint) {
       this.endpoint = endpoint;
+      return this;
+    }
+
+    public Builder setContentTypeIdProvider(ContentTypeIdProvider contentTypeIdProvider) {
+      this.contentTypeIdProvider = contentTypeIdProvider;
       return this;
     }
 
