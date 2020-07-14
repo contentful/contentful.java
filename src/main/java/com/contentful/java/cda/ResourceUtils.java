@@ -66,9 +66,21 @@ public final class ResourceUtils {
       ensureContentType(entry, client);
       for (CDAField field : entry.contentType().fields()) {
         if (field.linkType() != null) {
-          resolveSingleLink(entry, field, array, client.contentTypeIdProvider, client.assetChecker);
+          resolveSingleLink(
+                  entry,
+                  field,
+                  array,
+                  client.contentTypeIdProvider,
+                  client.assetChecker
+          );
         } else if ("Array".equals(field.type) && "Link".equals(field.items().get("type"))) {
-          resolveArrayOfLinks(entry, field, array, client.contentTypeIdProvider, client.assetChecker);
+          resolveArrayOfLinks(
+                  entry,
+                  field,
+                  array,
+                  client.contentTypeIdProvider,
+                  client.assetChecker
+          );
         }
       }
     }
@@ -97,7 +109,13 @@ public final class ResourceUtils {
   }
 
   @SuppressWarnings("unchecked")
-  static void resolveArrayOfLinks(CDAEntry entry, CDAField field, ArrayResource array, SyncContentTypeIdProvider contentTypeIdProvider, SyncAssetValidityChecker assetChecker) {
+  static void resolveArrayOfLinks(
+          CDAEntry entry,
+          CDAField field,
+          ArrayResource array,
+          SyncContentTypeIdProvider contentTypeIdProvider,
+          SyncAssetValidityChecker assetChecker
+  ) {
     CDAType linkType =
         CDAType.valueOf(((String) field.items().get("linkType")).toUpperCase(LOCALE));
     Map<String, Object> value = (Map<String, Object>) entry.fields.get(field.id());
@@ -119,8 +137,7 @@ public final class ResourceUtils {
         if (resource == null) {
           if (linkType == ASSET && assetChecker.isValidAsset(linkId)) {
             resource = CDAResourceFaker.getFakeAsset(linkId);
-          }
-          else if (linkType == ENTRY) {
+          } else if (linkType == ENTRY) {
             String contentTypeId = contentTypeIdProvider.getContentTypeId(linkId);
             if (contentTypeId != null) {
               resource = CDAResourceFaker.getFakeEntry(linkId, contentTypeId);
@@ -137,7 +154,13 @@ public final class ResourceUtils {
   }
 
   @SuppressWarnings("unchecked")
-  static void resolveSingleLink(CDAEntry entry, CDAField field, ArrayResource array, SyncContentTypeIdProvider contentTypeIdProvider, SyncAssetValidityChecker assetChecker) {
+  static void resolveSingleLink(
+          CDAEntry entry,
+          CDAField field,
+          ArrayResource array,
+          SyncContentTypeIdProvider contentTypeIdProvider,
+          SyncAssetValidityChecker assetChecker
+  ) {
     CDAType linkType = CDAType.valueOf(field.linkType().toUpperCase(LOCALE));
     Map<String, Object> value = (Map<String, Object>) entry.fields.get(field.id());
     if (value == null) {
@@ -154,8 +177,7 @@ public final class ResourceUtils {
       if (resource == null) {
         if (linkType == ASSET & assetChecker.isValidAsset(linkId)) {
           resource = CDAResourceFaker.getFakeAsset(linkId);
-        }
-        else if (linkType == ENTRY) {
+        } else if (linkType == ENTRY) {
           String contentTypeId = contentTypeIdProvider.getContentTypeId(linkId);
           if (contentTypeId != null) {
             resource = CDAResourceFaker.getFakeEntry(linkId, contentTypeId);
