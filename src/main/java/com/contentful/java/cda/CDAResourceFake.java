@@ -4,6 +4,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 
 public class CDAResourceFake extends CDAResource {
+    private static final long serialVersionUID = 8340118714770272388L;
 
     @Nullable
     CDAResource getFake(
