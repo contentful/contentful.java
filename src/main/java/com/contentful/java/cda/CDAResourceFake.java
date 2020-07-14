@@ -5,7 +5,6 @@ import io.reactivex.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class CDAResourceFake extends CDAResource {
     private static final long serialVersionUID = 8340118714770272388L;
