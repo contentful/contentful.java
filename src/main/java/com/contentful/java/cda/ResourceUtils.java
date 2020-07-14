@@ -116,9 +116,9 @@ public final class ResourceUtils {
           continue;
         }
         CDAResource resource = findLinkedResource(array, linkType, linkId);
-        if(resource == null) {
+        if (resource == null) {
           String contentTypeId = contentTypeIdProvider.getContentTypeId(linkId);
-          if(contentTypeId != null) {
+          if (contentTypeId != null || linkType == ASSET) {
             resource = new CDAResourceFake().getFake(linkId, contentTypeId, linkType);
           }
         }
@@ -146,9 +146,9 @@ public final class ResourceUtils {
       }
       CDAResource resource = findLinkedResource(array, linkType, linkId);
 
-      if(resource == null) {
+      if (resource == null) {
         String contentTypeId = contentTypeIdProvider.getContentTypeId(linkId);
-        if(contentTypeId != null) {
+        if(contentTypeId != null || linkType == ASSET) {
           resource = new CDAResourceFake().getFake(linkId, contentTypeId, linkType);
         }
       }

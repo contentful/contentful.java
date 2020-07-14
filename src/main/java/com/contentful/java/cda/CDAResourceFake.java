@@ -6,13 +6,15 @@ import io.reactivex.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.contentful.java.cda.Util.checkNotNull;
+
 public class CDAResourceFake extends CDAResource {
     private static final long serialVersionUID = 8340118714770272388L;
 
     @Nullable
     CDAResource getFake(
             @NonNull String id,
-            @NonNull String contentTypeId,
+            @Nullable String contentTypeId,
             @NonNull CDAType cdaType
     ) {
         if (cdaType == CDAType.ENTRY) {
@@ -26,7 +28,7 @@ public class CDAResourceFake extends CDAResource {
 
             contentType.fields = new ArrayList<>();
             contentType.attrs = new HashMap<>();
-            contentType.attrs.put("id", contentTypeId);
+            contentType.attrs.put("id", checkNotNull(contentType, "Can't create Entry with empty ContentType."));
 
             entry.setContentType(contentType);
 
