@@ -35,8 +35,10 @@ public class CDAResourceFake extends CDAResource {
         else if (cdaType == CDAType.ASSET) {
             final CDAAsset asset = new CDAAsset();
 
+            asset.fields = new HashMap<>();
             asset.attrs = new HashMap<>();
             asset.attrs.put("id", id);
+            asset.attrs.put("type", cdaType.name());
 
             return asset;
         }
