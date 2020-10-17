@@ -2,7 +2,6 @@ package com.contentful.java.cda;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static com.contentful.java.cda.Util.checkNotEmpty;
 import static com.contentful.java.cda.Util.checkNotNull;
@@ -86,9 +85,9 @@ public abstract class AbsQuery<
   public Query withLocale(String locale) {
     checkNotNull(locale, "Locale must not be null.");
 
-    Optional.ofNullable(params.get(PARAMETER_LOCALE)).ifPresent(it -> {
-      throw new IllegalStateException(format("Locale \"%s\" is already present in query.", it));
-    });
+    if (params.get(PARAMETER_LOCALE) != null) {
+      throw new IllegalStateException(format("Locale \"%s\" is already present in query.", params.get(PARAMETER_LOCALE)));
+    }
 
     params.put(PARAMETER_LOCALE, locale);
 
