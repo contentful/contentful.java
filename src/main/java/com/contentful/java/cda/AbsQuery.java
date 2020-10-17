@@ -86,7 +86,8 @@ public abstract class AbsQuery<
     checkNotNull(locale, "Locale must not be null.");
 
     if (params.get(PARAMETER_LOCALE) != null) {
-      throw new IllegalStateException(format("Locale \"%s\" is already present in query.", params.get(PARAMETER_LOCALE)));
+      throw new IllegalStateException(format("Locale \"%s\" is already present in query.", 
+          params.get(PARAMETER_LOCALE)));
     }
 
     params.put(PARAMETER_LOCALE, locale);
