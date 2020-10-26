@@ -535,6 +535,8 @@ public class CDAClient {
     Section application;
     Section integration;
 
+    private static final OkHttpClient OK_HTTP_CLIENT = new OkHttpClient();
+
     Builder() {
     }
 
@@ -725,7 +727,9 @@ public class CDAClient {
      */
     public OkHttpClient.Builder defaultCallFactoryBuilder() {
       final Section[] sections = createCustomHeaderSections(application, integration);
+
       OkHttpClient.Builder okBuilder = new OkHttpClient.Builder()
+          .connectionPool(OK_HTTP_CLIENT.connectionPool())
           .addInterceptor(new AuthorizationHeaderInterceptor(token))
           .addInterceptor(new UserAgentHeaderInterceptor(createUserAgent()))
           .addInterceptor(new ContentfulUserAgentHeaderInterceptor(sections))
