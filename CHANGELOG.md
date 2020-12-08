@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Version [10.4.5] - (2020-12-08)
+- Added support for Android > 23
+
 ## Version [10.4.4] - (2020-10-30)
 - Fixes issue with multiple connection pools
 
@@ -246,7 +249,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
-[unreleased]: https://github.com/contentful/contentful.java/compare/v10.4.0...HEAD
+[10.4.5]: https://github.com/contentful/contentful.java/compare/v10.4.4...v10.4.5
 [10.3.3]: https://github.com/contentful/contentful.java/compare/v10.3.3...v10.4.0
 [10.3.3]: https://github.com/contentful/contentful.java/compare/v10.3.2...v10.3.3
 [10.3.2]: https://github.com/contentful/contentful.java/compare/v10.3.1...v10.3.2
