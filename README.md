@@ -387,6 +387,11 @@ Proguard
 
 The [ProGuard configuration file](proguard-cda.cfg) is used to minify Android Apps using this SDK.
 
+Rich Text renderer library
+--------
+
+There is [Java SDK for Rich Text API](https://github.com/contentful/rich-text-renderer-java). It helps in easily rendering rich text stored in Contentful using Java.
+
 Pre-releases
 ------------
 
