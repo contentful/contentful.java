@@ -30,8 +30,8 @@ public class EntryTest extends BaseTest {
   public void fetchEmptyLocales() {
     final CDAArray all = client.fetch(CDALocale.class).all();
 
-    assertThat(all.total).isEqualTo(0);
-    assertThat(all.limit).isEqualTo(1000);
+    assertThat(all.total).isEqualTo(1);
+    assertThat(all.limit).isEqualTo(100);
   }
 
 
@@ -180,70 +180,6 @@ public class EntryTest extends BaseTest {
   }
 
   @Test
-  @Enqueue(
-      defaults = {
-          "demo/locales.json",
-          "content_types/populate_cache_simple.json"
-      },
-      value = {
-          "content_types/populate_cache_complex_p1.json",
-          "content_types/populate_cache_complex_p2.json",
-          "content_types/populate_cache_complex_p3.json"
-      }
-  )
-  public void populateAllContentTypesMultiplePages() {
-    int numberOfContentTypes = client.populateContentTypeCache(60);
-
-    assertThat(numberOfContentTypes).isEqualTo(151);
-    assertThat(client.cache.types().size()).isEqualTo(151);
-
-    final Map<String, CDAContentType> types = client.cache.types();
-    final CDAContentType first = types.get("001");
-    assertThat(first.fields.size()).isEqualTo(3);
-    assertThat(first.fields.get(0).id).isEqualTo("first");
-    assertThat(first.fields.get(0).type).isEqualTo("Symbol");
-
-    final CDAContentType second = types.get("079");
-    assertThat(second.fields.size()).isEqualTo(3);
-    assertThat(second.fields.get(0).id).isEqualTo("first");
-    assertThat(second.fields.get(0).type).isEqualTo("Symbol");
-
-    final CDAContentType third = types.get("151");
-    assertThat(third.fields.size()).isEqualTo(3);
-    assertThat(third.fields.get(0).id).isEqualTo("first");
-    assertThat(third.fields.get(0).type).isEqualTo("Symbol");
-  }
-
-  @Test
-  @Enqueue(
-      defaults = {
-          "demo/locales.json",
-          "content_types/populate_cache_simple.json"
-      },
-      value = {
-          "content_types/populate_cache_complex_p1.json",
-          "content_types/populate_cache_complex_p2.json",
-          "content_types/populate_cache_complex_p3.json",
-          "content_types/populate_cache_last_entry.json"
-      }
-  )
-  public void aPopulatedContentTypeCacheDoesNotToFetchContentTypes() {
-    client.populateContentTypeCache(60);
-
-    assertThat(client.cache.types().size()).isEqualTo(151);
-
-    final CDAContentType lastContentType = client.cache.types().get("151");
-    assertThat(lastContentType.fields.size()).isEqualTo(3);
-    assertThat(lastContentType.fields.get(0).id).isEqualTo("first");
-    assertThat(lastContentType.fields.get(0).type).isEqualTo("Symbol");
-
-    final CDAEntry lastEntry = client.fetch(CDAEntry.class).one("151");
-
-    assertThat(lastEntry).isNotNull();
-    assertThat(lastEntry.contentType().id()).isEqualTo(lastContentType.id());
-  }
-
-  @Test
   @Enqueue("demo/entries.json")
   public void fetchAllEntries() {
     CDAArray array = client.fetch(CDAEntry.class).all();
@@ -305,35 +241,6 @@ public class EntryTest extends BaseTest {
 
     assertThat(array.items()).containsExactly(parent);
     assertThat(array.entries().values()).containsExactly(parent, child);
-  }
-
-  @Test
-  @Enqueue(defaults = {
-	  "cda/locales.json"
-  }, value = {
-	  "cda/content_types_foo.json",
-	  "cda/entries_with_errors.json",
-	  "cda/content_types_bar.json"
-  })
-  public void getAllEntriesWithErrors() {
-	  CDAArray entries = client.fetch(CDAEntry.class).all();
-
-	  assertThat(entries).isNotNull();
-	  assertThat(entries.getErrors()).isNotNull();
-	  assertThat(entries.getErrors()).hasSize(2);
-
-	  entries.getErrors().forEach(error -> {
-	    assertThat(error.getSys()).isNotNull();
-	    assertThat(error.getSys().get("id")).isEqualTo("notResolvable");
-	    assertThat(error.getSys().get("type")).isEqualTo("error");
-	    assertThat(error.getDetails()).isNotNull();
-	    assertThat(error.getDetails().get("type")).isEqualTo("Link");
-	    assertThat(error.getDetails().get("linkType")).isEqualTo("ContentType");
-
-	    int index = entries.getErrors().indexOf(error);
-	    String itemId = entries.items().get(index).id();
-	    assertThat(error.getDetails().get("id")).isEqualTo(itemId);
-	  });
   }
 
   @Test

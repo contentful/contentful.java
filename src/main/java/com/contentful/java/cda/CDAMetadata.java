@@ -1,8 +1,6 @@
 package com.contentful.java.cda;
 
 import java.util.List;
-import java.util.Map;
-
 public class CDAMetadata {
     public List<CDAField> getTags() {
         return tags;
@@ -15,8 +13,6 @@ public class CDAMetadata {
 
     @Override
     public String toString() {
-        return "CDAMetadata{" +
-                "tags=" + tags +
-                '}';
+        return "CDAMetadata{" + "tags=" + getTags() + '}';
     }
 }

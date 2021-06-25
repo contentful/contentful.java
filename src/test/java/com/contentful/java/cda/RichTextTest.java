@@ -41,8 +41,6 @@ public class RichTextTest extends BaseTest {
     assertThat(heading.getContent()).hasSize(1);
     assertThat(heading.getContent().get(0)).isInstanceOf(CDARichText.class);
     final CDARichText text = (CDARichText) heading.getContent().get(0);
-    System.out.println("Czas " +  TimeUnit.NANOSECONDS.toMillis(estimatedTime));
-
     assertThat(text.getText()).isEqualTo("This is a level one headline");
   }
 
