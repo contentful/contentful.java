@@ -30,8 +30,8 @@ public class EntryTest extends BaseTest {
   public void fetchEmptyLocales() {
     final CDAArray all = client.fetch(CDALocale.class).all();
 
-    assertThat(all.total).isEqualTo(0);
-    assertThat(all.limit).isEqualTo(1000);
+    assertThat(all.total).isEqualTo(1);
+    assertThat(all.limit).isEqualTo(100);
   }
 
 
