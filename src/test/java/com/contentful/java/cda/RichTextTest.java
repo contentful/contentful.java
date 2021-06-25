@@ -19,15 +19,19 @@ import com.contentful.java.cda.rich.CDARichText;
 import com.contentful.java.cda.rich.CDARichUnorderedList;
 import org.junit.Test;
 
+import java.util.concurrent.TimeUnit;
+
 import static com.google.common.truth.Truth.assertThat;
 
 public class RichTextTest extends BaseTest {
   @Test
   @Enqueue(value = "rich_text/simple_headline_1.json", defaults = {"rich_text/locales.json", "rich_text/content_types.json"})
   public void simple_headline_1_test() {
+    long start_time = System.nanoTime();
     final CDAEntry entry = (CDAEntry) client.fetch(CDAEntry.class).all().items().get(0);
     final CDARichDocument rich = entry.getField("rich");
-    assertThat(rich).isNotNull();
+    long estimatedTime = System.nanoTime() - start_time;
+    //assertThat(rich).isNotNull();
 
     assertThat(rich.getContent()).hasSize(2);
     assertThat(rich.getContent().get(0)).isInstanceOf(CDARichHeading.class);
@@ -37,6 +41,8 @@ public class RichTextTest extends BaseTest {
     assertThat(heading.getContent()).hasSize(1);
     assertThat(heading.getContent().get(0)).isInstanceOf(CDARichText.class);
     final CDARichText text = (CDARichText) heading.getContent().get(0);
+    System.out.println("Czas " +  TimeUnit.NANOSECONDS.toMillis(estimatedTime));
+
     assertThat(text.getText()).isEqualTo("This is a level one headline");
   }
 

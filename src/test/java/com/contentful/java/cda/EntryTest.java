@@ -26,6 +26,16 @@ public class EntryTest extends BaseTest {
   }
 
   @Test
+  @Enqueue("demo/entries_nyancat.json")
+  public void fetchEmptyLocales() {
+    final CDAArray all = client.fetch(CDALocale.class).all();
+
+    assertThat(all.total).isEqualTo(0);
+    assertThat(all.limit).isEqualTo(1000);
+  }
+
+
+  @Test
   @Enqueue("array_empty.json")
   public void fetchNonExistingEntryThrowsError() throws InterruptedException {
     final Object result[] = new Object[]{new Object()};
