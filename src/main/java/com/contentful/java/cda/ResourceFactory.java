@@ -11,6 +11,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import static com.contentful.java.cda.rich.RichTextFactory.resolveRichTextField;
 
@@ -52,29 +53,58 @@ final class ResourceFactory {
       Response<SynchronizedSpace> newSpace,
       SynchronizedSpace oldSpace,
       CDAClient client) {
+    long start_time = System.nanoTime();
+    long estimatedTime = System.nanoTime() - start_time;
+
     Map<String, CDAAsset> assets = new HashMap<>();
     Map<String, CDAEntry> entries = new HashMap<>();
-
+    estimatedTime = System.nanoTime() - start_time;
+    System.out.println("Czas " +  TimeUnit.NANOSECONDS.toMillis(estimatedTime));
     // Map resources from existing space
     if (oldSpace != null) {
       ResourceUtils.mapResources(oldSpace.items(), assets, entries);
     }
+    estimatedTime = System.nanoTime() - start_time;
+    System.out.println("Czas1 " +  TimeUnit.NANOSECONDS.toMillis(estimatedTime));
 
     SynchronizedSpace result = ResourceUtils.iterate(newSpace, client);
+    estimatedTime = System.nanoTime() - start_time;
+    System.out.println("Czas2 " +  TimeUnit.NANOSECONDS.toMillis(estimatedTime));
     ResourceUtils.mapResources(result.items(), assets, entries);
+    estimatedTime = System.nanoTime() - start_time;
+    System.out.println("Czas3 " +  TimeUnit.NANOSECONDS.toMillis(estimatedTime));
     ResourceUtils.mapDeletedResources(result);
+    estimatedTime = System.nanoTime() - start_time;
+    System.out.println("Czas4 " +  TimeUnit.NANOSECONDS.toMillis(estimatedTime));
 
     List<CDAResource> items = new ArrayList<>();
+    estimatedTime = System.nanoTime() - start_time;
+    System.out.println("Czas5 " +  TimeUnit.NANOSECONDS.toMillis(estimatedTime));
     items.addAll(assets.values());
+    estimatedTime = System.nanoTime() - start_time;
+    System.out.println("Czas6 " +  TimeUnit.NANOSECONDS.toMillis(estimatedTime));
     items.addAll(entries.values());
+    estimatedTime = System.nanoTime() - start_time;
+    System.out.println("Czas7 " +  TimeUnit.NANOSECONDS.toMillis(estimatedTime));
     result.items = items;
+    estimatedTime = System.nanoTime() - start_time;
+    System.out.println("Czas8 " +  TimeUnit.NANOSECONDS.toMillis(estimatedTime));
     result.assets = assets;
+    estimatedTime = System.nanoTime() - start_time;
+    System.out.println("Czas9 " +  TimeUnit.NANOSECONDS.toMillis(estimatedTime));
     result.entries = entries;
+    estimatedTime = System.nanoTime() - start_time;
+    System.out.println("Czas10 " +  TimeUnit.NANOSECONDS.toMillis(estimatedTime));
 
     ResourceUtils.setRawFields(result);
+    estimatedTime = System.nanoTime() - start_time;
+    System.out.println("Czas11 " +  TimeUnit.NANOSECONDS.toMillis(estimatedTime));
     resolveRichTextField(result, client);
+    estimatedTime = System.nanoTime() - start_time;
+    System.out.println("Czas12 " +  TimeUnit.NANOSECONDS.toMillis(estimatedTime));
     ResourceUtils.resolveLinks(result, client);
-
+    estimatedTime = System.nanoTime() - start_time;
+    System.out.println("Czas13 " +  TimeUnit.NANOSECONDS.toMillis(estimatedTime));
     return result;
   }
 

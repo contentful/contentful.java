@@ -19,6 +19,8 @@ public class CDAArray extends ArrayResource {
 
   private List<CDAError> errors;
 
+  CDAMetadata metadata;
+
   /**
    * @return total number of resources (linked excluded).
    */

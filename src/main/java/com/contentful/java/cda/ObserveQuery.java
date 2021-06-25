@@ -85,7 +85,7 @@ public class ObserveQuery<T extends CDAResource> extends AbsQuery<T, ObserveQuer
    * @return {@link Flowable} instance.
    */
   public Flowable<CDAArray> all() {
-    return client.cacheAll(false)
+    return client.cacheAll(true)
         .flatMap(
             new Function<Cache, Publisher<Response<CDAArray>>>() {
               @Override
