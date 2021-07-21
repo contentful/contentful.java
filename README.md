@@ -277,7 +277,7 @@ public static class Cat {
   Cat mate;
 
   @ContentfulField
-  CDAEntry favoriteFood;
+  FavoriteFood favoriteFood;
 
   @ContentfulSystemField("id")
   String contentfulId;
@@ -302,7 +302,7 @@ In addition to returning the Content in a fashion flexible for various use-cases
 > * Specifying a `value` for the `@ContentfulField`-annotation , will use the value of the similarly called field id instead of the name of the custom field.
 > * A `locale` can be used to specify a given locale of this entry. If no locale is given, the default locale will be used. 
 > * `@ContentfulSystemField` is used for CDAEntries attributes (`sys.id`, etc) to be inserted.
-> * Currently only one type is transformed. A cat cannot have another content type transformed. Using CDAEntries instead is recommended.
+> * If another type is wanted to be transformed, it should have `@ContentfulEntryModel`-annotation specified similarly as in `Cat`. 
 
 
 Select
