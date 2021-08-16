@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/feature_graphic.png" alt="Contentful Java SDK"><br/>
+  <img src="assets/feature_graphic.png" alt="Contentful Java Library"><br/>
 
   <a href="https://www.contentful.com/slack/">
     <img src="https://img.shields.io/badge/-Join%20Community%20Slack-2AB27B.svg?logo=slack&maxAge=31557600" alt="Join Contentful Community Slack">
@@ -10,11 +10,11 @@
   </a>
 </p>
 
-contentful.java - Contentful Java Delivery SDK
-==============================================
+contentful.java - Contentful Java Delivery Library
+==================================================
 [![Build Status](https://travis-ci.org/contentful/contentful.java.svg)](https://travis-ci.org/contentful/contentful.java/builds#)
 
-> Java SDK for [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/). It helps in easily accessing the content stored in Contentful using Java applications.
+> Java library for [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/). It helps in easily accessing the content stored in Contentful using Java applications.
 
 
 What is Contentful?
@@ -86,7 +86,7 @@ Install the Contentful dependency:
 compile 'com.contentful.java:java-sdk:10.5.0'
 ```
 
-This SDK requires Java 8 (or higher version) or Android 21.
+This library requires Java 8 (or higher version) or Android 21.
 
 Client Creation
 ---------------
@@ -245,7 +245,7 @@ The above snippet will fetch the first _23_ Entries, sorted by creation date wit
 Includes
 --------
 
-The SDK contains a feature called link resolution, which will take a link and resolve them. So there is no need to look through entry id's manually, a simple `.getField(…)` retrieves and entry directly, no need to use the link elements themselves.
+The library contains a feature called link resolution, which will take a link and resolve them. So there is no need to look through entry id's manually, a simple `.getField(…)` retrieves and entry directly, no need to use the link elements themselves.
 
 For this feature to work, the linked entry needs to be _published_ (see [preview](#preview)) and the include level needs to be set to include this entry. A level of `2` means, that the links of links are getting resolved. Entries of deeper levels contain an empty field if the link could not be resolved. Finding the id of the not resolved field can be achieved through comparing the `.rawFields` with the `.fields` property of an Entry.
 
@@ -287,7 +287,7 @@ public static class Cat {
 }
 ```
 
-If this SDK should return a given response like the one above instead of a CDAEntry, the following code snippet will accomplish that:
+If this library should return a given response like the one above instead of a CDAEntry, the following code snippet will accomplish that:
 
 ```
 Cat happycat = client
@@ -308,7 +308,7 @@ In addition to returning the Content in a fashion flexible for various use-cases
 Select
 ------
 
-The amount of data returned by the API can be reduced by using the `.select()` method on a query. With this, Contentful only returns the selected fields. The SDK enforces that the `sys` fields (`.getAttribute()` on an Entry) will always be returned, since it is used for the proper functioning of the SDK.
+The amount of data returned by the API can be reduced by using the `.select()` method on a query. With this, Contentful only returns the selected fields. The library enforces that the `sys` fields (`.getAttribute()` on an Entry) will always be returned, since it is used for the proper functioning of the library.
 
 If reducing the payload size is wanted, the following snippet can explain how to accomplish that
 
@@ -384,17 +384,17 @@ CDAClient cdaClient = clientBuilder.setCallFactory(httpClient).build();
 Proguard
 --------
 
-The [ProGuard configuration file](proguard-cda.cfg) is used to minify Android Apps using this SDK.
+The [ProGuard configuration file](proguard-cda.cfg) is used to minify Android Apps using this library.
 
 Rich Text renderer library
 --------
 
-There is [Java SDK for Rich Text API](https://github.com/contentful/rich-text-renderer-java). It helps in easily rendering rich text stored in Contentful using Java.
+There is [Java library for Rich Text API](https://github.com/contentful/rich-text-renderer-java). It helps in easily rendering rich text stored in Contentful using Java.
 
 Pre-releases
 ------------
 
-Development versions of this SDK are available through 
+Development versions of this library are available through 
 
 * [Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/com/contentful/java/java-sdk/):
 
