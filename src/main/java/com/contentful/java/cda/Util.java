@@ -1,9 +1,9 @@
 package com.contentful.java.cda;
 
+import java.util.Map;
 import okhttp3.HttpUrl;
 
-import java.util.Map;
-
+import static com.contentful.java.cda.CDAType.ARRAY;
 import static com.contentful.java.cda.CDAType.ASSET;
 import static com.contentful.java.cda.CDAType.CONTENTTYPE;
 import static com.contentful.java.cda.CDAType.DELETEDASSET;
@@ -64,6 +64,8 @@ final class Util {
       return CDALocale.class;
     } else if (DELETEDASSET.equals(type) || DELETEDENTRY.equals(type)) {
       return DeletedResource.class;
+    } else if (ARRAY.equals(type)) {
+      return CDAArray.class;
     }
     throw new IllegalArgumentException("Invalid type provided: " + type);
   }

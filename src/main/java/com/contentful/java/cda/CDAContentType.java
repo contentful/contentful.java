@@ -1,18 +1,25 @@
 package com.contentful.java.cda;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.List;
 
 /**
  * Represents a single content type.
  */
+@JsonTypeName("ContentType")
 public class CDAContentType extends CDAResource {
   private static final long serialVersionUID = 7901798878659781364L;
+  @JsonProperty
   List<CDAField> fields;
 
+  @JsonProperty
   String name;
 
+  @JsonProperty
   String displayField;
 
+  @JsonProperty
   String description;
 
   /**

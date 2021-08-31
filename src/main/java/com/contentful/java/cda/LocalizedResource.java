@@ -1,5 +1,8 @@
 package com.contentful.java.cda;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -46,12 +49,15 @@ public abstract class LocalizedResource extends CDAResource {
     }
   }
 
+  @JsonIgnore
   String defaultLocale;
-
+  @JsonIgnore
   Map<String, String> fallbackLocaleMap;
 
-  Map<String, Object> fields;
+  @JsonProperty(defaultValue = "{}")
+  Map<String, Object> fields = new HashMap<>();
 
+  @JsonIgnore
   Map<String, Object> rawFields;
 
   /**

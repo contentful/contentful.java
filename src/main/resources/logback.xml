@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <!-- Console Log Setting -->
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <encoder>
+        <pattern>[%d{yyyy/MM/dd HH:mm:ss}] %highlight(%-5level)| %cyan(%-25.25logger{0}) | %msg%n</pattern>
+      </encoder>
+    </layout>
+  </appender>
+
+  <root level="INFO">
+    <appender-ref ref="STDOUT" />
+  </root>
+
+</configuration>

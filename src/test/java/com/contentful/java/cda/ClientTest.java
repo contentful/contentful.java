@@ -6,18 +6,15 @@ import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor;
 import com.contentful.java.cda.interceptor.UserAgentHeaderInterceptor;
 import com.contentful.java.cda.lib.Enqueue;
 import com.contentful.java.cda.lib.EnqueueResponse;
-
-import org.junit.Test;
-
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
-
 import okhttp3.Call;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import okhttp3.mockwebserver.RecordedRequest;
+import org.junit.Test;
 
 import static com.contentful.java.cda.SyncType.onlyEntriesOfType;
 import static com.google.common.truth.Truth.assertThat;
@@ -33,8 +30,10 @@ public class ClientTest extends BaseTest {
 
   public static final String ERROR_MESSAGE = "This is an expected error!";
 
-  @Test @Enqueue
-  public void notUsingCustomCallFactoryDoesCreateCallFactoryWithAuthAndUserAgentInterceptors() throws InterruptedException {
+  @Test
+  @Enqueue(value = "demo/space.json", defaults = {})
+  public void notUsingCustomCallFactoryDoesCreateCallFactoryWithAuthAndUserAgentInterceptors()
+      throws InterruptedException {
 
     createClient().fetchSpace();
 
@@ -47,7 +46,8 @@ public class ClientTest extends BaseTest {
     assertThat(headers.get(UserAgentHeaderInterceptor.HEADER_NAME)).startsWith("contentful.java");
   }
 
-  @Test @Enqueue
+  @Test
+  @Enqueue(value = "demo/space.json", defaults = {})
   public void usingCustomCallFactoryDoesNotAddDefaultHeaders() throws InterruptedException {
     final Call.Factory callFactory = new OkHttpClient.Builder().build();
 
@@ -68,7 +68,8 @@ public class ClientTest extends BaseTest {
     assertThat(headers.get(UserAgentHeaderInterceptor.HEADER_NAME)).startsWith("okhttp");
   }
 
-  @Test @Enqueue
+  @Test
+  @Enqueue(value = "demo/space.json", defaults = {})
   public void customCallFactoryCanAddInterceptors() throws IOException {
     final Interceptor interceptor = spy(new AuthorizationHeaderInterceptor(DEFAULT_TOKEN));
 
@@ -85,7 +86,8 @@ public class ClientTest extends BaseTest {
     verify(interceptor).intercept(any(Interceptor.Chain.class));
   }
 
-  @Test(expected = RuntimeException.class) @Enqueue
+  @Test(expected = RuntimeException.class)
+  @Enqueue(value = "demo/space.json", defaults = {})
   public void throwingAnExceptionInAnInterceptorResultsInRuntimeException() {
     final Interceptor interceptor = chain -> {
       throw new IOException(ERROR_MESSAGE);
@@ -133,13 +135,14 @@ public class ClientTest extends BaseTest {
     try {
       CDAClient.builder().setSpace("space").build();
     } catch (NullPointerException e) {
-      assertThat(e.getMessage()).isEqualTo("A token must be provided, if no call factory is specified.");
+      assertThat(e.getMessage()).isEqualTo(
+          "A token must be provided, if no call factory is specified.");
       throw e;
     }
   }
 
   @Test
-  @Enqueue
+  @Enqueue(value = "demo/space.json", defaults = {})
   public void authHeader() throws InterruptedException {
     client.fetchSpace();
     RecordedRequest request = server.takeRequest();
@@ -147,7 +150,7 @@ public class ClientTest extends BaseTest {
   }
 
   @Test
-  @Enqueue
+  @Enqueue(value = "demo/space.json", defaults = {})
   public void userAgentHeader() throws InterruptedException {
     String versionName = GeneratedBuildParameters.PROJECT_VERSION;
     assertThat(versionName).matches("^\\d+\\.\\d+\\.\\d+(-\\w+)?$");
@@ -361,9 +364,9 @@ public class ClientTest extends BaseTest {
           .setLogLevel(Logger.Level.BASIC)
           .setLogger(null)
           .build();
-
     } catch (IllegalArgumentException e) {
-      assertThat(e.getMessage()).isEqualTo("Cannot log to a null logger. Please set either logLevel to None, or do set a Logger");
+      assertThat(e.getMessage()).isEqualTo(
+          "Cannot log to a null logger. Please set either logLevel to None, or do set a Logger");
       throw e;
     }
   }
@@ -401,7 +404,8 @@ public class ClientTest extends BaseTest {
     }
   }
 
-  @Test @Enqueue
+  @Test
+  @Enqueue(value = "demo/space.json", defaults = {})
   public void customCallFactoryCanUseDefault() {
 
     final CDAClient.Builder builder = createBuilder();
@@ -419,7 +423,7 @@ public class ClientTest extends BaseTest {
   }
 
   @Test
-  @Enqueue
+  @Enqueue(value = "demo/space.json", defaults = {})
   public void contentfulCustomHeaderUsed() throws InterruptedException {
     final CDAClient client = createBuilder().build();
 
@@ -431,9 +435,8 @@ public class ClientTest extends BaseTest {
     assertThat(headerValue).matches("((sdk|platform|os) [.a-zA-Z0-9]+/[.a-zA-Z0-9]+(-.*)?; ?){3}");
   }
 
-
   @Test
-  @Enqueue
+  @Enqueue(value = "demo/space.json", defaults = {})
   public void addingApplicationToCustomHeaderWorks() throws InterruptedException {
     final CDAClient client = createBuilder()
         .setApplication("Contentful Java Unit Test", "0.0.1-beta4")
@@ -448,7 +451,7 @@ public class ClientTest extends BaseTest {
   }
 
   @Test
-  @Enqueue
+  @Enqueue(value = "demo/space.json", defaults = {})
   public void addingIntegrationToCustomHeaderWorks() throws InterruptedException {
     // use this features if you are using creating a library on top of the sdk.
     final CDAClient client = createBuilder()
@@ -479,7 +482,6 @@ public class ClientTest extends BaseTest {
       protected void onFailure(Throwable error) {
         latch.countDown();
       }
-
     });
 
     latch.await();
