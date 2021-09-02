@@ -11,9 +11,8 @@ import com.fasterxml.jackson.databind.type.SimpleType;
 import java.util.Collection;
 
 /**
- * Allows using nested "dot" dyntax for type discriminators. To use, annotate class with
+ * Allows using nested "dot" dyntax for type discriminators.
  *
- * @JsonTypeResolver(NestedTypeResolver.class)
  */
 public class NestedTypeResolver extends StdTypeResolverBuilder {
   @Override
