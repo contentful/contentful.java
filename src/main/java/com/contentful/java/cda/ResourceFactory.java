@@ -121,7 +121,6 @@ final class ResourceFactory {
         .addModule(new Jdk8Module())
         .addModule(new JavaTimeModule())
         .addModule(new MrBeanModule())
-        .findAndAddModules()
         .enable(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT)
         .enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
         .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
