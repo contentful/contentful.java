@@ -408,14 +408,11 @@ public class CDAClient {
     List<CDALocale> locales = invalidate ? null : cache.locales();
     if (locales == null) {
       return service.array(spaceId, environmentId, PATH_LOCALES, new HashMap<>())
-          .map(new Function<Response<CDAArray>, List<CDALocale>>() {
-                 @Override
-                 public List<CDALocale> apply(Response<CDAArray> localesResponse) {
-                   final List<CDALocale> locales1 = fromArrayToItems(fromResponse(localesResponse));
-                   cache.setLocales(locales1);
-                   return locales1;
-                 }
-               }
+          .map(localesResponse -> {
+            final List<CDALocale> locales1 = fromArrayToItems(fromResponse(localesResponse));
+            cache.setLocales(locales1);
+            return locales1;
+          }
           );
     }
     return Flowable.just(locales);

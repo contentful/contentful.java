@@ -5,17 +5,6 @@
   "total": 1,
   "skip": 0,
   "limit": 100,
-  "metadata": {
-    "tags": [
-      {
-        "sys": {
-          "type": "Link",
-          "linkType": "Tag",
-          "id": "nyCampaign"
-        }
-      }
-    ]
-  },
   "items": [
     {
       "fields": {
