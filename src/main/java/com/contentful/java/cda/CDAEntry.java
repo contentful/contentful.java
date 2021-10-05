@@ -1,11 +1,8 @@
 package com.contentful.java.cda;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
-
 /**
  * The class represents a basic entry in the space.
  */
-@JsonTypeName("Entry")
 public class CDAEntry extends LocalizedResource {
   private static final long serialVersionUID = 5902790363045498307L;
   private CDAContentType contentType;

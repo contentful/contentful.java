@@ -1,15 +1,9 @@
 package com.contentful.java.cda;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.module.mrbean.MrBeanModule;
-import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.io.IOException;
+import retrofit2.Response;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -17,7 +11,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import retrofit2.Response;
 
 import static com.contentful.java.cda.rich.RichTextFactory.resolveRichTextField;
 
@@ -27,7 +20,6 @@ final class ResourceFactory {
   }
 
   static final Gson GSON = createGson();
-  static final ObjectMapper OBJECT_MAPPER = createObjectMapper();
 
   static CDAArray array(Response<CDAArray> arrayResponse, CDAClient client) {
     CDAArray array = arrayResponse.body();
@@ -88,16 +80,6 @@ final class ResourceFactory {
     return response.body();
   }
 
-  static CDAError errorFromResponse(Response response) {
-    try {
-      if (response.errorBody() != null) {
-        return OBJECT_MAPPER.readValue(response.errorBody().byteStream(), CDAError.class);
-      }
-    } catch (IOException e) {
-    }
-    return new CDAError();
-  }
-
   @SuppressWarnings("unchecked")
   static <T extends CDAResource> List<T> fromArrayToItems(CDAArray array) {
     final List<T> result = new ArrayList<>(array.items.size());
@@ -113,18 +95,5 @@ final class ResourceFactory {
     return new GsonBuilder()
         .registerTypeAdapter(CDAResource.class, new ResourceDeserializer())
         .create();
-  }
-
-  private static ObjectMapper createObjectMapper() {
-    return JsonMapper.builder()
-        .addModule(new ParameterNamesModule())
-        .addModule(new Jdk8Module())
-        .addModule(new JavaTimeModule())
-        .addModule(new MrBeanModule())
-        .enable(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT)
-        .enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
-        .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-        .disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES)
-        .build();
   }
 }
