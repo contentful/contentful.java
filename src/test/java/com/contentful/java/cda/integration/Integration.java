@@ -19,12 +19,14 @@ import com.contentful.java.cda.SynchronizedSpace;
 import com.contentful.java.cda.TransformQuery.ContentfulEntryModel;
 import com.contentful.java.cda.TransformQuery.ContentfulField;
 import com.contentful.java.cda.TransformQuery.ContentfulSystemField;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import org.junit.Before;
-import org.junit.Test;
 
 import static com.contentful.java.cda.CDAType.SPACE;
 import static com.contentful.java.cda.QueryOperation.Exists;
@@ -697,7 +699,7 @@ public class Integration {
     String dayOfBirth;
 
     @ContentfulField(locale = "en-US")
-    int lives; // remember: Contentful ints are javas Doubles
+    Double lives; // remember: Contentful ints are javas Doubles
 
     @ContentfulField
     Cat bestFriend;
@@ -720,9 +722,9 @@ public class Integration {
 
     assertThat(happycat.bestFriend).isNotNull();
     assertThat(happycat.bestFriend.internal_id).isEqualTo("nyancat");
-    assertThat(happycat.bestFriend.lives).isEqualTo(1337);
+    assertThat(happycat.bestFriend.lives).isWithin(0.01).of(1337);
 
-    assertThat(happycat.lives).isEqualTo(1);
+    assertThat(happycat.lives).isEqualTo(1.0);
 
     assertThat(happycat.dayOfBirth).isEqualTo("2003-10-28T23:00:00+00:00");
 
@@ -775,7 +777,7 @@ public class Integration {
     assertThat(entry.<String>getField("name")).isEqualTo("Nyan Cat");
     assertThat(entry.<String>getField("color")).isEqualTo("rainbow");
     assertThat(entry.<String>getField("birthday")).isEqualTo("2011-04-04T22:00:00+00:00");
-    assertThat(entry.<Integer>getField("lives")).isEqualTo(1337);
+    assertThat(entry.<Double>getField("lives")).isEqualTo(1337.0);
 
     List<String> likes = entry.getField("likes");
     assertThat(likes).containsExactly("rainbows", "fish");

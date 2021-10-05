@@ -1,25 +1,20 @@
 package com.contentful.java.cda;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Represents a single locale.
  */
-@JsonTypeName("Locale")
 public class CDALocale extends CDAResource {
   private static final long serialVersionUID = -5710267672379169621L;
-  @JsonProperty String code;
+  String code;
 
-  @JsonProperty String name;
+  String name;
 
   @SerializedName("fallbackCode")
-  @JsonProperty("fallbackCode")
   String fallbackLocaleCode;
 
   @SerializedName("default")
-  @JsonProperty("default")
   boolean defaultLocale;
 
   /**

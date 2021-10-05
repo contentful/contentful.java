@@ -1,6 +1,5 @@
 package com.contentful.java.cda;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -10,7 +9,6 @@ public class CDAError implements Serializable {
 
   private Map<String, Object> sys;
 
-  @JsonProperty
   private Map<String, Object> details;
 
   public Map<String, Object> getSys() {
@@ -20,5 +18,4 @@ public class CDAError implements Serializable {
   public Map<String, Object> getDetails() {
     return details;
   }
-
 }

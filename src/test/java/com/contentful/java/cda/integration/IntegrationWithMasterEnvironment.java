@@ -7,6 +7,7 @@ import com.contentful.java.cda.CDALocale;
 import com.contentful.java.cda.CDASpace;
 import com.contentful.java.cda.LocalizedResource;
 import com.contentful.java.cda.SynchronizedSpace;
+
 import java.util.List;
 
 import static com.contentful.java.cda.CDAType.SPACE;
@@ -54,7 +55,7 @@ public class IntegrationWithMasterEnvironment extends Integration {
     assertThat(entry.<String>getField("name")).isEqualTo("Nyan Cat");
     assertThat(entry.<String>getField("color")).isEqualTo("rainbow");
     assertThat(entry.<String>getField("birthday")).isEqualTo("2011-04-04T22:00+00:00");
-    assertThat(entry.<Integer>getField("lives")).isEqualTo(1337);
+    assertThat(entry.<Double>getField("lives")).isEqualTo(1337.0);
 
     List<String> likes = entry.getField("likes");
     assertThat(likes).containsExactly("rainbows", "fish");
