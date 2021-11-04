@@ -15,6 +15,7 @@ import io.reactivex.functions.Function;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import org.reactivestreams.Publisher;
+import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -106,7 +107,7 @@ public class CDAClient {
     }
 
     Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
-        .addConverterFactory(GsonConverterFactory.create(ResourceFactory.GSON))
+        .addConverterFactory(clientBuilder.createOrGetConverterFactory(clientBuilder))
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .callFactory(clientBuilder.createOrGetCallFactory(clientBuilder))
         .baseUrl(endpoint);
@@ -528,6 +529,7 @@ public class CDAClient {
     Logger.Level logLevel = Logger.Level.NONE;
 
     Call.Factory callFactory;
+    Converter.Factory converterFactory;
 
     boolean preview;
     Tls12Implementation tls12Implementation = useRecommendation;
@@ -639,6 +641,29 @@ public class CDAClient {
       }
 
       return callFactory;
+    }
+
+    /**
+     * Sets a custom converter factory.
+     *
+     * @param converterFactory the factory to be used to convert.
+     * @return this builder for chaining.
+     */
+    public Builder setConverterFactory(Converter.Factory converterFactory) {
+      this.converterFactory = converterFactory;
+      return this;
+    }
+
+    Converter.Factory createOrGetConverterFactory(Builder clientBuilder) {
+      final Converter.Factory converterFactory;
+
+      if (clientBuilder.converterFactory == null) {
+        converterFactory = GsonConverterFactory.create(ResourceFactory.GSON);
+      } else {
+        converterFactory = clientBuilder.converterFactory;
+      }
+
+      return converterFactory;
     }
 
     private OkHttpClient.Builder setLogger(OkHttpClient.Builder okBuilder) {
