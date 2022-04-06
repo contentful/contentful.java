@@ -1,9 +1,9 @@
 package com.contentful.java.cda;
 
-import io.reactivex.Flowable;
-import io.reactivex.flowables.ConnectableFlowable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.flowables.ConnectableFlowable;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 final class Callbacks {
   private Callbacks() {
@@ -11,7 +11,7 @@ final class Callbacks {
   }
 
   static <O, C> CDACallback<C> subscribeAsync(
-      Flowable<O> flowable, CDACallback<C> callback, CDAClient client) {
+          Flowable<O> flowable, CDACallback<C> callback, CDAClient client) {
     ConnectableFlowable<O> connectable = flowable.observeOn(Schedulers.io()).publish();
 
     callback.setSubscription(connectable.subscribe(

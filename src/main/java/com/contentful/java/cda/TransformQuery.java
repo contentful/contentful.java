@@ -2,9 +2,9 @@ package com.contentful.java.cda;
 
 import com.google.code.regexp.Matcher;
 import com.google.code.regexp.Pattern;
-import io.reactivex.Flowable;
-import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.functions.Predicate;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

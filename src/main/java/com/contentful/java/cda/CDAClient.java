@@ -10,14 +10,14 @@ import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.
 import com.contentful.java.cda.interceptor.ErrorInterceptor;
 import com.contentful.java.cda.interceptor.LogInterceptor;
 import com.contentful.java.cda.interceptor.UserAgentHeaderInterceptor;
-import io.reactivex.Flowable;
-import io.reactivex.functions.Function;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.functions.Function;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import org.reactivestreams.Publisher;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import javax.net.ssl.TrustManager;
@@ -107,7 +107,7 @@ public class CDAClient {
 
     Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create(ResourceFactory.GSON))
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous())
         .callFactory(clientBuilder.createOrGetCallFactory(clientBuilder))
         .baseUrl(endpoint);
 
