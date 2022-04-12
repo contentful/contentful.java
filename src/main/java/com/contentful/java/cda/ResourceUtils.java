@@ -1,8 +1,8 @@
 package com.contentful.java.cda;
 
-import io.reactivex.Flowable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Predicate;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.functions.Predicate;
 import retrofit2.Response;
 
 import java.util.ArrayList;

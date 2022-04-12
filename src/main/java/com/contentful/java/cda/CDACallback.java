@@ -1,6 +1,6 @@
 package com.contentful.java.cda;
 
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
  * Communicates responses from a server or offline requests. One and only one method will be
