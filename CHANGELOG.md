@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Version [10.5.3] - (2022-05-07)
+- Fixed issue with unwrapping
+- Updated RxJava to version 3.1.3
+
 ## Version [10.4.5] - (2020-12-08)
 - Added support for Android > 23
 
