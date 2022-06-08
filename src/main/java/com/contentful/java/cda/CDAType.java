@@ -9,5 +9,6 @@ public enum CDAType {
   DELETEDENTRY,
   ENTRY,
   LOCALE,
-  SPACE
+  SPACE,
+  TAG
 }

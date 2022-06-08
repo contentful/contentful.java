@@ -5,10 +5,11 @@ import io.reactivex.rxjava3.functions.Function;
 import org.reactivestreams.Publisher;
 import retrofit2.Response;
 
-import static com.contentful.java.cda.CDAType.ASSET;
-import static com.contentful.java.cda.CDAType.CONTENTTYPE;
-import static com.contentful.java.cda.CDAType.ENTRY;
 import static com.contentful.java.cda.CDAType.LOCALE;
+import static com.contentful.java.cda.CDAType.TAG;
+import static com.contentful.java.cda.CDAType.ASSET;
+import static com.contentful.java.cda.CDAType.ENTRY;
+import static com.contentful.java.cda.CDAType.CONTENTTYPE;
 import static com.contentful.java.cda.Util.typeForClass;
 
 /**
@@ -42,7 +43,13 @@ public class ObserveQuery<T extends CDAResource> extends AbsQuery<T, ObserveQuer
         if (ASSET.equals(resourceType)) {
           return (T) array.assets().get(id);
         } else if (ENTRY.equals(resourceType)) {
-          return (T) array.entries().get(id);
+            return (T) array.entries().get(id);
+        } else if (TAG.equals(resourceType)) {
+            T found = findById(array, id);
+            if (found == null) {
+                throw new CDAResourceNotFoundException(type, id);
+            }
+            return found;
         } else if (CONTENTTYPE.equals(resourceType)) {
           return (T) array.items().get(0);
         } else if (LOCALE.equals(resourceType)) {

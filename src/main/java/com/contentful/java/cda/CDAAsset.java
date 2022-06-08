@@ -11,6 +11,13 @@ import java.util.Map;
 public class CDAAsset extends LocalizedResource {
 
   private static final long serialVersionUID = -4645571481643616657L;
+  private CDAMetadata metadata;
+  /**
+   * @return the metadata set.
+   */
+  public CDAMetadata metadata() {
+    return metadata;
+  }
 
   /**
    * @return title of this asset.
@@ -102,6 +109,7 @@ public class CDAAsset extends LocalizedResource {
     return "CDAAsset{"
         + "id='" + id() + '\''
         + ", title='" + title() + '\''
+        + ", metadata='" + metadata() + '\''
         + '}';
   }
 }

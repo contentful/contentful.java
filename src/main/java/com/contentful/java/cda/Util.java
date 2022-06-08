@@ -4,17 +4,14 @@ import okhttp3.HttpUrl;
 
 import java.util.Map;
 
-import static com.contentful.java.cda.CDAType.ASSET;
-import static com.contentful.java.cda.CDAType.CONTENTTYPE;
+import static com.contentful.java.cda.CDAType.LOCALE;
+import static com.contentful.java.cda.CDAType.TAG;
 import static com.contentful.java.cda.CDAType.DELETEDASSET;
 import static com.contentful.java.cda.CDAType.DELETEDENTRY;
-import static com.contentful.java.cda.CDAType.ENTRY;
-import static com.contentful.java.cda.CDAType.LOCALE;
+import static com.contentful.java.cda.CDAType.ASSET;
 import static com.contentful.java.cda.CDAType.SPACE;
-import static com.contentful.java.cda.Constants.PATH_ASSETS;
-import static com.contentful.java.cda.Constants.PATH_CONTENT_TYPES;
-import static com.contentful.java.cda.Constants.PATH_ENTRIES;
-import static com.contentful.java.cda.Constants.PATH_LOCALES;
+import static com.contentful.java.cda.CDAType.ENTRY;
+import static com.contentful.java.cda.CDAType.CONTENTTYPE;
 
 final class Util {
   private Util() {
@@ -40,30 +37,34 @@ final class Util {
 
   static String resourcePath(Class<?> clazz) {
     if (CDAAsset.class.equals(clazz)) {
-      return PATH_ASSETS;
+      return Constants.PATH_ASSETS;
     } else if (CDAContentType.class.equals(clazz)) {
-      return PATH_CONTENT_TYPES;
+      return Constants.PATH_CONTENT_TYPES;
     } else if (CDAEntry.class.equals(clazz)) {
-      return PATH_ENTRIES;
+      return Constants.PATH_ENTRIES;
     } else if (CDALocale.class.equals(clazz)) {
-      return PATH_LOCALES;
+      return Constants.PATH_LOCALES;
+    } else if (CDATag.class.equals(clazz)) {
+      return Constants.PATH_TAGS;
     }
     throw new IllegalArgumentException("Invalid type specified: " + clazz.getName());
   }
 
   static Class<? extends CDAResource> classForType(CDAType type) {
-    if (ASSET.equals(type)) {
+    if (CDAType.ASSET.equals(type)) {
       return CDAAsset.class;
-    } else if (CONTENTTYPE.equals(type)) {
+    } else if (CDAType.CONTENTTYPE.equals(type)) {
       return CDAContentType.class;
-    } else if (ENTRY.equals(type)) {
+    } else if (CDAType.ENTRY.equals(type)) {
       return CDAEntry.class;
-    } else if (SPACE.equals(type)) {
+    } else if (CDAType.SPACE.equals(type)) {
       return CDASpace.class;
     } else if (LOCALE.equals(type)) {
       return CDALocale.class;
     } else if (DELETEDASSET.equals(type) || DELETEDENTRY.equals(type)) {
       return DeletedResource.class;
+    } else if (TAG.equals(type)) {
+      return CDATag.class;
     }
     throw new IllegalArgumentException("Invalid type provided: " + type);
   }
@@ -79,6 +80,8 @@ final class Util {
       return SPACE;
     } else if (CDALocale.class.equals(clazz)) {
       return LOCALE;
+    } else if (CDATag.class.equals(clazz)) {
+      return TAG;
     }
     throw new IllegalArgumentException("Invalid class provided: " + clazz.getName());
   }
