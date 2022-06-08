@@ -6,6 +6,14 @@ package com.contentful.java.cda;
 public class CDAEntry extends LocalizedResource {
   private static final long serialVersionUID = 5902790363045498307L;
   private CDAContentType contentType;
+  private CDAMetadata metadata;
+
+  /**
+   * @return the metadata set.
+   */
+  public CDAMetadata metadata() {
+    return metadata;
+  }
 
   /**
    * @return the contentType set.
@@ -29,6 +37,7 @@ public class CDAEntry extends LocalizedResource {
   @Override public String toString() {
     return "CDAEntry{"
         + "id='" + id() + '\''
+        + "metadata='" + metadata() + '\''
         + '}';
   }
 }

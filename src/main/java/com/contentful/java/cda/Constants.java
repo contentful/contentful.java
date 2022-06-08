@@ -22,5 +22,7 @@ class Constants {
 
   static final String PATH_LOCALES = "locales";
 
+  static final String PATH_TAGS = "tags";
+
   static final String DEFAULT_ENVIRONMENT = "master";
 }
