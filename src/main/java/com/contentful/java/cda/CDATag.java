@@ -20,7 +20,10 @@ public class CDATag extends CDAResource {
    * @return a human readable string, representing the object.
    */
   @Override public String toString() {
-    return "CDATag { " + super.toString() + " "
-        + "}";
+    return "CDATag { "
+            + "attrs = " + attrs() + ", "
+            + "id = " + id() + ", "
+            + "name = " + name() + " "
+            + "}";
   }
 }
