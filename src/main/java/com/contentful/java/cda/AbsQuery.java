@@ -250,9 +250,10 @@ public abstract class AbsQuery<
       }
     }
 
-    if ((!name.startsWith("sys.") && !name.startsWith("fields."))
+    if ((!name.startsWith("sys.") && !name.startsWith("fields.") && !name.startsWith("metadata."))
         && !CDAContentType.class.isAssignableFrom(type)) {
-      throw new IllegalArgumentException("Please specify either a \"sys.\" or a \"fields.\" "
+      throw new IllegalArgumentException("Please specify either a \"sys.\", "
+          + "a \"metadata.\" or a \"fields.\" "
           + "attribute to be searched for. (Remember to specify a ContentType for \"fields.\" "
           + "searches when querying entries.)");
     }
