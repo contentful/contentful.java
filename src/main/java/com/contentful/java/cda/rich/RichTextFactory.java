@@ -41,6 +41,10 @@ public class RichTextFactory {
         RESOLVER_MAP.put("list-item", new BlockResolver<>(CDARichListItem::new));
         RESOLVER_MAP.put("ordered-list", new BlockResolver<>(CDARichOrderedList::new));
         RESOLVER_MAP.put("unordered-list", new BlockResolver<>(CDARichUnorderedList::new));
+        RESOLVER_MAP.put("table", new BlockResolver<>(CDARichTable::new));
+        RESOLVER_MAP.put("table-row", new BlockResolver<>(CDARichTableRow::new));
+        RESOLVER_MAP.put("table-header-cell", new BlockResolver<>(CDARichTableHeaderCell::new));
+        RESOLVER_MAP.put("table-cell", new BlockResolver<>(CDARichTableCell::new));
         RESOLVER_MAP.put("hyperlink",
                 new BlockAndDataResolver<>(CDARichHyperLink::new, "data"));
         RESOLVER_MAP.put("entry-hyperlink",
@@ -205,6 +209,14 @@ public class RichTextFactory {
             }
         } else if (node instanceof CDARichParagraph) {
             for (final CDARichNode child : ((CDARichParagraph) node).getContent()) {
+                resolveOneLink(array, field, locale, child);
+            }
+        } else if (node instanceof CDARichTableHeaderCell) {
+            for (final CDARichNode child : ((CDARichTableHeaderCell) node).getContent()) {
+                resolveOneLink(array, field, locale, child);
+            }
+        } else if (node instanceof CDARichTableCell) {
+            for (final CDARichNode child : ((CDARichTableCell) node).getContent()) {
                 resolveOneLink(array, field, locale, child);
             }
         } else if (node instanceof CDARichUnorderedList) {
