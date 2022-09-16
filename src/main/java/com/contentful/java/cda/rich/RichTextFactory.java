@@ -219,7 +219,18 @@ public class RichTextFactory {
             for (final CDARichNode child : ((CDARichTableCell) node).getContent()) {
                 resolveOneLink(array, field, locale, child);
             }
-        } else if (node instanceof CDARichUnorderedList) {
+        }
+        else if (node instanceof CDARichTableRow) {
+            for (final CDARichNode child : ((CDARichTableRow) node).getContent()) {
+                resolveOneLink(array, field, locale, child);
+            }
+        }
+        else if (node instanceof CDARichTable) {
+            for (final CDARichNode child : ((CDARichTable) node).getContent()) {
+                resolveOneLink(array, field, locale, child);
+            }
+        }
+        else if (node instanceof CDARichUnorderedList) {
             for (final CDARichNode child : ((CDARichUnorderedList) node).getContent()) {
                 resolveOneLink(array, field, locale, child);
             }
