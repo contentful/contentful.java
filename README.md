@@ -121,7 +121,7 @@ Usage
 Filtering
 ---------
 
-Filtering of Resources can be done by chaining method calls after the `.fetch()`. Using `.one()` and a Resource id retrieves only the specifyied Resource:
+Filtering of Resources can be done by chaining method calls after the `.fetch()`. Using `.one()` and a Resource id retrieves only the specified Resource:
 
 ```java
 CDAEntry entry =
