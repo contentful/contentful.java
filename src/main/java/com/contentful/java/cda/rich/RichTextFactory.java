@@ -24,7 +24,7 @@ public class RichTextFactory {
     private static final int HEADING_LEVEL_4 = 4;
     private static final int HEADING_LEVEL_5 = 5;
     private static final int HEADING_LEVEL_6 = 6;
-    private static final Map<String, Resolver> RESOLVER_MAP = new HashMap<>();
+    public static final Map<String, Resolver> RESOLVER_MAP = new HashMap<>();
 
     static {
         // add leafs
@@ -275,7 +275,7 @@ public class RichTextFactory {
         CDARichNode resolve(Map<String, Object> raw);
     }
 
-    private interface Supplier<T> {
+    public interface Supplier<T> {
         T get();
     }
 
@@ -299,7 +299,7 @@ public class RichTextFactory {
      *
      * @param <T> a block to be resolved.
      */
-    private static class BlockResolver<T extends CDARichBlock> implements Resolver {
+    public static class BlockResolver<T extends CDARichBlock> implements Resolver {
         final Supplier<T> supplier;
 
         /**
@@ -307,7 +307,7 @@ public class RichTextFactory {
          *
          * @param supplier an object to create more objects of type T.
          */
-        BlockResolver(Supplier<T> supplier) {
+        public BlockResolver(Supplier<T> supplier) {
             this.supplier = supplier;
         }
 

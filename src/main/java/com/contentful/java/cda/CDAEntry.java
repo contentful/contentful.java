@@ -5,7 +5,7 @@ package com.contentful.java.cda;
  */
 public class CDAEntry extends LocalizedResource {
   private static final long serialVersionUID = 5902790363045498307L;
-  private CDAContentType contentType;
+  protected CDAContentType contentType;
   private CDAMetadata metadata;
 
   /**
@@ -26,7 +26,7 @@ public class CDAEntry extends LocalizedResource {
    * Set the contentType of this entry.
    * @param contentType the type to be set.
    */
-  void setContentType(CDAContentType contentType) {
+  protected void setContentType(CDAContentType contentType) {
     this.contentType = contentType;
   }
 
