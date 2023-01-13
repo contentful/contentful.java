@@ -9,9 +9,9 @@ public class CDAField implements Serializable {
   private static final long serialVersionUID = -2852530837647669035L;
   String name;
 
-  String id;
+  protected String id;
 
-  String type;
+  protected String type;
 
   String linkType;
 

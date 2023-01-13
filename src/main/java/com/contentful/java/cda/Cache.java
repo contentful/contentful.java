@@ -6,7 +6,7 @@ import java.util.Map;
 class Cache {
   private List<CDALocale> locales;
 
-  private CDALocale defaultLocale;
+  protected CDALocale defaultLocale;
 
   private Map<String, CDAContentType> types;
 
@@ -18,7 +18,7 @@ class Cache {
     return locales;
   }
 
-  CDALocale defaultLocale() {
+  protected CDALocale defaultLocale() {
     return defaultLocale;
   }
 

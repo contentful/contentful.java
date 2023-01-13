@@ -14,15 +14,28 @@ import java.util.Set;
 
 import static com.contentful.java.cda.rich.RichTextFactory.resolveRichTextField;
 
-final class ResourceFactory {
-  private ResourceFactory() {
+public final class ResourceFactory {
+  public ResourceFactory() {
     throw new AssertionError();
   }
 
   static final Gson GSON = createGson();
 
-  static CDAArray array(Response<CDAArray> arrayResponse, CDAClient client) {
+  public static CDAArray array(Response<CDAArray> arrayResponse, CDAClient client) {
     CDAArray array = arrayResponse.body();
+    array.assets = new LinkedHashMap<>();
+    array.entries = new LinkedHashMap<>();
+
+    Set<CDAResource> resources = collectResources(array);
+    ResourceUtils.localizeResources(resources, client.cache);
+    ResourceUtils.mapResources(resources, array.assets, array.entries);
+    ResourceUtils.setRawFields(array);
+    resolveRichTextField(array, client);
+    ResourceUtils.resolveLinks(array, client);
+    return array;
+  }
+
+  public static CDAArray arrayFromJson(CDAArray array, CDAClient client) {
     array.assets = new LinkedHashMap<>();
     array.entries = new LinkedHashMap<>();
 
@@ -91,7 +104,7 @@ final class ResourceFactory {
     return result;
   }
 
-  private static Gson createGson() {
+  public static Gson createGson() {
     return new GsonBuilder()
         .registerTypeAdapter(CDAResource.class, new ResourceDeserializer())
         .create();

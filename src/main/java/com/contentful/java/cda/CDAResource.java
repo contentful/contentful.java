@@ -14,7 +14,7 @@ import static com.contentful.java.cda.Constants.LOCALE;
 public abstract class CDAResource implements Serializable {
   private static final long serialVersionUID = -160701290783423915L;
   @SerializedName("sys")
-  Map<String, Object> attrs;
+  protected Map<String, Object> attrs;
 
   /**
    * @return a string representing this object's id.
