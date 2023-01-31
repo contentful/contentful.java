@@ -54,6 +54,28 @@ public class CDARichMark {
   }
 
   /**
+   * Marker for making the rich text displayed as superscript.
+   */
+  public static class CDARichMarkSuperscript extends CDARichMark {
+
+    public CDARichMarkSuperscript() {
+      super("superscript");
+    }
+
+  }
+
+  /**
+   * Marker for making the rich text displayed as subscript.
+   */
+  public static class CDARichMarkSubscript extends CDARichMark {
+
+    public CDARichMarkSubscript() {
+      super("subscript");
+    }
+
+  }
+
+  /**
    * The text marked by this marker should be represented by Code.
    */
   public static class CDARichMarkCode extends CDARichMark {

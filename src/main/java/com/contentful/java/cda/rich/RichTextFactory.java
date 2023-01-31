@@ -126,6 +126,10 @@ public class RichTextFactory {
                 marks.add(new CDARichMark.CDARichMarkUnderline());
             } else if ("code".equals(type)) {
                 marks.add(new CDARichMark.CDARichMarkCode());
+            } else if ("subscript".equals(type)) {
+                marks.add(new CDARichMark.CDARichMarkSubscript());
+            } else if ("superscript".equals(type)) {
+                marks.add(new CDARichMark.CDARichMarkSuperscript());
             } else {
                 marks.add(new CDARichMark.CDARichMarkCustom(type));
             }
