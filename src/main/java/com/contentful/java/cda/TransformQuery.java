@@ -379,6 +379,19 @@ public class TransformQuery<Transformed>
           }
         }
       }
+
+      for (final Field field : type.getSuperclass().getDeclaredFields()) {
+        final ContentfulField annotation = field.getAnnotation(ContentfulField.class);
+        if (annotation != null) {
+          transformFieldAnnotation(entry, result, field, annotation);
+        } else {
+          final ContentfulSystemField systemField =
+                  field.getAnnotation(ContentfulSystemField.class);
+          if (systemField != null) {
+            transformSystemFieldAnnotation(entry, result, field, systemField);
+          }
+        }
+      }
     }
 
     return result;
