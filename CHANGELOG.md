@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Version [10.5.13] - (2023-03-28)
+- Support for unwrapping base class
+
 ## Version [10.5.12] - (2023-02-01)
 - Support for subscript and superscript in Rich Text field
 
@@ -265,6 +268,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
+[10.5.13]: https://github.com/contentful/contentful.java/compare/v.10.5.12...v.10.5.13
 [10.5.12]: https://github.com/contentful/contentful.java/compare/v.10.5.11...v.10.5.12
 [10.5.11]: https://github.com/contentful/contentful.java/compare/v.10.5.7...v.10.5.11
 [10.4.5]: https://github.com/contentful/contentful.java/compare/v10.4.4...v10.4.5
