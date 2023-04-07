@@ -247,6 +247,10 @@ public class RichTextFactory {
             for (final CDARichNode child : ((CDARichListItem) node).getContent()) {
                 resolveOneLink(array, field, locale, child);
             }
+        } else if (node instanceof CDARichHeading) {
+            for (final CDARichNode child : ((CDARichHeading) node).getContent()) {
+                resolveOneLink(array, field, locale, child);
+            }
         }
     }
 
