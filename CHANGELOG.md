@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Version [10.5.14] - (2023-04-07)
+- fix: Add CDARichHeading to rich text resolver #283
+
 ## Version [10.5.13] - (2023-03-28)
 - Support for unwrapping base class
 
@@ -268,6 +271,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
+[10.5.14]: https://github.com/contentful/contentful.java/compare/v.10.5.13...v.10.5.14
 [10.5.13]: https://github.com/contentful/contentful.java/compare/v.10.5.12...v.10.5.13
 [10.5.12]: https://github.com/contentful/contentful.java/compare/v.10.5.11...v.10.5.12
 [10.5.11]: https://github.com/contentful/contentful.java/compare/v.10.5.7...v.10.5.11
