@@ -613,4 +613,24 @@ public class AbsQueryTest {
     final FetchQuery<CDAContentType> typeQuery = new FetchQuery<>(CDAContentType.class, client);
     typeQuery.where("name", Matches, "Auth");
   }
+
+  @Test
+  public void string() {
+    String string = query
+      .withContentType("foo")
+      .withLocale("en")
+      .where("fields.value", IsLessThanOrEqualTo, 10)
+      .include(2)
+      .skip(5)
+      .orderBy("baz")
+      .toString();
+
+    assertThat(string).contains("type=class com.contentful.java.cda.CDAResource");
+    assertThat(string).contains("content_type=foo");
+    assertThat(string).contains("locale=en");
+    assertThat(string).contains("fields.value[lte]=10");
+    assertThat(string).contains("include=2");
+    assertThat(string).contains("skip=5");
+    assertThat(string).contains("order=baz");
+  }
 }
