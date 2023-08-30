@@ -77,6 +77,17 @@ public class TransformQuery<Transformed>
     String value() default "";
   }
 
+  /**
+   * This annotation marks the metadata field.
+   * <p>
+   * Metadata is returned in the {@link CDAEntry#metadata()} method.
+   * <p>
+   */
+  @Target(ElementType.FIELD)
+  @Retention(RetentionPolicy.RUNTIME)
+  public @interface ContentfulMetadata {
+    String value() default "metadata";
+  }
   private final String contentTypeId;
 
   private final Map<String, Object> instanceCache = new HashMap<>();
@@ -114,6 +125,11 @@ public class TransformQuery<Transformed>
         final ContentfulSystemField systemField = field.getAnnotation(ContentfulSystemField.class);
         if (systemField != null) {
           parseSystemFieldAnnotation(field, systemField);
+        } else {
+          final ContentfulMetadata metadata = field.getAnnotation(ContentfulMetadata.class);
+          if (metadata != null) {
+            parseMetadataAnnotation(metadata);
+          }
         }
       }
     }
@@ -219,6 +235,10 @@ public class TransformQuery<Transformed>
     }
 
     select("sys." + name);
+  }
+
+  private void parseMetadataAnnotation(ContentfulMetadata annotation) {
+    select(annotation.value());
   }
 
   /**
@@ -376,6 +396,12 @@ public class TransformQuery<Transformed>
               field.getAnnotation(ContentfulSystemField.class);
           if (systemField != null) {
             transformSystemFieldAnnotation(entry, result, field, systemField);
+          } else {
+            final ContentfulMetadata metadata =
+                    field.getAnnotation(ContentfulMetadata.class);
+            if (metadata != null) {
+              transformMetadataAnnotation(entry, result, field, metadata);
+            }
           }
         }
       }
@@ -389,6 +415,12 @@ public class TransformQuery<Transformed>
                   field.getAnnotation(ContentfulSystemField.class);
           if (systemField != null) {
             transformSystemFieldAnnotation(entry, result, field, systemField);
+          } else {
+            final ContentfulMetadata metadata =
+                    field.getAnnotation(ContentfulMetadata.class);
+            if (metadata != null) {
+              transformMetadataAnnotation(entry, result, field, metadata);
+            }
           }
         }
       }
@@ -473,6 +505,21 @@ public class TransformQuery<Transformed>
       field.set(result, entry.getAttribute(key));
     } catch (IllegalAccessException e) {
       throw new IllegalStateException("Cannot set custom system field " + key + ".");
+    }
+  }
+
+  private void transformMetadataAnnotation(CDAEntry entry, Object result, Field field,
+                                              ContentfulMetadata annotation) {
+    if (!field.isAccessible()) {
+      field.setAccessible(true);
+    }
+
+    final String key = annotation.value();
+
+    try {
+      field.set(result, entry.metadata());
+    } catch (IllegalAccessException e) {
+      throw new IllegalStateException("Cannot set " + key + ".");
     }
   }
 }
