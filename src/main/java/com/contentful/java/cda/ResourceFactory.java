@@ -107,6 +107,7 @@ public final class ResourceFactory {
   public static Gson createGson() {
     return new GsonBuilder()
         .registerTypeAdapter(CDAResource.class, new ResourceDeserializer())
+            .disableHtmlEscaping()
         .create();
   }
 }
