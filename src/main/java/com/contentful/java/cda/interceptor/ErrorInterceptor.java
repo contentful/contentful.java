@@ -12,6 +12,12 @@ import okhttp3.Response;
  * This interceptor will only be used for throwing an exception, once the server returns an error.
  */
 public class ErrorInterceptor implements Interceptor {
+  private final boolean logSensitiveData;
+
+  public ErrorInterceptor(boolean logSensitiveData) {
+    this.logSensitiveData = logSensitiveData;
+  }
+
 
   /**
    * Intercepts chain to check for unsuccessful requests.
@@ -25,7 +31,7 @@ public class ErrorInterceptor implements Interceptor {
     final Response response = chain.proceed(request);
 
     if (!response.isSuccessful()) {
-      throw new CDAHttpException(request, response);
+      throw new CDAHttpException(request, response, logSensitiveData);
     }
 
     return response;
