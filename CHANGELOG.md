@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Version [10.5.17] - (2023-11-23)
+- fix: add parameter for hiding auth data in the logs
+  
 ## Version [10.5.16] - (2023-09-14)
 - fix: disable HTML tags decoding
   
@@ -277,6 +280,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
+[10.5.17]: https://github.com/contentful/contentful.java/compare/v.10.5.16...v.10.5.17
 [10.5.16]: https://github.com/contentful/contentful.java/compare/v.10.5.15...v.10.5.16
 [10.5.15]: https://github.com/contentful/contentful.java/compare/v.10.5.14...v.10.5.15
 [10.5.14]: https://github.com/contentful/contentful.java/compare/v.10.5.13...v.10.5.14
