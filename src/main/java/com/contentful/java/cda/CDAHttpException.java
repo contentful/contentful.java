@@ -22,6 +22,8 @@ public class CDAHttpException extends RuntimeException {
   private final String responseBody;
   private final String stringRepresentation;
 
+  private final boolean logSensitiveData;
+
   /**
    * Construct an error response.
    * <p>
@@ -32,12 +34,13 @@ public class CDAHttpException extends RuntimeException {
    * @param request  the request issuing the error.
    * @param response the response from the server to this faulty request.
    */
-  public CDAHttpException(Request request, Response response) {
+  public CDAHttpException(Request request, Response response, boolean logSensitiveData) {
     super(response.message());
     this.request = request;
     this.response = response;
     this.responseBody = readResponseBody(response);
     this.stringRepresentation = createString();
+    this.logSensitiveData = logSensitiveData;
   }
 
   private String readResponseBody(Response response) {
@@ -133,6 +136,10 @@ public class CDAHttpException extends RuntimeException {
   }
 
   private String headersToString(Headers headers) {
+    if (!logSensitiveData) {
+      return "<headers omitted>";
+    }
+
     final StringBuilder builder = new StringBuilder();
 
     String divider = "";

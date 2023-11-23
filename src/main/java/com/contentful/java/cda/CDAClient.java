@@ -73,6 +73,8 @@ public class CDAClient {
 
   final boolean preview;
 
+  final boolean logSensitiveData;
+
   CDAClient(Builder builder) {
     this(new Cache(),
         Platform.get().callbackExecutor(),
@@ -89,6 +91,7 @@ public class CDAClient {
     this.environmentId = builder.environment;
     this.token = builder.token;
     this.preview = builder.preview;
+    this.logSensitiveData = builder.logSensitiveData;
   }
 
   private void validate(Builder builder) {
@@ -306,6 +309,10 @@ public class CDAClient {
     return sync(null, null, type);
   }
 
+
+  public boolean shouldLogSensitiveData() {
+    return logSensitiveData;
+  }
   /**
    * Returns a {@link SyncQuery} for synchronization with the provided {@code syncToken} via
    * the Sync API.
@@ -532,6 +539,8 @@ public class CDAClient {
     Converter.Factory converterFactory;
 
     boolean preview;
+
+    private boolean logSensitiveData = true;
     Tls12Implementation tls12Implementation = useRecommendation;
 
     Section application;
@@ -561,6 +570,18 @@ public class CDAClient {
      */
     public Builder setEnvironment(String environment) {
       this.environment = environment;
+      return this;
+    }
+
+    /**
+     * Sets the logSensitiveData value for logging
+     * the authorization headers in the CDAHttpException.
+     *
+     * @param logSensitiveData boolean value to be set.
+     * @return this builder for chaining.
+     */
+    public Builder setLogSensitiveData(boolean logSensitiveData) {
+      this.logSensitiveData = logSensitiveData;
       return this;
     }
 
@@ -758,7 +779,7 @@ public class CDAClient {
           .addInterceptor(new AuthorizationHeaderInterceptor(token))
           .addInterceptor(new UserAgentHeaderInterceptor(createUserAgent()))
           .addInterceptor(new ContentfulUserAgentHeaderInterceptor(sections))
-          .addInterceptor(new ErrorInterceptor());
+          .addInterceptor(new ErrorInterceptor(logSensitiveData));
 
       setLogger(okBuilder);
       useTls12IfWanted(okBuilder);
