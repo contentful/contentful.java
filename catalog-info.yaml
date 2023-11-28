@@ -19,5 +19,4 @@ metadata:
 spec:
   type: library 
   lifecycle: production  
-  # your team name as it appears in github when tagging them for reviews
   owner: group:team-developer-experience
