@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Version [10.5.18] - (2024-03-21)
+- feat: add support for avif format
+  
 ## Version [10.5.17] - (2023-11-23)
 - fix: add parameter for hiding auth data in the logs
   
@@ -280,6 +283,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
+[10.5.18]: https://github.com/contentful/contentful.java/compare/v.10.5.17...v.10.5.18
 [10.5.17]: https://github.com/contentful/contentful.java/compare/v.10.5.16...v.10.5.17
 [10.5.16]: https://github.com/contentful/contentful.java/compare/v.10.5.15...v.10.5.16
 [10.5.15]: https://github.com/contentful/contentful.java/compare/v.10.5.14...v.10.5.15
