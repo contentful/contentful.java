@@ -143,7 +143,7 @@ public class RichTextFactory {
      * @param rawNode the map response from Contentful
      * @return a CDARichNode from this SDK.
      */
-    static CDARichNode resolveRichNode(Map<String, Object> rawNode) {
+    public static CDARichNode resolveRichNode(Map<String, Object> rawNode) {
         final String type = (String) rawNode.get("nodeType");
         if (RESOLVER_MAP.containsKey(type)) {
             return RESOLVER_MAP.get(type).resolve(rawNode);

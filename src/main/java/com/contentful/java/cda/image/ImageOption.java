@@ -34,7 +34,12 @@ public class ImageOption {
     /**
      * Use googles lossy and lossless format.
      */
-    webp;
+    webp,
+
+    /**
+     * Use the AVIF format, which is efficient for compression and quality.
+     */
+    avif;
 
     final String override;
 
