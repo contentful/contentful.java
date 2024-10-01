@@ -1,12 +1,13 @@
 package com.contentful.java.cda.rich;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A leaf element of the rich text node graph: Render a given text with the given markings.
  */
-public class CDARichText extends CDARichNode {
+public class CDARichText extends CDARichNode implements Serializable {
   private final List<CDARichMark> marks = new ArrayList<>();
   private final CharSequence text;
 

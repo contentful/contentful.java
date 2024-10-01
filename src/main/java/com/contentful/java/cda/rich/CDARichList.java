@@ -1,9 +1,11 @@
 package com.contentful.java.cda.rich;
 
+import java.io.Serializable;
+
 /**
  * Parent class for all list classes
  */
-public class CDARichList extends CDARichBlock {
+public class CDARichList extends CDARichBlock implements Serializable {
   final CharSequence decoration;
 
   /**
