@@ -1,9 +1,11 @@
 package com.contentful.java.cda.rich;
 
+import java.io.Serializable;
+
 /**
  * This block represents a link to a website.
  */
-public class CDARichHyperLink extends CDARichBlock {
+public class CDARichHyperLink extends CDARichBlock implements Serializable {
   Object data;
 
   /**

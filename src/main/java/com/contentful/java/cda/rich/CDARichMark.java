@@ -1,11 +1,13 @@
 package com.contentful.java.cda.rich;
 
+import java.io.Serializable;
+
 /**
  * How to draw a given text.
  * <p>
  * Subclasses are used for further differentiation.
  */
-public class CDARichMark {
+public class CDARichMark implements Serializable {
 
   public CDARichMark(String type) {
     this.type = type;

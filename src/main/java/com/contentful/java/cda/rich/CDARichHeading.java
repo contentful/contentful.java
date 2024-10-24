@@ -1,11 +1,13 @@
 package com.contentful.java.cda.rich;
 
+import java.io.Serializable;
+
 /**
  * Defines a headline of the text.
  * <p>
  * Can have an arbitrary level assigned, but useful probably between 1 and 6.
  */
-public class CDARichHeading extends CDARichBlock {
+public class CDARichHeading extends CDARichBlock implements Serializable {
   private final int level;
 
   /**
