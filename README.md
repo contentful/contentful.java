@@ -302,7 +302,10 @@ In addition to returning the Content in a fashion flexible for various use-cases
 > * Specifying a `value` for the `@ContentfulField`-annotation , will use the value of the similarly called field id instead of the name of the custom field.
 > * A `locale` can be used to specify a given locale of this entry. If no locale is given, the default locale will be used. 
 > * `@ContentfulSystemField` is used for CDAEntries attributes (`sys.id`, etc) to be inserted.
-> * If another type is wanted to be transformed, it should have `@ContentfulEntryModel`-annotation specified similarly as in `Cat`. 
+> * If another type is wanted to be transformed, it should have `@ContentfulEntryModel`-annotation specified similarly as in `Cat`.
+> * **Limitation on Unwrapping**: Using Unwrapping does not currently allow direct access to the raw JSON for rich text fields, as the SDK automatically transforms fields into the custom model structure. For cases where raw JSON is needed:
+>   * Use the `rawFields` map in `CDAEntry` to directly access the unprocessed JSON of any field, including rich text.
+>   * Alternatively, make a direct HTTP request to the Contentful API to retrieve the full raw JSON response.
 
 
 Select
