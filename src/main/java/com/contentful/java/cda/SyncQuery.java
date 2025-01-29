@@ -21,12 +21,15 @@ public class SyncQuery {
 
   final SyncType type;
 
+  final Integer limit;
+
   SyncQuery(Builder builder) {
     this.client = checkNotNull(builder.client, "Client must not be null.");
     this.syncToken = builder.syncToken;
     this.space = builder.space;
     this.initial = builder.isInitial();
     this.type = builder.type;
+    this.limit = builder.limit;
   }
 
   /**
@@ -56,14 +59,15 @@ public class SyncQuery {
                          initial ? initial : null,
                          token,
                          initial && type != null ? type.getName() : null,
-                         initial && type != null ? type.getContentType() : null);
+                         initial && type != null ? type.getContentType() : null,
+                         initial ? limit : null);
                    }
                  }
         ).map(
             new Function<Response<SynchronizedSpace>, SynchronizedSpace>() {
               @Override
               public SynchronizedSpace apply(Response<SynchronizedSpace> synchronizedSpace) {
-                return ResourceFactory.sync(synchronizedSpace, space, client);
+                return ResourceFactory.sync(synchronizedSpace, space, client, limit);
               }
             }
         );
@@ -102,6 +106,13 @@ public class SyncQuery {
     SynchronizedSpace space;
 
     SyncType type;
+
+    Integer limit;
+
+    Builder setLimit(Integer limit) {
+      this.limit = limit;
+      return this;
+    }
 
     Builder setClient(CDAClient client) {
       this.client = client;

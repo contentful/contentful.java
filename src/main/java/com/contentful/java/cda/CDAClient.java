@@ -293,7 +293,11 @@ public class CDAClient {
    */
 
   public SyncQuery sync() {
-    return sync(null, null);
+    return sync(null, null, null, null);
+  }
+
+  public SyncQuery sync(Integer limit) {
+    return sync(null, null, null, limit);
   }
 
   /**
@@ -306,7 +310,7 @@ public class CDAClient {
    * @return query instance.
    */
   public SyncQuery sync(SyncType type) {
-    return sync(null, null, type);
+    return sync(null, null, type, null);
   }
 
 
@@ -323,7 +327,11 @@ public class CDAClient {
    * @return query instance.
    */
   public SyncQuery sync(String syncToken) {
-    return sync(syncToken, null);
+    return sync(syncToken, null, null, null);
+  }
+
+  public SyncQuery sync(String syncToken, Integer limit) {
+    return sync(syncToken, null, null, limit);
   }
 
   /**
@@ -339,11 +347,11 @@ public class CDAClient {
   }
 
   private SyncQuery sync(String syncToken, SynchronizedSpace synchronizedSpace) {
-    return sync(syncToken, synchronizedSpace, null);
+    return sync(syncToken, synchronizedSpace, null, null);
   }
 
   private SyncQuery sync(String syncToken, SynchronizedSpace synchronizedSpace,
-                         SyncType type) {
+                         SyncType type, Integer limit) {
     if (preview) {
       syncToken = null;
       synchronizedSpace = null;
@@ -358,6 +366,9 @@ public class CDAClient {
     }
     if (type != null) {
       builder.setType(type);
+    }
+    if (limit != null) {
+      builder.setLimit(limit);
     }
     return builder.build();
   }

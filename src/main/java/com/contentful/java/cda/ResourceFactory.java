@@ -64,7 +64,8 @@ public final class ResourceFactory {
   static SynchronizedSpace sync(
       Response<SynchronizedSpace> newSpace,
       SynchronizedSpace oldSpace,
-      CDAClient client) {
+      CDAClient client,
+      Integer limit) {
 
     Map<String, CDAAsset> assets = new HashMap<>();
     Map<String, CDAEntry> entries = new HashMap<>();
@@ -72,7 +73,7 @@ public final class ResourceFactory {
     if (oldSpace != null) {
       ResourceUtils.mapResources(oldSpace.items(), assets, entries);
     }
-    SynchronizedSpace result = ResourceUtils.iterate(newSpace, client);
+    SynchronizedSpace result = ResourceUtils.iterate(newSpace, client, limit);
     ResourceUtils.mapResources(result.items(), assets, entries);
     ResourceUtils.mapDeletedResources(result);
 

@@ -26,11 +26,12 @@ public final class ResourceUtils {
     throw new AssertionError();
   }
 
-  static SynchronizedSpace iterate(Response<SynchronizedSpace> spaceResponse, CDAClient client) {
+  static SynchronizedSpace iterate(
+          Response<SynchronizedSpace> spaceResponse, CDAClient client, Integer limit) {
     SynchronizedSpace space = ResourceFactory.fromResponse(spaceResponse);
     List<CDAResource> items = space.items;
     while (true) {
-      SynchronizedSpace nextSpace = nextSpace(space, client);
+      SynchronizedSpace nextSpace = nextSpace(space, client, limit);
       if (nextSpace == null) {
         break;
       }
@@ -42,7 +43,7 @@ public final class ResourceUtils {
     return space;
   }
 
-  static SynchronizedSpace nextSpace(SynchronizedSpace space, CDAClient client) {
+  static SynchronizedSpace nextSpace(SynchronizedSpace space, CDAClient client, Integer limit) {
     String nextPageUrl = space.nextPageUrl();
     if (nextPageUrl == null) {
       return null;
@@ -55,7 +56,7 @@ public final class ResourceUtils {
             null,
             queryParam(nextPageUrl, "sync_token"),
             null,
-            null)
+            null, null)
             .blockingFirst();
 
     return synchronizedSpace.body();
