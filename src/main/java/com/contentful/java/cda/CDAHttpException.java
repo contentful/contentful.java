@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import static java.lang.String.format;
-
 /**
  * This class will represent known Contentful exceptions
  */
@@ -55,14 +53,31 @@ public class CDAHttpException extends RuntimeException {
   }
 
   private String createString() {
-    return format(
-        Locale.getDefault(),
-        "FAILED REQUEST:\n\t%s\n\t╰→ Header{%s}\n\t%s\n\t├→ Body{%s}\n\t╰→ Header{%s}",
-        request.toString(),
-        headersToString(request.headers()),
-        response.toString(),
-        responseBody,
-        headersToString(response.headers()));
+    return String.format(
+            Locale.getDefault(),
+            "FAILED REQUEST:\n\t%s\n\t╰→ Header{%s}\n\t%s\n\t├→ Body{%s}\n\t╰→ Header{%s}",
+            toStringRequest(request),                  // Safe request string
+            headersToString(request.headers()),        // Already respects logSensitiveData
+            toStringResponse(response),                // Safe response string
+            responseBody,
+            headersToString(response.headers())        // Already respects logSensitiveData
+    );
+  }
+
+  private String toStringRequest(Request request) {
+    if (logSensitiveData) {
+      return request.toString();
+    } else {
+      return request.method() + " " + request.url();
+    }
+  }
+
+  private String toStringResponse(Response response) {
+    if (logSensitiveData) {
+      return response.toString();
+    } else {
+      return "HTTP " + response.code() + " " + response.message();
+    }
   }
 
   /**
