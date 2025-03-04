@@ -28,5 +28,6 @@ interface CDAService {
       @Query("initial") Boolean initial,
       @Query("sync_token") String syncToken,
       @Query("type") String type,
-      @Query("content_type") String contentType);
+      @Query("content_type") String contentType,
+      @Query("limit") Integer limit);
 }
