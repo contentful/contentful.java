@@ -77,9 +77,9 @@ public class CDAClient {
 
   CDAClient(Builder builder) {
     this(new Cache(),
-        Platform.get().callbackExecutor(),
-        createService(builder),
-        builder);
+            Platform.get().callbackExecutor(),
+            createService(builder),
+            builder);
     validate(builder);
   }
 
@@ -110,10 +110,10 @@ public class CDAClient {
     }
 
     Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
-        .addConverterFactory(clientBuilder.createOrGetConverterFactory(clientBuilder))
-        .addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous())
-        .callFactory(clientBuilder.createOrGetCallFactory(clientBuilder))
-        .baseUrl(endpoint);
+            .addConverterFactory(clientBuilder.createOrGetConverterFactory(clientBuilder))
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous())
+            .callFactory(clientBuilder.createOrGetCallFactory(clientBuilder))
+            .baseUrl(endpoint);
 
     return retrofitBuilder.build().create(CDAService.class);
   }
@@ -192,7 +192,7 @@ public class CDAClient {
     }
     if (limit <= 0) {
       throw new IllegalArgumentException("Content types per page limit cannot be "
-          + "less or equal to 0.");
+              + "less or equal to 0.");
     }
 
     return observeContentTypeCachePopulation(limit).blockingFirst();
@@ -231,59 +231,59 @@ public class CDAClient {
     }
     if (limit <= 0) {
       throw new IllegalArgumentException("Content types per page limit cannot be "
-          + "less or equal to 0.");
+              + "less or equal to 0.");
     }
 
     return
-        observe(CDAContentType.class)
-            .orderBy("sys.id")
-            .limit(limit)
-            .all()
-            .map(
-                new Function<CDAArray, CDAArray>() {
-                  @Override
-                  public CDAArray apply(CDAArray array) {
-                    if (array.skip() + array.limit() < array.total()) {
-                      return nextPage(array);
-                    } else {
-                      return array;
-                    }
-                  }
+            observe(CDAContentType.class)
+                    .orderBy("sys.id")
+                    .limit(limit)
+                    .all()
+                    .map(
+                            new Function<CDAArray, CDAArray>() {
+                              @Override
+                              public CDAArray apply(CDAArray array) {
+                                if (array.skip() + array.limit() < array.total()) {
+                                  return nextPage(array);
+                                } else {
+                                  return array;
+                                }
+                              }
 
-                  private CDAArray nextPage(CDAArray array) {
-                    final CDAArray nextArray = observe(CDAContentType.class)
-                        .orderBy("sys.id")
-                        .limit(limit)
-                        .skip(array.skip + limit)
-                        .all()
-                        .map(this)
-                        .blockingFirst();
+                              private CDAArray nextPage(CDAArray array) {
+                                final CDAArray nextArray = observe(CDAContentType.class)
+                                        .orderBy("sys.id")
+                                        .limit(limit)
+                                        .skip(array.skip + limit)
+                                        .all()
+                                        .map(this)
+                                        .blockingFirst();
 
-                    array.skip = nextArray.skip;
-                    array.items.addAll(nextArray.items);
-                    array.assets.putAll(nextArray.assets);
-                    array.entries.putAll(nextArray.entries);
+                                array.skip = nextArray.skip;
+                                array.items.addAll(nextArray.items);
+                                array.assets.putAll(nextArray.assets);
+                                array.entries.putAll(nextArray.entries);
 
-                    return array;
-                  }
-                }
-            )
-            .map(new Function<CDAArray, Integer>() {
-                   @Override
-                   public Integer apply(CDAArray array) {
-                     for (CDAResource resource : array.items) {
-                       if (resource instanceof CDAContentType) {
-                         cache.types().put(resource.id(), (CDAContentType) resource);
-                       } else {
-                         throw new IllegalStateException(
-                             "Requesting a list of content types should not return "
-                                 + "any other type.");
-                       }
-                     }
-                     return array.total;
-                   }
-                 }
-            );
+                                return array;
+                              }
+                            }
+                    )
+                    .map(new Function<CDAArray, Integer>() {
+                           @Override
+                           public Integer apply(CDAArray array) {
+                             for (CDAResource resource : array.items) {
+                               if (resource instanceof CDAContentType) {
+                                 cache.types().put(resource.id(), (CDAContentType) resource);
+                               } else {
+                                 throw new IllegalStateException(
+                                         "Requesting a list of content types should not return "
+                                                 + "any other type.");
+                               }
+                             }
+                             return array.total;
+                           }
+                         }
+                    );
   }
 
   /**
@@ -291,9 +291,19 @@ public class CDAClient {
    *
    * @return query instance.
    */
-
   public SyncQuery sync() {
     return sync(null, null);
+  }
+
+  /**
+   * Returns a {@link SyncQuery} for initial synchronization via
+   * the Sync API with a specified limit.
+   *
+   * @param limit the maximum number of entries per page
+   * @return query instance.
+   */
+  public SyncQuery sync(int limit) {
+    return sync(null, null, null, limit);
   }
 
   /**
@@ -309,6 +319,19 @@ public class CDAClient {
     return sync(null, null, type);
   }
 
+  /**
+   * Returns a {@link SyncQuery} for synchronization with the provided {@code syncToken} via
+   * the Sync API with a specified limit.
+   * <p>
+   * If called from a {@link #preview} client, this will always do an initial sync.
+   *
+   * @param type the type to be sync'ed.
+   * @param limit the maximum number of entries per page
+   * @return query instance.
+   */
+  public SyncQuery sync(SyncType type, int limit) {
+    return sync(null, null, type, limit);
+  }
 
   public boolean shouldLogSensitiveData() {
     return logSensitiveData;
@@ -342,8 +365,12 @@ public class CDAClient {
     return sync(syncToken, synchronizedSpace, null);
   }
 
+  private SyncQuery sync(String syncToken, SynchronizedSpace synchronizedSpace, SyncType type) {
+    return sync(syncToken, synchronizedSpace, type, null);
+  }
+
   private SyncQuery sync(String syncToken, SynchronizedSpace synchronizedSpace,
-                         SyncType type) {
+                         SyncType type, Integer limit) {
     if (preview) {
       syncToken = null;
       synchronizedSpace = null;
@@ -358,6 +385,9 @@ public class CDAClient {
     }
     if (type != null) {
       builder.setType(type);
+    }
+    if (limit != null) {
+      builder.setLimit(limit);
     }
     return builder.build();
   }
@@ -398,33 +428,36 @@ public class CDAClient {
    */
   Flowable<Cache> cacheAll(final boolean invalidate) {
     return cacheLocales(invalidate)
-        .flatMap(new Function<List<CDALocale>, Publisher<? extends Map<String, CDAContentType>>>() {
-          @Override
-          public Publisher<? extends Map<String, CDAContentType>> apply(List<CDALocale> locales) {
-            return CDAClient.this.cacheTypes(invalidate);
-          }
-        })
-        .map(new Function<Map<String, CDAContentType>, Cache>() {
-          @Override
-          public Cache apply(Map<String, CDAContentType> stringCDAContentTypeMap) {
-            return cache;
-          }
-        });
+            .flatMap(new Function<List<CDALocale>,
+                    Publisher<? extends Map<String, CDAContentType>>>() {
+              @Override
+              public Publisher<? extends Map<String, CDAContentType>>
+                apply(List<CDALocale> locales) {
+                  return CDAClient.this.cacheTypes(invalidate);
+              }
+            })
+            .map(new Function<Map<String, CDAContentType>, Cache>() {
+              @Override
+              public Cache apply(Map<String, CDAContentType> stringCDAContentTypeMap) {
+                return cache;
+              }
+            });
   }
 
   Flowable<List<CDALocale>> cacheLocales(boolean invalidate) {
     List<CDALocale> locales = invalidate ? null : cache.locales();
     if (locales == null) {
       return service.array(spaceId, environmentId, PATH_LOCALES, new HashMap<>())
-          .map(new Function<Response<CDAArray>, List<CDALocale>>() {
-                 @Override
-                 public List<CDALocale> apply(Response<CDAArray> localesResponse) {
-                   final List<CDALocale> locales1 = fromArrayToItems(fromResponse(localesResponse));
-                   cache.setLocales(locales1);
-                   return locales1;
-                 }
-               }
-          );
+              .map(new Function<Response<CDAArray>, List<CDALocale>>() {
+                     @Override
+                     public List<CDALocale> apply(Response<CDAArray> localesResponse) {
+                       final List<CDALocale> locales1 =
+                               fromArrayToItems(fromResponse(localesResponse));
+                       cache.setLocales(locales1);
+                       return locales1;
+                     }
+                   }
+              );
     }
     return Flowable.just(locales);
   }
@@ -433,10 +466,10 @@ public class CDAClient {
     Map<String, CDAContentType> types = invalidate ? null : cache.types();
     if (types == null) {
       return service.array(
-          spaceId,
-          environmentId,
-          PATH_CONTENT_TYPES,
-          new HashMap<>()
+              spaceId,
+              environmentId,
+              PATH_CONTENT_TYPES,
+              new HashMap<>()
       ).map(new Function<Response<CDAArray>, Map<String, CDAContentType>>() {
               @Override
               public Map<String, CDAContentType> apply(Response<CDAArray> arrayResponse) {
@@ -458,17 +491,17 @@ public class CDAClient {
     CDAContentType contentType = cache.types().get(id);
     if (contentType == null) {
       return observe(CDAContentType.class)
-          .one(id)
-          .map(new Function<CDAContentType, CDAContentType>() {
-                 @Override
-                 public CDAContentType apply(CDAContentType resource) {
-                   if (resource != null) {
-                     cache.types().put(resource.id(), resource);
+              .one(id)
+              .map(new Function<CDAContentType, CDAContentType>() {
+                     @Override
+                     public CDAContentType apply(CDAContentType resource) {
+                       if (resource != null) {
+                         cache.types().put(resource.id(), resource);
+                       }
+                       return resource;
+                     }
                    }
-                   return resource;
-                 }
-               }
-          );
+              );
     }
     return Flowable.just(contentType);
   }
@@ -486,11 +519,11 @@ public class CDAClient {
   static String createUserAgent() {
     final Properties properties = System.getProperties();
     return String.format("contentful.java/%s(%s %s) %s/%s",
-        PROJECT_VERSION,
-        properties.getProperty("java.runtime.name"),
-        properties.getProperty("java.runtime.version"),
-        properties.getProperty("os.name"),
-        properties.getProperty("os.version")
+            PROJECT_VERSION,
+            properties.getProperty("java.runtime.name"),
+            properties.getProperty("java.runtime.version"),
+            properties.getProperty("os.name"),
+            properties.getProperty("os.version")
     );
   }
 
@@ -499,19 +532,19 @@ public class CDAClient {
 
     final Platform platform = Platform.get();
     return new Section[]{
-        sdk(
-            "contentful.java",
-            Version.parse(PROJECT_VERSION)),
-        platform(
-            "java",
-            Version.parse(properties.getProperty("java.runtime.version"))
-        ),
-        os(
-            OperatingSystem.parse(platform.name()),
-            Version.parse(platform.version())
-        ),
-        application,
-        integration
+            sdk(
+                    "contentful.java",
+                    Version.parse(PROJECT_VERSION)),
+            platform(
+                    "java",
+                    Version.parse(properties.getProperty("java.runtime.version"))
+            ),
+            os(
+                    OperatingSystem.parse(platform.name()),
+                    Version.parse(platform.version())
+            ),
+            application,
+            integration
     };
   }
 
@@ -702,7 +735,8 @@ public class CDAClient {
       } else {
         if (logLevel != Logger.Level.NONE) {
           throw new IllegalArgumentException(
-              "Cannot log to a null logger. Please set either logLevel to None, or do set a Logger"
+                  "Cannot log to a null logger. "
+                          + "Please set either logLevel to None, or do set a Logger"
           );
         }
       }
@@ -715,10 +749,10 @@ public class CDAClient {
           okBuilder.sslSocketFactory(new TlsSocketFactory(), getX509TrustManager());
         } catch (GeneralSecurityException exception) {
           throw new IllegalArgumentException(
-              "Cannot create TlsSocketFactory for TLS 1.2. "
-                  + "Please consider using 'setTls12Implementation(systemProvided)', "
-                  + "or update to a system providing TLS 1.2 support.",
-              exception);
+                  "Cannot create TlsSocketFactory for TLS 1.2. "
+                          + "Please consider using 'setTls12Implementation(systemProvided)', "
+                          + "or update to a system providing TLS 1.2 support.",
+                  exception);
         }
       }
 
@@ -727,14 +761,14 @@ public class CDAClient {
 
     X509TrustManager getX509TrustManager() throws NoSuchAlgorithmException, KeyStoreException {
       final TrustManagerFactory trustManagerFactory =
-          TrustManagerFactory.getInstance(getDefaultAlgorithm());
+              TrustManagerFactory.getInstance(getDefaultAlgorithm());
       trustManagerFactory.init((KeyStore) null);
 
       return extractX509TrustManager(trustManagerFactory.getTrustManagers());
     }
 
     X509TrustManager extractX509TrustManager(TrustManager[] trustManagers)
-        throws NoSuchAlgorithmException {
+            throws NoSuchAlgorithmException {
       if (trustManagers != null) {
         for (final TrustManager manager : trustManagers) {
           if (manager instanceof X509TrustManager) {
@@ -744,8 +778,8 @@ public class CDAClient {
       }
 
       throw new NoSuchAlgorithmException(
-          "Cannot find a 'X509TrustManager' in system provided managers: '"
-              + Arrays.toString(trustManagers) + "'.");
+              "Cannot find a 'X509TrustManager' in system provided managers: '"
+                      + Arrays.toString(trustManagers) + "'.");
     }
 
     boolean isSdkTlsSocketFactoryWanted() {
@@ -775,11 +809,11 @@ public class CDAClient {
       final Section[] sections = createCustomHeaderSections(application, integration);
 
       OkHttpClient.Builder okBuilder = new OkHttpClient.Builder()
-          .connectionPool(OK_HTTP_CLIENT.connectionPool())
-          .addInterceptor(new AuthorizationHeaderInterceptor(token))
-          .addInterceptor(new UserAgentHeaderInterceptor(createUserAgent()))
-          .addInterceptor(new ContentfulUserAgentHeaderInterceptor(sections))
-          .addInterceptor(new ErrorInterceptor(logSensitiveData));
+              .connectionPool(OK_HTTP_CLIENT.connectionPool())
+              .addInterceptor(new AuthorizationHeaderInterceptor(token))
+              .addInterceptor(new UserAgentHeaderInterceptor(createUserAgent()))
+              .addInterceptor(new ContentfulUserAgentHeaderInterceptor(sections))
+              .addInterceptor(new ErrorInterceptor(logSensitiveData));
 
       setLogger(okBuilder);
       useTls12IfWanted(okBuilder);

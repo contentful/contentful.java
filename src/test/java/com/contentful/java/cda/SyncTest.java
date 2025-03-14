@@ -16,9 +16,9 @@ import static com.google.common.truth.Truth.assertThat;
 
 public class SyncTest extends BaseTest {
   @Test @Enqueue({
-      "demo/sync_initial_p1.json", "demo/sync_initial_p2.json",
-      "demo/locales.json", "demo/content_types.json",
-      "demo/sync_update_p1.json", "demo/sync_update_p2.json"
+          "demo/sync_initial_p1.json", "demo/sync_initial_p2.json",
+          "demo/locales.json", "demo/content_types.json",
+          "demo/sync_update_p1.json", "demo/sync_update_p2.json"
   })
   public void sync() {
     SynchronizedSpace first = client.sync().observe().blockingFirst();
@@ -96,8 +96,8 @@ public class SyncTest extends BaseTest {
   }
 
   @SuppressWarnings("unchecked") @Test @Enqueue(defaults = {}, value = {
-      "shallow/locales.json", "shallow/types.json", "shallow/initial.json",
-      "shallow/locales.json", "shallow/types.json", "shallow/update.json"
+          "shallow/locales.json", "shallow/types.json", "shallow/initial.json",
+          "shallow/locales.json", "shallow/types.json", "shallow/update.json"
   })
   public void testRawFields() {
     SynchronizedSpace space = client.sync().fetch();
@@ -138,20 +138,20 @@ public class SyncTest extends BaseTest {
 
   @Test
   @Enqueue(
-      defaults = {},
-      value = {
-          "links_invalid/locales.json",
-          "links_invalid/content_types.json",
-          "links_invalid/sync_initial.json"
-      }
+          defaults = {},
+          value = {
+                  "links_invalid/locales.json",
+                  "links_invalid/content_types.json",
+                  "links_invalid/sync_initial.json"
+          }
   )
   public void invalidLinkDoesNotThrow() {
     client.sync().fetch();
   }
 
   @Test @Enqueue({
-      "demo/sync_initial_preview_p1.json", "demo/sync_initial_preview_p2.json",
-      "demo/locales.json", "demo/content_types.json"
+          "demo/sync_initial_preview_p1.json", "demo/sync_initial_preview_p2.json",
+          "demo/locales.json", "demo/content_types.json"
   })
   public void syncingInPreviewWithTokenSyncsInitial() {
     client = createPreviewClient();
@@ -162,10 +162,10 @@ public class SyncTest extends BaseTest {
 
   @Test
   @Enqueue({
-      "demo/sync_initial_preview_p1.json", "demo/sync_initial_preview_p2.json",
-      "demo/locales.json", "demo/content_types.json",
-      "demo/sync_initial_preview_p1.json", "demo/sync_initial_preview_p2.json",
-      "demo/locales.json", "demo/content_types.json"
+          "demo/sync_initial_preview_p1.json", "demo/sync_initial_preview_p2.json",
+          "demo/locales.json", "demo/content_types.json",
+          "demo/sync_initial_preview_p1.json", "demo/sync_initial_preview_p2.json",
+          "demo/locales.json", "demo/content_types.json"
   })
   public void syncingInPreviewWithPreviousSpaceSyncsInitial() {
     client = createPreviewClient();
@@ -179,9 +179,9 @@ public class SyncTest extends BaseTest {
 
   @Test
   @Enqueue({
-      "demo/sync_initial_preview_p1.json",
-      "demo/sync_initial_preview_p2.json",
-      "demo/locales.json"})
+          "demo/sync_initial_preview_p1.json",
+          "demo/sync_initial_preview_p2.json",
+          "demo/locales.json"})
   public void syncingWithPreviewWorks() {
     client = createPreviewClient();
     final SynchronizedSpace space = client.sync().fetch();
@@ -191,13 +191,13 @@ public class SyncTest extends BaseTest {
 
   @Test
   @Enqueue({
-      "demo/sync_initial_staging_p1.json",
-      "demo/sync_initial_staging_p2.json",
-      "demo/locales.json"})
+          "demo/sync_initial_staging_p1.json",
+          "demo/sync_initial_staging_p2.json",
+          "demo/locales.json"})
   public void syncingWithEnvironmentsWorks() {
     client = createBuilder()
-        .setEnvironment("staging")
-        .build();
+            .setEnvironment("staging")
+            .build();
 
     final SynchronizedSpace space = client.sync().fetch();
 
@@ -223,6 +223,23 @@ public class SyncTest extends BaseTest {
   public void syncUsesContentType() {
     final SyncQuery query = client.sync(onlyEntriesOfType("customType"));
 
+    assertThat(query.type.getContentType()).isEqualTo("customType");
+  }
+
+  @Test
+  public void syncUsesLimit() {
+    final int limit = 100;
+    final SyncQuery query = client.sync(limit);
+
+    assertThat(query.limit).isEqualTo(limit);
+  }
+
+  @Test
+  public void syncUsesLimitWithType() {
+    final int limit = 100;
+    final SyncQuery query = client.sync(onlyEntriesOfType("customType"), limit);
+
+    assertThat(query.limit).isEqualTo(limit);
     assertThat(query.type.getContentType()).isEqualTo("customType");
   }
 }

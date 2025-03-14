@@ -55,6 +55,7 @@ public final class ResourceUtils {
             null,
             queryParam(nextPageUrl, "sync_token"),
             null,
+            null,
             null)
             .blockingFirst();
 
