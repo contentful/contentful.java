@@ -21,12 +21,15 @@ public class SyncQuery {
 
   final SyncType type;
 
+  final Integer limit;
+
   SyncQuery(Builder builder) {
     this.client = checkNotNull(builder.client, "Client must not be null.");
     this.syncToken = builder.syncToken;
     this.space = builder.space;
     this.initial = builder.isInitial();
     this.type = builder.type;
+    this.limit = builder.limit;
   }
 
   /**
@@ -47,26 +50,28 @@ public class SyncQuery {
       token = syncToken;
     }
     return client.cacheAll(true)
-        .flatMap(new Function<Cache, Publisher<Response<SynchronizedSpace>>>() {
-                   @Override
-                   public Publisher<Response<SynchronizedSpace>> apply(Cache cache) {
-                     return client.service.sync(
-                         client.spaceId,
-                         client.environmentId,
-                         initial ? initial : null,
-                         token,
-                         initial && type != null ? type.getName() : null,
-                         initial && type != null ? type.getContentType() : null);
-                   }
-                 }
-        ).map(
-            new Function<Response<SynchronizedSpace>, SynchronizedSpace>() {
-              @Override
-              public SynchronizedSpace apply(Response<SynchronizedSpace> synchronizedSpace) {
-                return ResourceFactory.sync(synchronizedSpace, space, client);
-              }
-            }
-        );
+            .flatMap(new Function<Cache, Publisher<Response<SynchronizedSpace>>>() {
+                       @Override
+                       public Publisher<Response<SynchronizedSpace>> apply(Cache cache) {
+                         return client.service.sync(
+                                 client.spaceId,
+                                 client.environmentId,
+                                 initial ? initial : null,
+                                 token,
+                                 initial && type != null ? type.getName() : null,
+                                 initial && type != null ? type.getContentType() : null,
+                                 limit);
+                       }
+                     }
+            ).map(
+                    new Function<Response<SynchronizedSpace>, SynchronizedSpace>() {
+                      @Override
+                      public SynchronizedSpace apply(
+                              Response<SynchronizedSpace> synchronizedSpace) {
+                        return ResourceFactory.sync(synchronizedSpace, space, client);
+                      }
+                    }
+            );
   }
 
   /**
@@ -103,6 +108,8 @@ public class SyncQuery {
 
     SyncType type;
 
+    Integer limit;
+
     Builder setClient(CDAClient client) {
       this.client = client;
       return this;
@@ -121,6 +128,20 @@ public class SyncQuery {
     Builder setType(SyncType type) {
       if (isInitial()) {
         this.type = type;
+      }
+      return this;
+    }
+
+    /**
+     * Sets the limit for the number of entries to be returned per page.
+     * This parameter is only used for initial sync.
+     *
+     * @param limit the maximum number of entries per page
+     * @return this builder instance
+     */
+    Builder setLimit(Integer limit) {
+      if (isInitial()) {
+        this.limit = limit;
       }
       return this;
     }
