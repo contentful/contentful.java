@@ -465,7 +465,8 @@ public class TransformQuery<Transformed>
           // Field doesn't exist on the result object, skip it and continue
         }
       } else if (value instanceof Collection) {
-        @SuppressWarnings("unchecked") final Collection<Object> collection = (Collection<Object>) value;
+        @SuppressWarnings("unchecked") final Collection<Object> collection
+                = (Collection<Object>) value;
 
         final ArrayList<Object> transformedList = new ArrayList<>(collection.size());
         for (final Object element : collection) {
@@ -480,7 +481,6 @@ public class TransformQuery<Transformed>
             transformedList.add(element);
           }
         }
-        
         try {
           field.set(result, transformedList);
         } catch (IllegalArgumentException e) {
