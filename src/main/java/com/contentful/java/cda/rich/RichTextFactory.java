@@ -336,6 +336,13 @@ public class RichTextFactory {
                 final CDARichNode resolvedNode = resolveRichNode(rawNode);
                 if (resolvedNode != null) {
                     resolved.content.add(resolvedNode);
+                } else if (rawNode.containsKey("nodeType")) {
+                    // Only handle empty table cells
+                    final String type = (String) rawNode.get("nodeType");
+                    if ("table-cell".equals(type) || "table-header-cell".equals(type)) {
+                        final T emptyNode = getCDAType(rawNode);
+                        resolved.content.add(emptyNode);
+                    }
                 }
             }
             return resolved;
