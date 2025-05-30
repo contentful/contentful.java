@@ -3,7 +3,7 @@
 
   <groupId>com.contentful.java</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>10.5.22-SNAPSHOT</version>
+  <version>10.5.22</version>
   <packaging>jar</packaging>
 
   <name>${project.groupId}:${project.artifactId}</name>
@@ -20,7 +20,7 @@
     <url>http://github.com/contentful/contentful.java</url>
     <connection>scm:git:git://github.com/contentful/contentful.java.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/contentful/contentful.java.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>java-sdk-10.5.22</tag>
   </scm>
 
   <issueManagement>
@@ -127,7 +127,14 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>${mockito.version}</version>
+      <version>3.4.0</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-inline</artifactId>
+      <version>3.4.0</version>
       <scope>test</scope>
     </dependency>
 
@@ -191,7 +198,7 @@
             <id>simple-command</id>
             <phase>package</phase>
             <goals>
-              <goal>attached</goal>
+              <goal>single</goal>
             </goals>
           </execution>
         </executions>
