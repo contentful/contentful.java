@@ -12,6 +12,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.util.ArrayList;
 
 public class EntryTest extends BaseTest {
   @Test(expected = CDAResourceNotFoundException.class)
@@ -96,6 +100,17 @@ public class EntryTest extends BaseTest {
     CDAEntry entry = client.fetch(CDAEntry.class).one("nyancat");
     assertThat(entry.contentType()).isNotNull();
   }
+
+  @Test
+  @Enqueue("demo/entries.json")
+  public void entryTaxonomy() {
+    CDAEntry entry = client.fetch(CDAEntry.class).one("ge1xHyH3QOWucKWCCAgIG");
+    assertThat(entry.contentType()).isNotNull();
+    assertNotNull(entry.getMetadata());
+    assertNotNull(entry.getMetadata().getConcepts());
+    assertEquals(1, entry.getMetadata().getConcepts().size());
+  }
+
 
   @Test
   @Enqueue("demo/entries_nyancat.json")

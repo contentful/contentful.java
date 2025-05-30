@@ -41,6 +41,7 @@
         "description": "such json\nwow"
       }
     },
+
     {
       "sys": {
         "space": {
@@ -354,6 +355,18 @@
           "lat": 48.856614,
           "lon": 2.3522219000000177
         }
+      },
+      "metadata": {
+        "tags": [],
+        "concepts": [
+          {
+            "sys": {
+              "type": "Link",
+              "linkType": "TaxonomyConcept",
+              "id": "3DMf5gdax6J22AfcJ6fvsC"
+            }
+          }
+        ]
       }
     },
     {

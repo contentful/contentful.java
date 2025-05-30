@@ -12,6 +12,7 @@ import static com.contentful.java.cda.CDAType.ASSET;
 import static com.contentful.java.cda.CDAType.SPACE;
 import static com.contentful.java.cda.CDAType.ENTRY;
 import static com.contentful.java.cda.CDAType.CONTENTTYPE;
+import static com.contentful.java.cda.CDAType.TAXONOMYCONCEPT;
 
 final class Util {
   private Util() {
@@ -46,18 +47,20 @@ final class Util {
       return Constants.PATH_LOCALES;
     } else if (CDATag.class.equals(clazz)) {
       return Constants.PATH_TAGS;
+    } else if (CDATaxonomyConcept.class.equals(clazz)) {
+      return Constants.PATH_TAXONOMY_CONCEPTS;
     }
     throw new IllegalArgumentException("Invalid type specified: " + clazz.getName());
   }
 
   static Class<? extends CDAResource> classForType(CDAType type) {
-    if (CDAType.ASSET.equals(type)) {
+    if (ASSET.equals(type)) {
       return CDAAsset.class;
-    } else if (CDAType.CONTENTTYPE.equals(type)) {
+    } else if (CONTENTTYPE.equals(type)) {
       return CDAContentType.class;
-    } else if (CDAType.ENTRY.equals(type)) {
+    } else if (ENTRY.equals(type)) {
       return CDAEntry.class;
-    } else if (CDAType.SPACE.equals(type)) {
+    } else if (SPACE.equals(type)) {
       return CDASpace.class;
     } else if (LOCALE.equals(type)) {
       return CDALocale.class;
@@ -65,6 +68,8 @@ final class Util {
       return DeletedResource.class;
     } else if (TAG.equals(type)) {
       return CDATag.class;
+    } else if (TAXONOMYCONCEPT.equals(type)) {
+      return CDATaxonomyConcept.class;
     }
     throw new IllegalArgumentException("Invalid type provided: " + type);
   }
@@ -82,6 +87,8 @@ final class Util {
       return LOCALE;
     } else if (CDATag.class.equals(clazz)) {
       return TAG;
+    } else if (CDATaxonomyConcept.class.equals(clazz)) {
+      return TAXONOMYCONCEPT;
     }
     throw new IllegalArgumentException("Invalid class provided: " + clazz.getName());
   }

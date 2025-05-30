@@ -10,5 +10,6 @@ public enum CDAType {
   ENTRY,
   LOCALE,
   SPACE,
-  TAG
+  TAG,
+  TAXONOMYCONCEPT,
 }

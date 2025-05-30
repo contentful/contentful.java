@@ -24,5 +24,7 @@ class Constants {
 
   static final String PATH_TAGS = "tags";
 
+  static final String PATH_TAXONOMY_CONCEPTS = "taxonomy/concepts";
+
   static final String DEFAULT_ENVIRONMENT = "master";
 }
