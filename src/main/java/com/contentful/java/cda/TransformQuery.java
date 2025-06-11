@@ -459,9 +459,14 @@ public class TransformQuery<Transformed>
           transform(fieldEntry);
         }
 
-        field.set(result, instanceCache.get(fieldEntry.id()));
+        try {
+          field.set(result, instanceCache.get(fieldEntry.id()));
+        } catch (IllegalArgumentException e) {
+          // Field doesn't exist on the result object, skip it and continue
+        }
       } else if (value instanceof Collection) {
-        @SuppressWarnings("unchecked") final Collection<Object> collection = (Collection) value;
+        @SuppressWarnings("unchecked") final Collection<Object> collection
+                = (Collection<Object>) value;
 
         final ArrayList<Object> transformedList = new ArrayList<>(collection.size());
         for (final Object element : collection) {
@@ -475,11 +480,18 @@ public class TransformQuery<Transformed>
           } else {
             transformedList.add(element);
           }
-
+        }
+        try {
           field.set(result, transformedList);
+        } catch (IllegalArgumentException e) {
+          // Field doesn't exist on the result object, skip it and continue
         }
       } else {
-        field.set(result, value);
+        try {
+          field.set(result, value);
+        } catch (IllegalArgumentException e) {
+          // Field doesn't exist on the result object, skip it and continue
+        }
       }
     } catch (IllegalAccessException e) {
       throw new IllegalStateException("Cannot set custom field " + key + ".");
