@@ -28,10 +28,14 @@ public class RichTextFactory {
 
     static {
         // add leafs
-        RESOLVER_MAP.put("text", raw -> new CDARichText(
+        RESOLVER_MAP.put("text", raw -> {
+            CDARichText text = new CDARichText(
                 (CharSequence) raw.get("value"),
                 resolveMarks((List<Map<String, Object>>) raw.get("marks"))
-        ));
+            );
+            text.setNodeType((String) raw.get("nodeType"));
+            return text;
+        });
         RESOLVER_MAP.put("hr", raw -> new CDARichHorizontalRule());
 
         // add blocks
@@ -329,6 +333,9 @@ public class RichTextFactory {
         @Override
         public CDARichNode resolve(Map<String, Object> raw) {
             final T resolved = getCDAType(raw);
+            if (resolved instanceof CDARichNode) {
+                ((CDARichNode) resolved).setNodeType((String) raw.get("nodeType"));
+            }
 
             final List<Map<String, Object>> contents = (List<Map<String, Object>>)
                     raw.get("content");
@@ -372,6 +379,15 @@ public class RichTextFactory {
             });
             this.level = level;
         }
+
+        @Override
+        public CDARichNode resolve(Map<String, Object> raw) {
+            CDARichNode result = super.resolve(raw);
+            if (result instanceof CDARichNode) {
+                ((CDARichNode) result).setNodeType((String) raw.get("nodeType"));
+            }
+            return result;
+        }
     }
 
     /**
@@ -404,7 +420,11 @@ public class RichTextFactory {
          */
         @Override
         T getCDAType(Map<String, Object> raw) {
-            return supplier.get(raw.get(dataFieldKey));
+            T result = supplier.get(raw.get(dataFieldKey));
+            if (result instanceof CDARichNode) {
+                ((CDARichNode) result).setNodeType((String) raw.get("nodeType"));
+            }
+            return result;
         }
     }
 }
