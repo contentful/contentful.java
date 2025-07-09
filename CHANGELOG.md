@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Version [10.5.23] - (2025-07-03)
+- fix: inconsistent rich text embedding
+
 ## Version [10.5.21] - (2025-03-04)
 - fix: add limit to sync query
 
@@ -289,6 +292,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Version 1.0.0 - 2014-08-13
 Initial release.
 
+[10.5.23]: https://github.com/contentful/contentful.java/compare/v.10.5.21...v.10.5.23
 [10.5.21]: https://github.com/contentful/contentful.java/compare/v.10.5.19...v.10.5.21
 [10.5.19]: https://github.com/contentful/contentful.java/compare/v.10.5.18...v.10.5.19
 [10.5.18]: https://github.com/contentful/contentful.java/compare/v.10.5.17...v.10.5.18
