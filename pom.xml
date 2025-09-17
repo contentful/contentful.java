@@ -3,7 +3,7 @@
 
   <groupId>com.contentful.java</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>10.5.23</version>
+  <version>10.5.24</version>
   <packaging>jar</packaging>
 
   <name>${project.groupId}:${project.artifactId}</name>
@@ -53,7 +53,7 @@
     <retrofit.version>2.11.0</retrofit.version>
     <rxjava.version>3.1.9</rxjava.version>
     <gson.version>2.11.0</gson.version>
-    <okhttp.version>4.12.0</okhttp.version>
+    <okhttp.version>5.1.0</okhttp.version>
 
     <!-- Test Dependencies -->
     <commonsio.version>2.7</commonsio.version>
@@ -102,6 +102,11 @@
     <dependency>
       <groupId>com.squareup.okhttp3</groupId>
       <artifactId>okhttp</artifactId>
+      <version>${okhttp.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp-jvm</artifactId>
       <version>${okhttp.version}</version>
     </dependency>
 

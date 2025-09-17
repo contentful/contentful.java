@@ -76,14 +76,14 @@ Install the Contentful dependency:
 <dependency>
   <groupId>com.contentful.java</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>10.5.23</version>
+  <version>10.5.24</version>
 </dependency>
 ```
 
 * _Gradle_
 
 ```groovy
-compile 'com.contentful.java:java-sdk:10.5.23'
+compile 'com.contentful.java:java-sdk:10.5.24'
 ```
 
 This library requires Java 8 (or higher version) or Android 21.
@@ -382,6 +382,37 @@ OkHttpClient httpClient = clientBuilder.defaultCallFactoryBuilder()
 
 // reapply the http changes and build a contentful client
 CDAClient cdaClient = clientBuilder.setCallFactory(httpClient).build();
+```
+
+Android and OkHttp 5
+--------------------
+
+OkHttp 5 splits platform artifacts. This SDK depends on `okhttp-jvm` so it works out of the box for JVM users. For Android apps, depend on `okhttp-android` and exclude `okhttp-jvm` from this SDK to avoid duplicate-class errors.
+
+Gradle (Kotlin DSL):
+
+```kotlin
+dependencies {
+  implementation(platform("com.squareup.okhttp3:okhttp-bom:5.1.0"))
+  implementation("com.squareup.okhttp3:okhttp-android")
+
+  implementation("com.contentful.java:java-sdk:10.5.24") {
+    exclude(group = "com.squareup.okhttp3", module = "okhttp-jvm")
+  }
+}
+```
+
+Gradle (Groovy):
+
+```groovy
+dependencies {
+  implementation platform('com.squareup.okhttp3:okhttp-bom:5.1.0')
+  implementation 'com.squareup.okhttp3:okhttp-android'
+
+  implementation('com.contentful.java:java-sdk:10.5.24') {
+    exclude group: 'com.squareup.okhttp3', module: 'okhttp-jvm'
+  }
+}
 ```
 
 Proguard
