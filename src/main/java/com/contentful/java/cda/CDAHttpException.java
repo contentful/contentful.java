@@ -36,9 +36,9 @@ public class CDAHttpException extends RuntimeException {
     super(response.message());
     this.request = request;
     this.response = response;
+    this.logSensitiveData = logSensitiveData;
     this.responseBody = readResponseBody(response);
     this.stringRepresentation = createString();
-    this.logSensitiveData = logSensitiveData;
   }
 
   private String readResponseBody(Response response) {
