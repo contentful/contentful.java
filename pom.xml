@@ -3,7 +3,7 @@
 
   <groupId>com.contentful.java</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>10.5.24</version>
+  <version>10.5.25</version>
   <packaging>jar</packaging>
 
   <name>${project.groupId}:${project.artifactId}</name>
