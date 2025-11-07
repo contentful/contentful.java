@@ -75,7 +75,7 @@ public abstract class AbsQuery<
 
   /**
    * Requesting content with specific locale.
-   * If the locale contains Unicode extension tags (e.g., "en-CA-u-fw-sun-mu-celsius" they will be stripped.
+   * If the locale contains Unicode extension tags (e.g., "en-CA-u-fw-sun-mu-celsius") they will be stripped.
    *
    * @param locale the locale to be used.
    * @return the calling query for chaining.
