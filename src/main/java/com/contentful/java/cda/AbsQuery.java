@@ -75,6 +75,7 @@ public abstract class AbsQuery<
 
   /**
    * Requesting content with specific locale.
+   * If the locale contains Unicode extension tags (e.g., "en-CA-u-fw-sun-mu-celsius" they will be stripped.
    *
    * @param locale the locale to be used.
    * @return the calling query for chaining.
@@ -85,12 +86,14 @@ public abstract class AbsQuery<
   public Query withLocale(String locale) {
     checkNotNull(locale, "Locale must not be null.");
 
+    String normalizedLocale = stripExtensionsFromLocale(locale);
+
     if (params.get(PARAMETER_LOCALE) != null) {
       throw new IllegalStateException(format("Locale \"%s\" is already present in query.",
           params.get(PARAMETER_LOCALE)));
     }
 
-    params.put(PARAMETER_LOCALE, locale);
+    params.put(PARAMETER_LOCALE, normalizedLocale);
 
     return (Query) this;
   }
@@ -486,5 +489,38 @@ public abstract class AbsQuery<
       }
     }
     return count;
+  }
+
+  /**
+   * Normalizes a locale string by removing Unicode extension tags.
+   * <p>
+   * Starting with Android 14 (API 34), the ICU library provides extended locale strings
+   * that include user preferences like "en-CA-u-fw-sun-mu-celsius". These extensions are
+   * not supported by Contentful's API, so we strip them to get the base locale code.
+   * <p>
+   * Examples:
+   * <ul>
+   *   <li>"en-CA-u-fw-sun-mu-celsius" → "en-CA"</li>
+   *   <li>"en-GB-u-hc-h24" → "en-GB"</li>
+   *   <li>"en-US" → "en-US" (unchanged)</li>
+   * </ul>
+   *
+   * @param locale the locale string to normalize
+   * @return the normalized locale string without Unicode extension tags
+   */
+  private String stripExtensionsFromLocale(String locale) {
+    if (locale == null || locale.isEmpty()) {
+      return locale;
+    }
+
+    // Find the Unicode extension separator "-u-"
+    int extensionIndex = locale.indexOf("-u-");
+    if (extensionIndex > 0) {
+      // Strip everything from "-u-" onwards
+      return locale.substring(0, extensionIndex);
+    }
+
+    // No Unicode extensions found, return as-is
+    return locale;
   }
 }
