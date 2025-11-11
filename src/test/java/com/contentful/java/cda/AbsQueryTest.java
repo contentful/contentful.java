@@ -73,6 +73,97 @@ public class AbsQueryTest {
   }
 
   @Test
+  public void localeWithStandardFormat() {
+    query.withLocale("en-US");
+
+    assertThat(query.params).containsEntry("locale", "en-US");
+  }
+
+  @Test
+  public void localeWithAndroid14ExtensionIsNormalized() {
+    // Android 14+ may send locales with Unicode extension tags like "en-CA-u-fw-sun-mu-celsius"
+    query.withLocale("en-CA-u-fw-sun-mu-celsius");
+
+    // Should be normalized to just "en-CA"
+    assertThat(query.params).containsEntry("locale", "en-CA");
+  }
+
+  @Test
+  public void localeWithMultipleUnicodeExtensions() {
+    // Test locale with multiple Unicode extension tags
+    query.withLocale("en-GB-u-hc-h24-fw-mon");
+
+    // Should strip all extensions after "-u-"
+    assertThat(query.params).containsEntry("locale", "en-GB");
+  }
+
+  @Test
+  public void localeWithSimpleUnicodeExtension() {
+    // Test with a simple Unicode extension
+    query.withLocale("en-US-u-ca-gregory");
+
+    assertThat(query.params).containsEntry("locale", "en-US");
+  }
+
+  @Test
+  public void localeWithOnlyLanguageCode() {
+    // Test with just a language code (no region)
+    query.withLocale("en");
+
+    assertThat(query.params).containsEntry("locale", "en");
+  }
+
+  @Test
+  public void localeWithThreeLetterRegionCode() {
+    // Test with three-letter region code
+    query.withLocale("zh-CHN");
+
+    assertThat(query.params).containsEntry("locale", "zh-CHN");
+  }
+
+  @Test
+  public void localeWithScriptAndRegion() {
+    // Test with script and region (e.g., Chinese)
+    query.withLocale("zh-Hans-CN");
+
+    assertThat(query.params).containsEntry("locale", "zh-Hans-CN");
+  }
+
+  @Test
+  public void localeWithScriptRegionAndUnicodeExtension() {
+    // Test with script, region, and Unicode extension
+    query.withLocale("zh-Hans-CN-u-ca-chinese");
+
+    // Should preserve script and region, but strip Unicode extension
+    assertThat(query.params).containsEntry("locale", "zh-Hans-CN");
+  }
+
+  @Test
+  public void localeWithUAtStart() {
+    // Edge case: "u" at the start should not be treated as extension
+    query.withLocale("uz-UZ");
+
+    assertThat(query.params).containsEntry("locale", "uz-UZ");
+  }
+
+  @Test
+  public void localeWithUppercaseU() {
+    // Edge case: uppercase "U" should not be treated as extension separator
+    query.withLocale("en-US-U-test");
+
+    // "-U-" (uppercase) should not be treated as Unicode extension separator
+    assertThat(query.params).containsEntry("locale", "en-US-U-test");
+  }
+
+  @Test
+  public void localeEmpty() {
+    // Empty locale should be handled gracefully (will be caught by checkNotNull)
+    query.withLocale("");
+
+    assertThat(query.params).containsEntry("locale", "");
+  }
+
+  @Test
   public void select() {
     query.withContentType("foo");
     query.select("fields.bar");
