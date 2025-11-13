@@ -76,14 +76,14 @@ Install the Contentful dependency:
 <dependency>
   <groupId>com.contentful.java</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>10.5.26</version>
+  <version>10.5.27</version>
 </dependency>
 ```
 
 * _Gradle_
 
 ```groovy
-compile 'com.contentful.java:java-sdk:10.5.26'
+compile 'com.contentful.java:java-sdk:10.5.27'
 ```
 
 This library requires Java 8 (or higher version) or Android 21.
@@ -258,6 +258,38 @@ CDAArray found = client.fetch(CDAEntry.class)
 ```
 
 This only resolves the first level of includes. `10` is the maximum number of levels to be included and should be used sparingly, since this will bloat up the response by a lot.
+
+Cross-Space References
+----------------------
+
+The SDK supports resolving cross-space references, which allows you to link content across multiple spaces. When cross-space tokens are configured, entries and assets from other spaces will be automatically included in the response's `includes` section and resolved by the SDK's link resolution.
+
+To enable cross-space reference resolution, provide access tokens for the additional spaces:
+
+```java
+Map<String, String> crossSpaceTokens = new HashMap<>();
+crossSpaceTokens.put("space-id-1", "cda-token-for-space-1");
+crossSpaceTokens.put("space-id-2", "cda-token-for-space-2");
+
+CDAClient client = CDAClient.builder()
+    .setSpace("main-space-id")
+    .setToken("main-space-token")
+    .setCrossSpaceTokens(crossSpaceTokens)
+    .build();
+
+// Cross-space references will now be automatically resolved
+CDAArray entries = client.fetch(CDAEntry.class)
+    .include(2)
+    .all();
+```
+
+**Limitations:**
+- Maximum 20 extra spaces can be configured (21 total including the main space)
+- Only the first level of cross-space references is resolved (similar to `include=1` for cross-space)
+- The main space can still resolve up to 10 levels of includes
+- Cross-space errors are returned in the `CDAArray.getErrors()` method
+
+For more information, see the [Contentful Resource Links documentation](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/resource-links).
 
 Unwrapping
 ----------

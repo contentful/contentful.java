@@ -10,6 +10,9 @@ import com.contentful.java.cda.lib.EnqueueResponse;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import okhttp3.Call;
@@ -489,5 +492,58 @@ public class ClientTest extends BaseTest {
     }
     assertThat(request.getPath()).contains("type=Entry");
     assertThat(request.getPath()).contains("content_type=CustomType");
+  }
+
+  @Test
+  @Enqueue
+  public void crossSpaceResolutionHeaderAdded() throws InterruptedException {
+    Map<String, String> crossSpaceTokens = new HashMap<>();
+    crossSpaceTokens.put("IdToR3s0lv3", "ND63YKcYBe335RWDnIuzv");
+    crossSpaceTokens.put("4n0th3rSp4c3", "UuVe6icuBuXv");
+
+    final CDAClient client = createBuilder()
+        .setCrossSpaceTokens(crossSpaceTokens)
+        .build();
+
+    client.fetchSpace();
+
+    final RecordedRequest request = server.takeRequest();
+    final String headerValue = request.getHeader("x-contentful-resource-resolution");
+
+    assertThat(headerValue).isNotNull();
+
+    // Decode and verify JSON structure
+    byte[] decoded = Base64.getDecoder().decode(headerValue);
+    String json = new String(decoded);
+    assertThat(json).contains("\"spaces\"");
+    assertThat(json).contains("\"IdToR3s0lv3\"");
+    assertThat(json).contains("\"4n0th3rSp4c3\"");
+    assertThat(json).contains("\"ND63YKcYBe335RWDnIuzv\"");
+    assertThat(json).contains("\"UuVe6icuBuXv\"");
+  }
+
+  @Test
+  @Enqueue
+  public void crossSpaceResolutionHeaderNotAddedWhenNotSet() throws InterruptedException {
+    final CDAClient client = createBuilder().build();
+
+    client.fetchSpace();
+
+    final RecordedRequest request = server.takeRequest();
+    final String headerValue = request.getHeader("x-contentful-resource-resolution");
+
+    assertThat(headerValue).isNull();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void crossSpaceResolutionThrowsWhenExceedsMaxSpaces() {
+    Map<String, String> tooManySpaces = new HashMap<>();
+    for (int i = 1; i <= 21; i++) {
+      tooManySpaces.put("space" + i, "token" + i);
+    }
+
+    createBuilder()
+        .setCrossSpaceTokens(tooManySpaces)
+        .build();
   }
 }

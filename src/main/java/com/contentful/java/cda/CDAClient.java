@@ -8,6 +8,7 @@ import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.
 import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.OperatingSystem;
 import com.contentful.java.cda.interceptor.ContentfulUserAgentHeaderInterceptor.Section.Version;
 import com.contentful.java.cda.interceptor.ErrorInterceptor;
+import com.contentful.java.cda.interceptor.HeaderInterceptor;
 import com.contentful.java.cda.interceptor.LogInterceptor;
 import com.contentful.java.cda.interceptor.UserAgentHeaderInterceptor;
 import io.reactivex.rxjava3.core.Flowable;
@@ -35,6 +36,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
+import java.util.Base64;
 
 import static com.contentful.java.cda.Constants.ENDPOINT_PROD;
 import static com.contentful.java.cda.Constants.PATH_CONTENT_TYPES;
@@ -579,6 +581,8 @@ public class CDAClient {
     Section application;
     Section integration;
 
+    Map<String, String> crossSpaceTokens;
+
     private static final OkHttpClient OK_HTTP_CLIENT = new OkHttpClient();
 
     Builder() {
@@ -720,6 +724,20 @@ public class CDAClient {
       return converterFactory;
     }
 
+    /**
+     * Encodes cross-space tokens to a base64-encoded JSON string for the
+     * x-contentful-resource-resolution header.
+     *
+     * @param tokens map of space IDs to access tokens
+     * @return base64-encoded JSON string
+     */
+    private String encodeCrossSpaceTokens(Map<String, String> tokens) {
+      Map<String, Map<String, String>> payload = new HashMap<>();
+      payload.put("spaces", tokens);
+      String json = ResourceFactory.GSON.toJson(payload);
+      return Base64.getEncoder().encodeToString(json.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+    }
+
     private OkHttpClient.Builder setLogger(OkHttpClient.Builder okBuilder) {
       if (logger != null) {
         switch (logLevel) {
@@ -812,8 +830,15 @@ public class CDAClient {
               .connectionPool(OK_HTTP_CLIENT.connectionPool())
               .addInterceptor(new AuthorizationHeaderInterceptor(token))
               .addInterceptor(new UserAgentHeaderInterceptor(createUserAgent()))
-              .addInterceptor(new ContentfulUserAgentHeaderInterceptor(sections))
-              .addInterceptor(new ErrorInterceptor(logSensitiveData));
+              .addInterceptor(new ContentfulUserAgentHeaderInterceptor(sections));
+
+      // Add cross-space resolution header if tokens are configured
+      if (crossSpaceTokens != null && !crossSpaceTokens.isEmpty()) {
+        String encodedHeader = encodeCrossSpaceTokens(crossSpaceTokens);
+        okBuilder.addInterceptor(new HeaderInterceptor("x-contentful-resource-resolution", encodedHeader));
+      }
+
+      okBuilder.addInterceptor(new ErrorInterceptor(logSensitiveData));
 
       setLogger(okBuilder);
       useTls12IfWanted(okBuilder);
@@ -865,6 +890,31 @@ public class CDAClient {
      */
     public Builder setIntegration(String name, String version) {
       this.integration = Section.integration(name, Version.parse(version));
+      return this;
+    }
+
+    /**
+     * Sets cross-space tokens for resolving cross-space references.
+     * <p>
+     * This enables automatic resolution of entries and assets from other spaces by providing
+     * access tokens for those spaces. Cross-space resources will be included in the response's
+     * includes section.
+     * <p>
+     * The maximum number of extra spaces supported is 20 (21 total including the main space).
+     *
+     * @param spaceIdToToken a map of space IDs to their corresponding access tokens (CDA tokens).
+     * @return this builder for chaining.
+     * @throws IllegalArgumentException if the map is null or contains more than 20 spaces.
+     * @see <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/resource-links">Resource Links Documentation</a>
+     */
+    public Builder setCrossSpaceTokens(Map<String, String> spaceIdToToken) {
+      checkNotNull(spaceIdToToken, "Cross-space tokens map must not be null.");
+      if (spaceIdToToken.size() > 20) {
+        throw new IllegalArgumentException(
+            String.format("Maximum 20 extra spaces supported for cross-space resolution, but %d provided.",
+                spaceIdToToken.size()));
+      }
+      this.crossSpaceTokens = spaceIdToToken;
       return this;
     }
 
