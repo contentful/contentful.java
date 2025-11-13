@@ -78,6 +78,8 @@ public class CDAClient {
 
   final boolean logSensitiveData;
 
+  final boolean hasCrossSpaceTokens;
+
   CDAClient(Builder builder) {
     this(new Cache(),
             Platform.get().callbackExecutor(),
@@ -95,6 +97,8 @@ public class CDAClient {
     this.token = builder.token;
     this.preview = builder.preview;
     this.logSensitiveData = builder.logSensitiveData;
+    this.hasCrossSpaceTokens = builder.crossSpaceTokens != null
+        && !builder.crossSpaceTokens.isEmpty();
   }
 
   private void validate(Builder builder) {
@@ -908,8 +912,6 @@ public class CDAClient {
      * @param spaceIdToToken a map of space IDs to their corresponding access tokens (CDA tokens).
      * @return this builder for chaining.
      * @throws IllegalArgumentException if the map is null or contains more than 20 spaces.
-     * @see <a href="https://www.contentful.com/developers/docs/references/
-     *     content-delivery-api/#/reference/resource-links">Resource Links Documentation</a>
      */
     public Builder setCrossSpaceTokens(Map<String, String> spaceIdToToken) {
       checkNotNull(spaceIdToToken, "Cross-space tokens map must not be null.");

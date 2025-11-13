@@ -65,7 +65,12 @@ public final class ResourceUtils {
   static void resolveLinks(ArrayResource array, CDAClient client) {
     for (CDAEntry entry : array.entries().values()) {
       ensureContentType(entry, client);
-      for (CDAField field : entry.contentType().fields()) {
+      CDAContentType contentType = entry.contentType();
+      if (contentType == null || contentType.fields() == null) {
+        // Content type may be null for cross-space entries
+        continue;
+      }
+      for (CDAField field : contentType.fields()) {
         if (field.linkType() != null) {
           resolveSingleLink(entry, field, array);
         } else if ("Array".equals(field.type) && "Link".equals(field.items().get("type"))) {
@@ -88,13 +93,19 @@ public final class ResourceUtils {
     }
 
     String contentTypeId = extractNested(entry.attrs(), "contentType", "sys", "id");
-    try {
-      contentType = client.cacheTypeWithId(contentTypeId).blockingFirst();
-    } catch (CDAResourceNotFoundException e) {
-      throw new CDAContentTypeNotFoundException(entry.id(), CDAEntry.class, contentTypeId, e);
+    if (contentTypeId == null) {
+      return;
     }
 
-    entry.setContentType(contentType);
+    try {
+      contentType = client.cacheTypeWithId(contentTypeId).blockingFirst();
+      entry.setContentType(contentType);
+    } catch (CDAResourceNotFoundException e) {
+      if (client.hasCrossSpaceTokens) {
+        return;
+      }
+      throw new CDAContentTypeNotFoundException(entry.id(), CDAEntry.class, contentTypeId, e);
+    }
   }
 
   @SuppressWarnings("unchecked")
