@@ -909,7 +909,7 @@ public class CDAClient {
      * @return this builder for chaining.
      * @throws IllegalArgumentException if the map is null or contains more than 20 spaces.
      * @see <a href="https://www.contentful.com/developers/docs/references/
-     * content-delivery-api/#/reference/resource-links">Resource Links Documentation</a>
+     *     content-delivery-api/#/reference/resource-links">Resource Links Documentation</a>
      */
     public Builder setCrossSpaceTokens(Map<String, String> spaceIdToToken) {
       checkNotNull(spaceIdToToken, "Cross-space tokens map must not be null.");
