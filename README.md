@@ -76,14 +76,14 @@ Install the Contentful dependency:
 <dependency>
   <groupId>com.contentful.java</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>10.5.26</version>
+  <version>10.6.0</version>
 </dependency>
 ```
 
 * _Gradle_
 
 ```groovy
-compile 'com.contentful.java:java-sdk:10.5.26'
+compile 'com.contentful.java:java-sdk:10.6.0'
 ```
 
 This library requires Java 8 (or higher version) or Android 21.
@@ -259,6 +259,38 @@ CDAArray found = client.fetch(CDAEntry.class)
 
 This only resolves the first level of includes. `10` is the maximum number of levels to be included and should be used sparingly, since this will bloat up the response by a lot.
 
+Cross-Space References
+----------------------
+
+In version 10.6.0 and later the library supports resolving cross-space references, which allows you to link content across multiple spaces. When cross-space tokens are configured, entries and assets from other spaces will be automatically included in the response's `includes` section and resolved by the library link resolution.
+
+To enable cross-space reference resolution, provide access tokens for the additional spaces:
+
+```java
+Map<String, String> crossSpaceTokens = new HashMap<>();
+crossSpaceTokens.put("space-id-1", "cda-token-for-space-1");
+crossSpaceTokens.put("space-id-2", "cda-token-for-space-2");
+
+CDAClient client = CDAClient.builder()
+    .setSpace("main-space-id")
+    .setToken("main-space-token")
+    .setCrossSpaceTokens(crossSpaceTokens)
+    .build();
+
+// Cross-space references will now be automatically resolved
+CDAArray entries = client.fetch(CDAEntry.class)
+    .include(2)
+    .all();
+```
+
+**Limitations:**
+- Maximum 20 extra spaces can be configured (21 total including the main space)
+- Only the first level of cross-space references is resolved (similar to `include=1` for cross-space)
+- The main space can still resolve up to 10 levels of includes
+- Cross-space errors are returned in the `CDAArray.getErrors()` method
+
+For more information, see the [Contentful Resource Links documentation](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/resource-links).
+
 Unwrapping
 ----------
 
@@ -303,7 +335,7 @@ In addition to returning the Content in a fashion flexible for various use-cases
 > * A `locale` can be used to specify a given locale of this entry. If no locale is given, the default locale will be used. 
 > * `@ContentfulSystemField` is used for CDAEntries attributes (`sys.id`, etc) to be inserted.
 > * If another type is wanted to be transformed, it should have `@ContentfulEntryModel`-annotation specified similarly as in `Cat`.
-> * **Limitation on Unwrapping**: Using Unwrapping does not currently allow direct access to the raw JSON for rich text fields, as the SDK automatically transforms fields into the custom model structure. For cases where raw JSON is needed:
+> * **Limitation on Unwrapping**: Using Unwrapping does not currently allow direct access to the raw JSON for rich text fields, as the library automatically transforms fields into the custom model structure. For cases where raw JSON is needed:
 >   * Use the `rawFields` map in `CDAEntry` to directly access the unprocessed JSON of any field, including rich text.
 >   * Alternatively, make a direct HTTP request to the Contentful API to retrieve the full raw JSON response.
 
@@ -387,7 +419,7 @@ CDAClient cdaClient = clientBuilder.setCallFactory(httpClient).build();
 Android and OkHttp 5
 --------------------
 
-OkHttp 5 splits platform artifacts. This SDK depends on `okhttp-jvm` so it works out of the box for JVM users. For Android apps, depend on `okhttp-android` and exclude `okhttp-jvm` from this SDK to avoid duplicate-class errors.
+OkHttp 5 splits platform artifacts. This library depends on `okhttp-jvm` so it works out of the box for JVM users. For Android apps, depend on `okhttp-android` and exclude `okhttp-jvm` from this library to avoid duplicate-class errors.
 
 Gradle (Kotlin DSL):
 
@@ -396,7 +428,7 @@ dependencies {
   implementation(platform("com.squareup.okhttp3:okhttp-bom:5.1.0"))
   implementation("com.squareup.okhttp3:okhttp-android")
 
-  implementation("com.contentful.java:java-sdk:10.5.24") {
+  implementation("com.contentful.java:java-sdk:10.6.0") {
     exclude(group = "com.squareup.okhttp3", module = "okhttp-jvm")
   }
 }
@@ -409,7 +441,7 @@ dependencies {
   implementation platform('com.squareup.okhttp3:okhttp-bom:5.1.0')
   implementation 'com.squareup.okhttp3:okhttp-android'
 
-  implementation('com.contentful.java:java-sdk:10.5.24') {
+  implementation('com.contentful.java:java-sdk:10.6.0') {
     exclude group: 'com.squareup.okhttp3', module: 'okhttp-jvm'
   }
 }

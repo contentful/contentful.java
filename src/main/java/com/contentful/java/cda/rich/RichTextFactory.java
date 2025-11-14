@@ -2,6 +2,7 @@ package com.contentful.java.cda.rich;
 
 import com.contentful.java.cda.ArrayResource;
 import com.contentful.java.cda.CDAClient;
+import com.contentful.java.cda.CDAContentType;
 import com.contentful.java.cda.CDAEntry;
 import com.contentful.java.cda.CDAField;
 
@@ -78,7 +79,12 @@ public class RichTextFactory {
     public static void resolveRichTextField(ArrayResource array, CDAClient client) {
         for (CDAEntry entry : array.entries().values()) {
             ensureContentType(entry, client);
-            for (CDAField field : entry.contentType().fields()) {
+            CDAContentType contentType = entry.contentType();
+            if (contentType == null || contentType.fields() == null) {
+                // Content type may be null for cross-space entries
+                continue;
+            }
+            for (CDAField field : contentType.fields()) {
                 if ("RichText".equals(field.type())) {
                     resolveRichDocument(entry, field);
                     resolveRichLink(array, entry, field);
