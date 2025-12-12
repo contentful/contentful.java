@@ -55,5 +55,7 @@ public class CDAArray extends ArrayResource {
     @SerializedName("Asset") List<CDAAsset> assets;
 
     @SerializedName("Entry") List<CDAEntry> entries;
+
+    @SerializedName("TaxonomyConcept") List<CDATaxonomyConcept> concepts;
   }
 }

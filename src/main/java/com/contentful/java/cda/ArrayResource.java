@@ -16,6 +16,8 @@ public abstract class ArrayResource extends CDAResource {
 
   Map<String, CDAEntry> entries;
 
+  Map<String, CDATaxonomyConcept> concepts;
+
   /**
    * @return items in this resource.
    */
@@ -35,5 +37,12 @@ public abstract class ArrayResource extends CDAResource {
    */
   public Map<String, CDAEntry> entries() {
     return entries;
+  }
+
+  /**
+   * @return taxonomy concepts mapped by concept id (includes linked resources).
+   */
+  public Map<String, CDATaxonomyConcept> concepts() {
+    return concepts;
   }
 }

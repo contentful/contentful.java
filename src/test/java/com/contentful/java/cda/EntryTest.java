@@ -15,8 +15,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.ArrayList;
-
 public class EntryTest extends BaseTest {
   @Test(expected = CDAResourceNotFoundException.class)
   @Enqueue("array_empty.json")
@@ -109,6 +107,93 @@ public class EntryTest extends BaseTest {
     assertNotNull(entry.getMetadata());
     assertNotNull(entry.getMetadata().getConcepts());
     assertEquals(1, entry.getMetadata().getConcepts().size());
+  }
+
+  @Test
+  @Enqueue("demo/entries_with_taxonomy_concepts.json")
+  public void entryTaxonomyConceptsWithPrefLabel() {
+    CDAEntry entry = client.fetch(CDAEntry.class).one("test-entry-with-taxonomy");
+    assertThat(entry).isNotNull();
+    assertNotNull(entry.getMetadata());
+    assertNotNull(entry.getMetadata().getConcepts());
+    assertEquals(2, entry.getMetadata().getConcepts().size());
+
+    // Verify concepts are resolved from includes and have prefLabel
+    CDATaxonomyConcept concept1 = entry.getMetadata().getConcepts().get(0);
+    assertThat(concept1.id()).isEqualTo("3DMf5gdax6J22AfcJ6fvsC");
+    assertNotNull(concept1.prefLabel());
+    assertThat(concept1.prefLabel().get("en-US")).isEqualTo("sofa");
+    assertThat(concept1.prefLabel().get("de-DE")).isEqualTo("Sofa");
+    assertThat(concept1.getPrefLabel("en-US")).isEqualTo("sofa");
+    assertThat(concept1.getPrefLabel("de-DE")).isEqualTo("Sofa");
+    assertThat(concept1.getPrefLabel("fr-FR")).isNull();
+
+    CDATaxonomyConcept concept2 = entry.getMetadata().getConcepts().get(1);
+    assertThat(concept2.id()).isEqualTo("5YRe68gqRx6QlLyEE00Ue6");
+    assertNotNull(concept2.prefLabel());
+    assertThat(concept2.prefLabel().get("en-US")).isEqualTo("furniture");
+    assertThat(concept2.prefLabel().get("de-DE")).isEqualTo("Möbel");
+    assertThat(concept2.getPrefLabel("en-US")).isEqualTo("furniture");
+  }
+
+  @Test
+  @Enqueue("demo/entries_with_taxonomy_concepts.json")
+  public void taxonomyConceptsInArrayIncludes() {
+    CDAArray array = client.fetch(CDAEntry.class).all();
+    assertThat(array).isNotNull();
+    assertNotNull(array.concepts());
+    assertEquals(2, array.concepts().size());
+
+    // Verify concepts are accessible from array
+    CDATaxonomyConcept concept1 = array.concepts().get("3DMf5gdax6J22AfcJ6fvsC");
+    assertThat(concept1).isNotNull();
+    assertThat(concept1.id()).isEqualTo("3DMf5gdax6J22AfcJ6fvsC");
+    assertNotNull(concept1.prefLabel());
+    assertThat(concept1.getPrefLabel("en-US")).isEqualTo("sofa");
+
+    CDATaxonomyConcept concept2 = array.concepts().get("5YRe68gqRx6QlLyEE00Ue6");
+    assertThat(concept2).isNotNull();
+    assertThat(concept2.id()).isEqualTo("5YRe68gqRx6QlLyEE00Ue6");
+    assertNotNull(concept2.prefLabel());
+    assertThat(concept2.getPrefLabel("en-US")).isEqualTo("furniture");
+  }
+
+  @Test
+  @Enqueue("demo/entries_with_taxonomy_concepts.json")
+  public void taxonomyConceptLinksResolvedInMetadata() {
+    CDAEntry entry = client.fetch(CDAEntry.class).one("test-entry-with-taxonomy");
+    assertThat(entry).isNotNull();
+    
+    List<CDATaxonomyConcept> concepts = entry.getMetadata().getConcepts();
+    assertThat(concepts).isNotNull();
+    assertEquals(2, concepts.size());
+
+    // Verify that concepts are full objects, not just links
+    for (CDATaxonomyConcept concept : concepts) {
+      // Full objects should have prefLabel populated
+      assertNotNull(concept.prefLabel());
+      assertThat(concept.prefLabel().size()).isGreaterThan(0);
+      // Verify it's not just a link object (links would have null prefLabel)
+      assertThat(concept.prefLabel().get("en-US")).isNotNull();
+    }
+  }
+
+  @Test
+  @Enqueue("demo/entries.json")
+  public void taxonomyConceptLinksWithoutIncludesRemainAsLinks() {
+    // This test uses entries.json which has concepts in metadata but no includes.TaxonomyConcept
+    // Concepts should remain as links (backward compatibility)
+    CDAEntry entry = client.fetch(CDAEntry.class).one("ge1xHyH3QOWucKWCCAgIG");
+    assertThat(entry).isNotNull();
+    assertNotNull(entry.getMetadata());
+    assertNotNull(entry.getMetadata().getConcepts());
+    assertEquals(1, entry.getMetadata().getConcepts().size());
+
+    CDATaxonomyConcept concept = entry.getMetadata().getConcepts().get(0);
+    assertThat(concept.id()).isEqualTo("3DMf5gdax6J22AfcJ6fvsC");
+    // When concept is not in includes, prefLabel should be null (it's just a link)
+    // This is expected behavior for backward compatibility
+    assertThat(concept.prefLabel()).isNull();
   }
 
 

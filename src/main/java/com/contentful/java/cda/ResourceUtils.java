@@ -17,6 +17,7 @@ import static com.contentful.java.cda.CDAType.ASSET;
 import static com.contentful.java.cda.CDAType.DELETEDASSET;
 import static com.contentful.java.cda.CDAType.DELETEDENTRY;
 import static com.contentful.java.cda.CDAType.ENTRY;
+import static com.contentful.java.cda.CDAType.TAXONOMYCONCEPT;
 import static com.contentful.java.cda.Constants.LOCALE;
 import static com.contentful.java.cda.Util.extractNested;
 import static com.contentful.java.cda.Util.queryParam;
@@ -178,12 +179,15 @@ public final class ResourceUtils {
       return array.assets().get(id);
     } else if (ENTRY.equals(linkType)) {
       return array.entries().get(id);
+    } else if (TAXONOMYCONCEPT.equals(linkType)) {
+      return array.concepts().get(id);
     }
     return null;
   }
 
   static void mapResources(Collection<? extends CDAResource> resources,
-                           Map<String, CDAAsset> assets, Map<String, CDAEntry> entries) {
+                           Map<String, CDAAsset> assets, Map<String, CDAEntry> entries,
+                           Map<String, CDATaxonomyConcept> concepts) {
     for (CDAResource resource : resources) {
       CDAType type = resource.type();
       String id = resource.id();
@@ -195,6 +199,8 @@ public final class ResourceUtils {
         entries.remove(id);
       } else if (ENTRY.equals(type)) {
         entries.put(id, (CDAEntry) resource);
+      } else if (TAXONOMYCONCEPT.equals(type)) {
+        concepts.put(id, (CDATaxonomyConcept) resource);
       }
     }
   }
@@ -310,5 +316,44 @@ public final class ResourceUtils {
       rawFields.put(key, map);
     }
     resource.rawFields = rawFields;
+  }
+
+  /**
+   * Resolve taxonomy concept links in entry metadata to full concept objects from includes.
+   * Concepts in metadata may come as links (with only sys field) or as full objects.
+   * This method resolves links to full objects from the includes section.
+   *
+   * @param array the array resource containing entries and included concepts
+   */
+  static void resolveMetadataConcepts(ArrayResource array) {
+    for (CDAEntry entry : array.entries().values()) {
+      CDAMetadata metadata = entry.getMetadata();
+      if (metadata == null || metadata.getConcepts() == null) {
+        continue;
+      }
+
+      List<CDATaxonomyConcept> resolvedConcepts = new ArrayList<>();
+      for (CDATaxonomyConcept concept : metadata.getConcepts()) {
+        String conceptId = concept.id();
+        if (conceptId == null) {
+          // No ID, keep as is
+          resolvedConcepts.add(concept);
+          continue;
+        }
+
+        // Try to resolve from includes - this will have the full object with prefLabel
+        CDATaxonomyConcept resolvedConcept = array.concepts().get(conceptId);
+        if (resolvedConcept != null) {
+          // Found in includes, use the resolved version
+          resolvedConcepts.add(resolvedConcept);
+        } else {
+          // Not in includes - could be a full object already or just a link
+          // If it has prefLabel, it's already a full object, keep it
+          // Otherwise, it's just a link, keep it as is
+          resolvedConcepts.add(concept);
+        }
+      }
+      metadata.setConcepts(resolvedConcepts);
+    }
   }
 }

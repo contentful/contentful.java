@@ -25,26 +25,30 @@ public final class ResourceFactory {
     CDAArray array = arrayResponse.body();
     array.assets = new LinkedHashMap<>();
     array.entries = new LinkedHashMap<>();
+    array.concepts = new LinkedHashMap<>();
 
     Set<CDAResource> resources = collectResources(array);
     ResourceUtils.localizeResources(resources, client.cache);
-    ResourceUtils.mapResources(resources, array.assets, array.entries);
+    ResourceUtils.mapResources(resources, array.assets, array.entries, array.concepts);
     ResourceUtils.setRawFields(array);
     resolveRichTextField(array, client);
     ResourceUtils.resolveLinks(array, client);
+    ResourceUtils.resolveMetadataConcepts(array);
     return array;
   }
 
   public static CDAArray arrayFromJson(CDAArray array, CDAClient client) {
     array.assets = new LinkedHashMap<>();
     array.entries = new LinkedHashMap<>();
+    array.concepts = new LinkedHashMap<>();
 
     Set<CDAResource> resources = collectResources(array);
     ResourceUtils.localizeResources(resources, client.cache);
-    ResourceUtils.mapResources(resources, array.assets, array.entries);
+    ResourceUtils.mapResources(resources, array.assets, array.entries, array.concepts);
     ResourceUtils.setRawFields(array);
     resolveRichTextField(array, client);
     ResourceUtils.resolveLinks(array, client);
+    ResourceUtils.resolveMetadataConcepts(array);
     return array;
   }
 
@@ -57,6 +61,9 @@ public final class ResourceFactory {
       if (array.includes.entries != null) {
         resources.addAll(array.includes.entries);
       }
+      if (array.includes.concepts != null) {
+        resources.addAll(array.includes.concepts);
+      }
     }
     return resources;
   }
@@ -68,12 +75,13 @@ public final class ResourceFactory {
 
     Map<String, CDAAsset> assets = new HashMap<>();
     Map<String, CDAEntry> entries = new HashMap<>();
+    Map<String, CDATaxonomyConcept> concepts = new HashMap<>();
     // Map resources from existing space
     if (oldSpace != null) {
-      ResourceUtils.mapResources(oldSpace.items(), assets, entries);
+      ResourceUtils.mapResources(oldSpace.items(), assets, entries, concepts);
     }
     SynchronizedSpace result = ResourceUtils.iterate(newSpace, client);
-    ResourceUtils.mapResources(result.items(), assets, entries);
+    ResourceUtils.mapResources(result.items(), assets, entries, concepts);
     ResourceUtils.mapDeletedResources(result);
 
     List<CDAResource> items = new ArrayList<>();
