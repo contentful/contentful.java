@@ -12,7 +12,7 @@
 
 contentful.java - Contentful Java Delivery Library
 ==================================================
-[![Build Status](https://travis-ci.org/contentful/contentful.java.svg)](https://travis-ci.org/contentful/contentful.java/builds#)
+[![CI](https://github.com/contentful/contentful.java/actions/workflows/ci.yml/badge.svg)](https://github.com/contentful/contentful.java/actions/workflows/ci.yml)
 
 > Java library for [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/). It helps in easily accessing the content stored in Contentful using Java applications.
 
@@ -512,6 +512,16 @@ Getting involved
 ----------------
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?maxAge=31557600)](http://makeapullrequest.com)
+
+For a reproducible local setup, open this repository in its included dev container. The container installs the project dependencies automatically when it is created.
+
+After the container is ready, run:
+
+```bash
+./mvnw -B test
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full contributor workflow.
 
 Code of Conduct
 ===============
