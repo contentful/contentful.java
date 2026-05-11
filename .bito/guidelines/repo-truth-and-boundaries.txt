@@ -1,0 +1,9 @@
+Use the repository's written documentation as review context and check whether the change matches documented intent.
+
+- Start from README.md, ARCHITECTURE.md, AGENTS.md, CONTRIBUTING.md, and docs/ADRs/ for architectural context.
+- Check whether code, tests, and documentation all tell the same story. Flag mismatches between implementation and documented architecture or ADRs.
+- Treat AGENTS.md as the authoritative guide for sharp edges and invariants. If a change violates an invariant documented there, flag it.
+- Public API changes (CDAClient builder methods, CDAResource subclasses, query builder methods) require extra scrutiny — this is a published library used by external consumers.
+- Architecture-significant changes (new dependency, new module, new HTTP interceptor, new deserialization path) should be accompanied by an ADR update or new ADR in docs/ADRs/.
+- If CI or another required check already enforces a merge rule, do not ask for duplicate PR sections or manual checklists.
+- The SDK targets Java 8 (source/target 1.8) and Android API 21 minimum — flag any change that requires a higher Java or Android API level.

@@ -1,0 +1,49 @@
+Critical invariants for contentful.java. Violations are bugs, not style issues.
+
+POST-PROCESSING PIPELINE ORDER (ResourceFactory.array()):
+  1. localizeResources() — apply locale fallback chain
+  2. mapResources() — index assets and entries by ID
+  3. setRawFields() — capture raw JSON field map before any mutation
+  4. resolveRichTextField() — parse rich text JSON into CDARich* node tree
+  5. resolveLinks() — replace link stubs with resolved CDAResource references
+  Never reorder these steps without understanding the full cascade of side effects.
+
+LINK RESOLUTION:
+  - Unresolved links are silent placeholder objects, NOT exceptions. Consumer code must handle null/stub gracefully.
+  - Include depth max is 10 (API limit). Links beyond that depth remain unresolved.
+  - Cross-space resolution only resolves the first level of cross-space references.
+
+PUBLIC API CONTRACT:
+  - CDAClient, CDAClient.Builder, CDAEntry, CDAAsset, CDAArray, SynchronizedSpace, and all CDAResource subclasses are public API.
+  - Adding new builder methods is non-breaking. Removing or renaming them is a breaking change requiring a major version bump.
+  - The sys.* fields are always returned, regardless of select() usage.
+
+ANDROID COMPATIBILITY:
+  - Source/target must remain Java 1.8. Do not use APIs requiring Java 9+.
+  - Do not introduce Android API calls above API 21 in main source.
+  - TlsSocketFactory only activates below Android API 20 — do not change this guard.
+  - logSensitiveData MUST default to false — auth tokens must never be logged by default.
+
+OKHTTP / ANDROID:
+  - okhttp-jvm is declared as a dependency for JVM consumers.
+  - Android consumers must exclude okhttp-jvm and depend on okhttp-android — this is a known setup step (documented in README).
+
+SENSITIVE DATA:
+  - logSensitiveData defaults to false. Never flip in production code. AuthorizationHeaderInterceptor must redact the token by default.
+
+TRANSFORMQUERY:
+  - observeAndTransform() auto-injects a select filter — only annotated fields are fetched.
+  - Rich text fields are NOT accessible via TransformQuery — consumers must use rawFields or direct HTTP.
+  - Only works with CDA, not CMA.
+
+SYNC:
+  - Sync tokens are environment-specific. Passing a SynchronizedSpace from environment A to a client pointed at environment B produces incorrect deltas.
+  - Deleted resources appear ONLY in deletedEntries()/deletedAssets() — they do not appear in the items() list.
+
+CROSS-SPACE:
+  - Maximum 20 additional spaces (21 total). Exceeding this limit requires a different architecture.
+  - Cross-space errors surface via CDAArray.getErrors() — they do not throw.
+
+RELEASE:
+  - GPG signing is required for Maven Central publication. Do not attempt release without the Contentful GPG key.
+  - master is the trunk branch. There is no main branch.
