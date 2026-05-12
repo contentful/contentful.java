@@ -26,7 +26,7 @@ Read this file first. It tells you where to find context in this repo.
 - **Android: never depend on `okhttp-jvm` directly when using `okhttp-android`** — exclude `okhttp-jvm` from this library to avoid duplicate-class errors on Android (see README and ADR 0002).
 - **`TlsSocketFactory` only activates below Android API 20** — do not remove or gate it differently; it protects older devices.
 - **`TransformQuery.observeAndTransform()` auto-injects a `select` filter** — if the annotation scanner has a bug, fields are silently dropped, not thrown as errors. Always validate field mapping in tests.
-- **`logSensitiveData` defaults to `false`** — never flip this to `true` in production builds; auth tokens would be logged.
+- **`logSensitiveData` defaults to `true`** — always set this to `false` in production builds to avoid logging auth tokens.
 - **Release requires GPG signing** — the Maven Central publication flow requires the Contentful GPG key imported locally. Do not attempt to release without it.
 - **`master` is the trunk** — there is no `main` branch. All CI and release flows target `master`.
 

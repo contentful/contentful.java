@@ -44,7 +44,7 @@ devcontainer exec --workspace-folder . bash
 ./mvnw -B test
 ```
 
-- **Integration tests** connect to live Contentful spaces using hardcoded read-only credentials (space IDs and tokens are baked into the test classes under `src/test/java/…/cda/integration/`). No environment variables are required. Integration tests are not run in CI — run them locally when you need to verify against the live API.
+- **Integration tests** connect to live Contentful spaces using hardcoded read-only credentials (space IDs and tokens are baked into the test classes under `src/test/java/…/cda/integration/`). No environment variables are required. Integration tests are included in the `./mvnw -B test` run and therefore execute in CI.
 
 ## Commit Convention
 

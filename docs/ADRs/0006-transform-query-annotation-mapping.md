@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-Consumers often want to map CDA Entry responses to their own domain model classes rather than working with the generic `CDAEntry` + field maps. Without a mapping layer, consumers write repetitive boilerplate to extract typed fields from `CDAEntry.getField()`. A code generation approach (similar to ORM annotation processors) was considered but adds build complexity.
+Consumers often want to map CDA Entry responses to their own domain model classes rather than working with the generic `CDAEntry` and field maps. Without a mapping layer, consumers write repetitive boilerplate to extract typed fields from `CDAEntry.getField()`. A code generation approach (similar to ORM annotation processors) was considered but adds build complexity.
 
 Source: Java SDK Contractor Handover Template (Glean, 2026-03).
 
