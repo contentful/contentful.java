@@ -44,7 +44,7 @@ devcontainer exec --workspace-folder . bash
 ./mvnw -B test
 ```
 
-- **Integration tests** require a live Contentful space and environment variables — not run in CI by default.
+- **Integration tests** connect to live Contentful spaces using hardcoded read-only credentials (space IDs and tokens are baked into the test classes under `src/test/java/…/cda/integration/`). No environment variables are required. Integration tests are not run in CI — run them locally when you need to verify against the live API.
 
 ## Commit Convention
 
@@ -80,10 +80,10 @@ Releases are on-demand and require the Contentful GPG key imported locally (obta
 # 2. Add -SNAPSHOT postfix to <version> in pom.xml if not already present
 
 # 3. Prepare the release (prompts for release version and next snapshot version)
-mvn release:prepare
+./mvnw release:prepare
 
 # 4. Perform the release (builds, signs, and publishes to Maven Central)
-mvn release:perform
+./mvnw release:perform
 ```
 
 Artifacts are published to Maven Central under `com.contentful.java:java-sdk`. Pre-releases are available via Sonatype snapshots and jitpack.io.

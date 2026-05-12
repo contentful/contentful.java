@@ -49,7 +49,7 @@ Consumers are JVM and Android applications. The SDK wraps all outbound HTTP via 
    - `ResourceUtils.mapResources()` — indexes assets and entries by ID
    - `ResourceUtils.setRawFields()` — preserves the unprocessed field map for rich text access
    - `RichTextFactory.resolveRichTextField()` — parses rich text JSON into the `CDARich*` node tree
-   - `ResourceUtils.resolveLinks()` — traverses the includes and replaces link stubs with the actual `CDAResource` objects (in-memory object graph)
+   - `ResourceUtils.resolveLinks()` — iterates each entry's content-type field definitions to find Link and Array-of-Link fields, then replaces link stubs with the already-indexed `CDAResource` objects from `array.assets()` / `array.entries()` (in-memory object graph). Links not present in the index are silently dropped, not thrown as errors.
 
 5. **Result** — `CDAArray` (or single `CDAResource`) is returned to the caller with fully resolved links and localized fields.
 

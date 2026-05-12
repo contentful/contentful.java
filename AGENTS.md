@@ -19,7 +19,7 @@ Read this file first. It tells you where to find context in this repo.
 
 - **Link resolution order matters** — `ResourceUtils.resolveLinks()` must run after localization and raw-field capture. Never reorder the post-processing pipeline in `ResourceFactory.array()` without understanding all downstream side effects.
 - **Unresolved links are silent, not exceptions** — if an included entry's depth exceeds the API limit (10), unresolved links remain as placeholder objects. Code that dereferences resolved links must handle null/stub gracefully.
-- **`sys` fields are always present** — the SDK enforces that `sys.*` attributes are always returned (for the `select` feature, `.withContentType()` is required when using `.select()` or an API error will ensue).
+- **`sys` fields are always present** — the SDK enforces that `sys.*` attributes are always returned. When using `.select()` with `fields.*` selections, `.withContentType()` must be called first or the SDK throws a client-side `IllegalStateException` before the request is sent. Selecting only `sys` fields does not require a content type.
 - **`rawFields` is the only path to raw rich text JSON** — `TransformQuery` (unwrapping) does not expose raw rich text; use `CDAEntry.rawFields` or make a direct HTTP request.
 - **Cross-space token limit is 20** — `setCrossSpaceTokens()` accepts at most 20 extra spaces (21 total). Only the first level of cross-space references is resolved.
 - **Sync tokens are stateful and environment-aware** — passing a `SynchronizedSpace` from the wrong environment to `client.sync()` will produce incorrect deltas.
