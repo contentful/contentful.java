@@ -19,7 +19,9 @@ class Cache {
   }
 
   protected CDALocale defaultLocale() {
-    return defaultLocale;
+    synchronized (localesLock) {
+      return defaultLocale;
+    }
   }
 
   void setLocales(List<CDALocale> locales) {
@@ -35,6 +37,7 @@ class Cache {
       for (final CDALocale locale : this.locales) {
         if (locale.isDefaultLocale()) {
           this.defaultLocale = locale;
+          break;
         }
       }
     }
