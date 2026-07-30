@@ -178,6 +178,9 @@ public class RichTextFactory {
 
         for (final String locale : rawValue.keySet()) {
             final CDARichDocument document = entry.getField(locale, field.id());
+            if (document == null) {
+                continue;
+            }
             for (final CDARichNode node : document.getContent()) {
                 resolveOneLink(array, field, locale, node);
             }
@@ -276,8 +279,8 @@ public class RichTextFactory {
             final String id = (String) sys.get("id");
 
             if ("Link".equals(type)
-                    && ("Entry".equals(linkType) || "Asset".equals(linkType)
-                    && id != null)) {
+                    && ("Entry".equals(linkType) || "Asset".equals(linkType))
+                    && id != null) {
                 return true;
             }
         } catch (ClassCastException cast) {

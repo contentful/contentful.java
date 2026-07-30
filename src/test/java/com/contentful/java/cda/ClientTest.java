@@ -10,13 +10,19 @@ import com.contentful.java.cda.lib.EnqueueResponse;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import okhttp3.Call;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
+import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.RecordedRequest;
 
 import static com.contentful.java.cda.SyncType.onlyEntriesOfType;
@@ -353,6 +359,40 @@ public class ClientTest extends BaseTest {
     }
   }
 
+  // Regression test: response.body() can be null for a body-less unsuccessful response (e.g. an
+  // upstream proxy returning a bare 500/502 with no content). readResponseBody() in
+  // CDAHttpException used to dereference response.body() without a null check, throwing an
+  // unrelated NullPointerException that masked the real HTTP error. HTTP 204/304 are treated as
+  // successful by Retrofit/OkHttp and never reach CDAHttpException, so this is reproduced via a
+  // body-less 5xx error response instead.
+  @Test
+  @Enqueue
+  public void bodyLess500ResponseDoesNotThrowNpeAndProducesMeaningfulException() {
+    server.enqueue(new MockResponse().setResponseCode(500));
+
+    try {
+      client.fetch(CDAEntry.class).all();
+      throw new AssertionError("Expected CDAHttpException to be thrown");
+    } catch (CDAHttpException cdaException) {
+      assertThat(cdaException.responseCode()).isEqualTo(500);
+      assertThat(cdaException.responseBody()).isNotNull();
+    }
+  }
+
+  @Test
+  @Enqueue
+  public void bodyLess502ResponseDoesNotThrowNpeAndProducesMeaningfulException() {
+    server.enqueue(new MockResponse().setResponseCode(502));
+
+    try {
+      client.fetch(CDAEntry.class).all();
+      throw new AssertionError("Expected CDAHttpException to be thrown");
+    } catch (CDAHttpException cdaException) {
+      assertThat(cdaException.responseCode()).isEqualTo(502);
+      assertThat(cdaException.responseBody()).isNotNull();
+    }
+  }
+
   @Test(expected = IllegalArgumentException.class)
   @Enqueue("demo/content_types_cat.json")
   public void settingNoLoggerAndAnyLogLevelResultsException() {
@@ -379,6 +419,87 @@ public class ClientTest extends BaseTest {
     client.clearCache();
     assertThat(client.cache.types()).isNull();
     assertThat(client.cache.locales()).isNull();
+  }
+
+  // Regression test: cache.types() returns null right after clearCache() is called.
+  // CDAClient#cacheTypeWithId(String) and the content-type caching step in
+  // ObserveQuery#one(String) used to dereference that null directly, causing an unhandled
+  // NullPointerException.
+  @Test
+  @Enqueue(defaults = {}, value = {
+      "demo/locales.json",
+      "demo/content_types_cat.json",
+      "demo/content_types_cat.json",
+      "demo/locales.json",
+      "demo/content_types_cat.json",
+      "demo/content_types_cat.json"
+  })
+  public void cacheTypeWithIdAfterClearCacheDoesNotThrow() {
+    // populate the cache first
+    client.fetch(CDAContentType.class).all();
+    assertThat(client.cache.types()).isNotNull();
+
+    client.clearCache();
+    // Preserve the existing, tested contract: cache.types() is null right after clear().
+    assertThat(client.cache.types()).isNull();
+
+    CDAContentType result = client.cacheTypeWithId("cat").blockingFirst();
+
+    assertThat(result).isNotNull();
+    assertThat(result.id()).isEqualTo("cat");
+  }
+
+  // Regression test: concurrent Cache#clear() and Cache#types() reads must never throw, since
+  // clearCache() is a public API that can legitimately race with any in-flight observable chain.
+  @Test
+  public void concurrentClearAndReadOfCacheTypesDoesNotThrow() throws InterruptedException {
+    final Cache cache = new Cache();
+    final int iterations = 500;
+    final CountDownLatch start = new CountDownLatch(1);
+    final AtomicReference<Throwable> failure = new AtomicReference<>();
+    ExecutorService executor = Executors.newFixedThreadPool(2);
+
+    Runnable clearer = () -> {
+      try {
+        start.await();
+        for (int i = 0; i < iterations; i++) {
+          cache.clear();
+        }
+      } catch (Throwable t) {
+        failure.compareAndSet(null, t);
+      }
+    };
+
+    Runnable reader = () -> {
+      try {
+        start.await();
+        for (int i = 0; i < iterations; i++) {
+          Map<String, CDAContentType> types = cache.types();
+          if (types != null) {
+            types.get("any-id");
+          }
+        }
+      } catch (Throwable t) {
+        failure.compareAndSet(null, t);
+      }
+    };
+
+    executor.submit(clearer);
+    executor.submit(reader);
+    start.countDown();
+
+    executor.shutdown();
+    executor.awaitTermination(5, TimeUnit.SECONDS);
+
+    assertThat(failure.get()).isNull();
+  }
+
+  // Regression test: the builder used to default logSensitiveData to `true`, leaking
+  // authorization headers into CDAHttpException#toString() output by default.
+  @Test
+  public void logSensitiveDataDefaultsToFalse() {
+    CDAClient defaultClient = createBuilder().build();
+    assertThat(defaultClient.shouldLogSensitiveData()).isFalse();
   }
 
   @Test

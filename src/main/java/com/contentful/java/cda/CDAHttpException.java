@@ -42,6 +42,9 @@ public class CDAHttpException extends RuntimeException {
   }
 
   private String readResponseBody(Response response) {
+    if (response.body() == null) {
+      return "<no response body>";
+    }
     try {
       BufferedSource bufferedSource = response.body().source();
       Timeout timeout = bufferedSource.timeout();

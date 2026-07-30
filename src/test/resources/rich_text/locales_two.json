@@ -1,0 +1,32 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 2,
+  "skip": 0,
+  "limit": 1000,
+  "items": [
+    {
+      "code": "en-US",
+      "name": "English (United States)",
+      "default": true,
+      "fallbackCode": null,
+      "sys": {
+        "id": "7fpOneSflazHm9rrNGxojE",
+        "type": "Locale",
+        "version": 1
+      }
+    },
+    {
+      "code": "de-DE",
+      "name": "German (Germany)",
+      "default": false,
+      "fallbackCode": null,
+      "sys": {
+        "id": "8fpOneSflazHm9rrNGxojF",
+        "type": "Locale",
+        "version": 1
+      }
+    }
+  ]
+}

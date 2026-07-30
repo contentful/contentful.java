@@ -24,6 +24,31 @@ import java.util.concurrent.TimeUnit;
 import static com.google.common.truth.Truth.assertThat;
 
 public class RichTextTest extends BaseTest {
+
+  // Regression test: RichTextFactory.resolveRichLink() used to call document.getContent() on
+  // the result of entry.getField(locale, field.id()) without checking for null. That method
+  // returns null whenever a rich text field is present in the content model but not populated
+  // (and has no locale fallback configured) for a given locale - a common situation in partially
+  // localised spaces - causing an unhandled NullPointerException that failed the entire fetch,
+  // even for locales where the field was populated correctly.
+  @Test
+  @Enqueue(
+      value = "rich_text/entry_missing_locale.json",
+      defaults = {"rich_text/locales_two.json", "rich_text/content_types.json"}
+  )
+  public void richTextFieldMissingForOneLocaleDoesNotThrowAndOtherLocaleResolvesFine() {
+    final CDAEntry entry = (CDAEntry) client.fetch(CDAEntry.class).all().items().get(0);
+
+    final CDARichDocument populatedLocale = entry.getField("en-US", "rich");
+    assertThat(populatedLocale).isNotNull();
+    assertThat(populatedLocale.getContent()).isNotEmpty();
+
+    // de-DE has no fallback locale configured and the raw field value was explicitly null -
+    // it must resolve to a safely-skipped/unresolved value, not throw.
+    final CDARichDocument unpopulatedLocale = entry.getField("de-DE", "rich");
+    assertThat(unpopulatedLocale).isNull();
+  }
+
   @Test
   @Enqueue(value = "rich_text/simple_headline_1.json", defaults = {"rich_text/locales.json", "rich_text/content_types.json"})
   public void simple_headline_1_test() {

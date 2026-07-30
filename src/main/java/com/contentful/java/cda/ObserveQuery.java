@@ -5,6 +5,8 @@ import io.reactivex.rxjava3.functions.Function;
 import org.reactivestreams.Publisher;
 import retrofit2.Response;
 
+import java.util.Map;
+
 import static com.contentful.java.cda.CDAType.LOCALE;
 import static com.contentful.java.cda.CDAType.TAG;
 import static com.contentful.java.cda.CDAType.ASSET;
@@ -67,7 +69,10 @@ public class ObserveQuery<T extends CDAResource> extends AbsQuery<T, ObserveQuer
     if (CONTENTTYPE.equals(typeForClass(type))) {
       flowable = flowable.map(t -> {
         if (t != null) {
-          client.cache.types().put(t.id(), (CDAContentType) t);
+          Map<String, CDAContentType> types = client.cache.types();
+          if (types != null) {
+            types.put(t.id(), (CDAContentType) t);
+          }
         }
         return t;
       });

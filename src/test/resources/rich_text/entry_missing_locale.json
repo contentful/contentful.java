@@ -1,0 +1,66 @@
+{
+  "sys": {
+    "type": "Array"
+  },
+  "total": 1,
+  "skip": 0,
+  "limit": 100,
+  "items": [
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "<space_id>"
+          }
+        },
+        "id": "temp1BugFixVerification",
+        "type": "Entry",
+        "createdAt": "2018-10-17T13:32:30.252Z",
+        "updatedAt": "2019-01-04T14:06:02.180Z",
+        "environment": {
+          "sys": {
+            "id": "human-readable",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "revision": 3,
+        "contentType": {
+          "sys": {
+            "type": "Link",
+            "linkType": "ContentType",
+            "id": "rich"
+          }
+        }
+      },
+      "fields": {
+        "name": {
+          "en-US": "entry_missing_locale"
+        },
+        "rich": {
+          "en-US": {
+            "data": {},
+            "content": [
+              {
+                "data": {},
+                "content": [
+                  {
+                    "data": {},
+                    "marks": [],
+                    "value": "Populated only for en-US",
+                    "nodeType": "text"
+                  }
+                ],
+                "nodeType": "paragraph"
+              }
+            ],
+            "nodeType": "document"
+          },
+          "de-DE": null
+        }
+      }
+    }
+  ]
+}

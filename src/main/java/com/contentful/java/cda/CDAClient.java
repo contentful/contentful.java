@@ -495,7 +495,8 @@ public class CDAClient {
   }
 
   Flowable<CDAContentType> cacheTypeWithId(String id) {
-    CDAContentType contentType = cache.types().get(id);
+    Map<String, CDAContentType> types = cache.types();
+    CDAContentType contentType = types == null ? null : types.get(id);
     if (contentType == null) {
       return observe(CDAContentType.class)
               .one(id)
@@ -503,7 +504,10 @@ public class CDAClient {
                      @Override
                      public CDAContentType apply(CDAContentType resource) {
                        if (resource != null) {
-                         cache.types().put(resource.id(), resource);
+                         Map<String, CDAContentType> currentTypes = cache.types();
+                         if (currentTypes != null) {
+                           currentTypes.put(resource.id(), resource);
+                         }
                        }
                        return resource;
                      }
@@ -580,7 +584,7 @@ public class CDAClient {
 
     boolean preview;
 
-    private boolean logSensitiveData = true;
+    private boolean logSensitiveData = false;
     Tls12Implementation tls12Implementation = useRecommendation;
 
     Section application;
