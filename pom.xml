@@ -58,7 +58,7 @@
     <!-- Test Dependencies -->
     <commonsio.version>2.14.0</commonsio.version>
     <junit.version>4.13.2</junit.version>
-    <mockito.version>2.23.4</mockito.version>
+    <mockito.version>2.28.2</mockito.version>
     <android.version>4.1.1.4</android.version>
     <android.platform>16</android.platform>
     <truth.version>0.46</truth.version>
