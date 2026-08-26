@@ -120,7 +120,7 @@ public class TransformedEntriesTest extends BaseTest {
 
     assertThat(catsCaught.size()).isEqualTo(3);
     assertThat(catsCaught.stream().map(it -> it.name).toArray())
-        .asList().containsAllOf("Happy Cat", "Garfield", "Nyan Cat");
+        .asList().containsAtLeast("Happy Cat", "Garfield", "Nyan Cat");
   }
 
   @ContentfulEntryModel("post")

@@ -784,7 +784,7 @@ public class Integration {
 
     Object bestFriend = entry.getField("bestFriend");
     assertThat(bestFriend).isInstanceOf(CDAEntry.class);
-    assertThat(entry).isSameAs(((CDAEntry) bestFriend).getField("bestFriend"));
+    assertThat(entry).isSameInstanceAs(((CDAEntry) bestFriend).getField("bestFriend"));
 
     // Localization
     final LocalizedResource.Localizer localizedCat = entry.localize("tlh");

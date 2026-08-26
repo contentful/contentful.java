@@ -1,6 +1,8 @@
 <p align="center">
-  <img src="assets/feature_graphic.png" alt="Contentful Java Library"><br/>
+  <img src="assets/feature_graphic.png" alt="Contentful Java Library">
+</p>
 
+<p align="center">
   <a href="https://www.contentful.com/slack/">
     <img src="https://img.shields.io/badge/-Join%20Community%20Slack-2AB27B.svg?logo=slack&maxAge=31557600" alt="Join Contentful Community Slack">
   </a>
@@ -10,88 +12,121 @@
   </a>
 </p>
 
-contentful.java - Contentful Java Delivery Library
-==================================================
-[![CI](https://github.com/contentful/contentful.java/actions/workflows/ci.yml/badge.svg)](https://github.com/contentful/contentful.java/actions/workflows/ci.yml)
+# contentful.java - Java Content Delivery Library for Contentful
 
-> Java library for [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/). It helps in easily accessing the content stored in Contentful using Java applications.
+> Java library for the Contentful [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/). It helps you to easily access your content stored in Contentful with your Java applications.
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Maintained-green.svg" alt="This repository is actively maintained" />
+  &nbsp;
+  <a href="LICENSE.txt">
+    <img src="https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg" alt="Apache 2.0 License" />
+  </a>
+  &nbsp;
+  <a href="https://github.com/contentful/contentful.java/actions/workflows/ci.yml">
+    <img src="https://github.com/contentful/contentful.java/actions/workflows/ci.yml/badge.svg" alt="CI Build Status">
+  </a>
+</p>
 
-What is Contentful?
--------------------
-[Contentful](https://www.contentful.com) provides a content infrastructure for digital teams to power content in websites, apps, and devices. Contentful, unlike any other CMS, is built to integrate with the modern software stack. It offers a central hub for structured content, powerful management and delivery APIs, and a customizable web app that enable developers and content creators to ship digital products faster.
+**What is Contentful?**
+
+[Contentful](https://www.contentful.com/) provides content infrastructure for digital teams to power websites, apps, and devices. Unlike a CMS, Contentful was built to integrate with the modern software stack. It offers a central hub for structured content, powerful management and delivery APIs, and a customizable web app that enable developers and content creators to ship their products faster.
 
 <details open>
 <summary>Table of contents</summary>
-
 <!-- TOC -->
-- [Core Features](#core-features)
-- [Getting Started](#getting-started)
-  - [Setup](#setup)
-  - [Client Creation](#client-creation)
-  - [First Request](#first-request)
-- [Usage](#usage)
-  - [Filtering](#filtering)
-  - [Calls in Parallel](#calls-in-parallel)
-  - [Paging](#paging)
-  - [Includes](#includes)
-  - [Unwrapping](#unwrapping)
-  - [Preview Mode](#preview)
-  - [Sync](#sync)
-  - [Http Client](#http-client)
-  - [Proguard](#proguard)
-  - [Pre-Releases](#pre-releases)
-- [Documentation](#documentation)
-- [License](#license)
-- [Reaching Contentful](#reaching-contentful)
-  - [Bugs and Feature Requests](#bugs-and-feature-requests)
-  - [Sharing Confidential Information](#sharing-confidential-information)
-  - [Getting involved](#getting-involved)
-- [Code of Conduct](#code-of-conduct)
 
-</details>
+- [contentful.java - Java Content Delivery Library for Contentful](#contentfuljava---java-content-delivery-library-for-contentful)
+  - [Core Features](#core-features)
+  - [Getting started](#getting-started)
+    - [Requirements](#requirements)
+    - [Installation](#installation)
+    - [Your first request](#your-first-request)
+    - [Authorization](#authorization)
+    - [Accessing the Preview API](#accessing-the-preview-api)
+  - [Using the SDK](#using-the-sdk)
+    - [Filtering](#filtering)
+    - [Calls in parallel](#calls-in-parallel)
+    - [Paging](#paging)
+    - [Includes](#includes)
+    - [Cross-space references](#cross-space-references)
+    - [Unwrapping](#unwrapping)
+    - [Select](#select)
+    - [Synchronization](#synchronization)
+    - [Rich text](#rich-text)
+  - [Advanced configuration](#advanced-configuration)
+    - [Http client](#http-client)
+    - [Android and OkHttp 5](#android-and-okhttp-5)
+    - [Proguard](#proguard)
+  - [Documentation & References](#documentation--references)
+    - [Rich Text renderer library](#rich-text-renderer-library)
+    - [Pre-releases](#pre-releases)
+  - [Reach out to us](#reach-out-to-us)
+    - [Have questions about how to use this library?](#have-questions-about-how-to-use-this-library)
+    - [You found a bug or want to propose a feature?](#you-found-a-bug-or-want-to-propose-a-feature)
+    - [You need to share confidential information or have other questions?](#you-need-to-share-confidential-information-or-have-other-questions)
+  - [Get involved](#get-involved)
+    - [Development setup](#development-setup)
+  - [License](#license)
+  - [Code of Conduct](#code-of-conduct)
 
 <!-- /TOC -->
 
-Core Features
-=============
+</details>
 
-- Content retrieval through [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/).
-- [Synchronization](https://www.contentful.com/developers/docs/concepts/sync/)
-- [Localization support](https://www.contentful.com/developers/docs/concepts/locales/)
-- [Link resolution](https://www.contentful.com/developers/docs/concepts/links/)
-- Supports [Environments](https://www.contentful.com/developers/docs/concepts/multiple-environments/)
-- Synchronous and asynchrouns methods of fetching content
+## Core Features
 
-Getting Started
-===============
+- Content retrieval through the [Content Delivery API](https://www.contentful.com/developers/docs/references/content-delivery-api/) and [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/).
+- [Synchronization](https://www.contentful.com/developers/docs/concepts/sync/) with delta updates on subsequent calls.
+- [Localization support](https://www.contentful.com/developers/docs/concepts/locales/) with locale fallback chains.
+- Automatic [link resolution](https://www.contentful.com/developers/docs/concepts/links/), configurable up to 10 levels deep.
+- Cross-space reference resolution, automatically linking entries and assets across multiple Contentful spaces.
+- Support for [Environments](https://www.contentful.com/developers/docs/concepts/multiple-environments/).
+- Synchronous, callback-based, and reactive (RxJava 3) methods of fetching content.
+- Unwrapping of `CDAEntry` responses into your own custom Java types via simple annotations.
+- [Rich Text](https://www.contentful.com/developers/docs/concepts/rich-text/) field decoding into a strongly typed node tree.
+- A companion [Rich Text renderer library](https://github.com/contentful/rich-text-renderer-java) for turning rich text into HTML or native Android output.
 
-Setup
------
+## Getting started
 
-Install the Contentful dependency:
+In order to get started with the Contentful Java library you'll need not only to install it, but also to get credentials which will allow you to have access to your content in Contentful.
+
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Your first request](#your-first-request)
+- [Authorization](#authorization)
+- [Accessing the Preview API](#accessing-the-preview-api)
+
+### Requirements
+
+| Requirement | Version |
+| --- | --- |
+| Java | 8 or higher |
+| Android | API 21+ |
+
+The SDK depends on OkHttp, Retrofit, Gson, and RxJava 3 for its networking, serialization, and reactive layers.
+
+### Installation
 
 * _Maven_
+
 ```xml
 <dependency>
   <groupId>com.contentful.java</groupId>
   <artifactId>java-sdk</artifactId>
-  <version>10.6.0</version>
+  <version>10.6.1</version>
 </dependency>
 ```
 
 * _Gradle_
 
 ```groovy
-compile 'com.contentful.java:java-sdk:10.6.0'
+implementation 'com.contentful.java:java-sdk:10.6.1'
 ```
 
-This library requires Java 8 (or higher version) or Android 21.
+### Your first request
 
-Client Creation
----------------
-
-The `CDAClient` manages all interactions with the _Content Delivery API_.
+The `CDAClient` manages all interactions with the Content Delivery API:
 
 ```java
 CDAClient client = CDAClient.builder()
@@ -100,28 +135,43 @@ CDAClient client = CDAClient.builder()
     .build();
 ```
 
-The <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/spaces" title="A Space is a container for all Resources in Contentful."/>_Space_</a>-id and <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/authentication" title="An access token is a password to the content of the Space.">_Access Token_</a> are retrived from the <a href="https://app.contentful.com/deeplink?link=api" title="The Web App is used to edit content visually.">Contentful WebApp</a>.
-
-First Request
--------------
-
-Fetching content is achieved by calling the `CDAClient.fetch()`-method. It fetches all <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/common-resource-attributes" title="Everything stored in Contentful is a Resource."/>_Resources_</a> from a Space. The following code fetches all <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/entries" title="An Entry stores content in a user defined structure."/>_Entries_</a>:
+Fetching content is achieved by calling the `.fetch()` method. It fetches all [Resources](https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/common-resource-attributes) from a Space. The following code fetches all [Entries](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/entries):
 
 ```java
-// Fetch entries
-CDAArray array = 
+CDAArray array =
     client
         .fetch(CDAEntry.class)
         .all();
 ```
 
-Usage
-=====
+### Authorization
 
-Filtering
----------
+Grab credentials for your Contentful space by [navigating to the "APIs" section of the Contentful Web App](https://app.contentful.com/deeplink?link=api). The [Space](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/spaces) ID and [Access Token](https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/authentication) are retrieved from there.
 
-Filtering of Resources can be done by chaining method calls after the `.fetch()`. Using `.one()` and a Resource id retrieves only the specified Resource:
+Delivery tokens only return published content, while preview tokens return the latest draft of your content. Never hard-code tokens into a shipping app; inject them from your build configuration or a secure store instead.
+
+### Accessing the Preview API
+
+The Content Delivery API only returns published Entries. The [Content Preview API](https://www.contentful.com/developers/docs/references/content-preview-api/) returns *all* Entries, even ones that aren't published yet:
+
+```java
+CDAClient client =
+    CDAClient.builder()
+        .setSpace("space-key-goes-here")
+        .setToken("access-token-goes-here")
+        .preview()
+        .build();
+```
+
+The [Preview Access Token](https://www.contentful.com/developers/docs/references/content-preview-api/#/introduction/preview-api-authentication) is exposed on the [Contentful Web App](https://app.contentful.com/deeplink?link=api).
+
+> Note: In Preview, Resources can be invalid since no validation is performed prior to publishing.
+
+## Using the SDK
+
+### Filtering
+
+Filtering of Resources can be done by chaining method calls after `.fetch()`. Using `.one()` and a Resource id retrieves only the specified Resource:
 
 ```java
 CDAEntry entry =
@@ -130,10 +180,10 @@ CDAEntry entry =
         .one("{entry-id-goes-here}");
 ```
 
-Fetching only Entries of a specific <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-types" title="A ContentType defines the structure of an Entries field."/>_Content Type_</a> is done by adding the `.withContentType({id})` call to the chain:
+Fetching only Entries of a specific [Content Type](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-types) is done by adding the `.withContentType({id})` call to the chain:
 
 ```java
-CDAArray result = 
+CDAArray result =
     client
         .fetch(CDAEntry.class)
         .withContentType("{content-type-id-goes-here}")
@@ -141,7 +191,7 @@ CDAArray result =
         .all();
 ```
 
-Finally fetching <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/assets" title="All external binary data stored in Contentful. Images, videos, pdf, etc"/>_Assets_</a> follows the same principles:
+Fetching [Assets](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/assets) follows the same principles:
 
 ```java
 // Fetch an Asset with a specific id
@@ -151,10 +201,9 @@ CDAAsset asset =
         .one("{asset-id-goes-here}");
 ```
 
-Calls in Parallel
------------------
+### Calls in parallel
 
-All of the above examples are executed synchronously. In order to request asynchronously, provide a callback to `.all(…)` or `.one(…)`:
+All of the above examples are executed synchronously. To request content asynchronously, provide a callback to `.all(…)` or `.one(…)`:
 
 ```java
 client
@@ -166,9 +215,9 @@ client
 });
 ```
 
-> Note: The return value for any asynchronous methods is the Callback itself, making sure keeping a reference to it and clearing it according to its host lifecycle events is adviced. 
+> Note: The return value for any asynchronous method is the callback itself. Keeping a reference to it and clearing it according to its host's lifecycle events is advised.
 
-If <a href="https://github.com/ReactiveX/RxJava" title="a library for composing asynchronous and event-based programs using observable sequences for the Java VM."/>_RxJava_</a> is required instead, the `.observe()` method can be used to get an `Observable` instance:
+If [RxJava](https://github.com/ReactiveX/RxJava) is preferred instead, use `.observe()` to get an `Observable` instance:
 
 ```java
 client
@@ -177,44 +226,39 @@ client
     .subscribe(System.out::println);
 ```
 
-Paging
-------
+### Paging
 
-If more then _100_ Resources are in the Space, `.fetchAll()` only returns the first _100_. If more Resources are needed, specify the limit with the `.limit(X)` for example:
+If more than 100 Resources are in the Space, `.all()` only returns the first 100. If more Resources are needed, specify the limit with `.limit(X)`:
 
 ```java
-CDAArray result = 
+CDAArray result =
   client
     .fetch(CDAEntry.class)
     .limit(1000)
     .all();
 ```
 
-The maximum number of Resources to be requested is _1000_. 
+The maximum number of Resources requestable in one call is 1000.
 
-For more then _1000_ Resources `.skip(N)`, `.limit(L)` and `.orderBy(F)` methods are needed. By using `.skip(N)`, the first _N_ Resources are ignored and _L_, from `.limit(L)`, items are returned. 
-
-To guarantee ordering, the use of the `.orderBy` method is required: It enforces the <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/collection-resources-and-pagination" title="A collection of Resources from Contentful. Containts meta information about number and limits of the Resources it contains."/>_Array_</a> to be in a predictable order. 
-
-The following code is used to request all Entries:
+For more than 1000 Resources, `.skip(N)`, `.limit(L)`, and `.orderBy(F)` are needed together. `.skip(N)` ignores the first `N` Resources, and `L` items (from `.limit(L)`) are returned. To guarantee a stable order across paged requests, use `.orderBy(…)`:
 
 ```java
-// get the amount of Entries, without fetching the actual content
-final int amountOfResourcesInContentful = 
+// Get the amount of Entries, without fetching the actual content.
+final int amountOfResourcesInContentful =
   client
     .fetch(CDAEntry.class)
     .limit(0)
     .all()
     .total();
 
-// create storage for the Entries
+// Create storage for the Entries.
 final List<CDAResource> resources = new ArrayList<CDAResource>(amountOfResourcesInContentful);
 
-// use page size, based on usecase
+// Use a page size based on your use case.
 final int PAGE_SIZE = 2;
 
-// loop through all pages and store results
-for(int page = 0; page * PAGE_SIZE < amountOfResourcesInContentful; ++page) {
+// Loop through all pages and store results.
+for (int page = 0; page * PAGE_SIZE < amountOfResourcesInContentful; ++page) {
   final CDAArray currentPagedItems = client
       .fetch(CDAEntry.class)
       .skip(page * PAGE_SIZE)
@@ -222,15 +266,14 @@ for(int page = 0; page * PAGE_SIZE < amountOfResourcesInContentful; ++page) {
       .orderBy("sys.createdAt")
       .all();
 
-  // add to current list of Entries
   resources.addAll(currentPagedItems.items());
 }
 ```
 
-Using the `.reverseOrderBy()` method reverses the order:
+Use `.reverseOrderBy()` to reverse the order:
 
 ```java
-CDAArray result = 
+CDAArray result =
     client
         .fetch(CDAEntry.class)
         .limit(23)
@@ -238,31 +281,27 @@ CDAArray result =
         .all();
 ```
 
-The above snippet will fetch the first _23_ Entries, sorted by creation date with the latest ones on top.
+The above snippet fetches the first 23 Entries, sorted by creation date with the latest ones on top.
 
-[Sync](#sync) is used to fetch all entries in a single call and to get only changed Resources in following calls.
+[Sync](#synchronization) is the recommended approach for fetching all entries in a single initial call and getting only changed Resources on subsequent calls.
 
-Includes
---------
+### Includes
 
-The library contains a feature called link resolution, which will take a link and resolve them. So there is no need to look through entry id's manually, a simple `.getField(…)` retrieves and entry directly, no need to use the link elements themselves.
+The library resolves links automatically: a simple `.getField(…)` retrieves a linked entry directly, without needing to look up the entry by id manually.
 
-For this feature to work, the linked entry needs to be _published_ (see [preview](#preview)) and the include level needs to be set to include this entry. A level of `2` means, that the links of links are getting resolved. Entries of deeper levels contain an empty field if the link could not be resolved. Finding the id of the not resolved field can be achieved through comparing the `.rawFields` with the `.fields` property of an Entry.
+For link resolution to work, the linked entry needs to be *published* (see [Preview](#accessing-the-preview-api)), and the include level needs to be set to include it. A level of `2` means links-of-links are also resolved. Entries beyond the requested depth contain an empty field where the link could not be resolved; compare `.rawFields` with `.fields` to find the id of an unresolved field.
 
-In order to change the level of includes, the following snippet can be used as a guide:
-
-```
+```java
 CDAArray found = client.fetch(CDAEntry.class)
-        .include(1) // maximum is 10
+        .include(1) // Maximum is 10.
         .all();
 ```
 
-This only resolves the first level of includes. `10` is the maximum number of levels to be included and should be used sparingly, since this will bloat up the response by a lot.
+`10` is the maximum number of levels to include, and should be used sparingly since it can bloat the response significantly.
 
-Cross-Space References
-----------------------
+### Cross-space references
 
-In version 10.6.0 and later the library supports resolving cross-space references, which allows you to link content across multiple spaces. When cross-space tokens are configured, entries and assets from other spaces will be automatically included in the response's `includes` section and resolved by the library link resolution.
+The library supports resolving cross-space references, letting you link content across multiple Contentful spaces. When cross-space tokens are configured, entries and assets from other spaces are automatically included in the response's `includes` section and resolved by the library's link resolution.
 
 To enable cross-space reference resolution, provide access tokens for the additional spaces:
 
@@ -277,26 +316,26 @@ CDAClient client = CDAClient.builder()
     .setCrossSpaceTokens(crossSpaceTokens)
     .build();
 
-// Cross-space references will now be automatically resolved
+// Cross-space references will now be automatically resolved.
 CDAArray entries = client.fetch(CDAEntry.class)
     .include(2)
     .all();
 ```
 
-**Limitations:**
-- Maximum 20 extra spaces can be configured (21 total including the main space)
-- Only the first level of cross-space references is resolved (similar to `include=1` for cross-space)
-- The main space can still resolve up to 10 levels of includes
-- Cross-space errors are returned in the `CDAArray.getErrors()` method
+A few limits apply:
+
+- Maximum 20 extra spaces can be configured (21 total including the main space).
+- Only the first level of cross-space references is resolved (similar to `include=1` for cross-space).
+- The main space can still resolve up to 10 levels of includes.
+- Cross-space errors are returned via `CDAArray.getErrors()`.
 
 For more information, see the [Contentful Resource Links documentation](https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/resource-links).
 
-Unwrapping
-----------
+### Unwrapping
 
-Unwrapping is the process of taking a `CDAEntry` and transforming it into custom types. The following code demonstrates the definition of a custom type:
+Unwrapping is the process of taking a `CDAEntry` and transforming it into your own custom types:
 
-```
+```java
 import com.contentful.java.cda.TransformQuery.ContentfulEntryModel;
 import com.contentful.java.cda.TransformQuery.ContentfulField;
 
@@ -319,107 +358,102 @@ public static class Cat {
 }
 ```
 
-If this library should return a given response like the one above instead of a CDAEntry, the following code snippet will accomplish that:
+To have the library return your custom type instead of a `CDAEntry`:
 
-```
+```java
 Cat happycat = client
     .observeAndTransform(Cat.class)
     .one("happycat")
     .blockingFirst();
 ```
 
-In addition to returning the Content in a fashion flexible for various use-cases, this feature also uses the [select](#select) filter to only return the fields required, making the response smaller and more focused.
+Unwrapping also uses the [select](#select) filter under the hood to only return the fields required, making the response smaller and more focused.
 
 > Notes:
-> * Specifying a `value` for the `@ContentfulField`-annotation , will use the value of the similarly called field id instead of the name of the custom field.
-> * A `locale` can be used to specify a given locale of this entry. If no locale is given, the default locale will be used. 
-> * `@ContentfulSystemField` is used for CDAEntries attributes (`sys.id`, etc) to be inserted.
-> * If another type is wanted to be transformed, it should have `@ContentfulEntryModel`-annotation specified similarly as in `Cat`.
-> * **Limitation on Unwrapping**: Using Unwrapping does not currently allow direct access to the raw JSON for rich text fields, as the library automatically transforms fields into the custom model structure. For cases where raw JSON is needed:
->   * Use the `rawFields` map in `CDAEntry` to directly access the unprocessed JSON of any field, including rich text.
->   * Alternatively, make a direct HTTP request to the Contentful API to retrieve the full raw JSON response.
+> * Specifying a `value` for `@ContentfulField` uses the value as the field id instead of the name of the annotated field.
+> * A `locale` can be specified for a given field. If omitted, the default locale is used.
+> * `@ContentfulSystemField` is used to populate `CDAEntry` attributes (`sys.id`, etc).
+> * Any nested type must also be annotated with `@ContentfulEntryModel`, similar to `Cat` above.
+> * **Limitation:** Unwrapping does not currently allow direct access to the raw JSON for rich text fields, since the library automatically transforms fields into the custom model structure. Use the `rawFields` map on `CDAEntry` to access the unprocessed JSON of any field, including rich text, or make a direct HTTP request to the Contentful API for the full raw JSON response.
 
+### Select
 
-Select
-------
-
-The amount of data returned by the API can be reduced by using the `.select()` method on a query. With this, Contentful only returns the selected fields. The library enforces that the `sys` fields (`.getAttribute()` on an Entry) will always be returned, since it is used for the proper functioning of the library.
-
-If reducing the payload size is wanted, the following snippet can explain how to accomplish that
-
-```
-CDAArray found = client.fetch(CDAEntry.class)
-    .withContentType("cat");
-    .select("fields.name");
-```
-This snippet makes sure that the entries of type `cat` are only containing its `name` field. All other fields will be `null` or its respective default value. 
-
-> Note: The content type has to be added through `.withContentType(…)` otherwise an error ensues.
-
-Preview
--------
-
-The _Content Delivery API_ only returns _published_ Entries. The <a href="https://www.contentful.com/developers/docs/references/content-preview-api/" title="Shortened to Preview from now on."/>_Content Preview API_</a> will return _all_ Entries, even not published ones:
+The amount of data returned by the API can be reduced with `.select()`. The library always requests the `sys` fields (`.getAttribute()` on an Entry), since they're required for the library to function correctly:
 
 ```java
-CDAClient client = 
-    CDAClient.builder()
-        .setSpace("space-key-goes-here")
-        .setToken("access-token-goes-here")
-        .preview()
-        .build();
+CDAArray found = client.fetch(CDAEntry.class)
+    .withContentType("cat")
+    .select("fields.name");
 ```
 
-The <a href="https://www.contentful.com/developers/docs/references/content-preview-api/#/introduction/preview-api-authentication" title="A password for this specific API."/>_Preview Access Token_</a> is exposed on the [Contentful Web App](https://app.contentful.com/deeplink?link=api). 
+This ensures entries of type `cat` only contain their `name` field — all other fields are `null` or their default value.
 
-> Note: In Preview, Resources can be invalid since no validation is performed prior to publishing.
+> Note: The content type must be added through `.withContentType(…)`, otherwise an error is thrown.
 
-Sync
-----
+### Synchronization
 
-Fetching all Resources and retrieving only changes on subsequent calls is accomplished by using the `.sync()`-methods:
+Fetching all Resources initially, and only changes on subsequent calls, is accomplished with the `.sync()` methods:
 
 ```java
 SynchronizedSpace space = client.sync().fetch();
 ```
 
-The _SynchronizedSpace_ contains _all_ _published_ Resources. If `.preview()` ([see Preview](#preview)) is used, it also contains all unpublished Resources.
+The `SynchronizedSpace` contains all published Resources. If `.preview()` (see [Preview](#accessing-the-preview-api)) is used, it also contains unpublished Resources.
 
-If changes are to be fetched later, calling `sync()` again using the given SynchronizedSpace as a parameter is needed:
+To fetch changes later, call `.sync()` again, passing the previous `SynchronizedSpace` as a parameter:
 
 ```java
 SynchronizedSpace later = client.sync(space).fetch();
 ```
 
-If an Entry gets deleted, its <a href="https://www.contentful.com/developers/docs/references/content-delivery-api/#/introduction/common-resource-attributes" title="Every Resource has a unique id."/>_id_</a> is returned in the`SynchronizedSpace.deletedEntries()` set. Same is true for the deleted Assets through `SynchronizedSpace.deletedAssets()`.
+If an Entry is deleted, its id is returned in `SynchronizedSpace.deletedEntries()`. The same is true for deleted Assets via `SynchronizedSpace.deletedAssets()`.
 
-Http Client
------------
+### Rich text
 
-Changing the settings of the http client, without losing the information setup in the client build process, is achieved by requesting the `.defaultCallFactoryBuilder()` from the `CDAClient.Builder`, changing it and then reapplying it:
+Rich text fields decode into a `CDARichDocument`, the base of all rich text nodes in the SDK:
 
 ```java
-// create a client builder as usual
+final CDARichDocument node = entry.getField(FIELD_ID);
+```
+
+If your data comes from an external tool (for example a JavaScript library), you can build a `CDARichDocument` from plain JSON — useful when the content wasn't fetched directly through this library. Using GSON for JSON processing:
+
+```java
+private final Gson gson = new Gson();
+Type type = new TypeToken<Map<String, Object>>(){}.getType();
+Map<String, Object> jsonMap = gson.fromJson(json, type);
+final CDARichDocument node = RichTextFactory.resolveRichNode(jsonMap);
+```
+
+To turn a rich text node tree into HTML or native Android output, use the companion [rich-text-renderer-java](https://github.com/contentful/rich-text-renderer-java) library — see [Rich Text renderer library](#rich-text-renderer-library).
+
+## Advanced configuration
+
+### Http client
+
+Changing the settings of the HTTP client, without losing the information set up during the client build process, is achieved by requesting the `.defaultCallFactoryBuilder()` from the `CDAClient.Builder`, changing it, then reapplying it:
+
+```java
+// Create a client builder as usual.
 CDAClient.Builder clientBuilder = CDAClient.builder()
         .setSpace("space-id-goes-here")
-        .setEnvironment("environment-id-goes-here")  // optional
+        .setEnvironment("environment-id-goes-here")  // Optional.
         .setToken("cda-token-goes-here");
 
-// request the http client with the settings from above (token, error interceptor, etc)
+// Request the http client with the settings from above (token, error interceptor, etc).
 OkHttpClient httpClient = clientBuilder.defaultCallFactoryBuilder()
-        .addInterceptor(interceptor) // adding a custom interceptor
-        .connectTimeout(5, TimeUnit.SECONDS) // adding a timeout 
-        .cache(new Cache(new File("/tmp"), CACHE_SIZE_BYTES)) // adding a simple http cache
+        .addInterceptor(interceptor) // Adding a custom interceptor.
+        .connectTimeout(5, TimeUnit.SECONDS) // Adding a timeout.
+        .cache(new Cache(new File("/tmp"), CACHE_SIZE_BYTES)) // Adding a simple HTTP cache.
         .build();
 
-// reapply the http changes and build a contentful client
+// Reapply the http changes and build a Contentful client.
 CDAClient cdaClient = clientBuilder.setCallFactory(httpClient).build();
 ```
 
-Android and OkHttp 5
---------------------
+### Android and OkHttp 5
 
-OkHttp 5 splits platform artifacts. This library depends on `okhttp-jvm` so it works out of the box for JVM users. For Android apps, depend on `okhttp-android` and exclude `okhttp-jvm` from this library to avoid duplicate-class errors.
+OkHttp 5 splits platform artifacts. This library depends on `okhttp-jvm`, so it works out of the box for JVM users. For Android apps, depend on `okhttp-android` and exclude `okhttp-jvm` from this library to avoid duplicate-class errors.
 
 Gradle (Kotlin DSL):
 
@@ -428,7 +462,7 @@ dependencies {
   implementation(platform("com.squareup.okhttp3:okhttp-bom:5.1.0"))
   implementation("com.squareup.okhttp3:okhttp-android")
 
-  implementation("com.contentful.java:java-sdk:10.6.0") {
+  implementation("com.contentful.java:java-sdk:10.6.1") {
     exclude(group = "com.squareup.okhttp3", module = "okhttp-jvm")
   }
 }
@@ -441,26 +475,29 @@ dependencies {
   implementation platform('com.squareup.okhttp3:okhttp-bom:5.1.0')
   implementation 'com.squareup.okhttp3:okhttp-android'
 
-  implementation('com.contentful.java:java-sdk:10.6.0') {
+  implementation('com.contentful.java:java-sdk:10.6.1') {
     exclude group: 'com.squareup.okhttp3', module: 'okhttp-jvm'
   }
 }
 ```
 
-Proguard
---------
+### Proguard
 
-The [ProGuard configuration file](proguard-cda.cfg) is used to minify Android Apps using this library.
+The [ProGuard configuration file](proguard-cda.cfg) is used to minify Android apps that use this library.
 
-Rich Text renderer library
---------
+## Documentation & References
 
-There is [Java library for Rich Text API](https://github.com/contentful/rich-text-renderer-java). It helps in easily rendering rich text stored in Contentful using Java.
+For further information about the underlying REST API, check out the [Content Delivery API Reference Documentation](https://www.contentful.com/developers/documentation/content-delivery-api/). Browse the [JavaDoc](https://contentful.github.io/contentful.java/) for the full API reference of this library.
 
-Pre-releases
-------------
+Every released change is recorded in the [CHANGELOG.md](CHANGELOG.md).
 
-Development versions of this library are available through 
+### Rich Text renderer library
+
+There is a [Java library for the Rich Text API](https://github.com/contentful/rich-text-renderer-java). It helps you easily render rich text stored in Contentful into HTML or native Android views.
+
+### Pre-releases
+
+Development versions of this library are available through:
 
 * [Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/com/contentful/java/java-sdk/):
 
@@ -476,42 +513,28 @@ maven { url 'https://jitpack.io' }
 implementation 'com.github.contentful:contentful.java:java-sdk-10.4.1-SNAPSHOT'
 ```
 
-Documentation
-=============
+## Reach out to us
 
-See
-* [JavaDoc](https://contentful.github.io/contentful.java/) 
-* [API documentation](https://www.contentful.com/developers/documentation/content-delivery-api/)
+### Have questions about how to use this library?
 
-License
-=======
+* Reach out to our community forum: [![Contentful Community Forum](https://img.shields.io/badge/-Join%20Community%20Forum-3AB2E6.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiA1OSI+CiAgPHBhdGggZmlsbD0iI0Y4RTQxOCIgZD0iTTE4IDQxYTE2IDE2IDAgMCAxIDAtMjMgNiA2IDAgMCAwLTktOSAyOSAyOSAwIDAgMCAwIDQxIDYgNiAwIDEgMCA5LTkiIG1hc2s9InVybCgjYikiLz4KICA8cGF0aCBmaWxsPSIjNTZBRUQyIiBkPSJNMTggMThhMTYgMTYgMCAwIDEgMjMgMCA2IDYgMCAxIDAgOS05QTI5IDI5IDAgMCAwIDkgOWE2IDYgMCAwIDAgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0UwNTM0RSIgZD0iTTQxIDQxYTE2IDE2IDAgMCAxLTIzIDAgNiA2IDAgMSAwLTkgOSAyOSAyOSAwIDAgMCA0MSAwIDYgNiAwIDAgMC05LTkiLz4KICA8cGF0aCBmaWxsPSIjMUQ3OEE0IiBkPSJNMTggMThhNiA2IDAgMSAxLTktOSA2IDYgMCAwIDEgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0JFNDMzQiIgZD0iTTE4IDUwYTYgNiAwIDEgMS05LTkgNiA2IDAgMCAxIDkgOSIvPgo8L3N2Zz4K&maxAge=31557600)](https://support.contentful.com/)
+* Jump into our community slack channel: [![Contentful Community Slack](https://img.shields.io/badge/-Join%20Community%20Slack-2AB27B.svg?logo=slack&maxAge=31557600)](https://www.contentful.com/slack/)
 
-> Copyright (c) 2019 Contentful GmbH. See [LICENSE.txt](LICENSE.txt) for further details.
+### You found a bug or want to propose a feature?
 
+* File an issue here on GitHub: [![File an issue](https://img.shields.io/badge/-Create%20Issue-6cc644.svg?logo=github&maxAge=31557600)](https://github.com/contentful/contentful.java/issues/new). Make sure to remove any credential from your code before sharing it.
 
-Reaching Contentful
-===================
-
-Questions
----------
-
-* Use the community forum: [![Contentful Community Forum](https://img.shields.io/badge/-Join%20Community%20Forum-3AB2E6.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiA1OSI+CiAgPHBhdGggZmlsbD0iI0Y4RTQxOCIgZD0iTTE4IDQxYTE2IDE2IDAgMCAxIDAtMjMgNiA2IDAgMCAwLTktOSAyOSAyOSAwIDAgMCAwIDQxIDYgNiAwIDEgMCA5LTkiIG1hc2s9InVybCgjYikiLz4KICA8cGF0aCBmaWxsPSIjNTZBRUQyIiBkPSJNMTggMThhMTYgMTYgMCAwIDEgMjMgMCA2IDYgMCAxIDAgOS05QTI5IDI5IDAgMCAwIDkgOWE2IDYgMCAwIDAgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0UwNTM0RSIgZD0iTTQxIDQxYTE2IDE2IDAgMCAxLTIzIDAgNiA2IDAgMSAwLTkgOSAyOSAyOSAwIDAgMCA0MSAwIDYgNiAwIDAgMC05LTkiLz4KICA8cGF0aCBmaWxsPSIjMUQ3OEE0IiBkPSJNMTggMThhNiA2IDAgMSAxLTktOSA2IDYgMCAwIDEgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0JFNDMzQiIgZD0iTTE4IDUwYTYgNiAwIDEgMS05LTkgNiA2IDAgMCAxIDkgOSIvPgo8L3N2Zz4K&maxAge=31557600)](https://support.contentful.com/)
-* Use the community slack channel: [![Contentful Community Slack](https://img.shields.io/badge/-Join%20Community%20Slack-2AB27B.svg?logo=slack&maxAge=31557600)](https://www.contentful.com/slack/)
-
-Bugs and Feature Requests
--------------------------
-
-* File an issue here [![File an issue](https://img.shields.io/badge/-Create%20Issue-6cc644.svg?logo=github&maxAge=31557600)](https://github.com/contentful/contentful.java/issues/new).
-
-Sharing Confidential Information
---------------------------------
+### You need to share confidential information or have other questions?
 
 * File a support ticket at our Contentful Customer Support: [![File support ticket](https://img.shields.io/badge/-Submit%20Support%20Ticket-3AB2E6.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MiA1OSI+CiAgPHBhdGggZmlsbD0iI0Y4RTQxOCIgZD0iTTE4IDQxYTE2IDE2IDAgMCAxIDAtMjMgNiA2IDAgMCAwLTktOSAyOSAyOSAwIDAgMCAwIDQxIDYgNiAwIDEgMCA5LTkiIG1hc2s9InVybCgjYikiLz4KICA8cGF0aCBmaWxsPSIjNTZBRUQyIiBkPSJNMTggMThhMTYgMTYgMCAwIDEgMjMgMCA2IDYgMCAxIDAgOS05QTI5IDI5IDAgMCAwIDkgOWE2IDYgMCAwIDAgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0UwNTM0RSIgZD0iTTQxIDQxYTE2IDE2IDAgMCAxLTIzIDAgNiA2IDAgMSAwLTkgOSAyOSAyOSAwIDAgMCA0MSAwIDYgNiAwIDAgMC05LTkiLz4KICA8cGF0aCBmaWxsPSIjMUQ3OEE0IiBkPSJNMTggMThhNiA2IDAgMSAxLTktOSA2IDYgMCAwIDEgOSA5Ii8+CiAgPHBhdGggZmlsbD0iI0JFNDMzQiIgZD0iTTE4IDUwYTYgNiAwIDEgMS05LTkgNiA2IDAgMCAxIDkgOSIvPgo8L3N2Zz4K&maxAge=31557600)](https://www.contentful.com/support/)
 
-Getting involved
-----------------
+## Get involved
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?maxAge=31557600)](http://makeapullrequest.com)
+
+We appreciate any help on our repositories. For more details about how to contribute, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+### Development setup
 
 For a reproducible local setup, open this repository in its included dev container. The container installs the project dependencies automatically when it is created.
 
@@ -521,19 +544,21 @@ After the container is ready, run:
 ./mvnw -B test
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the full contributor workflow.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full contributor workflow, including commit conventions and the release process.
 
-Code of Conduct
-===============
+## License
 
-Contentful wants to provide a safe, inclusive, welcoming, and harassment-free space and experience for all participants, regardless of their identity markers.
+This repository is published under the [Apache 2.0](LICENSE.txt) license.
 
-[Full Code of Conduct](https://github.com/contentful-developer-relations/community-code-of-conduct).
+## Code of Conduct
+
+We want to provide a safe, inclusive, welcoming, and harassment-free space and experience for all participants, regardless of gender identity and expression, sexual orientation, disability, physical appearance, socioeconomic status, body size, ethnicity, nationality, level of experience, age, religion (or lack thereof), or other identity markers.
+
+[Read our full Code of Conduct](https://github.com/contentful-developer-relations/community-code-of-conduct).
 
 <!-- Generated by seed-golden-context | Last updated: 2026-05-11 -->
 
-For Agents & Contributors
-=========================
+## For Agents & Contributors
 
 | Document | What it covers |
 |---|---|
