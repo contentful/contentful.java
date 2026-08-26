@@ -227,7 +227,7 @@ public class EntryTest extends BaseTest {
 
     Object bestFriend = entry.getField("bestFriend");
     assertThat(bestFriend).isInstanceOf(CDAEntry.class);
-    assertThat(entry).isSameAs(((CDAEntry) bestFriend).getField("bestFriend"));
+    assertThat(entry).isSameInstanceAs(((CDAEntry) bestFriend).getField("bestFriend"));
 
     // Localization
     assertThat(entry.defaultLocale).isEqualTo("en-US");
@@ -246,7 +246,7 @@ public class EntryTest extends BaseTest {
 
     assertThat(array.items()).hasSize(1);
     assertThat(array.entries()).hasSize(2);
-    assertThat(array.entries().values()).containsAllIn(array.items());
+    assertThat(array.entries().values()).containsAtLeastElementsIn(array.items());
 
     CDAEntry parent = array.entries().get("7Avw18DWveMI60a0WWwyCi");
     assertThat(parent).isNotNull();

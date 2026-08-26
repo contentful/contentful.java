@@ -45,7 +45,7 @@ public class ResourceFactoryUnitTest {
     final Response<CDAArray> inputArrayResponse = Response.success(inputArray);
     final CDAArray outputArray = ResourceFactory.array(inputArrayResponse, client);
 
-    assertThat(outputArray.entries().values()).containsAllIn(inputArray.items);
+    assertThat(outputArray.entries().values()).containsAtLeastElementsIn(inputArray.items);
   }
 
   private CDAEntry createCdaEntry(String id) {
