@@ -57,7 +57,7 @@
 
     <!-- Test Dependencies -->
     <commonsio.version>2.14.0</commonsio.version>
-    <junit.version>4.13.1</junit.version>
+    <junit.version>4.13.2</junit.version>
     <mockito.version>2.23.4</mockito.version>
     <android.version>4.1.1.4</android.version>
     <android.platform>16</android.platform>
@@ -220,7 +220,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
-        <version>2.5</version>
+        <version>2.5.3</version>
       </plugin>
 
       <plugin>
