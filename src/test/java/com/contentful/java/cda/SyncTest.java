@@ -48,7 +48,7 @@ public class SyncTest extends BaseTest {
     assertThat(nyanCat.<String>getField("color")).isEqualTo("red");
     likes = nyanCat.getField("likes");
     assertThat(likes).containsExactly("a", "b", "c");
-    assertThat(nyanCat.<CDAEntry>getField("bestFriend")).isSameAs(superCat);
+    assertThat(nyanCat.<CDAEntry>getField("bestFriend")).isSameInstanceAs(superCat);
   }
 
   private void assertInitial(SynchronizedSpace space) {

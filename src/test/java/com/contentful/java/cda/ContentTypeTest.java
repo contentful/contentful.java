@@ -30,7 +30,7 @@ public class ContentTypeTest extends BaseTest {
 
     CDAContentType fake = client.fetch(CDAContentType.class).one("fake");
     assertThat(client.cache.types()).hasSize(6);
-    assertThat(client.cache.types().get(fake.id())).isSameAs(fake);
+    assertThat(client.cache.types().get(fake.id())).isSameInstanceAs(fake);
   }
 
   @Test
