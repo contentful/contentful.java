@@ -19,9 +19,9 @@ jobs:
       - name: Install devcontainer CLI
         run: npm install -g @devcontainers/cli@0
 
-      - name: Run tests in dev container
+      - name: Test and package in dev container
         env:
           JAVA_VERSION: "8"
         run: |
           devcontainer up --workspace-folder .
-          devcontainer exec --workspace-folder . bash -lc "./mvnw -B test"
+          devcontainer exec --workspace-folder . bash -lc "./mvnw -B package"
