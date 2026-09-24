@@ -2,6 +2,32 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+Merged to `master` after 10.6.1 and not yet released. Because Retrofit changes major version, release this as **10.7.0**:
+- fix: Android apps no longer get `Duplicate class okhttp3.…` build errors (`okhttp-jvm` next to `okhttp-android`), and no exclusion is needed. The SDK now publishes Gradle module metadata that leaves out `okhttp-jvm`, so Gradle picks the right OkHttp artifact per platform. The POM is unchanged, so Maven users are unaffected
+- chore(deps): OkHttp pinned to **5.3.2**: `okhttp-android` 5.4+ would force Android apps to compileSdk 36/37
+- chore(deps): Retrofit **3.0.0** (#371; binary-compatible with 2.11 for `retrofit`, `converter-gson`, `adapter-rxjava3`), Gson 2.14.0 (#359), named-regexp 1.x (#370)
+- chore(deps): build and test tooling updates (Truth 1.4.5, checkstyle, Maven plugins)
+
+## Version [10.6.1] - (2026-08-25)
+- fix: `CDAHttpException` no longer logs sensitive request data by default (`logSensitiveData` now defaults to `false`)
+- fix: guard against a missing content type cache when resolving and caching content types
+- fix: thread-safe access to the default locale
+- fix: rich text: skip missing locale documents; correct `Entry`/`Asset` link detection
+- fix: handle an empty response body in HTTP error messages
+- chore: dependency updates via Renovate (OkHttp 5.1.0, Retrofit 2.11.0, Gson 2.11.0, RxJava 3.1.12)
+
+## Version [10.6.0] - (2025-11-14)
+- feat: cross-space reference resolution support
+- fix: strip any extensions that might be passed in with the locale
+
+## Version [10.5.26] - (2025-11-11)
+- fix: strip any extensions that might be passed in with the locale
+
+## Version [10.5.25] - (2025-09-18)
+- fix: assign `logSensitiveData` in the `CDAHttpException` constructor before it is used
+- feat: add `perfLabel` to taxonomy concepts
+
 ## Version [10.5.23] - (2025-07-03)
 - fix: inconsistent rich text embedding
 

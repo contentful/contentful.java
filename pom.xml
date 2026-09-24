@@ -1,4 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <!-- do_not_remove: published-with-gradle-metadata -->
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.contentful.java</groupId>
@@ -53,7 +54,11 @@
     <retrofit.version>3.0.0</retrofit.version>
     <rxjava.version>3.1.12</rxjava.version>
     <gson.version>2.14.0</gson.version>
-    <okhttp.version>5.5.0</okhttp.version>
+    <!--
+      Kept below 5.4: okhttp-android 5.4.0 requires Android apps to compile against API 36, and
+      5.5.0 against API 37. See renovate.json.
+    -->
+    <okhttp.version>5.3.2</okhttp.version>
 
     <!-- Test Dependencies -->
     <commonsio.version>2.22.0</commonsio.version>
@@ -104,6 +109,12 @@
       <artifactId>okhttp</artifactId>
       <version>${okhttp.version}</version>
     </dependency>
+    <!--
+      Plain-Maven (JVM) users need okhttp-jvm: the "okhttp" POM carries no classes. Gradle users
+      don't: gradle-module-metadata-maven-plugin (below) publishes Gradle module metadata without it,
+      and Gradle resolves "okhttp" to okhttp-jvm or okhttp-android. Before, Android apps got both
+      okhttp-jvm and okhttp-android ("Duplicate class okhttp3.*").
+    -->
     <dependency>
       <groupId>com.squareup.okhttp3</groupId>
       <artifactId>okhttp-jvm</artifactId>
@@ -168,6 +179,31 @@
     </resources>
 
     <plugins>
+      <!--
+        Publishes Gradle module metadata (.module) next to the POM. Gradle prefers it over the POM,
+        and it omits okhttp-jvm so Android apps get okhttp-android only. Maven users keep the POM.
+      -->
+      <plugin>
+        <groupId>org.gradlex</groupId>
+        <artifactId>gradle-module-metadata-maven-plugin</artifactId>
+        <version>1.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>gmm</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <removedDependencies>
+            <dependency>
+              <groupId>com.squareup.okhttp3</groupId>
+              <artifactId>okhttp-jvm</artifactId>
+            </dependency>
+          </removedDependencies>
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>

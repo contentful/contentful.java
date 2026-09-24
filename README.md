@@ -453,31 +453,16 @@ CDAClient cdaClient = clientBuilder.setCallFactory(httpClient).build();
 
 ### Android and OkHttp 5
 
-OkHttp 5 splits platform artifacts. This library depends on `okhttp-jvm`, so it works out of the box for JVM users. For Android apps, depend on `okhttp-android` and exclude `okhttp-jvm` from this library to avoid duplicate-class errors.
+OkHttp 5 splits platform artifacts: `okhttp-jvm` for the JVM and `okhttp-android` for Android. **No configuration is needed from 10.7.0:**
 
-Gradle (Kotlin DSL):
+- **Gradle (Android and JVM):** the SDK publishes Gradle module metadata, and Gradle resolves `okhttp` to `okhttp-android` in Android apps and to `okhttp-jvm` on the JVM.
+- **Maven (JVM):** the POM includes `okhttp-jvm`, as before.
 
-```kotlin
-dependencies {
-  implementation(platform("com.squareup.okhttp3:okhttp-bom:5.1.0"))
-  implementation("com.squareup.okhttp3:okhttp-android")
-
-  implementation("com.contentful.java:java-sdk:10.6.1") {
-    exclude(group = "com.squareup.okhttp3", module = "okhttp-jvm")
-  }
-}
-```
-
-Gradle (Groovy):
+For **10.6.1 and earlier** on Android, exclude it:
 
 ```groovy
-dependencies {
-  implementation platform('com.squareup.okhttp3:okhttp-bom:5.1.0')
-  implementation 'com.squareup.okhttp3:okhttp-android'
-
-  implementation('com.contentful.java:java-sdk:10.6.1') {
-    exclude group: 'com.squareup.okhttp3', module: 'okhttp-jvm'
-  }
+implementation('com.contentful.java:java-sdk:10.6.1') {
+  exclude group: 'com.squareup.okhttp3', module: 'okhttp-jvm'
 }
 ```
 
