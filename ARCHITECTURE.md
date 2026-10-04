@@ -113,10 +113,10 @@ OkHttp 5 splits platform artifacts: JVM users get `okhttp-jvm` (included by defa
 - **Pre-release**: Sonatype snapshots and jitpack.io
 - **Versioning**: Semantic Versioning — patch = bug fixes / dependency updates; minor = new non-breaking features; major = breaking API changes
 - **Branching**: Trunk-based development off `master`
-- **Release cadence**: On-demand
+- **Release cadence**: On-demand, through the manual `Release` GitHub Actions workflow (`.github/workflows/release.yml`)
 - **Build**: Maven Wrapper (`./mvnw`) — no global Maven installation required
 - **Code coverage**: Codecov
 - **Checkstyle**: Enforced at `verify` phase via `checkstyle.xml`
-- **GPG signing**: Required for Maven Central publication (private key managed by Contentful infrastructure team)
+- **GPG signing**: Required for Maven Central publication (private key managed by Contentful infrastructure team). CI signs with the key from the `maven-central` environment's secrets.
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full release procedure.
+See [RELEASING.md](./RELEASING.md) for the full release procedure.
