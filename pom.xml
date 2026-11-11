@@ -69,7 +69,7 @@
     <truth.version>1.4.5</truth.version>
 
     <!-- Build Dependencies -->
-    <build-helper.version>3.7.0</build-helper.version>
+    <build-helper.version>3.8.0</build-helper.version>
   </properties>
 
   <dependencies>
