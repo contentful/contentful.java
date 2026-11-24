@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Unreleased
 Merged to `master` after 10.6.1 and not yet released. Because Retrofit changes major version, release this as **10.7.0**:
 - fix: Android apps no longer get `Duplicate class okhttp3.…` build errors (`okhttp-jvm` next to `okhttp-android`), and no exclusion is needed. The SDK now publishes Gradle module metadata that leaves out `okhttp-jvm`, so Gradle picks the right OkHttp artifact per platform. The POM is unchanged, so Maven users are unaffected
+- fix: `Location`, `BoundingBox` and `BoundingCircle` queries no longer depend on the default locale (`52,500000,13,400000` on a German device)
 - chore(deps): OkHttp pinned to **5.3.2**: `okhttp-android` 5.4+ would force Android apps to compileSdk 36/37
 - chore(deps): Retrofit **3.0.0** (#371; binary-compatible with 2.11 for `retrofit`, `converter-gson`, `adapter-rxjava3`), Gson 2.14.0 (#359), named-regexp 1.x (#370)
 - chore(deps): build and test tooling updates (Truth 1.4.5, checkstyle, Maven plugins)

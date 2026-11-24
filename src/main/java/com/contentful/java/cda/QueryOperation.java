@@ -1,5 +1,7 @@
 package com.contentful.java.cda;
 
+import java.util.Locale;
+
 /**
  * This enumeration will be used to formulate more complex search queries.
  *
@@ -92,7 +94,7 @@ public class QueryOperation<T> {
      */
     @Override
     public String toString() {
-      return String.format("%f,%f", latitude, longitude);
+      return String.format(Locale.ROOT, "%f,%f", latitude, longitude);
     }
   }
 
@@ -169,7 +171,7 @@ public class QueryOperation<T> {
      * @return returns a url friendly representation.
      */
     @Override public String toString() {
-      return String.format("%s,%f", center.toString(), radius);
+      return String.format(Locale.ROOT, "%s,%f", center.toString(), radius);
     }
   }
 }

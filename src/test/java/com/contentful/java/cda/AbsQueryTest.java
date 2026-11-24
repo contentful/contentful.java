@@ -10,6 +10,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Locale;
+
 import static com.contentful.java.cda.QueryOperation.Exists;
 import static com.contentful.java.cda.QueryOperation.HasAllOf;
 import static com.contentful.java.cda.QueryOperation.HasNoneOf;
@@ -465,6 +467,22 @@ public class AbsQueryTest {
   @Test(expected = IllegalStateException.class)
   public void nearThrowsIfNotUsedWithContentType() {
     query.where("fields.bar", IsCloseTo, new Location(52, 14));
+  }
+
+  @Test
+  public void locationsDoNotDependOnTheDefaultLocale() {
+    final Locale defaultLocale = Locale.getDefault();
+    try {
+      Locale.setDefault(Locale.GERMANY);
+
+      assertThat(new Location(52.5, 13.4).toString()).isEqualTo("52.500000,13.400000");
+      assertThat(new BoundingBox(1.5, 2.5, 3.5, 4.5).toString())
+          .isEqualTo("1.500000,2.500000,3.500000,4.500000");
+      assertThat(new BoundingCircle(new Location(52.5, 13.4), 0.5).toString())
+          .isEqualTo("52.500000,13.400000,0.500000");
+    } finally {
+      Locale.setDefault(defaultLocale);
+    }
   }
 
   @Test
